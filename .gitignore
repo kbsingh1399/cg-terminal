@@ -57,6 +57,11 @@ prompt
 server.log
 # Skills directory
 /skills/
+# database
+prisma/db/
+*.db
+*.db-journal
+
 # continuity engine store
 data/*
 !data/.gitkeep
