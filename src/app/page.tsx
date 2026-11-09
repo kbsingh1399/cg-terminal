@@ -9,6 +9,7 @@ import CvdTool from "@/components/cg/cvd-tool";
 import OverviewTool from "@/components/cg/overview-tool";
 import AlertsTool from "@/components/cg/alerts-tool";
 import EngineStatus from "@/components/cg/engine-status";
+import LivePrice from "@/components/cg/live-price";
 
 type Tool = "overview" | "footprint" | "large-orders" | "liquidation-levels" | "book-walls" | "cvd" | "alerts";
 
@@ -77,6 +78,8 @@ export default function Home() {
               </button>
             ))}
           </div>
+
+          <LivePrice sym={sym} />
 
           <nav className="flex flex-wrap gap-1.5" aria-label="Tools">
             {TOOLS.map((t) => (

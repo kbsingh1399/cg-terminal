@@ -129,6 +129,18 @@ async function toolNotifications(args) {
   };
 }
 
+async function toolLivePrice(args) {
+  const sym = (args?.sym ?? "BTC").toUpperCase();
+  const d = await api(`/api/cg/ticker?sym=${sym}`);
+  if (!d.ok || d.price == null) throw new Error(d.error || "ticker failed");
+  const dir = d.dir === "up" ? "▲" : d.dir === "down" ? "▼" : "=";
+  const age = d.ageMs != null ? ` · upstream age ${Math.round(d.ageMs)}ms` : "";
+  return {
+    text: `${sym} ${d.price} ${dir}${age} — 1s-grade feed (forming m1 close via Coinglass)`,
+    data: d,
+  };
+}
+
 async function toolLiquidationLevels(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
   const range = ["3d", "7d", "30d"].includes(args?.range) ? args.range : "3d";
@@ -256,6 +268,16 @@ const TOOLS = [
       required: ["sym"],
     },
     handler: toolMarketSnapshot,
+  },
+  {
+    name: "live_price",
+    description: "Real-time price tick (1-second-grade feed): forming m1 candle close from Coinglass — the same live number the site charts show. Safe to poll at 1s; the terminal shares one upstream fetch across all callers.",
+    inputSchema: {
+      type: "object",
+      properties: { sym: { type: "string", description: "Asset symbol, e.g. BTC, ETH, XAU" } },
+      required: ["sym"],
+    },
+    handler: toolLivePrice,
   },
   {
     name: "signals",

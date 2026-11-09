@@ -59,6 +59,35 @@ export interface KlinePayload {
   rows: KlineRow[];
 }
 
+export interface TickerPayload {
+  ok: boolean;
+  sym: string;
+  price: number | null;
+  dir?: "up" | "down" | "flat";
+  candleT?: number | null;
+  fetchedAt?: number;
+  ageMs?: number;
+  stale?: boolean;
+  ttlMs?: number;
+}
+
+/**
+ * 1-second live price ticker (shared server cache → Coinglass kline).
+ * Falls back to `null` price on error so callers can degrade gracefully.
+ */
+export function useTicker(sym: string, intervalMs = 1_000) {
+  const q = usePolling<TickerPayload>(`/api/cg/ticker?sym=${encodeURIComponent(sym)}`, intervalMs);
+  return {
+    price: q.data?.price ?? null,
+    dir: q.data?.dir ?? "flat",
+    live: !!q.data?.ok && !q.data?.stale && q.data?.price != null,
+    ageMs: q.data?.ageMs ?? null,
+    fetchedAt: q.data?.fetchedAt ?? null,
+    error: q.error,
+    updatedAt: q.updatedAt,
+  };
+}
+
 export interface OiPayload {
   ok: boolean;
   interval: string;

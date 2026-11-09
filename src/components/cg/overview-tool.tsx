@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { usePolling } from "./use-cg-data";
+import { usePolling, useTicker } from "./use-cg-data";
 import { assetOf } from "@/lib/cg/assets";
 
 /**
@@ -57,6 +57,7 @@ const TF_LABEL: Record<string, string> = { m15: "15m", h1: "1H", h4: "4H", d1: "
 export default function OverviewTool({ sym = "BTC" }: { sym?: string }) {
   const q = usePolling<MarketResp>(`/api/cg/market?sym=${sym}`, 30_000);
   const sigQ = usePolling<SignalsResp>(`/api/cg/signals?sym=${sym}`, 45_000);
+  const tk = useTicker(sym); // 1s live price — refreshes the header every second
   const d = q.data;
   const decs = assetOf(sym)?.priceDecs ?? 2;
 
@@ -77,7 +78,10 @@ export default function OverviewTool({ sym = "BTC" }: { sym?: string }) {
     return m;
   }, [sigQ.data]);
 
-  const price = d?.price.last ?? null;
+  const price = tk.price ?? d?.price.last ?? null;
+  // day change % computed from the 1s live price (prev-day close from the 30s snapshot)
+  const chgLive =
+    price != null && d?.price.prevDayClose ? ((price - d.price.prevDayClose) / d.price.prevDayClose) * 100 : (d?.price.chgDayPct ?? null);
   const vwap = d?.vwap;
   const vwapBands = useMemo(() => {
     if (!vwap || vwap.vwap == null) return [];
@@ -107,12 +111,23 @@ export default function OverviewTool({ sym = "BTC" }: { sym?: string }) {
             {d?.name ?? sym} · {sym}/USDT perp · Binance lead
           </div>
           <div className="flex items-baseline gap-3">
-            <div className={`text-3xl font-semibold tabular-nums ${price == null ? "text-neutral-500" : "text-neutral-100"}`}>
+            <div
+              className={`text-3xl font-semibold tabular-nums transition-colors duration-300 ${
+                price == null ? "text-neutral-500" : tk.dir === "up" ? "text-emerald-300" : tk.dir === "down" ? "text-red-300" : "text-neutral-100"
+              }`}
+            >
               {fmt(price, decs)}
             </div>
-            <div className={`text-sm font-medium tabular-nums ${(d?.price.chgDayPct ?? 0) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-              {pct(d?.price.chgDayPct)} <span className="text-neutral-500">1D</span>
+            <div className={`text-sm font-medium tabular-nums ${(chgLive ?? 0) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+              {pct(chgLive)} <span className="text-neutral-500">1D</span>
             </div>
+            <span
+              className="flex items-center gap-1 rounded border border-neutral-800 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider"
+              title="Price refreshes every second from the live Coinglass feed (shared ~3s upstream cache)"
+            >
+              <span className={`h-1.5 w-1.5 rounded-full ${tk.live ? "animate-pulse bg-emerald-400" : "bg-amber-400"}`} />
+              <span className={tk.live ? "text-emerald-400" : "text-amber-400"}>{tk.live ? "live · 1s" : "reconnecting"}</span>
+            </span>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs sm:grid-cols-4">

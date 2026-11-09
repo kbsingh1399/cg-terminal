@@ -31,8 +31,9 @@ Under the hood:
 - **Notification scanner** — computes signals + indicator events + whale
   walls + sweep setups + CVD divergences server-side and pushes them to the
   Alerts tab, `GET /api/cg/notifications`, and the SSE stream
-  `GET /api/cg/stream`.
-- **MCP server** (`mcp/server.mjs`) — 9 tools incl. `analyze_setup` for
+  `GET /api/cg/stream`. For a real-time price in any analysis, poll
+  `GET /api/cg/ticker?sym=BTC` (1 s-safe, shared upstream cache).
+- **MCP server** (`mcp/server.mjs`) — 10 tools incl. `analyze_setup` for
   one-call trade formulation.
 
 ## 2. Prerequisites
@@ -143,9 +144,10 @@ src/lib/cg/client.ts + crypto.ts        one shared cached client
  │ cg-signals.ts    Coinglass signal engine (1:1 port) │
  └──────┬─────────────────────────────────────────────┘
         │
-src/app/api/cg/*      REST: market, signals, notifications, stream,
-                      fp, lto, largeorder, liqlevels, stopmap,
-                      bookwalls, cvd, kline, orderflow, engine, assets
+src/app/api/cg/*      REST: ticker (1s price), market, signals,
+                      notifications, stream, fp, lto, largeorder,
+                      liqlevels, stopmap, bookwalls, cvd, kline,
+                      orderflow, engine, assets
         │                          │
   UI (localhost:3000)      mcp/server.mjs (Antigravity)
 ```

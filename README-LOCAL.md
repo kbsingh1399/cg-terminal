@@ -113,13 +113,33 @@ day-window quadrant "Spot bid" = their "Spot bid".
 
 | Route | Upstream calls (per refresh) | TTL cache |
 |---|---|---|
+| `/api/cg/ticker?sym` | 1× kline m1 (limit 2) | 3 s (`CG_TICKER_TTL_MS`) |
 | `/api/cg/fp?sym&itv&limit` | 4× orderFlow + 2× kline (+4× oi_kline) | 20–30 s |
 | `/api/cg/lto?minVolUsd` | 1× support + 14× largeTakerOrder/v3 | 10 min / 30 s |
 | `/api/cg/liqlevels?range&lvR` | 4× liquidationLevels/v2 | 60 s |
 | `/api/cg/stopmap?endTime` | 1× liqHeatMap v2 (24h window) | 30 s |
 | `/api/cg/bookwalls?market&interval&limit&band` | aggregate NDJSON stream + kline | 45 s |
 | `/api/cg/cvd?itv&limit&mode&anchor` | 2× tickers + 1× kline + 21× #bs_usd | 45 s |
+| `/api/cg/market?sym` | 4× kline (m15/h1/h4/d1) | 60 s |
 | `/api/cg/engine/status` · `/backfill` | store health / gap fill | — |
+
+### Live refresh cadence (what updates how fast)
+
+| Data | UI refresh | Server cache | Effectively live to |
+|---|---|---|---|
+| **Header price + Overview big price (all tabs)** | **1 s** | 3 s shared (`/api/cg/ticker`) | **≤ 4 s** |
+| Overview auction/EMA/RSI/VWAP | 30 s | 60 s | ~1 min |
+| Footprint signals & charts | 30–45 s | 20–30 s | ~1 min |
+| Whale open orders | 45 s | 30 s–10 min | ~1–2 min |
+| Liquidation levels | 45 s | 60 s | ~2 min |
+| Stops map | 60 s | 30 s | ~2 min |
+| Book walls / CVD | 45–60 s | 45 s | ~2 min |
+| Alerts feed | **push (SSE)** the moment detected | — | seconds |
+
+The price feed reads the forming m1 candle close from Coinglass — the
+same number their site charts show — so the header ticks every second
+while staying gentle on upstream (one shared fetch per ~3 s regardless
+of how many tabs or agents poll).
 
 Scalability properties:
 
