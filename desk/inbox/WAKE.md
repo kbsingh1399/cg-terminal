@@ -145,3 +145,6 @@ CONSTRAINTS: no changes to desk_round.py, desk/alerts.json schema, or state.json
 
 ## 2026-11-10 18:28 UTC — ALERT A10 — outbox-reply
 - BELL: atg replied to directive (2026-11-10T18-12-00_DIR-0006-local-alerts.reply.md) — zai-desk to verify on next wake
+
+## 2026-11-10 18:53 UTC — ALERT A6 — expiry
+- execute DIR-0005 (cancel) then BELL: BTC order expired+cancelled
