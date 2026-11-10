@@ -108,6 +108,21 @@ async function gitSync() {
   return p.code === 0 ? "pulled" : `pull failed: ${p.err}`;
 }
 
+// ---------------- bash resolver (prefers Git Bash over WSL on Windows) ----------------
+function resolveBash() {
+  if (process.platform === "win32") {
+    const candidates = [
+      "C:\\Users\\SIGMA\\AppData\\Local\\hermes\\git\\bin\\bash.exe",
+      "C:\\Program Files\\Git\\bin\\bash.exe",
+      "C:\\Program Files (x86)\\Git\\bin\\bash.exe",
+    ];
+    for (const c of candidates) {
+      if (existsSync(c)) return c;
+    }
+  }
+  return "bash";
+}
+
 // ---------------- notifications / wake ----------------
 function spawnDetached(cmd, args = []) {
   try {
@@ -121,9 +136,9 @@ function spawnDetached(cmd, args = []) {
 function notify(title, text) {
   if (cfg.notify_cmd === "") return;
   if (cfg.notify_cmd && cfg.notify_cmd !== "auto") {
-    spawnDetached(`${cfg.notify_cmd} "${title}: ${text}"`);
+    spawnDetached(`${cfg.notify_cmd} "${title}" "${text}"`);
   } else if (process.platform === "win32") {
-    spawnDetached(`msg * "${title}: ${text}"`);
+    spawnDetached(`python scripts/bell_alert.py "${title}" "${text}"`);
   } else {
     spawnDetached("notify-send", [title, text]);
   }
@@ -159,7 +174,7 @@ async function runRound(force = false) {
   } catch { /* fall through */ }
   log(`analysis round due (last ${Math.round((Date.now() - lastKnown) / 60000)} min ago) — running desk_round.sh`);
   appendFileSync("desk/rounds.local.log", `\n===== ${new Date().toISOString()} daemon round =====\n`);
-  const r = await sh("bash", ["scripts/desk_round.sh"], {
+  const r = await sh(resolveBash(), ["scripts/desk_round.sh"], {
     timeout: 600_000,
     env: { ...process.env, DESK_BOOT_CMD: cfg.terminal_boot_cmd },
   });

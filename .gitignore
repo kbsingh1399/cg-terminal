@@ -48,6 +48,9 @@ local-*
 *.log
 dev.log
 dev.out.log
+__pycache__/
+*.pyc
+scripts/*.png
 test
 prompt
 
