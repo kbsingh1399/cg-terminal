@@ -155,3 +155,29 @@ entries. All timestamps UTC.
 - R7-LTC-1 (LTC SHORT, R 4.3, debate 6/0): BROKER BLOCKED — basis +0.841% (>0.5%) AND spread 2.40% (>0.15%). Skip; re-check each round.
 - R4-DOGE-3 (DOGE SHORT, R 4.5, debate 4/1): BROKER BLOCKED — no tick (symbol name TBD, DIR-0003).
 - Role split (user directive 16:44): USER places manually at MT5 · atg-exec VERIFIES (reply contract on the placement card) · zai-desk runs rounds + arbitration.
+
+### EXEC · 2026-11-10 17:02 UTC · atg-exec — XAUUSD test position closed
+- User closed Ticket 209400100 (BUY 0.01 XAUUSD @ 4022.68) manually in MT5.
+- Realized PnL: -$4.46. Account flat: balance $4,649.96, equity $4,649.96, margin 0.
+- MT5 live broadcast verified in desk/mt5.json on 45s daemon cycle.
+## R9 · 2026-11-10 17:01 UTC · zai-desk
+
+**Market**: BTC 72,990.5 (-3.1%)  ETH 2,022.32 (-5.2%)  SOL 82.07 (-5.3%)  XAU 4,029.34 (-2.8%)  XAG 51.400 (-3.9%)
+**Bias (|score|≥2)**: BTC-7  ADA-4  DOGE-6  LTC-6  XAG-4  BNB-3  SOL-2  AVAX-2  LINK-2
+
+### Opportunities (engine v3 — debate-gated, min R 2.0)
+- NEW R9-ADA-1 ADA SHORT limit 0.1773 · stop 0.1796 · T1 0.1702 · T2 0.1692 · T3 0.1678 · R 3.0
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.1725 vs 0.1758), h4 RSI 37.0, day -2.8%
+      [FOR    ] footprint: bull 41 / bear 60; recent: none <6h
+      [FOR    ] liquidation: long-liq magnet 0.1702 (str 92, ~$4M est, -1.36%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.144 (5m ago -0.228, rising bids); bid $0.01B vs ask $0.02B
+      [FOR    ] cvd: taker buy 48.5%, perpCvd -23, spotCvd -4, quadrant both-selling, latestDiv bull (stale/none)
+
+### Order lifecycle
+- R4-BTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R4-DOGE-3 re-debated: FOR 5/AGAINST 0 — stands
+- R7-LTC-1 re-debated: FOR 5/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
