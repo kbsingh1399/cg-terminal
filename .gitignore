@@ -70,3 +70,6 @@ data/*
 /download/
 /mini-services/
 /db/
+
+# session continuity notes (assistant memory, local only)
+/SESSION-MEMORY.md

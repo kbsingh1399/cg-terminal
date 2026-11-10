@@ -156,7 +156,18 @@ export interface KeyLevel {
   venues: string[];
 }
 
+/** Optional live reference for liqStats — see server-price.ts for why the
+ *  embedded candle close must NOT be trusted as "current price". */
+export interface LiqStatsRef {
+  /** live market price — overrides the embedded candle close as the
+   *  side/distance reference when finite and > 0 */
+  livePrice?: number | null;
+  /** cluster-price rounding (asset priceDecs); default 1 (legacy behavior) */
+  priceDecs?: number;
+}
+
 export interface LiqStats {
+  /** the reference price actually used (live when provided) */
   last: number;
   keyLevels: { above: KeyLevel[]; below: KeyLevel[] };
   totals: { shorts: number; longs: number; rows: number };
@@ -166,7 +177,7 @@ export interface LiqStats {
 }
 
 /** Their keyLevels/bands/levTiers in one pass. gran = 0 keeps every level. */
-export function liqStats(model: LiqModel, lvR: number): LiqStats {
+export function liqStats(model: LiqModel, lvR: number, ref?: LiqStatsRef): LiqStats {
   const gMin = model.gMin;
   const dp = model.dp;
   const rowOf = (p: number) => Math.min(ROWS - 1, Math.max(0, Math.floor((p - gMin) / dp)));
@@ -187,7 +198,12 @@ export function liqStats(model: LiqModel, lvR: number): LiqStats {
     rowVenues[r].add(lv.venue);
   }
 
-  const price = model.c[model.n - 1];
+  // Reference price: LIVE market price when provided (the embedded candle
+  // close can lag minutes behind — that misassigned above/below sides and
+  // fired false "approaching cluster" alerts); embedded close as fallback.
+  const live = ref?.livePrice;
+  const price = Number.isFinite(live as number) && (live as number) > 0 ? (live as number) : model.c[model.n - 1];
+  const decs = ref?.priceDecs ?? 1;
   const a = rowOf(price);
   const rowsWith: number[] = [];
   for (let r = 0; r < ROWS; r++) if (active[r] > 0) rowsWith.push(r);
@@ -202,7 +218,7 @@ export function liqStats(model: LiqModel, lvR: number): LiqStats {
     const lev = activeLev[r][0] >= activeLev[r][1] && activeLev[r][0] >= activeLev[r][2] ? 0 : activeLev[r][1] >= activeLev[r][2] ? 1 : 2;
     return {
       side,
-      price: +p.toFixed(1),
+      price: +p.toFixed(decs),
       distPct: +(((p - price) / price) * 100).toFixed(2),
       lev: (["High", "Mid", "Low"] as const)[lev],
       strength: +((100 * active[r]) / mx).toFixed(1),

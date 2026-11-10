@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import { buildLiqModel, liqStats, type RawLiqPayload, type LiqStats } from "@/lib/cg/liq-model";
-import { isAsset, liqVenues } from "@/lib/cg/assets";
+import { isAsset, liqVenues, assetOf } from "@/lib/cg/assets";
+import { getLivePrice } from "@/lib/live/server-price";
 import type { LiquidationLevel } from "@/lib/cg/types";
 
 export const dynamic = "force-dynamic";
@@ -57,7 +58,11 @@ export async function GET(req: NextRequest) {
     if (!model) {
       return NextResponse.json({ ok: false, error: "no usable price series" }, { status: 502 });
     }
-    const stats: LiqStats = liqStats(model, lvR);
+    // Anchor sides/distances to the LIVE market price — the payload's embedded
+    // candle close can lag minutes behind the market (verified: false
+    // "approaching" distances on XRP/ADA). stats.last reports the price used.
+    const live = await getLivePrice(sym).catch(() => null);
+    const stats: LiqStats = liqStats(model, lvR, { livePrice: live?.price ?? null, priceDecs: assetOf(sym)?.priceDecs });
 
     return NextResponse.json({
       ok: true,

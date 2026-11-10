@@ -32,6 +32,7 @@ import { loadFpBars } from "./fp-load";
 import { buildMarketSnapshot, type MarketSnapshot } from "./market";
 import { buildLiqModel, liqStats, type RawLiqPayload, type KeyLevel } from "./liq-model";
 import { ASSETS, assetOf, liqVenues } from "./assets";
+import { getLivePrice } from "../live/server-price";
 import { emit, type CgNotification } from "./notify";
 import { fmtAssetPrice } from "./assets";
 
@@ -338,6 +339,17 @@ async function scanWhale(sym: string) {
     exchanges.map((ex) => cgGet(`/api/largeTakerOrder/v3?exchange=${encodeURIComponent(ex)}&symbol=${encodeURIComponent(sym)}&market=all&limit=3000&minVolUsd=1000000`, 5 * 60_000, FAPI))
   );
   const at = Date.now();
+  // Live market price — the plausibility anchor: a RESTING ask must sit at or
+  // above the market, a RESTING bid at or below (±0.5% tolerance for venue/
+  // spot-vs-perp drift). The upstream feed also carries already-filled or
+  // cancelled orders far from market (e.g. "ask walls" 15% BELOW price) —
+  // those are stale and must not become alerts or skew the imbalance.
+  const liveP = (await getLivePrice(sym).catch(() => null))?.price ?? null;
+  const plausible = (side: number, price: number): boolean => {
+    if (liveP == null || !(price > 0)) return true; // no reference — legacy behavior
+    const rel = (price - liveP) / liveP;
+    return side === 0 ? rel <= 0.005 && rel >= -0.1 : rel >= -0.005 && rel <= 0.1;
+  };
   let bidUsd = 0;
   let askUsd = 0;
   let orders = 0;
@@ -352,12 +364,15 @@ async function scanWhale(sym: string) {
     for (const grp of r.value as LtoRawGroup[]) {
       for (const o of grp.list ?? []) {
         if (!(o.currentUsd >= 1_000_000)) continue;
+        if (!plausible(o.side, o.price)) continue; // stale/impossible resting order
         if (firstPrice == null) firstPrice = o.price;
         orders++;
         if (o.side === 0) bidUsd += o.currentUsd;
         else askUsd += o.currentUsd;
-        // price bins 0.2% wide for walls
-        const bin = firstPrice != null ? Math.round((Math.log(o.price / firstPrice) / Math.log(1.002))) : Math.round(o.price);
+        // price bins 0.2% wide for walls — anchored to the LIVE price when
+        // available (deterministic), else the first observed order price
+        const anchor = liveP ?? firstPrice;
+        const bin = anchor != null ? Math.round((Math.log(o.price / anchor) / Math.log(1.002))) : Math.round(o.price);
         const m = o.side === 0 ? bidBins : askBins;
         m.set(bin, (m.get(bin) ?? 0) + o.currentUsd);
         if (o.currentUsd >= 10_000_000) {
@@ -375,7 +390,7 @@ async function scanWhale(sym: string) {
   if (!orders || firstPrice == null) return;
 
   const topOf = (m: Map<number, number>, k: number) =>
-    [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, k).map(([bin, usd]) => ({ price: firstPrice! * Math.pow(1.002, bin), usd }));
+    [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, k).map(([bin, usd]) => ({ price: (liveP ?? firstPrice!) * Math.pow(1.002, bin), usd }));
   const topBids = topOf(bidBins, 3);
   const topAsks = topOf(askBins, 3);
 
@@ -423,7 +438,10 @@ async function scanLiq(sym: string) {
   });
   const model = buildLiqModel(vs);
   if (!model) return;
-  const stats = liqStats(model, 4);
+  // Anchor sides/distances to the LIVE price — the payload's embedded candle
+  // close can lag minutes behind (false "approaching cluster" alerts).
+  const live = await getLivePrice(sym).catch(() => null);
+  const stats = liqStats(model, 4, { livePrice: live?.price ?? null, priceDecs: assetOf(sym)?.priceDecs });
   S.liq.set(sym, { sym, last: stats.last, topAbove: stats.keyLevels.above, topBelow: stats.keyLevels.below, totals: stats.totals, updatedAt: Date.now() });
 
   if (!st.liqPrimed) {
@@ -433,7 +451,7 @@ async function scanLiq(sym: string) {
   // sweep setup: price within 1.2% of a ≥60-strength cluster
   for (const lv of [...stats.keyLevels.above.slice(0, 3), ...stats.keyLevels.below.slice(0, 3)]) {
     if (lv.strength < 60 || lv.distPct > 1.2) continue;
-    const key = `${sym}|${lv.side}|${Math.round(lv.price)}`;
+    const key = `${sym}|${lv.side}|${lv.price.toFixed(assetOf(sym)?.priceDecs ?? 1)}`;
     const lastN = st.liqNotified.get(key) ?? 0;
     if (Date.now() - lastN < 2 * 3_600_000) continue;
     st.liqNotified.set(key, Date.now());
