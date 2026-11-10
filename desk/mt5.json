@@ -1,5 +1,5 @@
 {
-  "ts": 1794326658050,
+  "ts": 1794326983857,
   "error": null,
   "account": {
     "login": 11808165,
@@ -34,10 +34,10 @@
   "spreads": {
     "ADAUSD": {
       "ok": true,
-      "bid": 0.1715,
-      "ask": 0.1753,
+      "bid": 0.1716,
+      "ask": 0.1754,
       "spreadPoints": 38.0,
-      "spreadPct": 2.1915,
+      "spreadPct": 2.1902,
       "tradeAllowed": true,
       "asset": "ADA",
       "perpMid": null,
@@ -63,10 +63,10 @@
     },
     "BTCUSD": {
       "ok": true,
-      "bid": 73279.82,
-      "ask": 73300.92,
-      "spreadPoints": 2110.0,
-      "spreadPct": 0.0288,
+      "bid": 73252.46,
+      "ask": 73276.15,
+      "spreadPoints": 2369.0,
+      "spreadPct": 0.0323,
       "tradeAllowed": true,
       "asset": "BTC",
       "perpMid": null,
@@ -88,10 +88,10 @@
     },
     "ETHUSD": {
       "ok": true,
-      "bid": 2028.16,
-      "ask": 2029.04,
-      "spreadPoints": 88.0,
-      "spreadPct": 0.0434,
+      "bid": 2027.43,
+      "ask": 2027.98,
+      "spreadPoints": 55.0,
+      "spreadPct": 0.0271,
       "tradeAllowed": true,
       "asset": "ETH",
       "perpMid": null,
@@ -113,10 +113,10 @@
     },
     "LTCUSD": {
       "ok": true,
-      "bid": 50.0,
-      "ask": 51.21,
+      "bid": 50.06,
+      "ask": 51.27,
       "spreadPoints": 121.0,
-      "spreadPct": 2.3911,
+      "spreadPct": 2.3882,
       "tradeAllowed": true,
       "asset": "LTC",
       "perpMid": null,
@@ -138,10 +138,10 @@
     },
     "XAGUSD": {
       "ok": true,
-      "bid": 51.562,
-      "ask": 51.617,
+      "bid": 51.541,
+      "ask": 51.596,
       "spreadPoints": 55.0,
-      "spreadPct": 0.1066,
+      "spreadPct": 0.1067,
       "tradeAllowed": true,
       "asset": "XAG",
       "perpMid": null,
@@ -159,8 +159,8 @@
     },
     "XAUUSD": {
       "ok": true,
-      "bid": 4044.4,
-      "ask": 4044.78,
+      "bid": 4042.26,
+      "ask": 4042.64,
       "spreadPoints": 38.0,
       "spreadPct": 0.0094,
       "tradeAllowed": true,
@@ -179,25 +179,8 @@
       }
     },
     "XRPUSD": {
-      "ok": true,
-      "bid": 1.0409,
-      "ask": 1.0419,
-      "spreadPoints": 10.0,
-      "spreadPct": 0.096,
-      "tradeAllowed": true,
-      "asset": "XRP",
-      "perpMid": null,
-      "basisPct": null,
-      "spec": {
-        "contractSize": 100.0,
-        "volumeMin": 0.01,
-        "volumeStep": 0.01,
-        "volumeMax": 1000.0,
-        "tickValue": 0.01,
-        "tickSize": 0.0001,
-        "stopsLevelPoints": 1,
-        "currencyProfit": "USD"
-      }
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
     }
   }
 }
