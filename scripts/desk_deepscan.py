@@ -173,10 +173,17 @@ def fp_forensics(sym, fp, price):
 
 
 # ------------------------------------------------- 9 · trade construction
-def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias):
-    """Section 9 — construct limit-trade candidates + evidence manifest.
-    Every tab fetched in fetch_all() MUST appear in the manifest, whatever the
-    verdict (candidate / PARKED / REJECTED / NO-TRADE). Returns md lines."""
+def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=0):
+    """Section 9 — construct limit-trade candidates + FULL justification (v3).
+    (a) construction: entry-zone confluence, structural stop, str≥40 magnet
+        targets, R≥2 gate, broker translation, sizing;
+    (b) 'WHY THIS TRADE' written narrative (thesis / entry / stop / targets /
+        size / invalidation) — explain, don't tabulate;
+    (c) evidence manifest: EVERY tab fetched in fetch_all() appears with a
+        reading, a verdict (✓ supports / ✗ opposes / ○ neutral) and a WRITTEN
+        justification tied to THIS trade's levels — no data point silently
+        dropped, whatever the outcome (PLACEABLE / PARKED / REJECTED /
+        NO-TRADE; rejections print their reason). Returns md lines."""
     L = []
     ap = L.append
     mt = d["mt5"] or {}
@@ -184,12 +191,26 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias):
     sp = (mt.get("spreads") or {}).get(f"{sym}USD") or {}
     basis, spread, spec = sp.get("basisPct"), sp.get("spreadPct"), sp.get("spec") or {}
     risk_usd = (eq * 0.005) if eq else None
+    # v3: construction state for the justification layer
+    entry = stop = m_entry = m_stop = None
+    tgts, m_tgts, zone = [], [], []
+    confl = status = stop_src = why_out = None
+    risk_dist = r1 = 0.0
+    lots = risk_act = None
+    # machine-readable trade card for auto-digest + WAKEUP broadcast (v3.1)
+    card = {"sym": sym, "status": None, "side": bias, "reason": None, "recovery": None,
+            "entry": None, "entry_b": None, "confl": None, "stop": None, "stop_b": None,
+            "stop_src": None, "tgts": [], "r1": None, "lots": None, "risk_usd": None,
+            "risk_pct": None, "basis": basis, "spread": spread, "caveat": None, "why": []}
 
     ap("")
     ap("## 9 · Limit-trade candidates — full construction (all tabs accounted)")
 
     if bias and not (price and vwap and sd1):
         ap(f"- **no candidate** — bias {bias} but core market data missing")
+        status, why_out = "NO-DATA", "core market data missing"
+        card["status"], card["reason"] = status, why_out
+        card["recovery"] = "re-run when terminal endpoints respond"
     elif bias:
         # ---- entry zone: confluence of pullback/discount levels beyond spot
         zone = []
@@ -210,6 +231,9 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias):
         if not zone:
             ap(f"- **no candidate** — bias {bias} but price is already beyond every attack "
                f"zone (chasing forbidden by playbook)")
+            status, why_out = "NO-ZONE", "price beyond every attack zone — chasing forbidden"
+            card["status"], card["reason"] = status, why_out
+            card["recovery"] = "re-scan on the next pullback — price must re-enter the attack zone; chasing is forbidden by the playbook"
         else:
             zone.sort(key=lambda t: abs(t[1] - price))
             entry_name, entry = zone[0]
@@ -241,6 +265,9 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias):
                           if near else "none at all")
                 ap(f"- **REJECTED** — bias {bias}, entry {fmt(sym, entry)} ({confl}) but NO magnet "
                    f"str≥40 on profit side ({near_s}) → no structural target, R unquantifiable")
+                status, why_out = "REJECTED", f"no magnet str≥40 on profit side ({near_s})"
+                card["status"], card["reason"] = status, why_out
+                card["recovery"] = "re-scan after a str≥40 magnet prints on the profit side — until then R is unquantifiable"
             else:
                 tgts = strong[:3]
                 t1 = tgts[0]["price"]
@@ -248,6 +275,11 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias):
                 if r1 < 2.0:
                     ap(f"- **REJECTED** — R to T1 = {r1:.2f} < 2.0 mandate "
                        f"(entry {fmt(sym, entry)}, stop {fmt(sym, stop)}, T1 {fmt(sym, t1)} str {tgts[0]['strength']:.0f})")
+                    status, why_out = "REJECTED", f"R to T1 {r1:.2f} < 2.0"
+                    card["status"], card["reason"] = status, why_out
+                    card["entry"], card["confl"], card["stop"], card["r1"] = entry, confl, stop, round(r1, 2)
+                    card["recovery"] = (f"re-check on σ-compression (tighter stop) or T1 extension — "
+                                        f"needs R ≥ 2.0, now {r1:.2f}")
                 else:
                     # ---- broker translation + gates
                     if basis is not None:
@@ -297,11 +329,92 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias):
                     if status.startswith("PLACEABLE"):
                         ap("  - next: fresh round-engine pass (debate gates + live basis stamp) → "
                            "DIR for manual MT5 placement")
+                    # ---- v3 mandate: WRITTEN justification, not just numbers
+                    ap("")
+                    ap("  **WHY THIS TRADE**")
+                    ap(f"  - *Thesis*: {ns}×{bias} vs {nl}×{'LONG' if bias == 'SHORT' else 'SHORT'} "
+                       f"scorecard · 24h footprint Δ {fnum(fpx.get('net24h'), 0)} "
+                       f"({'sell' if (fpx.get('net24h') or 0) < 0 else 'buy'}-dominant) · "
+                       f"CVD quadrant {(k or {}).get('quadrant', '?')} → "
+                       f"{'sellers' if bias == 'SHORT' else 'buyers'} control the tape — we work the "
+                       f"{bias} only from the pullback zone, never at market.")
+                    zc = ""
+                    if price and vwap and sd1:
+                        zc = f" (spot {fmt(sym, price)} sits {(price - vwap) / sd1:+.2f}σ vs VWAP)"
+                    ap(f"  - *Entry {fmt(sym, entry)}*: {confl} — nearest confluence of "
+                       f"{', '.join(n for n, _ in zone)}{zc}; that is "
+                       f"{(entry / price - 1) * 100:+.2f}% away — a paid-for "
+                       f"{'bounce into supply' if bias == 'SHORT' else 'dip into demand'}, not a chase.")
+                    shield_txt = "" if "VWAP" in (stop_src or "") else " + VWAP±2σ shield"
+                    ap(f"  - *Stop {fmt(sym, stop)}*: {stop_src}{shield_txt} → 1R = "
+                       f"{fnum(risk_dist, 4)}; the idea is wrong only if price "
+                       f"{'reclaims the 2σ premium band' if bias == 'SHORT' else 'loses the 2σ discount band'}, "
+                       f"not on noise." + (f" Broker stop {fmt(sym, m_stop)}." if m_stop else ""))
+                    if tgts:
+                        tstr = " · ".join(
+                            f"T{i + 1} {fmt(sym, t['price'])} str {t['strength']:.0f} "
+                            f"(~${fnum((t.get('usd') or 0) * t['price'] / 1e6, 0)}M est)"
+                            for i, t in enumerate(tgts))
+                        ap(f"  - *Targets*: liquidation-magnet clusters (engine rule str≥40) — {tstr}; "
+                           f"price is structurally drawn there to unwind that leverage.")
+                    ap("  - *Size*: 0.5% equity mandate → "
+                       + (f"{fnum(lots, 2)} lots risks ${fnum(risk_act, 2)} of ${fnum(eq, 2)}."
+                          if lots and risk_act else "computed at placement (broker spec pending)."))
+                    risks = []
+                    dv_ = fpx.get("div")
+                    if dv_ and ("BULLISH" in dv_) == (bias == "SHORT"):
+                        risks.append(f"{dv_} = counter-trend pressure live → limit-only, cancel if it persists")
+                    fr_ = ((d["funding"] or {}).get("aggregate") or {}).get("fundingPct8h")
+                    if fr_ is not None and fr_ < -0.003 and bias == "SHORT":
+                        risks.append("shorts pay funding (crowded-short squeeze fuel)")
+                    tot_ = ((d["liq"] or {}).get("stats") or {}).get("totals") or {}
+                    if bias == "SHORT" and tot_.get("short") and tot_.get("long") and \
+                            tot_["short"] > 1.2 * tot_["long"]:
+                        risks.append(f"short-squeeze fuel {fnum(tot_['short'] / max(tot_['long'], 1e-9), 1)}× longs")
+                    risks.append("all desk candidates share one risk-off tape — cap NEW entries at 1-2")
+                    ap("  - *Invalidation*: " + "; ".join(risks) + ".")
+                    # ---- fill trade card (digest + broadcast layer)
+                    card["status"] = status
+                    card["reason"] = (why.strip(" —") or None) if "PLACEABLE" not in status else None
+                    card["entry"], card["entry_b"], card["confl"] = entry, m_entry, confl
+                    card["stop"], card["stop_b"], card["stop_src"] = stop, m_stop, stop_src
+                    card["tgts"] = [{"price": lv["price"], "str": round(lv.get("strength") or 0),
+                                     "usd_m": fnum((lv.get("usd") or 0) * lv["price"] / 1e6, 0)} for lv in tgts]
+                    card["r1"] = round(r1, 2)
+                    card["lots"], card["risk_usd"] = lots, risk_act
+                    if risk_act and eq:
+                        card["risk_pct"] = round(risk_act / eq * 100, 2)
+                        if card["risk_pct"] > 0.5:
+                            card["caveat"] = (f"lot-step/min-lot floor makes real risk {card['risk_pct']}% "
+                                              f"> 0.5% mandate — SKIP unless the user explicitly accepts")
+                    if "feed dead" in status:
+                        card["recovery"] = "needs the broker feed restored (DIR-0003) — levels stay valid on the perp side"
+                    else:
+                        card["recovery"] = (f"re-check when |basis| ≤ 0.5% and spread ≤ 0.15% "
+                                            f"(now basis {basis:+.3f}% / spread {fnum(spread, 3)}%)")
+                    card["why"] = [
+                        f"Thesis: {ns}×{bias} vs {nl}×{'LONG' if bias == 'SHORT' else 'SHORT'} scorecard · "
+                        f"24h Δ {fnum(fpx.get('net24h'), 0)} ({'sell' if (fpx.get('net24h') or 0) < 0 else 'buy'}-dominant) · "
+                        f"CVD quadrant {(k or {}).get('quadrant', '?')}",
+                        f"Entry {fmt(sym, entry)} ({confl}, {(entry / price - 1) * 100:+.2f}% from spot): a paid-for "
+                        f"{'bounce into supply' if bias == 'SHORT' else 'dip into demand'} — never chase",
+                        f"Stop {fmt(sym, stop)} ({stop_src}): the idea is wrong only beyond the "
+                        f"{'2σ premium band' if bias == 'SHORT' else '2σ discount band'}, not on noise",
+                        "Targets: " + " · ".join(f"T{i + 1} {fmt(sym, t['price'])} str{t['strength']:.0f}"
+                                                  for i, t in enumerate(tgts)) +
+                        " (liquidation magnets price is structurally drawn to unwind)",
+                        "Size: " + (f"{fnum(lots, 2)} lots → ${fnum(risk_act, 2)} = {card['risk_pct']}% of ${fnum(eq, 2)}"
+                                    if lots and risk_act else "computed at placement (broker spec pending)"),
+                        "Invalidation: " + "; ".join(risks),
+                    ]
     else:
         ap("- **no candidate** — NO-TRADE verdict (§8 dimensions disagree). "
            "Manifest below still accounts for every tab.")
+        status, why_out = "NO-TRADE", "scorecard dimensions disagree"
+        card["status"], card["reason"] = status, why_out
+        card["recovery"] = "re-scan after the next impulse or when 2+ dimensions flip — do not force setups in a transition tape"
 
-    # ---- evidence manifest: EVERY fetched tab, no gaps
+    # ---- evidence manifest v3: EVERY fetched tab, verdict + WRITTEN justification
     m = d["market"] or {}
     ema, rsi = m.get("ema") or {}, m.get("rsi") or {}
     mon = (m.get("auction") or {}).get("month") or {}
@@ -311,78 +424,381 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias):
         return "▲" if e.get("e13", 0) > e.get("e89", 0) > e.get("e233", 0) else (
             "▼" if e.get("e13", 0) < e.get("e89", 0) < e.get("e233", 0) else "◆")
 
+    S = bias
+
+    def vv(sup):
+        """verdict: ✓ supports the bias, ✗ opposes, ○ neutral/context."""
+        if S is None or sup is None:
+            return "○"
+        return "✓" if sup else "✗"
+
     ap("")
-    ap("### Evidence manifest — every fetched tab accounted")
-    ap("| tab | reading | informs |")
-    ap("|---|---|---|")
-    ap(f"| market·EMA | {' '.join(stk(t) + t for t in ('m15', 'h1', 'h4', 'd1'))} | direction |")
-    ap(f"| market·RSI | h4 {fnum(rsi.get('h4'), 1)} · d1 {fnum(rsi.get('d1'), 1)} | momentum context |")
-    zstr = f"{(price - vwap) / sd1:+.2f}σ" if (price and vwap and sd1) else "?"
-    ap(f"| market·VWAP | {fmt(sym, vwap)} (σ1 {fmt(sym, sd1)}) · price {zstr} | entry zone + regime |")
+    ap("### Evidence manifest — every fetched tab, justified against THIS verdict")
+    ap("| tab | reading | ✓/✗ | justification — how it feeds the decision |")
+    ap("|---|---|---|---|")
+
+    # 1 · EMA stacks
+    reading1 = " ".join(stk(t) + t for t in ("m15", "h1", "h4", "d1"))
+    n_al = sum(1 for t in ("m15", "h1", "h4", "d1")
+               if stk(t) == ("▼" if S == "SHORT" else "▲")) if S else 0
+    if S:
+        v1 = vv(n_al >= 3)
+        j1 = (f"{n_al}/4 stacks aligned {S.lower()} — the pullback entry works WITH the higher-TF trend"
+              if n_al >= 3 else
+              f"only {n_al}/4 stacks aligned {S.lower()} — trend conviction partial: half-size or stand down")
+    else:
+        v1, j1 = "○", "mixed multi-TF stacks — a core reason the scorecard cannot resolve"
+    ap(f"| market·EMA | {reading1} | {v1} | {j1} |")
+
+    # 2 · RSI
+    r4 = rsi.get("h4")
+    if S and r4 is not None:
+        if S == "SHORT":
+            if r4 < 30:
+                v2, j2 = "✓", (f"h4 {fnum(r4, 1)} oversold — the bounce INTO our limit is the expected "
+                                "entry trigger; never chase the low")
+            elif r4 < 45:
+                v2, j2 = "✓", f"h4 {fnum(r4, 1)} weak momentum — room to extend lower once the pullback fades"
+            else:
+                v2, j2 = "✗", f"h4 {fnum(r4, 1)} recovering — bounce may overshoot the zone; wait for the level"
+        else:
+            if r4 > 70:
+                v2, j2 = "✓", (f"h4 {fnum(r4, 1)} overbought — the dip INTO our limit is the expected "
+                                "entry trigger; never chase the high")
+            elif r4 > 55:
+                v2, j2 = "✓", f"h4 {fnum(r4, 1)} strong momentum — room to extend higher once the pullback fades"
+            else:
+                v2, j2 = "✗", f"h4 {fnum(r4, 1)} still weak — bounce may fail before reaching the zone"
+    else:
+        v2, j2 = "○", f"h4 {fnum(r4, 1)} — momentum context only (no trade constructed)"
+    ap(f"| market·RSI | h4 {fnum(r4, 1)} · d1 {fnum(rsi.get('d1'), 1)} | {v2} | {j2} |")
+
+    # 3 · VWAP z-score
+    zsc = ((price - vwap) / sd1) if (price and vwap and sd1) else None
+    zstr = f"{zsc:+.2f}σ" if zsc is not None else "?"
+    if S == "SHORT" and zsc is not None:
+        v3_ = vv(zsc < 0)
+        j3 = (f"price {zstr} vs VWAP {fmt(sym, vwap)} — discount regime; "
+              + (f"entry {fmt(sym, entry)} re-tests fair value from below, where supply sits" if entry
+                 else "wait for the re-test of fair value from below"))
+    elif S == "LONG" and zsc is not None:
+        v3_ = vv(zsc > 0)
+        j3 = (f"price {zstr} vs VWAP {fmt(sym, vwap)} — premium regime; "
+              + (f"entry {fmt(sym, entry)} buys the pullback to fair value" if entry
+                 else "wait for the pullback to fair value"))
+    else:
+        v3_, j3 = "○", f"VWAP {fmt(sym, vwap)} (σ1 {fmt(sym, sd1)}) — location context only"
+    ap(f"| market·VWAP | {fmt(sym, vwap)} (σ1 {fmt(sym, sd1)}) · price {zstr} | {v3_} | {j3} |")
+
+    # 4 · day auction profile
+    if S and entry:
+        near4 = []
+        if day.get("vah") and abs(entry - day["vah"]) <= 0.4 * (sd1 or 1):
+            near4.append("VAH")
+        if day.get("poc") and abs(entry - day["poc"]) <= 0.4 * (sd1 or 1):
+            near4.append("day POC")
+        v4 = "✓"
+        j4 = (f"entry sits on the {'+'.join(near4)} — the value-area edge/POC is where mean-reversion "
+              f"supply defends; {'selling the re-entry into value' if S == 'SHORT' else 'buying the re-entry into value'}"
+              if near4 else "day POC/VAH/VAL confluence shapes the pullback zone")
+    else:
+        v4, j4 = "○", "day POC/VAH/VAL recorded — value context for any future construction"
     ap(f"| auction·day | POC {fmt(sym, day.get('poc'))} · VAH {fmt(sym, day.get('vah'))} · "
-       f"VAL {fmt(sym, day.get('val'))} | entry zone |")
-    ap(f"| auction·month | POC {fmt(sym, mon.get('poc'))} | higher-TF context |")
-    ap(f"| footprint·Δ | 6h {fnum(fpx['net6h'], 0)} · 24h {fnum(fpx['net24h'], 0)} | direction |")
+       f"VAL {fmt(sym, day.get('val'))} | {v4} | {j4} |")
+
+    # 5 · month auction profile
+    mpoc = mon.get("poc")
+    if mpoc and price:
+        side5 = "above" if mpoc > price else "below"
+        j5 = (f"month POC {fmt(sym, mpoc)} sits {side5} spot — higher-TF value "
+              + ("caps rallies (macro supply overhead)" if side5 == "above"
+                 else "floors dips (macro demand beneath)")
+              + " — context weight only")
+    else:
+        j5 = "month profile unavailable"
+    ap(f"| auction·month | POC {fmt(sym, mpoc)} | ○ | {j5} |")
+
+    # 6 · footprint delta
+    n24 = fpx.get("net24h") or 0
+    if S:
+        sup6 = (n24 < 0) if S == "SHORT" else (n24 > 0)
+        v6 = vv(sup6)
+        j6 = (f"24h Δ {fnum(n24, 0)} contracts {'sell' if n24 < 0 else 'buy'}-dominant — "
+              + ("confirms persistent sellers behind the bias" if sup6
+                 else "OPPOSES the bias — flow does not support this direction; stand down or half-size"))
+    else:
+        v6, j6 = "○", f"24h Δ {fnum(n24, 0)} — flow context for the NO-TRADE split"
+    ap(f"| footprint·Δ | 6h {fnum(fpx.get('net6h'), 0)} · 24h {fnum(n24, 0)} | {v6} | {j6} |")
+
+    # 7 · typed footprint events
     evts = fpx.get("events") or []
     last_ev = evts[-1]["what"].split(" (")[0] if evts else "none — clean tape"
-    ap(f"| footprint·events | {len(evts)} typed (12h) · last: {last_ev} | timing |")
-    ap(f"| footprint·Δdiv | {fpx.get('div') or 'none'} | timing (counter-pressure) |")
-    ap(f"| footprint·POCmigr | {fnum(fpx.get('pocSlope'), 2)} bp/bar | direction persistence |")
+    if evts and S:
+        last7 = evts[-1]
+        sell7 = "sell" in last7["what"]
+        lc7 = last7.get("c")
+        near7 = bool(entry and lc7 and abs(lc7 - entry) <= 0.03 * entry)
+        sup7 = sell7 if S == "SHORT" else (not sell7)
+        v7 = vv(sup7)
+        j7 = (f"last typed event {last7['what']} @ {fmt(sym, lc7)}"
+              + (" — liquidity was defended RIGHT AT our zone → strong level confirmation" if near7
+                 else f" — fresh {'sell' if sell7 else 'buy'}-side activity, timing context"))
+    elif evts:
+        v7, j7 = "○", f"{len(evts)} typed events 12h — timing context only (no trade constructed)"
+    else:
+        v7, j7 = "○", "clean tape — no fresh absorption/exhaustion to time against; levels + magnets carry the plan"
+    ap(f"| footprint·events | {len(evts)} typed (12h) · last: {last_ev} | {v7} | {j7} |")
+
+    # 8 · delta divergence
+    dv8 = fpx.get("div")
+    if dv8 and S:
+        bull8 = "BULLISH" in dv8
+        sup8 = bull8 if S == "LONG" else (not bull8)
+        v8 = vv(sup8)
+        j8 = (f"{dv8} — flow divergence confirms the {S} case" if sup8 else
+              f"{dv8} — counter-trend pressure is LIVE: limit-only at the premium zone, never market; "
+              f"cancel if it persists through the next impulse")
+    elif dv8:
+        v8, j8 = "○", f"{dv8} — recorded; no trade to apply it to"
+    else:
+        v8, j8 = "○", "no Δ-divergence — trend and flow agree"
+    ap(f"| footprint·Δdiv | {dv8 or 'none'} | {v8} | {j8} |")
+
+    # 9 · POC migration
+    sl9 = fpx.get("pocSlope") or 0
+    if S:
+        sup9 = (sl9 < 0) if S == "SHORT" else (sl9 > 0)
+        v9 = vv(sup9)
+        j9 = (f"value migrating {'DOWN: sellers persistent' if sl9 < 0 else 'UP: buyers persistent'} → "
+              + ("confirms direction persistence" if sup9 else "opposes the bias — value migrates against us"))
+    else:
+        v9, j9 = "○", "migration context only"
+    ap(f"| footprint·POCmigr | {fnum(sl9, 2)} bp/bar | {v9} | {j9} |")
+
+    # 10 · CVD + 11 · CVD divergence
     if k:
-        ap(f"| cvd | perp {fnum(k.get('perpCvd'), 0)} · spot {fnum(k.get('spotCvd'), 0)} · "
-           f"{k.get('quadrant', '?')} · taker-buy {fnum(k.get('buyRatio'), 1)}% | direction |")
+        pc10 = k.get("perpCvd") or 0
+        if S:
+            sup10 = (pc10 < 0) if S == "SHORT" else (pc10 > 0)
+            v10 = vv(sup10)
+            j10 = (f"quadrant {k.get('quadrant')}, taker-buy {fnum(k.get('buyRatio'), 1)}% — aggressor flow "
+                   f"{'sells' if pc10 < 0 else 'buys'} → {'confirms' if sup10 else 'OPPOSES'} who controls the tape")
+        else:
+            v10, j10 = "○", "quadrant context for the NO-TRADE split"
+        ap(f"| cvd | perp {fnum(pc10, 0)} · spot {fnum(k.get('spotCvd'), 0)} · "
+           f"{k.get('quadrant', '?')} · taker-buy {fnum(k.get('buyRatio'), 1)}% | {v10} | {j10} |")
         ld = k.get("latestDiv")
         if ld:
             fresh = (time.time() - ld.get("ts", 0) / 1000) / 3600 < 6
-            ap(f"| cvd·div | {ld.get('type')} ({'fresh' if fresh else 'stale'}) | timing |")
+            if S and fresh:
+                bear11 = "bear" in (ld.get("type") or "").lower()
+                sup11 = bear11 if S == "SHORT" else (not bear11)
+                v11 = vv(sup11)
+                j11 = (f"{ld.get('type')} @ {fmt(sym, ld.get('price'))} is FRESH → timing "
+                       f"{'confirms' if sup11 else 'warns against'} the entry window")
+            else:
+                v11, j11 = "○", (f"{ld.get('type')} @ {fmt(sym, ld.get('price'))} "
+                                 f"({'fresh' if fresh else 'stale'}) — no active timing weight")
+            ap(f"| cvd·div | {ld.get('type')} | {v11} | {j11} |")
         else:
-            ap("| cvd·div | none | — |")
+            ap("| cvd·div | none | ○ | no CVD divergence recorded |")
     else:
-        ap("| cvd | unavailable (venue gap) | — |")
-    ap(f"| signals·micro | bull {cnt.get('bullish', 0)} / bear {cnt.get('bearish', 0)} "
-       f"(24h events listed §3) | direction |")
-    fr = ((d["funding"] or {}).get("aggregate") or {}).get("fundingPct8h")
-    ap(f"| funding | {fnum(fr, 4)}%/8h OI-weighted | direction + squeeze risk |")
+        ap("| cvd | unavailable (venue gap) | ○ | no CVD — direction read relies on footprint + magnets |")
+
+    # 12 · typed micro signals
+    b12 = cnt.get("bullish", 0) or 0
+    s12 = cnt.get("bearish", 0) or 0
+    if S and (b12 + s12) > 0:
+        sup12 = (s12 > b12) if S == "SHORT" else (b12 > s12)
+        thin12 = abs(b12 - s12) / (b12 + s12) < 0.15
+        v12 = "○" if thin12 else vv(sup12)
+        j12 = (f"bull {b12} vs bear {s12} typed micro-events — "
+               + ("micro-flow leans our way" if sup12 else "micro-flow leans AGAINST the bias — flagged honestly")
+               + (" (margin thin → neutral weight)" if thin12 else ""))
+    else:
+        v12, j12 = "○", "no typed micro events — neutral"
+    ap(f"| signals·micro | bull {b12} / bear {s12} (24h events listed §3) | {v12} | {j12} |")
+
+    # 13 · funding
+    fr13 = ((d["funding"] or {}).get("aggregate") or {}).get("fundingPct8h")
+    if fr13 is not None and S:
+        if fr13 > 0.003:
+            v13 = vv(S == "SHORT")
+            j13 = f"+{fnum(fr13, 4)}%/8h — longs pay: crowded longs are liquidation fuel DOWN; shorts collect carry"
+        elif fr13 < -0.003:
+            v13 = vv(S == "LONG")
+            j13 = f"{fnum(fr13, 4)}%/8h — shorts pay: crowded shorts are squeeze fuel UP against a short"
+        else:
+            v13, j13 = "○", f"{fnum(fr13, 4)}%/8h neutral — no squeeze fuel either way"
+    else:
+        v13, j13 = "○", f"{fnum(fr13, 4)}%/8h — positioning context only"
+    ap(f"| funding | {fnum(fr13, 4)}%/8h OI-weighted | {v13} | {j13} |")
+
+    # 14 · open interest × price
     oagg = (d["oi"] or {}).get("aggregate") or {}
-    ap(f"| oi | ${fnum((oagg.get('oiUsd') or 0) / 1e9, 2)}B · Δ1h {fnum(oagg.get('oiDelta1hPct'), 2)}% · "
-       f"Δ24h {fnum(oagg.get('oiDelta24hPct'), 2)}% | direction |")
-    ap(f"| liq·magnets | above {len(kl.get('above') or [])} / below {len(kl.get('below') or [])} "
-       f"tracked (§5) | targets + stop extension |")
-    tot = ((d["liq"] or {}).get("stats") or {}).get("totals") or {}
-    if tot.get("short") and tot.get("long"):
-        div_ = 1 if sym in ("XAU", "XAG") else 1000
-        ap(f"| liq·squeeze | shorts {fnum(tot['short'] / div_, 1)}K vs longs {fnum(tot['long'] / div_, 1)}K "
-           f"({fnum(tot['short'] / max(tot['long'], 1e-9), 1)}×) | squeeze risk |")
+    d24_ = oagg.get("oiDelta24hPct")
+    chg14 = (m.get("price") or {}).get("chgDayPct") or 0
+    if d24_ is not None and S:
+        if chg14 < 0 and d24_ < 0:
+            combo14, sup14 = "price↓ + OI↓ → forced long liquidation", (S == "SHORT")
+        elif chg14 < 0 and d24_ > 0:
+            combo14, sup14 = "price↓ + OI↑ → fresh shorts entering (continuation fuel, squeeze risk)", (S == "SHORT")
+        elif chg14 > 0 and d24_ > 0:
+            combo14, sup14 = "price↑ + OI↑ → new longs (bull confirmation)", (S == "LONG")
+        else:
+            combo14, sup14 = "price↑ + OI↓ → short-covering (weak rally)", (S == "SHORT")
+        v14 = vv(sup14)
+        j14 = f"{combo14} → {'supports' if sup14 else 'opposes'} the {S} case"
     else:
-        ap("| liq·squeeze | totals unavailable | — |")
+        v14, j14 = "○", "OI context only"
+    ap(f"| oi | ${fnum((oagg.get('oiUsd') or 0) / 1e9, 2)}B · Δ1h {fnum(oagg.get('oiDelta1hPct'), 2)}% · "
+       f"Δ24h {fnum(d24_, 2)}% | {v14} | {j14} |")
+
+    # 15 · liquidation magnets
+    ab15 = kl.get("above") or []
+    be15 = kl.get("below") or []
+    if S == "SHORT":
+        fuel15, grav15 = be15, ab15
+    elif S == "LONG":
+        fuel15, grav15 = ab15, be15
+    else:
+        fuel15, grav15 = [], []
+    if S and entry:
+        if tgts:
+            v15 = "✓"
+            j15 = (f"{len(fuel15)} magnets on the profit side — T1 {fmt(sym, tgts[0]['price'])} str "
+                   f"{tgts[0]['strength']:.0f} (~${fnum((tgts[0].get('usd') or 0) * tgts[0]['price'] / 1e6, 0)}M est) "
+                   f"is the structural target; {len(grav15)} magnets on the entry side give the pullback "
+                   f"somewhere to travel to")
+        else:
+            v15 = "✗"
+            j15 = "no magnet str≥40 on the profit side → no structural target → " + (why_out or "rejected")
+    else:
+        v15, j15 = "○", (f"{len(ab15)} above / {len(be15)} below tracked — magnet map recorded "
+                          "(no construction to attach)")
+    ap(f"| liq·magnets | above {len(ab15)} / below {len(be15)} tracked (§5) | {v15} | {j15} |")
+
+    # 16 · squeeze fuel
+    tot16 = ((d["liq"] or {}).get("stats") or {}).get("totals") or {}
+    if tot16.get("short") and tot16.get("long"):
+        div_ = 1 if sym in ("XAU", "XAG") else 1000
+        ratio16 = tot16["short"] / max(tot16["long"], 1e-9)
+        read16 = (f"shorts {fnum(tot16['short'] / div_, 1)}K vs longs {fnum(tot16['long'] / div_, 1)}K "
+                  f"({fnum(ratio16, 1)}×)")
+        if S and ratio16 > 1.2:
+            v16 = vv(S == "LONG")
+            j16 = ("short-squeeze fuel dominates — a squeeze would run a SHORT stop: stop discipline mandatory"
+                   if S == "SHORT" else "upside squeeze fuel accelerates LONG targets")
+        elif S and ratio16 < 0.8:
+            v16 = vv(S == "SHORT")
+            j16 = ("downside long-liquidation fuel dominates — accelerates SHORT targets"
+                   if S == "SHORT" else "long-liquidation fuel dominates — would run our LONG stop")
+        elif S:
+            v16, j16 = "○", "squeeze fuel balanced — no dominant side"
+        else:
+            v16, j16 = "○", "squeeze-fuel context for the NO-TRADE split"
+    else:
+        read16, v16, j16 = "totals unavailable", "○", "squeeze-fuel totals unavailable upstream"
+    ap(f"| liq·squeeze | {read16} | {v16} | {j16} |")
+
+    # 17 · whale walls (LTO)
     walls = []
     for g in (d["lto"] or {}).get("groups", []):
         for o in g.get("list", []):
             if (o.get("currentUsd") or 0) >= 5e6 and price and abs(o["price"] - price) / price < 0.04:
                 walls.append(o)
-    if walls:
-        w0 = max(walls, key=lambda o: o["currentUsd"])
-        side0 = "ASK" if w0.get("side") == 1 else "BID"
-        ap(f"| lto·walls | {len(walls)} ≥$5M in ±4% · biggest {side0} ${fnum(w0['currentUsd'] / 1e6, 1)}M "
-           f"@ {fmt(sym, w0['price'])} | stop protection / target |")
+    if walls and S:
+        w0 = max(walls, key=lambda o: o.get("currentUsd") or 0)
+        p0 = w0["price"]
+        m0 = (w0.get("currentUsd") or 0) / 1e6
+        is_ask = w0.get("side") == 1
+        read17 = f"{len(walls)} ≥$5M in ±4% · biggest {'ASK' if is_ask else 'BID'} ${fnum(m0, 1)}M @ {fmt(sym, p0)}"
+        if is_ask and p0 > (price or 0):
+            if S == "SHORT":
+                v17, j17 = "✓", (f"biggest wall ASK ${fnum(m0, 1)}M @ {fmt(sym, p0)} — caps the bounce toward "
+                                  "our entry (fill help) and defends overhead")
+            else:
+                v17, j17 = "✗", f"biggest wall ASK ${fnum(m0, 1)}M @ {fmt(sym, p0)} — supply overhead resists the LONG path"
+        elif (not is_ask) and p0 < (price or 0):
+            if S == "LONG":
+                v17, j17 = "✓", (f"biggest wall BID ${fnum(m0, 1)}M @ {fmt(sym, p0)} — floors the dip toward "
+                                  "our entry (fill help) and defends beneath")
+            else:
+                v17, j17 = "✗", f"biggest wall BID ${fnum(m0, 1)}M @ {fmt(sym, p0)} — demand beneath absorbs the SHORT push"
+        else:
+            v17, j17 = "○", (f"biggest wall ${fnum(m0, 1)}M @ {fmt(sym, p0)} sits on the profit side — "
+                             "may absorb the first touch; ladder exits")
+    elif walls:
+        read17 = f"{len(walls)} ≥$5M in ±4%"
+        v17, j17 = "○", "wall map recorded — no construction to attach"
     else:
-        ap("| lto·walls | none ≥$5M in ±4% | — |")
+        read17, v17, j17 = "none ≥$5M in ±4%", "○", "no whale walls near price — levels rely on magnets/σ bands"
+    ap(f"| lto·walls | {read17} | {v17} | {j17} |")
+
+    # 18 · book walls
     bwm = (d["book"] or {}).get("model") or {}
     if bwm:
-        ap(f"| bookwalls | imb {fnum(bwm.get('imbalance'), 3)} (5m ago {fnum(bwm.get('imbalance5mAgo'), 3)}) | fill likelihood |")
+        imb18 = bwm.get("imbalance")
+        imb5 = bwm.get("imbalance5mAgo")
+        read18 = f"imb {fnum(imb18, 3)} (5m ago {fnum(imb5, 3)})"
+        if S and imb18 is not None:
+            if S == "SHORT":
+                sup18 = (imb18 or 0) < 0
+                j18 = (f"imbalance {fnum(imb18, 3)} (5m ago {fnum(imb5, 3)}) — "
+                       + ("ask-heavy book → supply supports the short" if sup18
+                          else "bid-heavy book → dip demand may slow the decline; watch the zone"))
+            else:
+                sup18 = (imb18 or 0) > 0
+                j18 = (f"imbalance {fnum(imb18, 3)} (5m ago {fnum(imb5, 3)}) — "
+                       + ("bid-heavy book → demand supports the long" if sup18
+                          else "ask-heavy book → overhead supply may cap the rally; watch the zone"))
+            v18 = vv(sup18)
+        else:
+            v18, j18 = "○", "depth-imbalance context only"
     else:
-        ap("| bookwalls | unavailable | — |")
+        read18, v18, j18 = "unavailable", "○", "book model unavailable"
+    ap(f"| bookwalls | {read18} | {v18} | {j18} |")
+
+    # 19 · stopmap
     if sym == "BTC":
-        ap("| stopmap | stop heat above/below in §5 | stop-side context |")
+        ap("| stopmap | stop heat above/below in §5 | ○ | stop-cluster context — heat concentration warns "
+           "where stops get swept (BTC-only upstream) |")
     else:
-        ap("| stopmap | n/a — upstream BTC-only (known gap) | — |")
-    ap(f"| news | {len(d['news'])} items 24h (§6) | invalidation watch |")
+        ap("| stopmap | n/a — upstream BTC-only (known gap) | ○ | not fetched for this symbol — marked, not dropped |")
+
+    # 20 · news
+    nws = d["news"] or []
+    askn = sum(1 for n in nws if "ask wall" in (n.get("title") or "").lower())
+    bidn = sum(1 for n in nws if "bid wall" in (n.get("title") or "").lower())
+    if S and (askn or bidn):
+        if S == "SHORT":
+            v20 = vv(askn > bidn)
+            j20 = (f"{len(nws)} items 24h — {askn} whale-ASK-wall vs {bidn} BID flags: "
+                   + ("supply confirmed overhead" if askn > bidn else "demand reported beneath — caution"))
+        else:
+            v20 = vv(bidn > askn)
+            j20 = (f"{len(nws)} items 24h — {bidn} whale-BID-wall vs {askn} ASK flags: "
+                   + ("demand confirmed beneath" if bidn > askn else "supply reported overhead — caution"))
+    else:
+        v20, j20 = "○", f"{len(nws)} items 24h — invalidation watch only"
+    ap(f"| news | {len(nws)} items 24h (§6) | {v20} | {j20} |")
+
+    # 21 · broker gate
     if basis is not None:
-        ap(f"| broker | basis {basis:+.3f}% · spread {fnum(spread, 3)}% · "
-           f"{len(mt.get('positions') or [])} pos / {len(mt.get('orders') or [])} orders | gate + translation |")
+        ok21 = abs(basis) <= 0.5 and (spread if spread is not None else 9) <= 0.15
+        v21 = "✓" if ok21 else "✗"
+        j21 = (f"basis {basis:+.3f}% (translation {'negligible' if abs(basis) < 0.05 else 'MUST be applied to every level'}), "
+               f"spread {fnum(spread, 3)}% → "
+               + ("GATE PASSED — tradeable now" if ok21
+                  else "GATE FAILED — PARKED until basis/spread normalize (levels stay valid on the perp side)")
+               + ("; SHORT SL triggers on ASK — the real stop distance is the ask-side distance" if S == "SHORT" else ""))
+        read21 = (f"basis {basis:+.3f}% · spread {fnum(spread, 3)}% · "
+                  f"{len(mt.get('positions') or [])} pos / {len(mt.get('orders') or [])} orders")
     else:
-        ap("| broker | feed dead (no tick — DIR-0003) | gate — PARKED |")
-    return L
+        read21, v21, j21 = "feed dead (no tick — DIR-0003)", "✗", \
+            "cannot translate levels or check spread → PARKED, not pitched"
+    ap(f"| broker | {read21} | {v21} | {j21} |")
+    return L, card
 
 
 # ------------------------------------------------------------------ report
@@ -672,11 +1088,12 @@ def deep_report(sym):
     else:
         ap("- **NO-TRADE**: dimensions disagree — this is a transition/range tape; "
            "playbook says do not force setups. Re-scan after the next impulse or when a dimension flips 2+ votes.")
-    L.extend(build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias))
+    tl, card = build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, n_short, n_long)
+    L.extend(tl)
     ap("")
     ap("> honesty: liq clusters, whale walls, stopmap and squeeze-fuel figures are Coinglass *estimates*; "
        "footprint volumes are 4-venue perp aggregates (XAU/XAG venues may differ). All numbers from live terminal pulls.")
-    return "\n".join(L), d["errors"]
+    return "\n".join(L), d["errors"], card
 
 
 # ------------------------------------------------------------------ main

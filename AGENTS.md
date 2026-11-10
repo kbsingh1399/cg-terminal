@@ -52,6 +52,12 @@ rules, git conflict discipline. Quick version:
   punch MT5 orders, write back `status`/`ticket`/`actualEntry`, mirror
   open positions into `positions[]`, append `EXEC` entries to
   `desk/log.md`, then clear the handled WAKE sections and push.
+- **zai-desk pushes EVERY reply/digest to WAKE.md too** (user directive
+  2026-11-10 18:55 UTC): 360° digests, trade-list summaries, verdicts —
+  not only directives and suggested orders. Treat any `## <ts> — zai-desk`
+  digest section as required reading on activation: it carries the
+  complete limit-trade list with justifications and may reference
+  `desk/deepscan/DIGEST-<ts>.md`. Clear it once read (log a DIALOG ack).
 - `config` in `state.json` belongs to the human; never edit it.
 - Never force-push; always `git pull --rebase` before editing.
 

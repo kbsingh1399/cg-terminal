@@ -1,10 +1,12 @@
 # CHECKLIST-360 · Master checklist for a 360° deep-research run
 
-v1.1 · 2026-11-10 · owner: zai-desk · engine: v3.2 · review: after every 10 runs or on data-source change
+v1.2 · 2026-11-10 · owner: zai-desk · engine: v3.2 · review: after every 10 runs or on data-source change
 
 **360° = all 12 assets × 8 dimensions × every data point the terminal exposes,
-ending in a fully constructed limit-trade list with per-tab evidence manifests —
-no data point may be silently dropped (user mandate 2026-11-10).**
+ending in a fully constructed limit-trade list where EVERY tab carries a verdict
+(✓/✗/○) and a WRITTEN justification tied to the trade's levels, plus a
+"WHY THIS TRADE" narrative — no data point may be silently dropped, no
+number may go unexplained (user mandate 2026-11-10, reinforced 18:55 UTC).**
 Universe: BTC · ETH · SOL · BNB · XRP · ADA · AVAX · DOGE · LINK · LTC · XAU · XAG
 Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
@@ -49,7 +51,8 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 - [ ] **7 Broker state** — basis/spread → TRADEABLE or BLOCKED · live positions + pending orders on the symbol
 - [ ] **8 Synthesis** — 8-dimension scorecard (bias / h4 EMA / d1 EMA / CVD / footprint Δ24h / signals / funding / OI×price) → **bias** (net ≥3 votes) or **NO-TRADE** + attack zone + magnet targets
 - [ ] **9 Limit-trade candidates** — full construction per asset: entry zone confluence (day POC / VWAP±1σ / VAH-VAL), structural stop (VWAP±2σ, extended past str≥40 opposing magnet), targets (str≥40 magnets, R≥2.0 gate), size from broker spec (0.5% equity mandate — flag min-lot violations), broker translation (`mt5Level = perpLevel×(1+basis/100)`, SHORT SL on ASK), status PLACEABLE / PARKED (broker) / REJECTED (geometry, reason printed)
-- [ ] **9 Evidence manifest** — EVERY fetched tab appears with reading + role (market·EMA/RSI/VWAP · auction day+month · footprint Δ/events/Δdiv/POC-migr · cvd+div · signals · funding · oi · liq·magnets/squeeze · lto·walls · bookwalls · stopmap (n/a marked for non-BTC) · news · broker) — including for NO-TRADE / REJECTED / PARKED outcomes
+- [ ] **9 WHY THIS TRADE** — written narrative per constructed candidate: Thesis (scorecard + Δ + CVD) · Entry (why this confluence, distance from spot) · Stop (why beyond this band/magnet, what invalidates vs noise) · Targets (why these magnet clusters) · Size · Invalidation (Δ-div, funding/squeeze fuel, correlation cap). Explain — never just tabulate.
+- [ ] **9 Evidence manifest** — EVERY fetched tab appears with reading + verdict (✓ supports / ✗ opposes / ○ neutral) + written justification tied to THIS trade's levels (market·EMA/RSI/VWAP · auction day+month · footprint Δ/events/Δdiv/POC-migr · cvd+div · signals · funding · oi · liq·magnets/squeeze · lto·walls · bookwalls · stopmap (n/a marked for non-BTC) · news · broker) — including for NO-TRADE / REJECTED / PARKED outcomes. Opposing data (✗) is printed just as prominently as supporting data
 
 ## E · Cross-asset synthesis (desk layer, after all reports exist)
 
@@ -72,7 +75,9 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 - [ ] Reports **committed + pushed** (script auto-commits; if push loses the daemon race → `pull --rebase`, on `log.md` conflict keep BOTH records timestamp-ordered, rebase --continue, push)
 - [ ] `log.md` DEEPSCAN entry exists (auto)
-- [ ] Chat digest: **the complete trade list** (PLACEABLE with levels+size / PARKED with blocker / REJECTED with reason / NO-TRADE) + correlation warning + data gaps — the user must see every potential trade in chat, not just in files
+- [ ] **DIGEST with justification** — cross-asset digest file `DIGEST-<ts>.md`: complete trade list where every candidate carries its justification summary (not a bare table); blocked assets carry blocker + recovery condition
+- [ ] Chat digest: **the complete trade list** (PLACEABLE with levels+size+why / PARKED with blocker / REJECTED with reason / NO-TRADE) + correlation warning + data gaps — the user must see every potential trade WITH its reasoning in chat, not just in files
+- [ ] **WAKE.md beacon push (atg local wake)** — append a dated section to `desk/inbox/WAKE.md` with the digest pointer + compact trade cards so the Windows daemon's 45s poll wakes atg-exec locally (bell + agent activation). EVERY desk reply/digest goes to WAKE.md, not just directives and suggested orders (user directive 18:55 UTC: "are you pushing all such reply to wakeup.md — it will automatically wake up antigravity")
 - [ ] Actionable setup → full level plan (entry/SL/TP perp AND broker levels, size, ladder) → user decides
 - [ ] Nothing left uncommitted — uncommitted files die with the sandbox (lesson: ETH-20261110-1827.md lost to recycling)
 
@@ -85,5 +90,6 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 ## I · Changelog
 
+- v1.2 · 2026-11-10 — v3 justification layer: §9 now emits "WHY THIS TRADE" narrative + evidence manifest upgraded to reading/verdict(✓✗○)/written-justification per tab (opposing data flagged as prominently as supporting). Delivery upgraded: every 360 digest also lands as a WAKE.md beacon section so atg-exec wakes locally on the 45s poll.
 - v1.1 · 2026-11-10 — §9 limit-trade construction + evidence manifest added to every report; `360 all` now prints the complete trade list (user mandate: all potential limit trades, proper justification across all tabs, no data missed). First v2 run: 12× desk/deepscan/*-1848.md + DIGEST-20261110-1848.md (2 PLACEABLE, 4 PARKED, 5 REJECTED, 1 NO-TRADE; XAG min-lot risk mandate violation caught).
 - v1.0 · 2026-11-10 — initial, post playbook-audit DIALOG; pipeline validated end-to-end (BTC desk runs 18:28/18:33, BTC atg-exec run 18:35, ETH desk run 18:36 incl. daemon log.md race resolution)
