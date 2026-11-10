@@ -631,3 +631,8 @@ Re-ran 360 all post-fix: 12/12 all sources OK, digest DIGEST-20261110-1952, broa
 ### Positions
 - no open positions
 
+
+### DEEPSCAN · 2026-11-10 20:07 UTC · zai-desk — 360° on-demand deep analysis (DOGE+LINK+SOL)
+- DOGE: desk/deepscan/DOGE-20261110-2007.md
+- LINK: desk/deepscan/LINK-20261110-2007.md
+- SOL: desk/deepscan/SOL-20261110-2008.md
