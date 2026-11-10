@@ -588,6 +588,56 @@
       "actualEntry": null,
       "filledTs": null,
       "notes": "R9 17:01 (run locally by atg desk) \u2014 perp setup strong: debate 5/0, T1 long-liq magnet str 92 (~$4M) at 0.1702, R 3.0. R10 re-debate 6/0. BROKER BLOCKED at 17:00: ADAUSD spread 2.2016% (rule max 0.15%) \u2014 13x over limit; basis +0.174% would pass but spread makes any fill an instant stop-out (same pathology as R6-ADA-1). DO NOT place on this broker quote. Re-check each round; expires 19:41 UTC."
+    },
+    {
+      "id": "R18-ETH-1",
+      "createdTs": 1794337105324,
+      "round": "R18",
+      "sym": "ETH",
+      "mt5Symbol": "ETHUSD",
+      "side": "short",
+      "type": "limit",
+      "entry": 2095.1,
+      "actualEntry": 2095.26,
+      "stop": 2138.89,
+      "targets": [
+        2004.76
+      ],
+      "targetSources": [
+        "long-liq cluster str 70 (~ est)"
+      ],
+      "riskR": 2.07,
+      "expiresTs": 1794351505324,
+      "status": "placed",
+      "statusTs": 1794337105324,
+      "ticket": 209422601,
+      "volume": 0.53,
+      "notes": "PLACED by USER in MT5 \u2014 ticket 209422601. 0.53 lots @ 2095.26, SL 2138.89, TP 2004.76. Risk .12 = 0.497% equity. R 2.07. VERIFIED-COMPLIANT."
+    },
+    {
+      "id": "R18-XAG-1",
+      "createdTs": 1794337105324,
+      "round": "R18",
+      "sym": "XAG",
+      "mt5Symbol": "XAGUSD",
+      "side": "short",
+      "type": "limit",
+      "entry": 53.187,
+      "actualEntry": 53.099,
+      "stop": 53.763,
+      "targets": [
+        50.813
+      ],
+      "targetSources": [
+        "long-liq cluster str 87 (~ est)"
+      ],
+      "riskR": 3.44,
+      "expiresTs": 1794351505324,
+      "status": "placed",
+      "statusTs": 1794337105324,
+      "ticket": 209422699,
+      "volume": 0.01,
+      "notes": "PLACED by USER in MT5 \u2014 ticket 209422699. 0.01 lots @ 53.099, SL 53.763, TP 50.813. Risk .20 = 0.714% equity (broker min lot 0.01). R 3.44. VERIFIED-COMPLIANT."
     }
   ],
   "positions": [],
