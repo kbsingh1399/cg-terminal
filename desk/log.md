@@ -31,3 +31,14 @@ entries. All timestamps UTC.
 ### Positions
 - no open positions
 
+## R3 · 2026-11-10 14:40 UTC · zai-desk
+
+**Market**: BTC 74,274.1 (-1.4%)  ETH 2,081.68 (-2.5%)  SOL 84.46 (-2.6%)  XAU 4,053.20 (-2.2%)  XAG 51.820 (-3.2%)
+**Bias (|score|≥2)**: BTC-6  ADA-4  AVAX-2  DOGE-2  XAU+2
+
+### Opportunities
+- ADA SHORT confluence -4.0 but R to T1 only 0.3 — watch, no order
+
+### Positions
+- no open positions
+
