@@ -75,3 +75,40 @@ ETH −3.3 — no new candidates; all 4 standing orders re-debated and stand.
 - [FOR] bookWalls: ±5% depth imbalance -0.144 (5m ago -0.228, rising bids); bid $0.01B vs ask $0.02B
 - [FOR] cvd: taker buy 48.5%, perpCvd -23, spotCvd -4, quadrant both-selling, latestDiv bull (stale/none)
 - → place on ADAUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-10 17:37 UTC — new suggested order — place in MT5 (debate FOR 6/AGAINST 2)
+- R4-DOGE-3 DOGE SHORT limit entry 0.06982 · stop 0.07025 · targets 0.06788 / 0.06767 / 0.06747 · R 4.5 · expires 2026-11-10 18:53 UTC
+- BASIS: levels are PERP prices (perpRef 0.06723). Before placing in MT5 read spreads.DOGEUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.06723 vs 0.06867), h4 RSI 32.4, day -4.0%
+- [FOR] footprint: bull 25 / bear 36; recent: none <6h
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:sell×2, div:sell×4, exh:buy×2, exh:sell×1, sdiv:sell×6 — net 2 buy-side vs 13 sell-side
+- [FOR] liquidation: long-liq magnet 0.06638 (str 71, ~$4M est, -1.17%) as target
+- [AGAINST] liquidation-hazard: short-liq magnet 0.06801 (str 57) sits between entry and stop — sweep risk
+- [FOR] bookWalls: ±5% depth imbalance +0.051 (5m ago +0.051, falling bids); bid $0.04B vs ask $0.03B
+- [FOR] cvd: taker buy 47.7%, perpCvd -107, spotCvd -16, quadrant both-selling, latestDiv bear (recent)
+- [AGAINST] notifications: 6h weighted bias +9.2 (15 events)
+- → place on DOGEUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-10 17:37 UTC — new suggested order — place in MT5 (debate FOR 6/AGAINST 1)
+- R7-LTC-1 LTC SHORT limit entry 51.42 · stop 51.92 · targets 49.27 / 49.03 / 48.44 · R 4.3 · expires 2026-11-10 20:29 UTC
+- BASIS: levels are PERP prices (perpRef 50.04). Before placing in MT5 read spreads.LTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (50.04 vs 50.85), h4 RSI 38.1, day -2.6%
+- [FOR] footprint: bull 37 / bear 49; recent: none <6h
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:buy×3, abs:sell×8, div:buy×1, div:sell×2, exh:sell×2, sdiv:sell×2, trap:buy×1 — net 5 buy-side vs 14 sell-side
+- [FOR] liquidation: long-liq magnet 49.27 (str 55, ~$1M est, -1.51%) as target
+- [FOR] bookWalls: ±5% depth imbalance -0.078 (5m ago -0.078, falling bids); bid $0.01B vs ask $0.01B
+- [FOR] cvd: taker buy 47.9%, perpCvd -24, spotCvd -5, quadrant both-selling, latestDiv bear (recent)
+- [AGAINST] notifications: 6h weighted bias +0.8 (18 events)
+- → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-10 17:37 UTC — agent task from zai-desk
+- DIRECTIVE DIR-0004 · kind BUILD · priority high (no market risk)
+GOAL: close the two biggest data gaps from the 17:35 audit — add funding + open-interest endpoints to the CG terminal so the desk engine can consume them.
+TASKS:
+1. Extend the terminal (Next.js /api/cg/* routes, using the existing scripts/cg_client.py decrypt pipeline or its JS port) with:
+   - GET /api/cg/funding?sym=BTC  → current + 24h history of funding rate per venue (binance-perp, okx-perp, bybit-perp, hyperliquid-perp) + OI-weighted aggregate. Coinglass upstream endpoints exist for this.
+   - GET /api/cg/oi?sym=BTC      → current open interest per venue + 1h/4h/24h OI delta.
+   Return shapes: {ok, sym, venues[], aggregate{fundingPct8h, oiUsd, oiDelta1hPct, oiDelta24hPct}, series[]}. Tolerate upstream gaps like /liqlevels does (missing array).
+2. Wire into daemon snapshot: add funding/oi blocks for the top-6 symbols to desk/mt5.json (or a new desk/positioning.json if cleaner) each cycle.
+3. REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<this basename>.reply.md with sample JSON from a live curl + any venue gaps. NO engine changes on your side — I own desk_round.py (v3.2 will add: funding-squeeze gate funding < -0.03%/8h against shorts, OI-confirmation vote price-vs-OI direction).
+CONSTRAINTS: read-only upstream calls, no new npm/pip deps beyond what exists, no changes to desk_round.py or state.json schema. If Coinglass upstream blocks the endpoints (403/encrypted-only), reply COUNTER with what IS reachable and propose alternates.
