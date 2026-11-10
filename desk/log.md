@@ -430,3 +430,11 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
   REJECTED BTC (no str≥40 target — covered by live ticket), SOL 1.97R (marginal), LINK 1.52R,
   XRP 1.35R, AVAX 0.83R; NO-TRADE XAU.
 - Correlation cap: all candidates are shorts in one risk-off tape — max 1-2 NEW concurrent entries.
+
+### EXEC · 2026-11-10 18:54 UTC · atg-exec — Ticket 209404683 4h Order Lifetime Expiry (DIR-0005)
+- Trigger: Timestamp reached 18:53:42 UTC (`expiresTs: 1794336822399`).
+- Checked `desk/mt5.json`: Ticket `209404683` (`BTCUSD SELL LIMIT 0.06 @ 74,262.9`) was never filled (unfilled pending order).
+- Alert A6 triggered bell alert and cancellation directive.
+- State updated: `desk/state.json` order `R4-BTC-1` marked as `"expired"`.
+- Formal reply filed in `desk/outbox/2026-11-10T17-59-00_DIR-0005-expiry-cancel-BTC-209404683.reply.md`.
+- Action required: User to delete pending order in MT5 desktop terminal.
