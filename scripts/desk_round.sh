@@ -8,7 +8,11 @@ set -uo pipefail
 cd "$(dirname "$0")/.."
 # self-report to a TRACKED log (zai reads it via git; rounds.local.log is the
 # daemon's local copy). Also dumps environment — rounds must never fail silently.
-exec > >(tee -a desk/rounds.log) 2>&1
+if [[ "${OSTYPE:-}" == "msys"* || "${OSTYPE:-}" == "cygwin"* ]]; then
+  exec >> desk/rounds.log 2>&1
+else
+  exec > >(tee -a desk/rounds.log) 2>&1
+fi
 export GIT_AUTHOR_NAME="kbsingh1399" GIT_AUTHOR_EMAIL="kbsingh1399@users.noreply.github.com"
 export GIT_COMMITTER_NAME="kbsingh1399" GIT_COMMITTER_EMAIL="kbsingh1399@users.noreply.github.com"
 TS=$(date -u +"%Y-%m-%dT%H%MZ")
