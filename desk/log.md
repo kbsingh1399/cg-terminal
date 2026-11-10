@@ -592,3 +592,12 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 - LTC: desk/deepscan/LTC-20261110-1952.md
 - XAU: desk/deepscan/XAU-20261110-1952.md
 - XAG: desk/deepscan/XAG-20261110-1952.md
+
+### DIALOG · 2026-11-10 19:55 UTC · zai-desk — AUDIT & COMPLIANCE (user parameter checklist)
+
+User demanded full audit of trade-formulation pipeline vs 9-section parameter checklist (7 tabs + funding/OI + MT5). Method: read scripts/desk_deepscan.py line-by-line + probed every live endpoint payload for unused fields. Verdict:
+- CONFIRMED ACTIVE (code + live reports): EMA stacks 4TF (13/89/233) · RSI 4TF (h4 exhaustion logic) · day VWAP z · ±1σ/±2σ bands · day+month auction profiles · per-bar Δ · cum Δ 6h/24h · bar-POC + migration bp/bar · CPR · vol-to-range exhaustion · Δ-div 24 bars · str≥40 magnet gate · opposing-magnet stop extension · squeeze ratio · wall defense ≥$5M ±4% · book imbalance vs 5m · CVD perp/spot + quadrant + taker% + latest div + hit-rate · news severity · funding 8h OI-weighted + <-0.003% gate · OI total + Δ1h/Δ24h + OI×price matrix · basis translation · spread gate · SHORT-SL-on-ASK · 0.5% sizing w/ spec · R≥2.0 · corr cap 1-2 · 4h expiry.
+- FIXED THIS RUN (v3.3 commit d46060a — were available upstream but not rendered): session 8h profile · signal type×side cross-tab + per-set tallies · OI Δ4h · net whale-wall balance ≥$1M all venues · whale wall age+state · nearest major bid/ask walls (age/touched) · book wall life events (ADD/FILL/PULL).
+- UPSTREAM-UNAVAILABLE (marked in reports, not silently dropped): stopmap non-BTC (BTC-only endpoint) · continuous CVD divergence history (only latestDiv + hitRate exposed).
+- Q3 confirmed: every outcome (PLACEABLE/PARKED/REJECTED/NO-TRADE/NO-ZONE/NO-DATA) prints reason + recovery; evidence manifest renders all ~22 rows for every outcome incl. NO-TRADE.
+Re-ran 360 all post-fix: 12/12 all sources OK, digest DIGEST-20261110-1952, broadcast refreshed.
