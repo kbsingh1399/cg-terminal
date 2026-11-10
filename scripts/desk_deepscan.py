@@ -16,6 +16,11 @@ Covers EVERY data point the terminal exposes for the symbol:
   liqlevels (magnets + squeeze fuel) · lto (whale walls)
   bookwalls (depth imbalance) · stopmap (BTC) · notifications (news 24h)
   desk/mt5.json (broker basis/spread + live exposure)
+Section 9 constructs the actual LIMIT-trade candidates (entry zone confluence,
+structural stop, magnet targets, R, size, broker translation, gates) and an
+EVIDENCE MANIFEST: every fetched tab mapped to its role in the trade —
+no data point is silently dropped, including for NO-TRADE / PARKED / REJECTED
+outcomes (rejections print their reason).
 Output ends with a playbook trade plan or an explicit NO-TRADE verdict.
 """
 import json, sys, time, urllib.request, statistics
@@ -165,6 +170,219 @@ def fp_forensics(sym, fp, price):
         den = sum((x - mx) ** 2 for x in xs) or 1
         out["pocSlope"] = (sum((x - mx) * (p - my) for x, p in zip(xs, pocs)) / den) / price * 1e4  # bp/bar
     return out
+
+
+# ------------------------------------------------- 9 · trade construction
+def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias):
+    """Section 9 — construct limit-trade candidates + evidence manifest.
+    Every tab fetched in fetch_all() MUST appear in the manifest, whatever the
+    verdict (candidate / PARKED / REJECTED / NO-TRADE). Returns md lines."""
+    L = []
+    ap = L.append
+    mt = d["mt5"] or {}
+    eq = (mt.get("account") or {}).get("equity") or 0
+    sp = (mt.get("spreads") or {}).get(f"{sym}USD") or {}
+    basis, spread, spec = sp.get("basisPct"), sp.get("spreadPct"), sp.get("spec") or {}
+    risk_usd = (eq * 0.005) if eq else None
+
+    ap("")
+    ap("## 9 · Limit-trade candidates — full construction (all tabs accounted)")
+
+    if bias and not (price and vwap and sd1):
+        ap(f"- **no candidate** — bias {bias} but core market data missing")
+    elif bias:
+        # ---- entry zone: confluence of pullback/discount levels beyond spot
+        zone = []
+        if bias == "SHORT":
+            if day.get("poc") and day["poc"] > price:
+                zone.append(("day POC", day["poc"]))
+            if vwap + sd1 > price:
+                zone.append(("VWAP+1σ", vwap + sd1))
+            if day.get("vah") and day["vah"] > price:
+                zone.append(("day VAH", day["vah"]))
+        else:
+            if day.get("poc") and day["poc"] < price:
+                zone.append(("day POC", day["poc"]))
+            if vwap - sd1 < price:
+                zone.append(("VWAP−1σ", vwap - sd1))
+            if day.get("val") and day["val"] < price:
+                zone.append(("day VAL", day["val"]))
+        if not zone:
+            ap(f"- **no candidate** — bias {bias} but price is already beyond every attack "
+               f"zone (chasing forbidden by playbook)")
+        else:
+            zone.sort(key=lambda t: abs(t[1] - price))
+            entry_name, entry = zone[0]
+            confl = "+".join(n for n, p in zone if abs(p - entry) <= 0.4 * sd1) or entry_name
+            # ---- stop: beyond 2σ zone, extended past strong opposing magnet
+            if bias == "SHORT":
+                stop = max(vwap + 2 * sd1, entry + 0.8 * sd1)
+            else:
+                stop = min(vwap - 2 * sd1, entry - 0.8 * sd1)
+            stop_src = "VWAP±2σ zone"
+            opp = (kl.get("above") or []) if bias == "SHORT" else (kl.get("below") or [])
+            for lv in opp:
+                if (lv.get("strength") or 0) >= 40:
+                    p = lv["price"]
+                    if bias == "SHORT" and entry < p < stop + 0.5 * sd1 and p + 0.15 * sd1 > stop:
+                        stop = p + 0.15 * sd1
+                        stop_src = f"beyond {lv.get('lev', '')} magnet {fmt(sym, p)} (str {lv['strength']:.0f})"
+                    elif bias == "LONG" and entry > p > stop - 0.5 * sd1 and p - 0.15 * sd1 < stop:
+                        stop = p - 0.15 * sd1
+                        stop_src = f"beyond {lv.get('lev', '')} magnet {fmt(sym, p)} (str {lv['strength']:.0f})"
+            risk_dist = abs(stop - entry)
+            # ---- targets: magnets on profit side, str >= 40 (engine rule)
+            tgt_list = (kl.get("below") or []) if bias == "SHORT" else (kl.get("above") or [])
+            strong = sorted([lv for lv in tgt_list if (lv.get("strength") or 0) >= 40],
+                            key=lambda lv: abs(lv["price"] - entry))
+            if not strong:
+                near = tgt_list[:1]
+                near_s = (f"nearest {fmt(sym, near[0]['price'])} str {near[0].get('strength', 0):.0f}"
+                          if near else "none at all")
+                ap(f"- **REJECTED** — bias {bias}, entry {fmt(sym, entry)} ({confl}) but NO magnet "
+                   f"str≥40 on profit side ({near_s}) → no structural target, R unquantifiable")
+            else:
+                tgts = strong[:3]
+                t1 = tgts[0]["price"]
+                r1 = abs(entry - t1) / risk_dist if risk_dist > 0 else 0
+                if r1 < 2.0:
+                    ap(f"- **REJECTED** — R to T1 = {r1:.2f} < 2.0 mandate "
+                       f"(entry {fmt(sym, entry)}, stop {fmt(sym, stop)}, T1 {fmt(sym, t1)} str {tgts[0]['strength']:.0f})")
+                else:
+                    # ---- broker translation + gates
+                    if basis is not None:
+                        b = basis / 100.0
+                        m_entry, m_stop = entry * (1 + b), stop * (1 + b)
+                        m_tgts = [lv["price"] * (1 + b) for lv in tgts]
+                        ok = abs(basis) <= 0.5 and (spread if spread is not None else 9) <= 0.15
+                        status = "PLACEABLE" if ok else "PARKED (broker)"
+                        why = ("" if ok else
+                               f" — |basis| {abs(basis):.3f}% / spread {fnum(spread, 3)}% outside limits")
+                    else:
+                        m_entry = m_stop = None
+                        m_tgts = []
+                        status = "PARKED (broker feed dead — DIR-0003)"
+                        why = ""
+                    # ---- size from broker spec (0.5% equity risk mandate)
+                    lots = risk_act = None
+                    if spec and risk_usd:
+                        ts_, tv = spec.get("tickSize") or 0, spec.get("tickValue") or 0
+                        if ts_ > 0 and tv > 0:
+                            dist = abs((m_stop or stop) - (m_entry or entry))
+                            lpl = dist / ts_ * tv
+                            if lpl > 0:
+                                step = spec.get("volumeStep") or 0.01
+                                lots = max(spec.get("volumeMin") or 0.01,
+                                           int(risk_usd / lpl / step + 0.5) * step)
+                                lots = round(min(lots, spec.get("volumeMax") or lots), 6)
+                                risk_act = lots * lpl
+                    ap(f"- **{sym} {bias} LIMIT — {status}**{why}")
+                    ap(f"  - entry (perp): **{fmt(sym, entry)}** — {confl} "
+                       f"({(entry / price - 1) * 100:+.2f}% from spot)"
+                       + (f" → broker {fmt(sym, m_entry)}" if m_entry else ""))
+                    ap(f"  - stop (perp): {fmt(sym, stop)} — {stop_src} · 1R = {fnum(risk_dist, 4)}"
+                       + (f" → broker {fmt(sym, m_stop)}" if m_stop else "")
+                       + (" · SHORT SL triggers on ASK" if bias == "SHORT" else ""))
+                    for i, lv in enumerate(tgts, 1):
+                        t = lv["price"]
+                        ap(f"  - T{i} (perp): {fmt(sym, t)} — magnet str {lv['strength']:.0f} "
+                           f"{lv.get('lev', '')} ~${fnum((lv.get('usd') or 0) * t / 1e6, 0)}M est · "
+                           f"{abs(entry - t) / risk_dist:.2f}R"
+                           + (f" → broker {fmt(sym, m_tgts[i - 1])}" if m_tgts else ""))
+                    if lots and eq:
+                        ap(f"  - size: {fnum(lots, 2)} lots → risk ${fnum(risk_act, 2)} = "
+                           f"{risk_act / eq * 100:.2f}% equity (mandate 0.5%)")
+                    else:
+                        ap("  - size: broker spec unavailable (feed dead) — compute at placement")
+                    if status.startswith("PLACEABLE"):
+                        ap("  - next: fresh round-engine pass (debate gates + live basis stamp) → "
+                           "DIR for manual MT5 placement")
+    else:
+        ap("- **no candidate** — NO-TRADE verdict (§8 dimensions disagree). "
+           "Manifest below still accounts for every tab.")
+
+    # ---- evidence manifest: EVERY fetched tab, no gaps
+    m = d["market"] or {}
+    ema, rsi = m.get("ema") or {}, m.get("rsi") or {}
+    mon = (m.get("auction") or {}).get("month") or {}
+
+    def stk(t):
+        e = ema.get(t) or {}
+        return "▲" if e.get("e13", 0) > e.get("e89", 0) > e.get("e233", 0) else (
+            "▼" if e.get("e13", 0) < e.get("e89", 0) < e.get("e233", 0) else "◆")
+
+    ap("")
+    ap("### Evidence manifest — every fetched tab accounted")
+    ap("| tab | reading | informs |")
+    ap("|---|---|---|")
+    ap(f"| market·EMA | {' '.join(stk(t) + t for t in ('m15', 'h1', 'h4', 'd1'))} | direction |")
+    ap(f"| market·RSI | h4 {fnum(rsi.get('h4'), 1)} · d1 {fnum(rsi.get('d1'), 1)} | momentum context |")
+    zstr = f"{(price - vwap) / sd1:+.2f}σ" if (price and vwap and sd1) else "?"
+    ap(f"| market·VWAP | {fmt(sym, vwap)} (σ1 {fmt(sym, sd1)}) · price {zstr} | entry zone + regime |")
+    ap(f"| auction·day | POC {fmt(sym, day.get('poc'))} · VAH {fmt(sym, day.get('vah'))} · "
+       f"VAL {fmt(sym, day.get('val'))} | entry zone |")
+    ap(f"| auction·month | POC {fmt(sym, mon.get('poc'))} | higher-TF context |")
+    ap(f"| footprint·Δ | 6h {fnum(fpx['net6h'], 0)} · 24h {fnum(fpx['net24h'], 0)} | direction |")
+    evts = fpx.get("events") or []
+    last_ev = evts[-1]["what"].split(" (")[0] if evts else "none — clean tape"
+    ap(f"| footprint·events | {len(evts)} typed (12h) · last: {last_ev} | timing |")
+    ap(f"| footprint·Δdiv | {fpx.get('div') or 'none'} | timing (counter-pressure) |")
+    ap(f"| footprint·POCmigr | {fnum(fpx.get('pocSlope'), 2)} bp/bar | direction persistence |")
+    if k:
+        ap(f"| cvd | perp {fnum(k.get('perpCvd'), 0)} · spot {fnum(k.get('spotCvd'), 0)} · "
+           f"{k.get('quadrant', '?')} · taker-buy {fnum(k.get('buyRatio'), 1)}% | direction |")
+        ld = k.get("latestDiv")
+        if ld:
+            fresh = (time.time() - ld.get("ts", 0) / 1000) / 3600 < 6
+            ap(f"| cvd·div | {ld.get('type')} ({'fresh' if fresh else 'stale'}) | timing |")
+        else:
+            ap("| cvd·div | none | — |")
+    else:
+        ap("| cvd | unavailable (venue gap) | — |")
+    ap(f"| signals·micro | bull {cnt.get('bullish', 0)} / bear {cnt.get('bearish', 0)} "
+       f"(24h events listed §3) | direction |")
+    fr = ((d["funding"] or {}).get("aggregate") or {}).get("fundingPct8h")
+    ap(f"| funding | {fnum(fr, 4)}%/8h OI-weighted | direction + squeeze risk |")
+    oagg = (d["oi"] or {}).get("aggregate") or {}
+    ap(f"| oi | ${fnum((oagg.get('oiUsd') or 0) / 1e9, 2)}B · Δ1h {fnum(oagg.get('oiDelta1hPct'), 2)}% · "
+       f"Δ24h {fnum(oagg.get('oiDelta24hPct'), 2)}% | direction |")
+    ap(f"| liq·magnets | above {len(kl.get('above') or [])} / below {len(kl.get('below') or [])} "
+       f"tracked (§5) | targets + stop extension |")
+    tot = ((d["liq"] or {}).get("stats") or {}).get("totals") or {}
+    if tot.get("short") and tot.get("long"):
+        div_ = 1 if sym in ("XAU", "XAG") else 1000
+        ap(f"| liq·squeeze | shorts {fnum(tot['short'] / div_, 1)}K vs longs {fnum(tot['long'] / div_, 1)}K "
+           f"({fnum(tot['short'] / max(tot['long'], 1e-9), 1)}×) | squeeze risk |")
+    else:
+        ap("| liq·squeeze | totals unavailable | — |")
+    walls = []
+    for g in (d["lto"] or {}).get("groups", []):
+        for o in g.get("list", []):
+            if (o.get("currentUsd") or 0) >= 5e6 and price and abs(o["price"] - price) / price < 0.04:
+                walls.append(o)
+    if walls:
+        w0 = max(walls, key=lambda o: o["currentUsd"])
+        side0 = "ASK" if w0.get("side") == 1 else "BID"
+        ap(f"| lto·walls | {len(walls)} ≥$5M in ±4% · biggest {side0} ${fnum(w0['currentUsd'] / 1e6, 1)}M "
+           f"@ {fmt(sym, w0['price'])} | stop protection / target |")
+    else:
+        ap("| lto·walls | none ≥$5M in ±4% | — |")
+    bwm = (d["book"] or {}).get("model") or {}
+    if bwm:
+        ap(f"| bookwalls | imb {fnum(bwm.get('imbalance'), 3)} (5m ago {fnum(bwm.get('imbalance5mAgo'), 3)}) | fill likelihood |")
+    else:
+        ap("| bookwalls | unavailable | — |")
+    if sym == "BTC":
+        ap("| stopmap | stop heat above/below in §5 | stop-side context |")
+    else:
+        ap("| stopmap | n/a — upstream BTC-only (known gap) | — |")
+    ap(f"| news | {len(d['news'])} items 24h (§6) | invalidation watch |")
+    if basis is not None:
+        ap(f"| broker | basis {basis:+.3f}% · spread {fnum(spread, 3)}% · "
+           f"{len(mt.get('positions') or [])} pos / {len(mt.get('orders') or [])} orders | gate + translation |")
+    else:
+        ap("| broker | feed dead (no tick — DIR-0003) | gate — PARKED |")
+    return L
 
 
 # ------------------------------------------------------------------ report
@@ -425,6 +643,7 @@ def deep_report(sym):
         votes.append(("OI×price", "LONG"))   # crowded fresh shorts — squeeze risk
     n_short = sum(1 for _, v in votes if v == "SHORT")
     n_long = len(votes) - n_short
+    bias = None
     ap(f"- scorecard: {n_short}×SHORT vs {n_long}×LONG across {len(votes)} dimensions: "
        + ", ".join(f"{src}={v}" for src, v in votes))
     if abs(n_short - n_long) >= 3 and votes:
@@ -449,11 +668,11 @@ def deep_report(sym):
             tgt = [lv["price"] for lv in (kl.get("above") or []) if lv.get("strength", 0) >= 40][:3]
             ap(f"- discount zone to attack: {' / '.join(f'{n} {fmt(sym, p)}' for n, p in zone) or 'none clean — wait'}")
             ap(f"- magnet targets above: {', '.join(fmt(sym, t) for t in tgt) or 'none ≥str40'}")
-        ap("- full order construction (entry/stop/R/invalidation) → run the round engine "
-           "(scripts/desk_round.sh) which applies the debate gates + broker translation, or ask the desk to build it")
+        ap("- full construction with every tab's evidence → §9 below")
     else:
         ap("- **NO-TRADE**: dimensions disagree — this is a transition/range tape; "
            "playbook says do not force setups. Re-scan after the next impulse or when a dimension flips 2+ votes.")
+    L.extend(build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias))
     ap("")
     ap("> honesty: liq clusters, whale walls, stopmap and squeeze-fuel figures are Coinglass *estimates*; "
        "footprint volumes are 4-venue perp aggregates (XAU/XAG venues may differ). All numbers from live terminal pulls.")
