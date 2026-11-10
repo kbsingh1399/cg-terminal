@@ -616,3 +616,18 @@ Re-ran 360 all post-fix: 12/12 all sources OK, digest DIGEST-20261110-1952, broa
 ### Positions
 - no open positions
 
+## R21 · 2026-11-10 20:14 UTC · zai-desk
+
+**Market**: BTC 73,518.5 (-2.4%)  ETH 2,051.85 (-3.8%)  SOL 83.23 (-4.0%)  XAU 4,039.18 (-2.6%)  XAG 51.620 (-3.5%)
+**Bias (|score|≥2)**: BTC-6(TREND)  ADA-4(TRANS)  BNB-3(TREND)  SOL-2(TREND)  LTC-4(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R7-LTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 6/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
