@@ -650,3 +650,7 @@ Re-ran 360 all post-fix: 12/12 all sources OK, digest DIGEST-20261110-1952, broa
 - LTC: desk/deepscan/LTC-20261110-2009.md
 - XAU: desk/deepscan/XAU-20261110-2009.md
 - XAG: desk/deepscan/XAG-20261110-2009.md
+
+### DEEPSCAN · 2026-11-10 20:20 UTC · zai-desk — 360° on-demand deep analysis (XLM+XMR)
+- XLM: desk/deepscan/XLM-20261110-2020.md
+- XMR: desk/deepscan/XMR-20261110-2020.md
