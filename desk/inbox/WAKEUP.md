@@ -19,6 +19,8 @@
    forensics (Δ, absorption, exhaustion, POC migration, Δ-divergence) · order flow (CVD, micro
    events) · positioning (funding, OI deltas) · liquidity map (magnets, walls, stopmap) · news ·
    broker state · 8-dimension synthesis verdict. Output: desk/deepscan/<SYM>-<ts>.md.
+   Master checklist (preflight → run → 8-section review → synthesis → gates → delivery):
+   **desk/deepscan/CHECKLIST-360.md** — follow it on every 360 trigger.
 
 1. One instruction block per task. Prefix `URGENT:` if it should also ping
    the local atg daemon outside its normal 45s poll cycle.
