@@ -17,6 +17,21 @@ interface CacheEntry {
 
 const cache = new Map<string, CacheEntry>();
 
+/**
+ * Bound the upstream cache: unique URLs (endTime-paginated backfills add new
+ * ones every restart) would otherwise grow the Map forever. Insertion-order
+ * eviction keeps the newest entries — they are the ones likely to be re-hit.
+ */
+const CACHE_MAX = Math.max(50, Number(process.env.CG_CLIENT_CACHE_MAX ?? 800) || 800);
+
+function cacheSet(url: string, data: unknown) {
+  if (cache.size >= CACHE_MAX) {
+    const oldest = cache.keys().next().value;
+    if (oldest !== undefined) cache.delete(oldest);
+  }
+  cache.set(url, { at: Date.now(), data });
+}
+
 async function rawGet(url: string, cacheTs: string): Promise<{ status: number; headers: Record<string, string>; bodyText: string }> {
   const res = await fetch(url, {
     headers: cgHeaders(cacheTs),
@@ -57,11 +72,11 @@ export async function cgGet(pathAndQuery: string, ttlMs = 15_000, host: string =
   const body = parsed as { code?: string; msg?: string; data?: unknown };
   if (body && typeof body === "object" && "data" in body && typeof (body as { data?: unknown }).data !== "string") {
     if (body.code !== "0" && Number(body.code) !== 0) throw new Error(`upstream code ${body.code}: ${body.msg ?? ""}`);
-    cache.set(url, { at: Date.now(), data: body.data });
+    cacheSet(url, body.data);
     return body.data;
   }
   // Encrypted responses carry a string data field
   const data = decryptCgResponse({ status: resp.status, headers: resp.headers, bodyText: resp.bodyText }, cacheTs, url);
-  cache.set(url, { at: Date.now(), data });
+  cacheSet(url, data);
   return data;
 }

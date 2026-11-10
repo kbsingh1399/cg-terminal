@@ -143,7 +143,11 @@ of how many tabs or agents poll).
 
 Scalability properties:
 
-- **In-memory TTL cache per URL** — N browser tabs share one upstream call.
+- **In-memory TTL cache per URL** — N browser tabs share one upstream call;
+  insertion-order eviction past 800 entries (`CG_CLIENT_CACHE_MAX`).
+- **Bounded continuity store** — per-series row cap (`CG_STORE_MAX_ROWS`,
+  default 60k) with automatic file compaction; on-disk filenames are
+  Windows-safe (`:` flattened to `_`, legacy stores auto-migrate).
 - **Stale-soft-fail** — upstream errors serve the last good payload.
 - **AllSettled fan-out** — one failing venue never fails the aggregate.
 - **Continuity engine** — append-only JSONL store, dedup by key, boot

@@ -1,4 +1,10 @@
-:81 {
+# CG Order-Flow Terminal reverse proxy.
+#
+# SECURITY: this proxies the terminal with NO authentication — keep it
+# loopback-only (default below). If you ever expose it beyond your own PC,
+# add basic_auth to the handle blocks first, otherwise anyone on the
+# network can read your feed and trigger /api/cg/engine/backfill.
+localhost:81 {
 	@transform_port_query {
 		query XTransformPort=*
 	}

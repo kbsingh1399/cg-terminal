@@ -193,3 +193,11 @@ scanner in `scan.ts`.
 - XAU/XAG trade as USDT-margined perps on Binance/OKX/Bybit; no Hyperliquid
   venue, no anonymous stops map for metals.
 - Nothing here is investment advice.
+
+## 10. Long-term production stability
+
+- **Windows/NTFS safe continuity stores**: Series filenames with colons are safely flattened to `_` in `src/lib/cg/store.ts` (`migrateLegacy()` auto-migrates existing data stores on first load).
+- **Bounded storage growth**: In-memory rows and JSONL files are capped at `CG_STORE_MAX_ROWS=60000` (default) with automatic file compaction when 20% over cap.
+- **Bounded upstream cache**: Upstream response cache in `src/lib/cg/client.ts` uses insertion-order eviction past `CG_CLIENT_CACHE_MAX=800` entries.
+- **Secure local proxy**: Caddyfile binds strictly to `localhost:81` to prevent unauthenticated network exposure.
+- **Strict type checking**: `next.config.ts` enforces `ignoreBuildErrors: false`, excluding non-app directories in `tsconfig.json`.

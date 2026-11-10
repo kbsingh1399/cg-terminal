@@ -29,9 +29,19 @@ interface StoreState {
   backfilling: boolean;
   backfilledMs: number | null;
   hydrated: boolean;
+  /** set after the first write error so each series logs only once */
+  writeWarned?: boolean;
 }
 
 const ROOT = process.env.CG_DATA_DIR || path.join(process.cwd(), "data", "cg-series");
+
+/**
+ * Retention cap: per-series in-memory rows AND compacted file rows.
+ * Routes never read historical rows (they fetch live upstream), so old rows
+ * only matter for continuity bookkeeping (lastTs/gaps) — capping keeps disk
+ * and memory bounded after months of uptime. bookwalls grows ~74k rows/day.
+ */
+const MAX_ROWS = Math.max(2_000, Number(process.env.CG_STORE_MAX_ROWS ?? 60_000) || 60_000);
 
 /**
  * The store map lives on globalThis: Next.js dev mode can instantiate this
@@ -42,21 +52,44 @@ const ROOT = process.env.CG_DATA_DIR || path.join(process.cwd(), "data", "cg-ser
 const gStore = globalThis as unknown as { __cgStores?: Map<string, StoreState> };
 const stores: Map<string, StoreState> = (gStore.__cgStores ??= new Map());
 
+/**
+ * Windows-safe filename: `:` is illegal on NTFS/FAT (and would silently
+ * redirect into an NTFS alternate data stream). Series names keep their
+ * `name:key` form as MAP keys — only the on-disk filename is flattened.
+ */
 function fileOf(name: string) {
+  return path.join(ROOT, `${name.replace(/[^A-Za-z0-9_.\-]/g, "_")}.jsonl`);
+}
+
+/** pre-retention filename scheme (allowed `:`) — used only for migration */
+function legacyFileOf(name: string) {
   return path.join(ROOT, `${name.replace(/[^A-Za-z0-9_:.\-]/g, "_")}.jsonl`);
+}
+
+/** one-time rename of a legacy `:`-filename store to the safe name */
+function migrateLegacy(name: string) {
+  const f = fileOf(name);
+  const legacy = legacyFileOf(name);
+  if (legacy === f) return;
+  try {
+    if (!fs.existsSync(f) && fs.existsSync(legacy)) fs.renameSync(legacy, f);
+  } catch {
+    /* keep both; the safe file simply starts fresh */
+  }
 }
 
 function load(name: string, keyOf: (row: any) => string): StoreState {
   let st = stores.get(name);
   if (st && st.hydrated) return st;
   if (!st) {
-    st = { keys: new Set(), rows: [], lastTs: null, lastPoll: null, lastError: null, backfilling: false, backfilledMs: null, hydrated: false };
+    st = { keys: new Set(), rows: [], lastTs: null, lastPoll: null, lastError: null, backfilling: false, backfilledMs: null, hydrated: false, writeWarned: false };
     stores.set(name, st);
   }
   // (re-)hydrate from disk until the first successful read — an empty cache
   // created before the engine wrote the file must not stick
   try {
     fs.mkdirSync(ROOT, { recursive: true });
+    migrateLegacy(name);
     const f = fileOf(name);
     if (fs.existsSync(f)) {
       const text = fs.readFileSync(f, "utf8");
@@ -73,6 +106,11 @@ function load(name: string, keyOf: (row: any) => string): StoreState {
         } catch {
           /* skip corrupt line */
         }
+      }
+      // hydrate at most the retention cap (oldest lines dropped)
+      if (st.rows.length > MAX_ROWS) {
+        st.rows = st.rows.slice(-MAX_ROWS);
+        st.keys = new Set(st.rows.map((r) => keyOf(r)));
       }
     }
   } catch {
@@ -97,11 +135,28 @@ export function append(name: string, rows: unknown[], keyOf: (row: any) => strin
     if (t > (st.lastTs ?? 0)) st.lastTs = t;
   }
   if (!fresh.length) return 0;
+  // retention: trim in-memory to the cap; rewrite the file when meaningfully
+  // over (avoids rewriting on every append)
+  let compact = false;
+  if (st.rows.length > MAX_ROWS * 1.2) {
+    st.rows = st.rows.slice(-MAX_ROWS);
+    st.keys = new Set(st.rows.map((r) => keyOf(r)));
+    compact = true;
+  }
   try {
     fs.mkdirSync(ROOT, { recursive: true });
-    fs.appendFileSync(fileOf(name), fresh.map((r) => JSON.stringify(r)).join("\n") + "\n", "utf8");
-  } catch {
-    /* disk issues shouldn't kill the engine */
+    if (compact) {
+      fs.writeFileSync(fileOf(name), st.rows.map((r) => JSON.stringify(r)).join("\n") + "\n", "utf8");
+    } else {
+      fs.appendFileSync(fileOf(name), fresh.map((r) => JSON.stringify(r)).join("\n") + "\n", "utf8");
+    }
+  } catch (e) {
+    // disk issues must not kill the engine, but silence here hides Windows
+    // filename problems — log once per series per process
+    if (!st.writeWarned) {
+      st.writeWarned = true;
+      console.warn(`[cg-store] write failed for ${name}:`, e instanceof Error ? e.message : e);
+    }
   }
   return fresh.length;
 }

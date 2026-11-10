@@ -28,11 +28,12 @@ Under the hood:
 - **Continuity engine** — on every boot it backfills anything missed while
   the PC was off (klines, flows, stopmap windows, book walls, liq levels)
   so the data is continuous, then keeps polling live.
+- **1-second price ticker** — the header price on every tab ticks every
+  second (forming m1 candle close, shared ~3 s upstream cache).
 - **Notification scanner** — computes signals + indicator events + whale
   walls + sweep setups + CVD divergences server-side and pushes them to the
   Alerts tab, `GET /api/cg/notifications`, and the SSE stream
-  `GET /api/cg/stream`. For a real-time price in any analysis, poll
-  `GET /api/cg/ticker?sym=BTC` (1 s-safe, shared upstream cache).
+  `GET /api/cg/stream`.
 - **MCP server** (`mcp/server.mjs`) — 10 tools incl. `analyze_setup` for
   one-call trade formulation.
 
@@ -71,7 +72,23 @@ npm run build
 npm start
 ```
 
-## 4. Plug it into Antigravity
+## 4. How live is it? (refresh cadence)
+
+| Data | Refreshes | Fresh to within |
+| --- | --- | --- |
+| **Price — header ticker + Overview big price, every tab** | **every 1 s** (shared ~3 s upstream fetch, `/api/cg/ticker`) | ≤ 4 s |
+| Alerts / notification feed | **pushed the moment detected** (SSE — no polling) | seconds |
+| Overview auction · EMA · RSI · VWAP | 30 s | ~1 min |
+| Footprint signals & bar charts | 30–45 s | ~1 min |
+| Whale open orders table | 45 s | ~1–2 min |
+| Liquidation levels / stops map / book walls / CVD | 45–120 s | ~2 min |
+
+The 1-second ticker reads the forming m1 candle close from Coinglass —
+the same live number their charts show — served from one shared cache so
+any number of tabs/agents stay gentle on upstream. Tune it with
+`CG_TICKER_TTL_MS` in `.env` (default 3000 ms).
+
+## 5. Plug it into Antigravity
 
 1. Start the terminal first (`npm run dev` or `npm start`).
 2. In Antigravity open **Settings → MCP → Add custom server** and register:
@@ -107,7 +124,7 @@ To make it fully hands-off, add an Antigravity **scheduled agent task**
 The MCP `notifications` tool keeps its own cursor (`data/mcp-cursor.json`), so
 each run only sees genuinely new events.
 
-## 5. Data continuity — how boot resume works
+## 6. Data continuity — how boot resume works
 
 ```
 data/cg-series/            ← append-only JSONL stores (keep this folder!)
@@ -128,7 +145,7 @@ data/cg-series/            ← append-only JSONL stores (keep this folder!)
 - Increase history depth with `CG_ENGINE_BACKFILL_DAYS=30` in `.env`.
 - Back up / migrate your PC? Just copy the `data/` folder.
 
-## 6. Architecture (everything is pluggable)
+## 7. Architecture (everything is pluggable)
 
 ```
 Coinglass web API (capi/fapi, encrypted handshake — no keys)
@@ -144,10 +161,9 @@ src/lib/cg/client.ts + crypto.ts        one shared cached client
  │ cg-signals.ts    Coinglass signal engine (1:1 port) │
  └──────┬─────────────────────────────────────────────┘
         │
-src/app/api/cg/*      REST: ticker (1s price), market, signals,
-                      notifications, stream, fp, lto, largeorder,
-                      liqlevels, stopmap, bookwalls, cvd, kline,
-                      orderflow, engine, assets
+src/app/api/cg/*      REST: ticker, market, signals, notifications, stream,
+                      fp, lto, largeorder, liqlevels, stopmap,
+                      bookwalls, cvd, kline, orderflow, engine, assets
         │                          │
   UI (localhost:3000)      mcp/server.mjs (Antigravity)
 ```
@@ -156,7 +172,7 @@ Adding an asset = one line in `src/lib/cg/assets.ts` (venue instruments are
 derived from the table). Adding a feed = one poller in `engine.ts` + one
 scanner in `scan.ts`.
 
-## 7. Troubleshooting
+## 8. Troubleshooting
 
 | Symptom | Fix |
 | --- | --- |
@@ -167,7 +183,7 @@ scanner in `scan.ts`.
 | MCP tool says `fetch failed` | the terminal isn't running — start it first (`npm run dev`) |
 | Windows PowerShell `cp` error | use `copy .env.example .env` |
 
-## 8. Honest data notes
+## 9. Honest data notes
 
 - Every displayed number comes from the Coinglass API or is computed from it
   (EMA/RSI/VWAP/auction from live klines; signals from live order-flow).
@@ -177,3 +193,11 @@ scanner in `scan.ts`.
 - XAU/XAG trade as USDT-margined perps on Binance/OKX/Bybit; no Hyperliquid
   venue, no anonymous stops map for metals.
 - Nothing here is investment advice.
+
+## 10. Long-term production stability
+
+- **Windows/NTFS safe continuity stores**: Series filenames with colons are safely flattened to `_` in `src/lib/cg/store.ts` (`migrateLegacy()` auto-migrates existing data stores on first load).
+- **Bounded storage growth**: In-memory rows and JSONL files are capped at `CG_STORE_MAX_ROWS=60000` (default) with automatic file compaction when 20% over cap.
+- **Bounded upstream cache**: Upstream response cache in `src/lib/cg/client.ts` uses insertion-order eviction past `CG_CLIENT_CACHE_MAX=800` entries.
+- **Secure local proxy**: Caddyfile binds strictly to `localhost:81` to prevent unauthenticated network exposure.
+- **Strict type checking**: `next.config.ts` enforces `ignoreBuildErrors: false`, excluding non-app directories in `tsconfig.json`.
