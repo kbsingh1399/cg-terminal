@@ -13,6 +13,16 @@
 The USER now places trades manually at MT5. atg-exec's market-side role = VERIFY every
 placement against the desk card (reply contract below). zai-desk runs rounds + arbitration.
 
+## 17:36 UTC — DIR-0004 QUEUED · engine v3.1 LIVE · R11 done
+- **DIR-0004 · BUILD** — add /api/cg/funding + /api/cg/oi endpoints (full text in
+  desk/inbox/2026-11-10T17-36-00_DIR-0004-funding-oi-endpoints.json; closes the two
+  biggest audit gaps — funding rates + open interest). Reply per contract with sample JSON.
+- **Engine v3.1 deployed** (sandbox): new microFlow debate vote — 6h typed footprint
+  events (absorption/exhaustion/trap/divergence) that were previously fetched-then-discarded.
+  R11 17:33: no new candidates; standing orders re-debated WITH the new vote: ADA 7/0 ·
+  LTC 6/1 · DOGE 6/2 — all stand. R4-BTC-1 placed (ticket 209404683), not re-debated.
+- TP-MODIFY WATCH (17:30) still pending user decision: TP 72,957 → 72,500 ladder rec.
+
 ## 17:30 UTC — TP-MODIFY WATCH (user decision pending) — ticket 209404683
 User proposed targeting the High-lev long-liq zone (72,463.6 perp) as TP — desk recommends the
 LADDER: modify pending order TP 72,957.0 → **72,500** (MT5, translated at basis +0.05%; perp 72,463.6);

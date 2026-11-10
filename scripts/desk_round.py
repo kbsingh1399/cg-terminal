@@ -120,6 +120,20 @@ for sym in SYMS:
              if st.get("sigs") else None}
             for st in s.get("sets", [])
         ]
+        # v3.1: keep recent micro-events (<6h) by type/side — abs/trap/exh/div were discarded before
+        ev = {"buy": 0, "sell": 0, "types": {}}
+        now_s = now_ms / 1000
+        for st in s.get("sets", []):
+            for sig in st.get("sigs", []):
+                ts = sig.get("ts", 0)
+                ts = ts / 1000 if ts > 1e12 else ts
+                if now_s - ts < 6 * 3600:
+                    side = sig.get("side")
+                    if side in ("buy", "sell"):
+                        ev[side] += 1
+                        tk = f"{sig.get('t', '?')}:{side}"
+                        ev["types"][tk] = ev["types"].get(tk, 0) + 1
+        rec["microEvents"] = ev
     except Exception as e:
         rec["error"] = (rec["error"] + "; " if rec["error"] else "") + f"signals: {e}"
     assets[sym] = rec
@@ -288,6 +302,12 @@ def build_debate(sym, side, rec, deep):
             names.append(f"{lv.get('name')}/{lv.get('side')}[{st['bt']}]")
     ev = f"bull {c.get('bullish', 0)} / bear {c.get('bearish', 0)}; recent: {', '.join(names[:3]) or 'none <6h'}"
     d.append({"source": "footprint", "verdict": "FOR" if sig_sign > 0 else ("AGAINST" if sig_sign < 0 else "NEUTRAL"), "evidence": ev})
+    # 2b. micro-flow events (v3.1): absorption / exhaustion / traps / divergences, last 6h
+    me = rec.get("microEvents") or {}
+    me_net = (me.get("buy", 0) - me.get("sell", 0)) * sgn
+    types_s = ", ".join(f"{k}×{v}" for k, v in sorted((me.get("types") or {}).items())) or "none"
+    d.append({"source": "microFlow(abs/trap/exh)", "verdict": "FOR" if me_net > 0 else ("AGAINST" if me_net < 0 else "NEUTRAL"),
+              "evidence": f"6h micro-events: {types_s} — net {me.get('buy', 0)} buy-side vs {me.get('sell', 0)} sell-side"})
     # 3. large orders (whale walls)
     walls = deep.get("walls") or []
     near = [w for w in walls if abs(w["price"] - (price or 0)) / (price or 1) <= 0.02]
@@ -625,7 +645,7 @@ lines = [f"## {rid} · {now_iso} · zai-desk", ""]
 mkt = "  ".join(f"{s} {fmt(s, assets[s].get('price'))} ({(assets[s].get('chgDayPct') or 0):+.1f}%)"
                 for s in ("BTC", "ETH", "SOL", "XAU", "XAG") if assets.get(s, {}).get("price"))
 lines += [f"**Market**: {mkt}", f"**Bias (|score|≥2)**: {bias_tbl or 'none significant'}", ""]
-lines += [f"### Opportunities (engine v3 — debate-gated, min R {cfg['min_r_multiple']})"] + (opp_lines or ["- none meeting the gates this round"]) + [""]
+lines += [f"### Opportunities (engine v3.1 — debate-gated + microFlow vote, min R {cfg['min_r_multiple']})"] + (opp_lines or ["- none meeting the gates this round"]) + [""]
 if lifecycle_events:
     lines += ["### Order lifecycle"] + [f"- {e}" for e in lifecycle_events] + [""]
 lines += ["### Positions"] + (pos_lines or ["- no open positions"]) + [""]
@@ -634,7 +654,7 @@ if not DRY:
         f.write("\n".join(lines) + "\n")
 
 print("=" * 96)
-print(f"TRADE DESK {rid} · {now_iso} · engine v3 · {'DRY-RUN' if DRY else 'COMMITTED LOCALLY'}")
+print(f"TRADE DESK {rid} · {now_iso} · engine v3.1 · {'DRY-RUN' if DRY else 'COMMITTED LOCALLY'}")
 print("=" * 96)
 for s in cands:
     sc = scored[s]

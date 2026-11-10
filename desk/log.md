@@ -216,3 +216,32 @@ entries. All timestamps UTC.
 - HONEST CAVEATS logged: (a) circled zone str 23-27 is BELOW the engine's str-40 target-grade bar — field decay, not a design flaw; (b) High-lev tier is a plus (hair-trigger clusters); (c) fill tension: spot 73,012 is 1.71% below entry, order expires 18:53 UTC unfilled-by-design.
 - Future orders: no engine change needed — magnet targeting is already automatic; this decay is why re-debates re-read the field each round.
 - PENDING USER ACTION: modify TP on pending ticket (or reply "keep TP" to close this DIALOG). atg to verify modification per WAKE task.
+## R11 · 2026-11-10 17:33 UTC · zai-desk
+
+**Market**: BTC 73,064.9 (-3.0%)  ETH 2,025.38 (-5.1%)  SOL 82.47 (-4.9%)  XAU 4,027.54 (-2.8%)  XAG 51.340 (-4.1%)
+**Bias (|score|≥2)**: BTC-7  ADA-5  LTC-5  ETH-4  XAG-3  DOGE-4  XAU+2
+
+### Opportunities (engine v3.1 — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R4-DOGE-3 re-debated: FOR 6/AGAINST 2 — stands
+- R7-LTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 7/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
+
+### DIALOG · 2026-11-10 17:35 UTC · zai-desk — DATA-COVERAGE AUDIT (user challenge: "you might be missing many data points")
+**AUDIT RESULT — three tiers:**
+
+TIER 1 · CONSUMED (8 sources, engine v3): notifications (score ±2) · market/overview: ema h4+d1 (±2), vwap (±1), rsi (±0.5), session/day POC-VAH-VAL + month anchor (entry refinement + targets) · signals footprint counts (±1) · cvd buyRatio+divergence (±1.5, top-6) · liqlevels magnets (targets + stop buffer + hazard gate) · lto whale walls ≥$5M (gate + debate) · bookwalls depth imbalance (debate) · stopmap BTC-only (debate).
+
+TIER 2 · FETCHED-BUT-DISCARDED → FIXED NOW (v3.1): /signals individual events (absorption/exhaustion/trap/divergence with type, side, price, ts) were reduced to aggregate counts + latest-per-set. v3.1 adds microFlow debate vote: 6h typed events net-by-side. Live in R11: ADA debate now 7/0 (19 sell-side vs 14 buy-side micro events), DOGE 6/2 (13 vs 2). Engine commit follows.
+
+TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rates + funding OI-weighted · open interest + OI delta (price↓+OI↓ = forced long liquidation vs price↓+OI↑ = fresh shorts — THE missing confirmation for our short book) · long/short account ratio (retail crowding) · options (max pain, PCR, gamma walls) · orderbook liquidity delta · real-time liquidation stream (our liq map is a Coinglass-estimate MODEL — same caveat printed on every order) · ETF/stablecoin flows (notifications partially substitutes with news events).
+
+**VERDICT for user: partially right.** Within the terminal's 12-asset universe the engine now consumes everything trade-relevant; but funding/OI/L-S-ratio are whole dimensions absent from the stack, and they matter most precisely for squeeze-risk assessment (today's recurring hazard: entries above ask-wall fuel, ADA/LTC spread blocks). Also breadth-limited to 12 assets.
+
+**ACTION:** DIR-0004 issued — atg to extend terminal with /api/cg/funding + /api/cg/oi (Coinglass upstream already has these; cg_client.py decrypt pipeline exists). On delivery, engine v3.2 adds funding-squeeze gate (funding < −0.03%/8h on shorts → tighten entry or skip) + OI confirmation vote. Scope: 2 endpoints, no new deps.

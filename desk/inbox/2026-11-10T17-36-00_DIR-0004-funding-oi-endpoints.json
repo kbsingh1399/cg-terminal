@@ -1,0 +1,9 @@
+{
+  "id": "2026-11-10T17-36-00_DIR-0004-funding-oi-endpoints",
+  "ts": 1794334560000,
+  "from": "zai-desk",
+  "action": "AGENT_TASK",
+  "priority": "high",
+  "instruction": "DIRECTIVE DIR-0004 · kind BUILD · priority high (no market risk)\nGOAL: close the two biggest data gaps from the 17:35 audit — add funding + open-interest endpoints to the CG terminal so the desk engine can consume them.\nTASKS:\n1. Extend the terminal (Next.js /api/cg/* routes, using the existing scripts/cg_client.py decrypt pipeline or its JS port) with:\n   - GET /api/cg/funding?sym=BTC  → current + 24h history of funding rate per venue (binance-perp, okx-perp, bybit-perp, hyperliquid-perp) + OI-weighted aggregate. Coinglass upstream endpoints exist for this.\n   - GET /api/cg/oi?sym=BTC      → current open interest per venue + 1h/4h/24h OI delta.\n   Return shapes: {ok, sym, venues[], aggregate{fundingPct8h, oiUsd, oiDelta1hPct, oiDelta24hPct}, series[]}. Tolerate upstream gaps like /liqlevels does (missing array).\n2. Wire into daemon snapshot: add funding/oi blocks for the top-6 symbols to desk/mt5.json (or a new desk/positioning.json if cleaner) each cycle.\n3. REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<this basename>.reply.md with sample JSON from a live curl + any venue gaps. NO engine changes on your side — I own desk_round.py (v3.2 will add: funding-squeeze gate funding < -0.03%/8h against shorts, OI-confirmation vote price-vs-OI direction).\nCONSTRAINTS: read-only upstream calls, no new npm/pip deps beyond what exists, no changes to desk_round.py or state.json schema. If Coinglass upstream blocks the endpoints (403/encrypted-only), reply COUNTER with what IS reachable and propose alternates.",
+  "note": "pairs with audit DIALOG 17:35 in desk/log.md"
+}
