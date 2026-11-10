@@ -310,3 +310,19 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 - FILL PATH: ~$120M cumulative ask walls spot→entry, peak $22.2M @ 74,141 (77 pts below entry). Empirical 2h-bounce base rate ~10% → fill unlikely in remaining 55 min. DECISION: do not lower entry to chase (would park below the $22.2M wall, worse location, lower R).
 - EXPIRY: order is GTC in MT5 (no expiration field) — will NOT self-cancel. Engine discipline 4h (expiresTs 18:53:42 UTC). DIR-0005 sent to atg: at first poll ≥18:53:42, if ticket still pending → cancel + state→'expired' + EXEC log; if filled → NOT-APPLICABLE reply.
 - Broker sweep 17:49: BTC ✓ · ETH ✓ (no ≥2R candidate, score −4.0 TREND) · XAU ✓ (+3.1 TRANS, no candidate) · XRP ✓ (+0.5) · ADA BLOCKED spread 2.21% · LTC BLOCKED basis +1.09%/spread 2.40% · DOGE dead feed · SOL/BNB/LINK/AVAX no ticks. Standing suggestions R4-DOGE-3 / R7-LTC-1 / R9-ADA-1 remain unplaceable — nothing to modify until broker normalizes (DIR-0003 open on symbol names).
+## R15 · 2026-11-10 18:13 UTC · zai-desk
+
+**Market**: BTC 73,184.0 (-2.8%)  ETH 2,024.78 (-5.1%)  SOL 82.23 (-5.1%)  XAU 4,025.17 (-2.9%)
+**Bias (|score|≥2)**: BTC-6(TREND)  ETH-4(TREND)  BNB-3(TREND)  AVAX-3(TREND)  LTC-3(TREND)  ADA-2(TREND)  DOGE-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R4-DOGE-3 re-debated: FOR 4/AGAINST 1 — stands
+- R7-LTC-1 re-debated: FOR 5/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 4/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
