@@ -63,7 +63,10 @@ export const CLASSIC_ASSETS: ClassicCfg[] = [
   fx("NZDJPY"), fx("NZDCAD"), fx("NZDCHF"), fx("NZDSGD"), fx("SGDJPY"), fx("USDCNH"),
   fx("USDDKK"), fx("USDHUF"), fx("USDMXN"), fx("USDNOK"), fx("USDSEK"), fx("USDSGD"),
   fx("USDZAR"),
-  // ---- equities (20 · FN help-centre: 14 USD + 6 EUR-denominated) ----
+  // ---- equities (19 scanned · FN help-centre lists 20 incl. SPCX — REMOVED 2026-11-11:
+  // Yahoo "SPCX" is Tuttle's SPAC/New-Issue ETF, a different instrument entirely;
+  // wrong-instrument data is worse than no data. Restore only after the FN
+  // contract spec is verified against the broker symbol dump (DIR-0009). ----
   eq("AAPL", "Apple", "AAPL"),
   eq("AMZN", "Amazon", "AMZN"),
   eq("GOOG", "Alphabet", "GOOG"),
@@ -71,7 +74,6 @@ export const CLASSIC_ASSETS: ClassicCfg[] = [
   eq("NVDA", "Nvidia", "NVDA"),
   eq("TSLA", "Tesla", "TSLA"),
   eq("AMD", "AMD", "AMD"),
-  eq("SPCX", "SpaceX (FN listing)", "SPCX", "Yahoo SPCX = SPAC/New-Issue ETF — semantics UNVERIFIED, quote may not track the FN instrument"),
   eq("META", "Meta", "META"),
   eq("BABA", "Alibaba", "BABA"),
   eq("NFLX", "Netflix", "NFLX"),

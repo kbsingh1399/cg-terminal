@@ -46,9 +46,18 @@ now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 # fall back to the legacy <SYM>USD form.
 try:
     _cfg = json.loads((DESK / "state.json").read_text()).get("config") or {}
-except Exception:
-    _cfg = {}
+except Exception as _e:
+    # 2026-11-10 lesson (2nd daemon-race corruption): a silently-empty map made
+    # DOGE/LINK print false "feed dead" §7 readings. Refuse to scan instead.
+    sys.exit(f"ERROR: desk/state.json is unreadable ({_e}) — daemon/ desk write race. "
+             f"Repair first (scripts/repair_state_json.py pattern), then re-run. "
+             f"Refusing to scan with a dead symbol_map (false feed-dead readings are worse than no scan).")
 MT5_MAP = _cfg.get("symbol_map") or {}
+if len(MT5_MAP) < 17:
+    # review E5: valid-JSON-but-empty map races print false feed-dead readings —
+    # refuse instead (17 = full post-expansion map incl. XPT/USO/UKO)
+    sys.exit(f"ERROR: config.symbol_map has only {len(MT5_MAP)} entries (need 17) — "
+             f"daemon/desk write race reverted it. Repair desk/state.json, then re-run.")
 # Confirmed absent from the FundedNext server (user broker audit 2026-11-10):
 # perp-side watchlist only — no execution path at this broker.
 NOT_LISTED = {"SOL", "BNB", "AVAX"}
@@ -91,8 +100,14 @@ def fnum(x, nd=1):
 try:
     _cl = get("/classic?list=1", timeout=30)
     CLASSIC = {a["sym"]: a for a in (_cl.get("assets") or [])}
-except Exception:
+except Exception as _e:
     CLASSIC = {}
+    import sys as _sys
+    if any(a.lower() in ("all", "classic") for a in sys.argv[1:] if not a.startswith("--")):
+        # review E1/J4: a silent CLASSIC={} degrades `all` to perp-only with a
+        # false "0/78 online" reading — refuse instead
+        _sys.exit(f"ERROR: classic registry unreachable ({_e}) — terminal down? "
+                  f"Refusing an `all`/`classic` run with a dead registry.")
 
 
 # ------------------------------------------------------------------ fetch
@@ -346,8 +361,9 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
                             lpl = dist / ts_ * tv
                             if lpl > 0:
                                 step = spec.get("volumeStep") or 0.01
+                                # review L7: FLOOR to step — never round up above the mandate
                                 lots = max(spec.get("volumeMin") or 0.01,
-                                           int(risk_usd / lpl / step + 0.5) * step)
+                                           int(risk_usd / lpl / step) * step)
                                 lots = round(min(lots, spec.get("volumeMax") or lots), 6)
                                 risk_act = lots * lpl
                     ap(f"- **{sym} {bias} LIMIT — {status}**{why}")
@@ -421,14 +437,22 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
                     card["entry"], card["entry_b"], card["confl"] = entry, m_entry, confl
                     card["stop"], card["stop_b"], card["stop_src"] = stop, m_stop, stop_src
                     card["tgts"] = [{"price": lv["price"], "str": round(lv.get("strength") or 0),
-                                     "usd_m": fnum((lv.get("usd") or 0) * lv["price"] / 1e6, 0)} for lv in tgts]
+                                     "usd_m": fnum((lv.get("usd") or 0) * lv["price"] / 1e6, 0),
+                                     "usd_raw": (lv.get("usd") or 0) * lv["price"]} for lv in tgts]
                     card["r1"] = round(r1, 2)
                     card["lots"], card["risk_usd"] = lots, risk_act
                     if risk_act and eq:
                         card["risk_pct"] = round(risk_act / eq * 100, 2)
                         if card["risk_pct"] > 0.5:
+                            # review L6 (rule 4): min-lot risk above mandate = BLOCKED,
+                            # not PLACEABLE-with-⚠ — the caveat was advisory, this is a gate
+                            card["status"] = "PARKED"
+                            card["reason"] = (f"min-lot floor forces {card['risk_pct']}% risk > 0.5% mandate "
+                                               f"(volumeMin {spec.get('volumeMin')} — instrument property, not a choice)")
+                            card["recovery"] = (f"equity ≥ ${fnum(eq * card['risk_pct'] / 0.5, 0)} "
+                                                 f"OR user explicitly accepts per-symbol risk override (hard-capped 1.5×)")
                             card["caveat"] = (f"lot-step/min-lot floor makes real risk {card['risk_pct']}% "
-                                              f"> 0.5% mandate — SKIP unless the user explicitly accepts")
+                                              f"> 0.5% mandate — PARKED per v3.3 rule 4 (review L6)")
                     if "feed dead" in status:
                         card["recovery"] = "needs the broker feed restored (DIR-0003) — levels stay valid on the perp side"
                     elif "not listed" in status:
@@ -1196,17 +1220,34 @@ def deep_report(sym):
     fp_live = len(set(fpv.get("venues") or []) - set(fpv.get("missing") or []))
     liq_open = (((d.get("liq") or {}).get("stats") or {}).get("counts") or {}).get("open") or 0
     gate_ok = fp_live >= GATE_MIN_FP_VENUES and liq_open >= GATE_MIN_LIQ_OPEN
-    if (card.get("status") or "").startswith("PLACEABLE") and not gate_ok:
+    # v3.3 rule 2 (review L2 — yesterday's unshipped BLOCKER): absolute
+    # magnet-mass floor — T1 USD ≥ max($5M, 0.25% of perp OI). Rank-normalized
+    # str is cross-symbol meaningless: XLM's str-85 cluster is ~$1M where
+    # BTC's str-100 is ~$1,679M. Thin-mass targets must not carry R math.
+    t1 = (card.get("tgts") or [{}])[0]
+    t1_usd = t1.get("usd_raw") or 0
+    oi_usd = (((d.get("oi") or {}).get("aggregate") or {}).get("oiUsd")) or 0
+    mass_floor = max(5_000_000, 0.0025 * oi_usd)
+    mass_ok = bool(t1_usd) and t1_usd >= mass_floor
+    if (card.get("status") or "").startswith("PLACEABLE") and (not gate_ok or not mass_ok):
         card["status"] = "PARKED"
-        card["reason"] = (f"thin upstream data — {fp_live} fp venue(s) · {liq_open} open liq levels "
-                           f"(v3.3 gate: ≥{GATE_MIN_FP_VENUES} venues AND ≥{GATE_MIN_LIQ_OPEN} levels); "
-                           "rank-normalized magnets print phantom strength on thin books")
-        card["recovery"] = "upstream depth grows (≥3 fp venues AND ≥1,000 open liq levels), or user explicitly accepts thin-book magnets"
+        if not gate_ok:
+            card["reason"] = (f"thin upstream data — {fp_live} fp venue(s) · {liq_open} open liq levels "
+                               f"(v3.3 gate: ≥{GATE_MIN_FP_VENUES} venues AND ≥{GATE_MIN_LIQ_OPEN} levels); "
+                               "rank-normalized magnets print phantom strength on thin books")
+            card["recovery"] = "upstream depth grows (≥3 fp venues AND ≥1,000 open liq levels), or user explicitly accepts thin-book magnets"
+        else:
+            card["reason"] = (f"T1 magnet mass ${fnum(t1_usd / 1e6, 1)}M < floor ${fnum(mass_floor / 1e6, 1)}M "
+                               f"(max[$5M, 0.25% × OI ${fnum(oi_usd / 1e9, 2)}B]) — rank-normalized strength "
+                               f"(str {t1.get('str')}) has no leverage mass behind it at this depth")
+            card["recovery"] = "T1 cluster grows to ≥ the mass floor (natural OI growth or larger liquidation build), or user accepts thin-mass targets explicitly"
     tl.append("")
     tl.append(f"### DATA-DEPTH GATE (v3.3) — {sym}")
     tl.append(f"- fp data venues: **{fp_live}** live · open liq levels: **{liq_open:,}** → "
-              f"**{'PASS' if gate_ok else 'FAIL'}** (needs ≥{GATE_MIN_FP_VENUES} venues AND ≥{GATE_MIN_LIQ_OPEN:,} levels)"
-              + ("" if gate_ok else f" · status: {card.get('status')} — {card.get('reason', '')[:120]}"))
+              f"**{'PASS' if gate_ok else 'FAIL'}** (needs ≥{GATE_MIN_FP_VENUES} venues AND ≥{GATE_MIN_LIQ_OPEN:,} levels)")
+    tl.append(f"- magnet-mass floor (rule 2): T1 ${fnum(t1_usd / 1e6, 1)}M vs floor ${fnum(mass_floor / 1e6, 1)}M "
+              f"(max[$5M, 0.25% × OI ${fnum(oi_usd / 1e9, 2)}B]) → **{'PASS' if mass_ok else 'FAIL'}**"
+              + ("" if (gate_ok and mass_ok) else f" · status: {card.get('status')} — {(card.get('reason') or '')[:110]}"))
     L.extend(tl)
     ap("")
     ap("> honesty: liq clusters, whale walls, stopmap and squeeze-fuel figures are Coinglass *estimates*; "
@@ -1250,6 +1291,10 @@ def classic_report(sym):
     closes = [b["c"] for b in bars]
     cut = (bars[-1]["t"] or 0) - 24 * 3600_000
     r24 = [b for b in bars if b["t"] >= cut] or bars[-96:]
+    # 24h change from bars (review E2: the API's chgPct uses the RANGE's
+    # previous close — 5d by default — and must not be labeled "day")
+    c24 = next((b["c"] for b in reversed(bars) if b["t"] <= cut), None)
+    chg24 = round((price / c24 - 1) * 100, 2) if c24 else q.get("chgPct")
     tp = lambda b: ((b["h"] or b["c"]) + (b["l"] or b["c"]) + b["c"]) / 3
     hi24 = max((b["h"] or b["c"]) for b in r24)
     lo24 = min((b["l"] or b["c"]) for b in r24)
@@ -1283,11 +1328,16 @@ def classic_report(sym):
     rsi = 100 - 100 / (1 + (ag / al if al > 0 else 100))
     rpos = (price - lo24) / (hi24 - lo24) if hi24 > lo24 else 0.5
     fresh_min = (now_ms - (bars[-1]["t"] or 0)) / 60000
+    # review E3: staleness gate — a weekend EU index serving Friday's close as
+    # "live" is a false reading; degrade the verdict instead
+    stale = fresh_min > 90
+    verdict = "WATCHLIST-STALE" if stale else "WATCHLIST-ONLINE"
 
     pf = lambda v: f"{v:,.4f}" if abs(v) < 10 else f"{v:,.2f}"
-    L += ["## §1 quote + session (Yahoo, live)",
-          f"- price **{pf(price)}** · chg {q.get('chgPct')}% day · prevClose {pf(q.get('prevClose') or 0)} · {q.get('exchange')} · {q.get('tz')}",
-          f"- 15m bars (5d): {len(bars)} · volume: {'YES — VWAP/POC volume-weighted' if has_vol else 'NO upstream — price-only session stats (never faked)'} · last bar {fresh_min:.0f} min ago",
+    L += ["## §1 quote + session (Yahoo)",
+          f"- price **{pf(price)}** · chg 24h {chg24}% · prevClose {pf(q.get('prevClose') or 0)} · {q.get('exchange')} · {q.get('tz')}",
+          f"- 15m bars (5d): {len(bars)} · volume: {'YES — VWAP/POC volume-weighted' if has_vol else 'NO upstream — price-only session stats (never faked)'} · last bar {fresh_min:.0f} min ago"
+          + (f" · **STALE >90 min — quote is the last session close, not live**" if stale else ""),
           f"- {anchor_name}: **{pf(anchor)}** · ±1σ {pf(sd)} · z {z:+.2f}σ" + (f" · vol-POC {pf(poc24)}" if poc24 else ""),
           f"- 24h range {pf(lo24)} – {pf(hi24)} (pos {rpos*100:.0f}th pct) · 5d extremes {pf(lo5)} – {pf(hi5)}",
           f"- EMA20 {pf(e20)} vs EMA50 {pf(e50)} · RSI(14) 15m {rsi:.0f}", "",
@@ -1327,10 +1377,10 @@ def classic_report(sym):
           "## §9 evidence manifest + verdict",
           f"- source: /api/cg/classic?sym={sym} → Yahoo {cfg.get('yahoo')} · fetchedAt {q.get('fetchedAt')} · nBars {q.get('nBars')} · hasVolume {has_vol}",
           f"- fields consumed: price, prevClose, chgPct, exchange, tz, bars[t,o,h,l,c,v] · gaps: {len(errors)}",
-          f"- verdict: **WATCHLIST-ONLINE** — data flows; trade engine for this class = engine v4 (user approval pending)"]
-    card = {"sym": sym, "klass": cfg.get("klass"), "price": price, "chg": q.get("chgPct"),
-            "lean": lean, "score": score, "status": "WATCHLIST-ONLINE",
-            "reason": f"T3 {cfg.get('klass')}: data OK — no trade engine (v4 pending)",
+          f"- verdict: **{verdict}** — data flows{'; quote STALE (last bar ' + str(int(fresh_min)) + ' min old)' if stale else ''}; trade engine for this class = engine v4 (user approval pending)"]
+    card = {"sym": sym, "klass": cfg.get("klass"), "price": price, "chg": chg24,
+            "lean": lean, "score": score, "status": verdict,
+            "reason": f"T3 {cfg.get('klass')}: data OK — no trade engine (v4 pending)" + (" · quote stale" if stale else ""),
             "recovery": "engine v4 session/structure build (user approval)"}
     return "\n".join(L), errors, card
 
@@ -1495,6 +1545,18 @@ def broadcast_wakeup(cards, scope, ts, classic_cards=None):
     sides = {c.get("side") for c in cards if c.get("side")}
     if len(sides) == 1 and next(iter(sides)):
         B.append(f"- Correlation: all candidates {next(iter(sides))} in one tape — cap NEW entries at 1-2.")
+    # classic block joins B BEFORE the single write (review J9: the old
+    # write-then-append pass could leave stale duplicate classic sections)
+    cln = "none"
+    if classic_cards:
+        okc = sum(1 for c in classic_cards if c.get("status") == "WATCHLIST-ONLINE")
+        cln = f"{okc}/{len(classic_cards)} online (watchlist-only, engine v4 pending)"
+        leans = [c for c in classic_cards if abs(c.get("score") or 0) >= 3]
+        B.append(f"### CLASSIC UNIVERSE (Tier-3) — {cln} · quotes via /api/cg/classic (Yahoo v8) · NO trade construction")
+        if leans:
+            B.append("- strong 4-dim leans (|score| ≥ 3): " + ", ".join(f"{c['sym']} {c['lean']}" for c in leans[:8]))
+        B.append(f"- full table: desk/deepscan/DIGEST-{ts}.md (classic section) — derivatives dims honestly n/a for this class")
+        B.append("")
     B.append(END)
     txt = WUP.read_text() if WUP.exists() else "# WAKEUP.md — user → zai-desk instruction channel\n"
     if START in txt and END in txt:
@@ -1507,23 +1569,6 @@ def broadcast_wakeup(cards, scope, ts, classic_cards=None):
     pln = ", ".join(f"{c['sym']} {c['side']} {c['r1']}R" for c in pl) or "none"
     pkn = ", ".join(c["sym"] for c in pk) or "none"
     lvn = ", ".join(f"{a} {t}" for a, t in sorted(lv.items())) or "none"
-    cln = "none"
-    if classic_cards:
-        okc = sum(1 for c in classic_cards if c.get("status") == "WATCHLIST-ONLINE")
-        cln = f"{okc}/{len(classic_cards)} online (watchlist-only, engine v4 pending)"
-        leans = [c for c in classic_cards if abs(c.get("score") or 0) >= 3]
-        B.append(f"### CLASSIC UNIVERSE (Tier-3) — {cln} · quotes via /api/cg/classic (Yahoo v8) · NO trade construction")
-        if leans:
-            B.append("- strong 4-dim leans (|score| ≥ 3): " + ", ".join(f"{c['sym']} {c['lean']}" for c in leans[:8]))
-        B.append(f"- full table: desk/deepscan/DIGEST-{ts}.md (classic section) — derivatives dims honestly n/a for this class")
-        B.append("")
-        txt = WUP.read_text()
-        if START in txt and END in txt:
-            pre, post = txt.split(START)[0], txt.split(END, 1)[1]
-            txt = pre.rstrip("\n") + "\n\n" + "\n".join(B) + "\n" + post.lstrip("\n")
-        else:
-            txt = txt.rstrip("\n") + "\n\n" + "\n".join(B) + "\n"
-        WUP.write_text(txt)
     ins = {"action": "AGENT_TASK", "from": "zai-desk", "ts": f"{ts} UTC", "scope": scope,
            "instruction": (f"360° {scope} deepscan finished {ts} UTC — broadcast refreshed in "
                            f"desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-{ts}.md. "
@@ -1601,7 +1646,9 @@ def main():
                 ccard["gaps"] = list(errs)
                 classic_cards.append(ccard)
                 parts.append(rep)
-                time.sleep(0.15)
+                # review J7: back off on errors (Yahoo 429s) instead of burning
+                # the whole 78-symbol budget in 12s
+                time.sleep(2.0 if errs else 0.15)
             fn = outdir / f"CLASSIC-{ts_run}.md"
             fn.write_text("\n\n---\n\n".join(parts))
             okn = sum(1 for c in classic_cards if c.get("status") == "WATCHLIST-ONLINE")

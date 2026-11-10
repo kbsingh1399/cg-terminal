@@ -5,6 +5,7 @@ import LargeOrdersCanvas from "./charts/large-orders-canvas";
 import { usePolling, rowsToCandles, type KlinePayload, type LtoPayload } from "./use-cg-data";
 import type { LtoOrder } from "@/lib/cg/types";
 import { fmtAge, fmtNum, fmtPct, fmtUsd } from "@/lib/cg/format";
+import { leadInstr } from "@/lib/cg/assets";
 import { assetOf } from "@/lib/cg/assets";
 import { Button } from "@/components/ui/button";
 
@@ -36,7 +37,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
   const [selected, setSelected] = useState<LtoOrder | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const klineQ = usePolling<KlinePayload>(`/api/cg/kline?type=kline&interval=m15&limit=300&symbol=Binance_${sym}USDT`, 30_000);
+  const klineQ = usePolling<KlinePayload>(`/api/cg/kline?type=kline&interval=m15&limit=300&symbol=${leadInstr(sym)}`, 30_000);
   const ltoQ = usePolling<LtoPayload>(`/api/cg/lto?symbol=${sym}&minVolUsd=${minVolUsd}`, 20_000);
 
   // symbol switched: drop the detail selection so a stale BTC order can
@@ -46,7 +47,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
   // payload guard: the kline route now echoes the instrument key — never
   // render candles that belong to another symbol's series
   const candles = useMemo(
-    () => rowsToCandles(klineQ.data && klineQ.data.symbol === `Binance_${sym}USDT` ? klineQ.data.rows : undefined),
+    () => rowsToCandles(klineQ.data && klineQ.data.symbol === leadInstr(sym) ? klineQ.data.rows : undefined),
     [klineQ.data, sym]
   );
   const lastPrice = candles.length ? candles[candles.length - 1].c : null;

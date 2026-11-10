@@ -40,7 +40,16 @@ async function refresh(sym: string): Promise<TickerEntry> {
       `/api/v2/kline?symbol=${encodeURIComponent(`${instKey}#kline`)}&interval=m1&limit=2&minLimit=false`,
       TTL
     )) as { data?: [number, string | number, ...unknown[]][] } | [number, string | number, ...unknown[]][];
-    const rows = Array.isArray(r) ? r : (r.data ?? []);
+    let rows = Array.isArray(r) ? r : (r.data ?? []);
+    if (!rows.length) {
+      // OKX-lead assets (USO): the m1 kline can be empty — fall back to the
+      // m15 forming close rather than serving a dead ticker (review G3)
+      const r15 = (await cgGet(
+        `/api/v2/kline?symbol=${encodeURIComponent(`${instKey}#kline`)}&interval=m15&limit=2&minLimit=false`,
+        TTL
+      )) as { data?: [number, string | number, ...unknown[]][] } | [number, string | number, ...unknown[]][];
+      rows = Array.isArray(r15) ? r15 : (r15.data ?? []);
+    }
     const last = rows[rows.length - 1];
     // kline row = [t, o, h, l, c, v] — close of the forming candle is the live price
     const close = Number(last?.[4]);

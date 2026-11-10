@@ -28,6 +28,7 @@ interface CacheEntry {
 }
 const g = globalThis as unknown as { __cgClassic?: Map<string, CacheEntry> };
 const cache = (g.__cgClassic ??= new Map<string, CacheEntry>());
+const CACHE_MAX = 96; // whitelist key space is 78×6×6 — cap live memory (review G5/E7)
 
 async function yahooChart(yahoo: string, interval: string, range: string): Promise<{ status: number; text: string }> {
   const path = `/v8/finance/chart/${encodeURIComponent(yahoo)}?interval=${interval}&range=${range}&includePrePost=false`;
@@ -38,7 +39,12 @@ async function yahooChart(yahoo: string, interval: string, range: string): Promi
         cache: "no-store",
         signal: AbortSignal.timeout(12_000),
       });
-      if (res.status === 429 || res.status >= 500) {
+      if (res.status === 429) {
+        // rate-limited: retrying on query2 doubles the request exactly when
+        // Yahoo asked us to stop (review E6) — surface it immediately
+        return { status: res.status, text: await res.text() };
+      }
+      if (res.status >= 500) {
         if (host.includes("query2")) return { status: res.status, text: await res.text() };
         continue; // try query2 before giving up
       }
@@ -139,6 +145,11 @@ export async function GET(req: NextRequest) {
   if (hit && Date.now() - hit.at < TTL_MS) {
     if (hit.err) return NextResponse.json({ ok: false, error: hit.err }, { status: 502 });
     return NextResponse.json(hit.body);
+  }
+  if (hit) cache.delete(key); // expired: evict, never pin stale bodies (review E7)
+  if (cache.size >= CACHE_MAX) {
+    const oldest = cache.keys().next().value;
+    if (oldest !== undefined) cache.delete(oldest);
   }
   const { status, text } = await yahooChart(cfg.yahoo, interval, range);
   if (status !== 200) {

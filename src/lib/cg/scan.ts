@@ -617,7 +617,7 @@ export function startScanner() {
   };
   // footprint + market, per-tier lanes with the intended cadence:
   //   fast tier (BTC/ETH/SOL): every 60 s over 3 assets → each ~every 3 min
-  //   slow tier (9 alts/metals): every 90 s over 9 assets → each ~every 13.5 min
+  //   slow tier (13 alts/metals incl. XPT/USO): every 90 s → each ~every 19.5 min (2026-11-11 expansion)
   // combined work rate ≈ 1.67 scans/min — identical to the previous schedule,
   // but the primary trading assets now refresh 6× more often (they used to be
   // the SLOWER tier: 18 min vs the alts' 6 min, an inverted design).

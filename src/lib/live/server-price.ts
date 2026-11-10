@@ -1,5 +1,5 @@
 import { cgGet } from "../cg/client";
-import { assetOf } from "../cg/assets";
+import { assetOf, leadInstr } from "../cg/assets";
 import { fapiFetch } from "./fapi";
 
 /**
@@ -54,7 +54,7 @@ async function refresh(sym: string): Promise<LivePrice> {
 async function refreshViaCoinglass(sym: string, base: LivePrice, why: string): Promise<LivePrice> {
   try {
     const r = (await cgGet(
-      `/api/v2/kline?symbol=${encodeURIComponent(`Binance_${sym}USDT#kline`)}&interval=m1&limit=2&minLimit=false`,
+      `/api/v2/kline?symbol=${encodeURIComponent(`${leadInstr(sym)}#kline`)}&interval=m1&limit=2&minLimit=false`,
       2_000
     )) as { data?: [number, string | number, ...unknown[]][] } | [number, string | number, ...unknown[]][];
     const rows = Array.isArray(r) ? r : (r.data ?? []);
