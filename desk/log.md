@@ -762,6 +762,7 @@ Deliverables: EXPANSION-PLAN-20261110.md (v1.1) · REVIEW-MULTIAGENT-20261110.md
 ### DEEPSCAN · 2026-11-10 20:57 UTC · zai-desk — 360° on-demand deep analysis (DOGE+LINK)
 - DOGE: desk/deepscan/DOGE-20261110-2057.md
 - LINK: desk/deepscan/LINK-20261110-2057.md
+<<<<<<< HEAD
 
 ### DEEPSCAN · 2026-11-10 21:07 UTC · zai-desk — 360° on-demand deep analysis (XLM+XAG)
 - XLM: desk/deepscan/XLM-20261110-2107.md
@@ -769,3 +770,27 @@ Deliverables: EXPANSION-PLAN-20261110.md (v1.1) · REVIEW-MULTIAGENT-20261110.md
 
 ### DEEPSCAN · 2026-11-10 21:08 UTC · zai-desk — 360° on-demand deep analysis (classic)
 - CLASSIC universe (77): desk/deepscan/CLASSIC-20261110-2108.md — 62 online, watchlist-only (engine v4 pending)
+=======
+## R24 · 2026-11-10 21:06 UTC · zai-desk
+
+**Market**: BTC 73,947.2 (-1.8%)  ETH 2,061.72 (-3.4%)  SOL 83.47 (-3.7%)  XAU 4,038.00 (-2.6%)  XAG 51.620 (-3.5%)
+**Bias (|score|≥2)**: DOGE-4(TRANS)  BTC-5(TRANS)  LTC-5(TRANS)  SOL-3(TRANS)  ADA-3(TRANS)  XRP-4(TRANS)  ETH-2(TRANS)  XAG-2(TREND)  BNB-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R24-DOGE-1 DOGE SHORT limit 0.06950 · stop 0.07020 · T1 0.06744 · T2 0.06645 · T3 0.06612 · R 2.9
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.06786 vs 0.06840), h4 RSI 36.1, day -3.1%
+      [FOR    ] footprint: bull 31 / bear 38; recent: none <6h
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, abs:sell×2, div:buy×1, exh:buy×1, exh:sell×3, sdiv:buy×2, sdiv:sell×1, trap:buy×1 — net 7 buy-side vs 6 sell-side
+      [FOR    ] liquidation: long-liq magnet 0.06645 (str 49, ~$4M est, -2.32%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.009 (5m ago -0.009, falling bids); bid $0.03B vs ask $0.04B
+      [FOR    ] cvd: taker buy 47.8%, perpCvd -107, spotCvd -17, quadrant both-selling, latestDiv bull (recent)
+      [FOR    ] notifications: 6h weighted bias -1.0 (2 events)
+
+### Order lifecycle
+- R9-ADA-1 EXPIRED (unfilled past expiry)
+- R22-LTC-1 re-debated: FOR 6/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
+>>>>>>> 70cedeb (desk(round): 2026-11-10T2106Z — 15-min analysis round)
