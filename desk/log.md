@@ -438,3 +438,6 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 - State updated: `desk/state.json` order `R4-BTC-1` marked as `"expired"`.
 - Formal reply filed in `desk/outbox/2026-11-10T17-59-00_DIR-0005-expiry-cancel-BTC-209404683.reply.md`.
 - Action required: User to delete pending order in MT5 desktop terminal.
+
+### DEEPSCAN · 2026-11-10 19:03 UTC · zai-desk — 360° on-demand deep analysis
+- BTC: desk\deepscan\BTC-20261110-1903.md
