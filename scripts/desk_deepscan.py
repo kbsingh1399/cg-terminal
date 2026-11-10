@@ -653,7 +653,7 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
     else:
         v14, j14 = "○", "OI context only"
     ap(f"| oi | ${fnum((oagg.get('oiUsd') or 0) / 1e9, 2)}B · Δ1h {fnum(oagg.get('oiDelta1hPct'), 2)}% · "
-       f"Δ24h {fnum(d24_, 2)}% | {v14} | {j14} |")
+       f"Δ4h {fnum(oagg.get('oiDelta4hPct'), 2)}% · Δ24h {fnum(d24_, 2)}% | {v14} | {j14} |")
 
     # 15 · liquidation magnets
     ab15 = kl.get("above") or []
@@ -842,6 +842,10 @@ def deep_report(sym):
             (ema.get(tf, {}).get('e13', 0) or 0) < (ema.get(tf, {}).get('e89', 0) or 0)
             for tf in ("h4", "d1")) else "RANGE/TRANSITION (EMA stack mixed)"
         ap(f"- price vs VWAP: {z:+.2f}σ → {'premium' if z > 0 else 'discount'} regime · {regime}")
+    ses = auc.get("session") or {}
+    if ses:
+        ap(f"- session profile (8h): POC {fmt(sym, ses.get('poc'))} · VAH {fmt(sym, ses.get('vah'))} · "
+           f"VAL {fmt(sym, ses.get('val'))}")
     if day:
         ap(f"- day profile: POC {fmt(sym, day.get('poc'))} · VAH {fmt(sym, day.get('vah'))} · "
            f"VAL {fmt(sym, day.get('val'))}" + (f" · month POC {fmt(sym, mon.get('poc'))}" if mon.get("poc") else ""))
@@ -890,7 +894,22 @@ def deep_report(sym):
                f"({fnum(age_h, 1)}h ago — {'fresh' if age_h < 6 else 'stale'})")
     s = d["signals"] or {}
     cnt = s.get("counts") or {}
-    ap(f"- signal footprint: bull {cnt.get('bullish', 0)} / bear {cnt.get('bearish', 0)}")
+    ap(f"- signal footprint: bull {cnt.get('bullish', 0)} / bear {cnt.get('bearish', 0)} "
+       f"(all {cnt.get('all', 0)})")
+    type_tally = {}
+    for st in s.get("sets") or []:
+        n_ = len(st.get("sigs") or [])
+        if n_:
+            b_ = sum(1 for x in (st.get("sigs") or []) if (x.get("side") or "") == "buy")
+            ap(f"  - set '{st.get('label', '?')}': {n_} ({n_ - b_} bear / {b_} bull)")
+        for x in (st.get("sigs") or []):
+            k_ = ((x.get("t") or "?").lower(), (x.get("side") or "?"))
+            type_tally[k_] = type_tally.get(k_, 0) + 1
+    if type_tally:
+        types_ = sorted({kk[0] for kk in type_tally})
+        ap("  - micro-signal cross-tab (type × side): "
+           + " · ".join(f"{t_} {type_tally.get((t_, 'buy'), 0)}buy/{type_tally.get((t_, 'sell'), 0)}sell"
+                        for t_ in types_))
     ev = []
     for st in s.get("sets", []):
         for sig in st.get("sigs", []):
@@ -930,9 +949,10 @@ def deep_report(sym):
         ap("- funding: no venue data")
     oagg = oi.get("aggregate") or {}
     if oagg:
-        d1p, d24p = oagg.get("oiDelta1hPct"), oagg.get("oiDelta24hPct")
+        d1p, d4p, d24p = oagg.get("oiDelta1hPct"), oagg.get("oiDelta4hPct"), oagg.get("oiDelta24hPct")
         chg = (m.get("price") or {}).get("chgDayPct") or 0
-        ap(f"- OI: ${fnum((oagg.get('oiUsd') or 0) / 1e9, 2)}B · Δ1h {fnum(d1p, 2)}% · Δ24h {fnum(d24p, 2)}%")
+        ap(f"- OI: ${fnum((oagg.get('oiUsd') or 0) / 1e9, 2)}B · Δ1h {fnum(d1p, 2)}% · "
+           f"Δ4h {fnum(d4p, 2)}% · Δ24h {fnum(d24p, 2)}%")
         if d24p is not None:
             combo = ("price↓ + OI↓ → forced long liquidation (bear confirmation)" if chg < 0 and d24p < 0 else
                      "price↓ + OI↑ → fresh shorts entering (trend continuation fuel)" if chg < 0 and d24p > 0 else
@@ -967,23 +987,50 @@ def deep_report(sym):
            f"longs {fnum(tot['long'] / (1 if sym in ('XAU', 'XAG') else 1000), 1)}K "
            f"({fnum(tot['short'] / max(tot['long'], 1e-9), 1)}× — "
            f"{'upside squeeze fuel dominates' if tot['short'] > tot['long'] else 'downside fuel dominates'})")
+    net_bid = net_ask = 0.0
+    for g in (d["lto"] or {}).get("groups", []):
+        for o in g.get("list", []):
+            if (o.get("currentUsd") or 0) >= 1e6:
+                if o.get("side") == 1:
+                    net_ask += o["currentUsd"]
+                else:
+                    net_bid += o["currentUsd"]
+    if net_bid or net_ask:
+        ap(f"- net whale-wall balance (≥$1M, all venues): BID ${fnum(net_bid / 1e6, 1)}M vs "
+           f"ASK ${fnum(net_ask / 1e6, 1)}M → "
+           f"{'ask-side heavier — supply overhead' if net_ask > net_bid else 'bid-side heavier — demand beneath'}")
     walls = []
     for g in (d["lto"] or {}).get("groups", []):
         for o in g.get("list", []):
             if o.get("currentUsd", 0) >= 5e6 and price and abs(o["price"] - price) / price < 0.04:
                 walls.append(o)
     if walls:
-        ap("- whale walls ≥$5M within ±4%:")
+        ap("- whale walls ≥$5M within ±4% (age + touched state):")
         for o in sorted(walls, key=lambda x: -x["currentUsd"])[:6]:
             side = "ASK" if o.get("side") == 1 else "BID"
+            age_m = ((o.get("currentTime") or 0) - (o.get("startTime") or 0)) / 60000
             ap(f"  - {side} ${fnum(o['currentUsd'] / 1e6, 1)}M @ {fmt(sym, o['price'])} "
-               f"({(o['price'] / price - 1) * 100:+.2f}%)")
+               f"({(o['price'] / price - 1) * 100:+.2f}%) · age {fnum(age_m, 0)}m · state {o.get('state') or '?'}")
     bwm = (d["book"] or {}).get("model") or {}
     if bwm:
         dp = bwm.get("depth") or {}
         ap(f"- book ±5%: imbalance {fnum(bwm.get('imbalance'), 3)} "
            f"(5m ago {fnum(bwm.get('imbalance5mAgo'), 3)}) · bid ${fnum((dp.get('bidUsd') or 0) / 1e9, 2)}B vs "
            f"ask ${fnum((dp.get('askUsd') or 0) / 1e9, 2)}B")
+        bw_ = [w for w in (bwm.get("walls") or []) if (w.get("usd") or 0) >= 5e6]
+        for lbl, sch_ in (("ask", "a"), ("bid", "b")):
+            arr = sorted([w for w in bw_ if w.get("side") == sch_],
+                         key=lambda w: abs(w.get("distPct") or 9))
+            if arr:
+                w0 = arr[0]
+                ap(f"- nearest major {lbl} wall: ${fnum((w0.get('usd') or 0) / 1e6, 1)}M @ {fmt(sym, w0.get('price'))} "
+                   f"({(w0.get('distPct') or 0):+.2f}%) · age {fnum((w0.get('ageMs') or 0) / 60000, 0)}m · "
+                   f"{'touched (persisted — structural)' if w0.get('touched') else 'untouched'}")
+        bev = (bwm.get("events") or [])[-6:]
+        if bev:
+            ap("- wall life events (recent, MM-retreat watch): " + " · ".join(
+                f"{e.get('type', '?').upper()} {('ASK' if e.get('side') == 'a' else 'BID')} "
+                f"${fnum((e.get('usd') or 0) / 1e6, 1)}M @ {fmt(sym, e.get('p'))}" for e in bev))
     if d.get("stopmap"):
         smod = (d["stopmap"] or {}).get("model") or {}
         y = smod.get("y") or []
