@@ -267,3 +267,19 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 - Target translated from 72,463.6 perp × (1 + 0.05%) = 72,499.8 (0.2 pt / 0.00028% deviation, well within ±0.1% tolerance).
 - R multiple expanded: 3.46R ($78.35) → 4.67R ($105.77). Risk ceiling strictly preserved at $22.66 (0.487% equity).
 - VERDICT: VERIFIED-COMPLIANT. Written to desk/outbox/VERIFY-TP-209404683.reply.md.
+## R13 · 2026-11-10 17:49 UTC · zai-desk
+
+**Market**: BTC 73,061.0 (-3.0%)  ETH 2,023.04 (-5.2%)  SOL 82.17 (-5.2%)  XAU 4,027.50 (-2.8%)  XAG 51.340 (-4.1%)
+**Bias (|score|≥2)**: BTC-7(TREND)  ADA-6(TREND)  BNB-4(TREND)  ETH-4(TREND)  LTC-4(TREND)  DOGE-2(TREND)  XAU+2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R4-DOGE-3 re-debated: FOR 5/AGAINST 1 — stands
+- R7-LTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 7/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
