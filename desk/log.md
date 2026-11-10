@@ -245,6 +245,21 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 **VERDICT for user: partially right.** Within the terminal's 12-asset universe the engine now consumes everything trade-relevant; but funding/OI/L-S-ratio are whole dimensions absent from the stack, and they matter most precisely for squeeze-risk assessment (today's recurring hazard: entries above ask-wall fuel, ADA/LTC spread blocks). Also breadth-limited to 12 assets.
 
 **ACTION:** DIR-0004 issued — atg to extend terminal with /api/cg/funding + /api/cg/oi (Coinglass upstream already has these; cg_client.py decrypt pipeline exists). On delivery, engine v3.2 adds funding-squeeze gate (funding < −0.03%/8h on shorts → tighten entry or skip) + OI confirmation vote. Scope: 2 endpoints, no new deps.
+## R12 · 2026-11-10 17:46 UTC · zai-desk
+
+**Market**: BTC 72,940.1 (-3.2%)  ETH 2,018.44 (-5.4%)  SOL 81.95 (-5.5%)  XAU 4,027.28 (-2.8%)  XAG 51.290 (-4.1%)
+**Bias (|score|≥2)**: BTC-7(TREND)  ADA-5(TREND)  LTC-5(TREND)  ETH-4(TREND)  DOGE-4(TREND)  XAU+3(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R4-DOGE-3 re-debated: FOR 6/AGAINST 1 — stands
+- R7-LTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 7/AGAINST 0 — stands
+
+### Positions
+- no open positions
 
 ### EXEC · 2026-11-10 17:43 UTC · atg-exec — Ticket 209404683 TP modification verified
 - User modified pending ticket 209404683 in MT5: TP changed from 72,957.0 → 72,500.0 (High-leverage long-liq cluster target).

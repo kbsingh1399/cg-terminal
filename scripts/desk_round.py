@@ -276,7 +276,7 @@ def fetch_deep(sym):
 
 
 # ------------------------------------------------- 5. THE DEBATE
-def build_debate(sym, side, rec, deep):
+def build_debate(sym, side, rec, deep, regime=None):
     """One FOR/AGAINST/NEUTRAL verdict per terminal data source."""
     long = side == "long"
     sgn = 1 if long else -1
@@ -395,12 +395,32 @@ def debate_ok(deb, side):
     return f >= DEBATE_MIN_FOR and f > a, f, a
 
 
+
+# ------------------------------------------------- 5b. regime detection (v3.2)
+def regime_of(rec, parts):
+    """TREND-UP / TREND-DOWN / RANGE / TRANSITION — decides the trade template."""
+    trend = parts.get("trend", 0) or 0
+    price, vw = rec.get("price"), rec.get("vwap") or {}
+    vwap, b = vw.get("vwap") or price, vw.get("bands") or {}
+    sd1 = b.get("sd1") or (price * 0.005 if price else 0)
+    if not price or not sd1:
+        return "TRANSITION", 0.0
+    dist_sd = (price - vwap) / sd1
+    if abs(trend) >= 2 and abs(dist_sd) >= 0.5:
+        return ("TREND-DOWN" if trend < 0 else "TREND-UP"), dist_sd
+    if abs(trend) <= 1 and abs(dist_sd) < 0.5:
+        return "RANGE", dist_sd
+    return "TRANSITION", dist_sd
+
+regimes = {s: regime_of(assets[s], scored[s].get("parts") or {})[0]
+           for s in scored if scored.get(s, {}).get("score") is not None}
+
 # ------------------------------------------------- 6. build orders
 new_orders, opp_lines = [], []
 cands = [s for s in pre_rank if scored[s]["score"] is not None]
 
 
-def build_order(sym, side, score, parts, rec, deep):
+def build_order(sym, side, score, parts, rec, deep, regime="TRANSITION"):
     price, vw = rec.get("price"), rec.get("vwap") or {}
     vwap, b = vw.get("vwap") or price, vw.get("bands") or {}
     sd1, sd2 = b.get("sd1") or price * 0.005, b.get("sd2") or price * 0.01
@@ -410,17 +430,27 @@ def build_order(sym, side, score, parts, rec, deep):
     long = side == "long"
     sgn = 1 if long else -1
 
-    if long:
-        entry = min(price, vwap - sd1)
-        if day.get("poc") and day["poc"] < price and day["poc"] > entry:
+    mode = "mean-revert" if regime == "RANGE" else "trend-pullback"
+    if regime == "RANGE":
+        # v3.2 mean-revert template: fade the 2-sigma band extreme back to the VWAP mean
+        entry = vwap - 2.0 * sd1 if long else vwap + 2.0 * sd1
+        if day.get("poc") and ((long and vwap > day["poc"] > entry) or (not long and vwap < day["poc"] < entry)):
             entry = day["poc"]
+        base_risk = 0.75 * sd1
+        stop = entry - sgn * base_risk
     else:
-        entry = max(price, vwap + sd1)
-        if day.get("poc") and day["poc"] > price and day["poc"] < entry:
-            entry = day["poc"]
+        # trend-pullback template (v2/v3): limit into the value band, aligned with the trend
+        if long:
+            entry = min(price, vwap - sd1)
+            if day.get("poc") and day["poc"] < price and day["poc"] > entry:
+                entry = day["poc"]
+        else:
+            entry = max(price, vwap + sd1)
+            if day.get("poc") and day["poc"] > price and day["poc"] < entry:
+                entry = day["poc"]
 
-    base_risk = max(sd2 - sd1, price * 0.004)
-    stop = entry - sgn * base_risk
+        base_risk = max(sd2 - sd1, price * 0.004)
+        stop = entry - sgn * base_risk
     kl = liq.get("keyLevels", {})
     in_zone = (kl.get("below") if long else kl.get("above")) or []
     stop_note = ""
@@ -444,6 +474,8 @@ def build_order(sym, side, score, parts, rec, deep):
                           f"~${cluster_usd(lv):,.0f}M est) within 1.2R of entry — wait for sweep")
 
     magnets = []
+    if regime == "RANGE":
+        magnets.append(((vwap - 0.2 * sd1) if long else (vwap + 0.2 * sd1), "VWAP mean (reversion)"))
     if long:
         if day.get("vah") and day["vah"] > entry:
             magnets.append((day["vah"], "day VAH"))
@@ -494,7 +526,7 @@ def build_order(sym, side, score, parts, rec, deep):
     if r1 < cfg["min_r_multiple"]:
         return None, f"R to T1 {r1:.1f} < {cfg['min_r_multiple']}"
 
-    debate = build_debate(sym, side, rec, deep)
+    debate = build_debate(sym, side, rec, deep, regime=regime)
     ok, nf, na = debate_ok(debate, side)
     if not ok:
         return None, f"debate lost: FOR {nf} / AGAINST {na} (" + "; ".join(f"{x['source']}:{x['verdict']}" for x in debate if x['verdict'] != 'NEUTRAL') + ")"
@@ -508,7 +540,7 @@ def build_order(sym, side, score, parts, rec, deep):
         f"confluence {score:+.1f} [notif {parts.get('notif', 0):+.1f} · signals {parts.get('signals', 0):+.1f} · "
         f"trend {parts.get('trend', 0):+.0f} · vwap {parts.get('vwap', 0):+.0f} · rsi {parts.get('rsi', 0):+.1f} · cvd {parts.get('cvd', 0):+.1f}]"
         f" · debate FOR {nf}/AGAINST {na}"
-        f"; entry {'VWAP-1σ/day-POC' if long else 'VWAP+1σ/day-POC'} {fmt(sym, entry)}"
+        f"; entry {'VWAP-1σ/day-POC' if long else 'VWAP+1σ/day-POC'} {fmt(sym, entry)} [{mode} · {regime}]"
         f"; stop beyond 2σ zone{' — ' + stop_note if stop_note else ''}"
         f"; T1 {ladder[0][1]} · T2 {ladder[1][1] if len(ladder) > 1 else '—'} · T3 {ladder[2][1] if len(ladder) > 2 else '—'}"
         f"{wall_note}; levels are PERP prices — translate to broker via live basis before MT5; liq clusters are Coinglass estimates"
@@ -527,6 +559,7 @@ def build_order(sym, side, score, parts, rec, deep):
         "riskR": round(r1, 1), "expiresTs": now_ms + cfg["order_expiry_hours"] * 3600_000,
         "status": "suggested", "statusTs": now_ms,
         "perpRefPrice": price,
+        "regime": regime, "mode": mode,
         "debate": debate,
         "rationale": rationale,
         "ticket": None, "actualEntry": None, "filledTs": None, "notes": None,
@@ -547,7 +580,7 @@ for o in state["orders"]:
     sym = o["sym"]
     if scored.get(sym, {}).get("score") is None:
         continue
-    deb = build_debate(sym, o["side"], assets[sym], deep_for(sym))
+    deb = build_debate(sym, o["side"], assets[sym], deep_for(sym), regime=regimes.get(sym))
     o["debate"] = deb
     o["perpRefPrice"] = assets[sym].get("price")
     ok, nf, na = debate_ok(deb, o["side"])
@@ -565,21 +598,28 @@ state["orders"] = [o for o in state["orders"] if o.get("status") not in ("expire
 for sym in cands:
     sc = scored[sym]
     score, parts = sc["score"], sc["parts"]
-    if abs(score) < MIN_CONF:
-        continue
-    side = "long" if score > 0 else "short"
-    al = (1 if parts.get("signals", 0) * (1 if side == "long" else -1) > 0 else 0,
-          1 if parts.get("trend", 0) * (1 if side == "long" else -1) > 0 else 0,
-          1 if parts.get("vwap", 0) * (1 if side == "long" else -1) > 0 else 0)
-    if sum(al) < 2:
-        continue
+    regime = regimes.get(sym, "TRANSITION")
+    if regime == "RANGE":
+        # v3.2 mean-revert lane: weak directional lean picks the fade side; no momentum alignment required
+        if abs(score) < 1.5:
+            continue
+        side = "long" if score > 0 else "short"
+    else:
+        if abs(score) < MIN_CONF:
+            continue
+        side = "long" if score > 0 else "short"
+        al = (1 if parts.get("signals", 0) * (1 if side == "long" else -1) > 0 else 0,
+              1 if parts.get("trend", 0) * (1 if side == "long" else -1) > 0 else 0,
+              1 if parts.get("vwap", 0) * (1 if side == "long" else -1) > 0 else 0)
+        if sum(al) < 2:
+            continue
     if any(o.get("sym") == sym and o.get("side") == side and o.get("status") in ("suggested", "placed", "filled")
            for o in state["orders"] + live_positions):
         continue
     if n_open_positions + len([o for o in state["orders"] if o.get("status") in ("suggested", "placed")]) >= cfg["max_concurrent_positions"]:
         break
 
-    order, note = build_order(sym, side, score, parts, assets[sym], deep_for(sym))
+    order, note = build_order(sym, side, score, parts, assets[sym], deep_for(sym), regime=regime)
     if order is None:
         opp_lines.append(f"- {sym} {side.upper()} confluence {score:+.1f} — REJECTED: {note}")
         continue
@@ -640,12 +680,12 @@ state["analysis"] = {
 if not DRY:
     STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
 
-bias_tbl = "  ".join(f"{s}{scored[s]['score']:+.0f}" for s in cands if abs(scored[s]["score"]) >= 2)
+bias_tbl = "  ".join(f"{s}{scored[s]['score']:+.0f}({regimes.get(s, '?')[:5]})" for s in cands if abs(scored[s]["score"]) >= 2)
 lines = [f"## {rid} · {now_iso} · zai-desk", ""]
 mkt = "  ".join(f"{s} {fmt(s, assets[s].get('price'))} ({(assets[s].get('chgDayPct') or 0):+.1f}%)"
                 for s in ("BTC", "ETH", "SOL", "XAU", "XAG") if assets.get(s, {}).get("price"))
 lines += [f"**Market**: {mkt}", f"**Bias (|score|≥2)**: {bias_tbl or 'none significant'}", ""]
-lines += [f"### Opportunities (engine v3.1 — debate-gated + microFlow vote, min R {cfg['min_r_multiple']})"] + (opp_lines or ["- none meeting the gates this round"]) + [""]
+lines += [f"### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R {cfg['min_r_multiple']})"] + (opp_lines or ["- none meeting the gates this round"]) + [""]
 if lifecycle_events:
     lines += ["### Order lifecycle"] + [f"- {e}" for e in lifecycle_events] + [""]
 lines += ["### Positions"] + (pos_lines or ["- no open positions"]) + [""]
@@ -654,7 +694,7 @@ if not DRY:
         f.write("\n".join(lines) + "\n")
 
 print("=" * 96)
-print(f"TRADE DESK {rid} · {now_iso} · engine v3.1 · {'DRY-RUN' if DRY else 'COMMITTED LOCALLY'}")
+print(f"TRADE DESK {rid} · {now_iso} · engine v3.2 (regime-aware: trend-pullback + mean-revert) · {'DRY-RUN' if DRY else 'COMMITTED LOCALLY'}")
 print("=" * 96)
 for s in cands:
     sc = scored[s]
