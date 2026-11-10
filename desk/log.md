@@ -79,3 +79,25 @@ entries. All timestamps UTC.
 ### Positions
 - no open positions
 
+## R6 · 2026-11-10 15:18 UTC · zai-desk
+
+**Market**: BTC 74,300.2 (-1.4%)  ETH 2,070.21 (-3.0%)  SOL 84.12 (-3.0%)  XAU 4,056.63 (-2.1%)  XAG 52.080 (-2.7%)
+**Bias (|score|≥2)**: BTC-7  ADA-6  ETH-3  DOGE-4
+
+### Opportunities (engine v3 — debate-gated, min R 2.0)
+- NEW R6-ADA-1 ADA SHORT limit 0.1772 · stop 0.1783 · T1 0.1709 · R 6.0
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.1769 vs 0.1773), h4 RSI 42.8, day -0.3%
+      [FOR    ] footprint: bull 37 / bear 55; recent: none <6h
+      [FOR    ] liquidation: long-liq magnet 0.1709 (str 51, ~$2M est, -3.38%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.158 (5m ago -0.283, rising bids); bid $0.01B vs ask $0.02B
+      [FOR    ] cvd: taker buy 48.8%, perpCvd -17, spotCvd -3, quadrant both-selling, latestDiv bull (stale/none)
+      [FOR    ] notifications: 6h weighted bias -5.9 (14 events)
+- ETH SHORT confluence -3.2 — REJECTED: opposite liq magnet 2,113.70 (str 68, ~$161M est) within 1.2R of entry — wait for sweep
+
+### Order lifecycle
+- R4-BTC-1 re-debated: FOR 7/AGAINST 2 — stands
+- R4-DOGE-3 re-debated: FOR 5/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
