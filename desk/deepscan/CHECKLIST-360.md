@@ -1,14 +1,13 @@
 # CHECKLIST-360 · Master checklist for a 360° deep-research run
 
-v1.4 · 2026-11-10 20:30 UTC · owner: zai-desk · engine: v3.2 (deepscan v3.3 symbols) · review: after every 10 runs or on data-source change
+v1.5 · 2026-11-10 21:25 UTC · owner: zai-desk · engine: v3.3 (data-depth + magnet-mass gates) · review: after every 10 runs or on data-source change
 
-**360° = all 12 assets × 8 dimensions × every data point the terminal exposes,
-ending in a fully constructed limit-trade list where EVERY tab carries a verdict
+**360° = the FULL FundedNext universe — 16 perp assets × 8 dimensions × every data point the terminal exposes, PLUS the 77-instrument classic universe (watchlist-only), ending in a fully constructed limit-trade list where EVERY tab carries a verdict
 (✓/✗/○) and a WRITTEN justification tied to the trade's levels, plus a
 "WHY THIS TRADE" narrative — no data point may be silently dropped, no
-number may go unexplained (user mandate 2026-11-10, reinforced 18:55 UTC).**
-Universe (14, v1.4): BTC · ETH · SOL† · BNB† · XRP · ADA · AVAX† · DOGE · LINK · LTC · XLM · XMR · XAU · XAG († NOT LISTED on FundedNext — perp-side watchlist only, always PARKED-not-listed)
-Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
+number may go unexplained (user mandate 2026-11-10, reinforced 18:55 UTC, extended to full universe 2026-11-11).**
+Universe (v1.5): **PERP 16** — BTC · ETH · SOL† · BNB† · XRP · ADA · AVAX† · DOGE · LINK · LTC · XLM · XMR · XAU · XAG · XPT · USO († NOT LISTED — perp-side watchlist only) · **CLASSIC 77** — 14 indices · 43 FX · 19 equities · UKO (watchlist-only: no derivatives data exists for cash instruments; verdicts WATCHLIST-ONLINE / -STALE / -OFFLINE; SPCX excluded — wrong Yahoo instrument, pending DIR-0009 spec check)
+Report per perp asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md` · classic: consolidated `desk/deepscan/CLASSIC-<ts>.md` (multi-sym) or standalone file (single-sym request)
 
 ---
 
@@ -16,14 +15,16 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 | Type this | What happens |
 |---|---|
-| `360 all` | **Full 360° — all 12 assets**: 8-section report each + §9 limit-trade candidates + evidence manifests + ranked digest with the complete trade list (PLACEABLE / PARKED / REJECTED / NO-TRADE, reasons printed) |
-| `360 top` | Top-3 assets by \|confluence score\| (from state.json) |
-| `360 BTC ETH XAU` | Named subset only |
+| `360 all` | **FULL UNIVERSE — 16 perp deep reports + 77 classic watchlist scans** + §9 candidates + evidence manifests + ranked digest + classic table (RUNTIME ~6-10 min; Yahoo budget ~77 calls) |
+| `360 classic` | Classic universe only (77) |
+| `360 top` | Top-3 perp assets by \|confluence score\| (from state.json) |
+| `360 BTC ETH XAU EURUSD US30` | Named subset — perp AND/OR classic mix |
 
 - Typed **in chat** → instant desk wake → run starts immediately (preferred).
 - Written in **WAKEUP.md queue** → runs on next wake (cron 3×/day or next chat message).
-- Raw command (desk/atg shell): `python3 scripts/desk_deepscan.py [SYMS\|all\|--top N] [--dry-run]`
+- Raw command (desk/atg shell): `python3 scripts/desk_deepscan.py [SYMS\|all\|classic\|--top N] [--dry-run]`
   (`--dry-run` = report written but NOT committed → **sandbox recycling deletes it** — use only for debugging).
+- FAILURE MODES (v1.5): state.json unreadable/short map → run REFUSES (sys.exit — repair first, scripts/repair_state_json.py pattern) · terminal down + `all`/`classic` → run REFUSES (dead classic registry) · Yahoo 429 → per-symbol WATCHLIST-OFFLINE rows (expected degradation, 2s backoff) · EU/Asian indices outside market hours → WATCHLIST-STALE (expected, honest).
 
 ## B · Preflight (before running — desk)
 
@@ -96,3 +97,8 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 - v1.2 · 2026-11-10 — v3 justification layer: §9 now emits "WHY THIS TRADE" narrative + evidence manifest upgraded to reading/verdict(✓✗○)/written-justification per tab (opposing data flagged as prominently as supporting). Delivery upgraded: every 360 digest also lands as a WAKE.md beacon section so atg-exec wakes locally on the 45s poll.
 - v1.1 · 2026-11-10 — §9 limit-trade construction + evidence manifest added to every report; `360 all` now prints the complete trade list (user mandate: all potential limit trades, proper justification across all tabs, no data missed). First v2 run: 12× desk/deepscan/*-1848.md + DIGEST-20261110-1848.md (2 PLACEABLE, 4 PARKED, 5 REJECTED, 1 NO-TRADE; XAG min-lot risk mandate violation caught).
 - v1.0 · 2026-11-10 — initial, post playbook-audit DIALOG; pipeline validated end-to-end (BTC desk runs 18:28/18:33, BTC atg-exec run 18:35, ETH desk run 18:36 incl. daemon log.md race resolution)
+
+## G · Retention policy (v1.5, review J8)
+- Keep the **last 10 per-symbol reports** and **ALL digests**; older per-symbol reports are historical git artifacts (recoverable via git history) — prune working-tree copies quarterly if disk matters.
+- CLASSIC-<ts>.md consolidated files are compact by design (~3KB/symbol) — keep the last 10 alongside digests.
+- The digest is the canonical scan record: every run's full trade list + classic table lives there even after per-symbol files are pruned.

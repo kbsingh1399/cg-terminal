@@ -1,7 +1,7 @@
 # EXPANSION PLAN · 360° Universe Across Verified FundedNext Assets
 
-v1.1 · 2026-11-10 20:30 UTC (post multi-agent review) · owner: zai-desk · method: Karpathy guidelines (assumptions surfaced, surgical changes, verifiable criteria)
-inputs: user broker audit (FundedNext-Server, acct 11808165, 96 instruments) · live Coinglass web-API probe (19:55–20:00 UTC, this desk) · repo source audit (`src/lib/cg/assets.ts`, `scripts/desk_deepscan.py`, `desk/state.json`)
+v2.0 · 2026-11-10 21:20 UTC (T3 un-deferred by explicit user directive: "expand all the mentioned forex, indices and metals along with mentioned cryptos"; XPT/USO/UKO + 77-instrument classic universe SHIPPED — see v2 addendum at bottom) · v1.1 2026-11-10 20:30 UTC (post multi-agent review) · owner: zai-desk · method: Karpathy guidelines (assumptions surfaced, surgical changes, verifiable criteria)
+inputs: user broker audit (FundedNext-Server, acct 11808165, 96 instruments) · live Coinglass web-API probe (19:55–20:00 UTC, this desk) · live Yahoo/Binance/terminal probes 2026-11-10 20:40-21:10 UTC (scripts/t3_probe_results.json) · repo source audit (`src/lib/cg/assets.ts`, `src/lib/cg/classic.ts`, `scripts/desk_deepscan.py`, `desk/state.json`)
 
 ---
 
@@ -132,3 +132,24 @@ Current sizing is **spec-driven and class-agnostic**: `lots = risk_usd / (stopDi
 ## 8 · Rollback
 
 Phase 1: revert `symbol_map` values + the 3 hunks in `desk_deepscan.py` (self-contained, no schema change). Phase 2a: delete the two `mk()` lines + comment block. Both revertible in one commit; no data migrations involved.
+
+---
+
+# v2.0 ADDENDUM · 2026-11-10 21:20 UTC — FULL-UNIVERSE EXPANSION (user directive)
+
+**User directive 2026-11-11 (IST)**: "we were supposed to expand all the mentioned forex, indices and metals along with mentioned cryptos… extensive research of all market data available from all exchange and integration in our terminal." → **Tier 3 deferral OVERRIDDEN by the decision-maker.** Everything below SHIPPED and verified this run:
+
+| Tier | Assets | Data path | Status v2.0 |
+|---|---|---|---|---
+| T1 full pipeline | BTC ETH XRP ADA DOGE LINK LTC XAU XAG XLM XMR (11 tradeable + SOL/BNB/AVAX watchlist) | Coinglass 4-venue perps | **live** |
+| **T2b (was BLOCKED)** | **XPT USO** | XPT 2-venue · USO OKX-lead (leadInstr centralization, A2 done) | **SHIPPED** — scanned, PARKED under v3.3 data-depth gate (1,592/2v · 358/1v) |
+| **T3 (was deferred)** | **77 classic** (14 indices · 43 FX · 19 equities · UKO) | **NEW `/api/cg/classic` Yahoo v8 pipeline** (live-verified 143/143 probes) | **SHIPPED watchlist-only** — full §1-§9 reports, honest n/a derivatives dims, reduced 4-dim scorecard, WATCHLIST-ONLINE/STALE/OFFLINE verdicts |
+| Excluded | SPCX | Yahoo SPCX = SPAC ETF (wrong instrument) | removed; restore after DIR-0009 spec check |
+
+**v3.3 gates shipped with it** (multi-agent round 2, REVIEW-MULTIAGENT-20261110-R2.md): data-depth (≥3 venues AND ≥1,000 levels) · **magnet-mass floor (T1 ≥ max[$5M, 0.25% OI] — closes the XLM phantom-geometry blocker)** · min-lot risk → PARKED · floor-to-step sizing · staleness gate · registry/parse hard-fails.
+
+**Research compendium** (the directive's core ask): `desk/deepscan/T3-DATARESEARCH-20261110.md` — per-class coverage of every integrated + researched source (Coinglass, Binance, Yahoo, OANDA v20 books, CFTC semiweekly COT, Twelve Data, Finnhub, Alpha Vantage, Dukascopy, Stooq, MT5 DOM/tick-volume), scorecard mapping, rate-limit budget, sources.
+
+**Engine v4 gate**: classic instruments NEVER construct trades until the 8 Laurie preconditions ship (R2 doc) — watchlist data first, honesty always.
+
+**Verification (v2 criteria, all live)**: `/api/cg/assets` = 16 · `/api/cg/classic?list=1` = 77 · market/fp/ticker 200 on XPT+USO (OKX lead) · `360 all` = 16 perp + 77 classic (62 online + 15 STALE at 21:08 UTC, EU closed — honest) · XLM mass-floor PARK verified · XAG min-lot PARK verified · DOGE/LINK correct spread-gate readings after the state.json race repair (RETRACTION logged) · commits fc6d300, 01a5e8b, f40d1e9, f87f318.
