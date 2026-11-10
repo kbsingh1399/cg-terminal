@@ -380,8 +380,8 @@
       ],
       "riskR": 6.0,
       "expiresTs": 1794338287153,
-      "status": "suggested",
-      "statusTs": 1794323887153,
+      "status": "placed",
+      "statusTs": 1794324691000,
       "perpRefPrice": 0.1769,
       "debate": [
         {
@@ -426,10 +426,10 @@
         }
       ],
       "rationale": "confluence -6.3 [notif -2.0 \u00b7 signals -1.0 \u00b7 trend -2 \u00b7 vwap -1 \u00b7 rsi +0.0 \u00b7 cvd -0.3] \u00b7 debate FOR 6/AGAINST 0; entry VWAP+1\u03c3/day-POC 0.1772; stop beyond 2\u03c3 zone; T1 long-liq cluster str 51 (~$2M est) \u00b7 T2 \u2014 \u00b7 T3 \u2014; levels are PERP prices \u2014 translate to broker via live basis before MT5; liq clusters are Coinglass estimates",
-      "ticket": null,
-      "actualEntry": null,
+      "ticket": 209375723,
+      "actualEntry": 0.17772,
       "filledTs": null,
-      "notes": null
+      "notes": "placed by USER on MT5 desktop 15:31:31 UTC, 1.00 lot (recorded by zai-desk from user screenshot 15:33) \u2014 entry 0.17772 = perp 0.1772 x basis +0.29% (translated OK), but SL 0.1783 / TP 0.1709 left RAW (untranslated) and ADAUSD spreadPct 2.19% >> 0.15% rule. Desk verdict: CANCEL \u2014 at fill (bid>=0.17772) ask~0.1815 > SL => instant stop-out ~ -spread. Sizing unverified until contract spec lands in mt5.json (specs added to mt5_report.py). Awaiting user decision: CANCEL / MODIFY / KEEP."
     }
   ],
   "positions": [],

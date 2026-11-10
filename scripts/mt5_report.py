@@ -97,6 +97,17 @@ try:
                 "asset": asset,
                 "perpMid": pp,                # terminal price the levels are built from
                 "basisPct": basis,            # mt5 mid vs perp mid, % — translate levels: mt5 = perp * (1 + basis/100)
+                # broker contract specs — sizing math: risk$ = stopDist × contractSize × lots
+                "spec": {
+                    "contractSize": info.trade_contract_size,
+                    "volumeMin": info.volume_min,
+                    "volumeStep": info.volume_step,
+                    "volumeMax": info.volume_max,
+                    "tickValue": info.trade_tick_value,
+                    "tickSize": info.trade_tick_size,
+                    "stopsLevelPoints": info.trade_stops_level,
+                    "currencyProfit": info.currency_profit,
+                },
             }
         except Exception as e:
             spreads[sym] = {"ok": False, "reason": str(e)[:120]}

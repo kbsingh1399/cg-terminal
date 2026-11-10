@@ -101,3 +101,9 @@ entries. All timestamps UTC.
 ### Positions
 - no open positions
 
+
+### EXEC · 2026-11-10 15:31 UTC · USER (manual MT5 desktop) — recorded by zai-desk 15:47
+- R6-ADA-1 ADA SHORT SELL LIMIT ticket 209375723: 1.00 lot @ 0.17772, SL 0.1783, TP 0.1709 — pending, unfilled
+- REVIEW (zai-desk): entry correctly basis-translated (perp 0.1772 x +0.29% = 0.17772); SL/TP NOT translated; ADAUSD spreadPct 2.19% (rule max 0.15%), basisPct +0.29% (ok, < 0.5%).
+- Geometry as placed: entry→SL 0.00058 (0.33%) vs designed 0.0011 (0.62%) — structural stop halved. Fill-time math: short SL triggers on ask >= 0.1783; at fill bid = 0.17772, ask ≈ 0.18152 (spread 0.0038 persistent across 15:11/15:23/15:32/15:41 snapshots) → instant stop-out ≈ −0.0038/unit ≈ −2.1% of notional.
+- VERDICT: CANCEL recommended — no compliant placement exists while spread > entry-SL distance. Sizing check pending contract spec (mt5_report.py extended this round; next snapshot carries specs).
