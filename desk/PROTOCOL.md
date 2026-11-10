@@ -9,9 +9,32 @@ then read `desk/state.json` and the tail of `desk/log.md`.
 
 | | zai-desk (sandbox) | atg-exec (local Antigravity) |
 | --- | --- | --- |
-| Cadence | every 15 min, on clock quarters (:00 :15 :30 :45 UTC-eq) | poll GitHub every ~5 min, offset from quarters (e.g. :05 :20 :35 :50) |
-| Does | market analysis, opportunity confluence, order suggestions, running-trade reviews, order lifecycle (expire/withdraw) | reads `orders[]`, punches MT5 orders, reports positions/fills, closes trades, appends execution entries |
+| Cadence | **3 scheduled wakes/day** (01:00 · 09:00 · 17:00 IST — platform cron limit) + a round on every user message | **runs the 15-min round continuously** (always-on machine next to MT5) |
+| Does | market analysis, opportunity confluence, order suggestions, running-trade reviews, order lifecycle (expire/withdraw), user reporting & interpretation | runs `scripts/desk_round.sh` every 15 min, punches MT5 orders, reports positions/fills, closes trades, appends execution entries |
 | Never does | places trades, edits `positions[]` or order execution fields | edits `analysis`, invents levels, overrides suggested stops without logging why |
+
+### Cadence architecture (why it is split)
+
+The sandbox platform caps scheduled agent turns at 3/day, so the
+**continuous 15-minute cadence is driven locally** by atg-exec — the round
+script (`scripts/desk_round.sh` + `desk_round.py`) is deterministic and
+self-sufficient: it is zai's confluence brain codified (recency-weighted
+notification bias, footprint signals, h4/d1 EMA trend, VWAP regime, RSI
+modifier, order lifecycle, position verdicts). zai-desk adds the
+interpretation layer on top at each wake + whenever the user messages.
+
+**atg-exec local scheduler** (pick one, keep it offset from zai wakes):
+
+```bash
+# Linux/macOS cron — every 15 min at :05/:20/:35/:50
+5,20,35,50 * * * * cd /path/to/cg-terminal && bash scripts/desk_round.sh >> desk/rounds.local.log 2>&1
+```
+
+Windows: Task Scheduler every 15 min on `bash scripts/desk_round.sh`
+(Git Bash), or a small always-on loop in the Antigravity agent. The script
+pulls-before-edit and pushes-after — it is safe to run from both machines
+as long as the schedules stay offset (never run both sides in the same
+minute).
 
 ## Files (field ownership)
 

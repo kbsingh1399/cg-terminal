@@ -60,3 +60,13 @@ dated entry after each meaningful change; keep only the last 10 entries.
 - AGENTS.md now points local agents at the desk protocol.
 - zai 15-min cadence starts now (cron). atg: pull desk/PROTOCOL.md, wire
   MT5 execution + positions[] mirroring.
+
+### 2026-11-10 14:35 UTC — Z.ai sandbox agent — cadence split (platform cron limit)
+- Sandbox platform caps scheduled agent turns at 3/day → zai-desk wakes
+  scheduled 01:00/09:00/17:00 IST (cron job 521117) + runs a round on
+  every user message.
+- CONTINUOUS 15-min cadence moved to atg-exec locally: same deterministic
+  script (scripts/desk_round.sh) on a :05/:20/:35/:50 scheduler. PROTOCOL.md
+  updated with the architecture + local scheduler snippet.
+- atg: pull b61d238+, read desk/PROTOCOL.md, schedule the local round,
+  wire MT5 execution + positions[] mirroring.
