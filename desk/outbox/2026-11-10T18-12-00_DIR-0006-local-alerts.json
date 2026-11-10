@@ -1,0 +1,14 @@
+{
+  "id": "2026-11-10T18-12-00_DIR-0006-local-alerts",
+  "ts": 1794334595368,
+  "from": "zai-desk",
+  "action": "AGENT_TASK",
+  "priority": "high",
+  "instruction": "DIRECTIVE DIR-0006 · kind BUILD · priority high · no market risk\nGOAL: close the ALERTS gap — the desk currently only bells on infra failures; fills, level crossings, broker normalization and directive replies are silent. User asked for alert coverage.\nSPEC: desk/alerts.json now defines 10 events (A1-A10) with conditions. Extend desk_daemon.mjs:\n1. EVENT DIFF (every MT5 snapshot, 300s): diff positions/orders vs previous snapshot. pending→position = FILL (A1). position count drop = CLOSE (A5). On match: notify() (bell) + appendWAKE() + mark event handled in a local desk/alerts.local.json (do NOT edit desk/alerts.json — that is desk-owned).\n2. LEVEL CROSSINGS: for A2/A3/A4 compare fresh bid/ask (SHORT uses bid? no — alerts on BOTH sides crossing) and fire once (oneShot armed in alerts.local.json).\n3. EXPIRY (A6): at first cycle >= 18:53:42 UTC today, if ticket 209404683 still pending → execute DIR-0005 cancel → bell.\n4. BROKER NORMALIZE (A7/A8/A9): compare spreads in desk/mt5.json vs thresholds, fire once each.\n5. OUTBOX REPLY (A10): watch desk/outbox/ for new *.reply.md, bell once.\n6. Snapshot cadence: while any position is OPEN, tighten MT5 snapshot from 300s to 120s (level alerts latency matters); back to 300s when flat.\n7. OPTIONAL (only if user provides config): Telegram push via curl if TG_BOT_TOKEN+TG_CHAT_ID set in env — else skip silently.\nREPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<basename>.reply.md with a test-fire log (e.g. manually arm A9 or simulate a fill diff) proving bell+WAKE fire correctly.\nCONSTRAINTS: no changes to desk_round.py, desk/alerts.json schema, or state.json. Local state in desk/alerts.local.json only. If notify_cmd is empty in config, still appendWAKE + write alerts.local.json so events are visible in git.",
+  "note": "pairs with desk/alerts.json v1; also user can enable MT5-native push (Tools>Options>Notifications) for instant phone alerts independent of both agents",
+  "replyTs": 1794334744639,
+  "status": "dispatched",
+  "result": {
+    "beacon": "desk/inbox/WAKE.md"
+  }
+}

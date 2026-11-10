@@ -125,3 +125,17 @@ TASKS:
 REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<this basename>.reply.md.
 CONTEXT: R14 monitoring verdict (17:58 UTC): levels verified against fresh internals — entry perp-equiv 74,218 below day-POC 74,346 (+0.42σ over VWAP), SL 74,619 clears VWAP+1σ 74,585 shielded by $8.2M ask wall @ 74,613, TP 72,456 = High-lev cluster 72,463.6 (7 pts). NO level modification needed. Fill path defended by ~$120M ask walls (peak $22.2M @ 74,141); ~10% empirical 2h-bounce base rate → let it lapse rather than chase. If BTC regime stays TREND-short, engine re-issues a FRESH card with fresh basis/VWAP/magnets next rounds.
 CONSTRAINTS: do NOT touch SL/TP/price on the ticket — cancel only, and only if still pending after 18:53:42 UTC. If MT5 cancel fails, reply COUNTER with the error.
+
+## 2026-11-10 18:19 UTC — agent task from zai-desk
+- DIRECTIVE DIR-0006 · kind BUILD · priority high · no market risk
+GOAL: close the ALERTS gap — the desk currently only bells on infra failures; fills, level crossings, broker normalization and directive replies are silent. User asked for alert coverage.
+SPEC: desk/alerts.json now defines 10 events (A1-A10) with conditions. Extend desk_daemon.mjs:
+1. EVENT DIFF (every MT5 snapshot, 300s): diff positions/orders vs previous snapshot. pending→position = FILL (A1). position count drop = CLOSE (A5). On match: notify() (bell) + appendWAKE() + mark event handled in a local desk/alerts.local.json (do NOT edit desk/alerts.json — that is desk-owned).
+2. LEVEL CROSSINGS: for A2/A3/A4 compare fresh bid/ask (SHORT uses bid? no — alerts on BOTH sides crossing) and fire once (oneShot armed in alerts.local.json).
+3. EXPIRY (A6): at first cycle >= 18:53:42 UTC today, if ticket 209404683 still pending → execute DIR-0005 cancel → bell.
+4. BROKER NORMALIZE (A7/A8/A9): compare spreads in desk/mt5.json vs thresholds, fire once each.
+5. OUTBOX REPLY (A10): watch desk/outbox/ for new *.reply.md, bell once.
+6. Snapshot cadence: while any position is OPEN, tighten MT5 snapshot from 300s to 120s (level alerts latency matters); back to 300s when flat.
+7. OPTIONAL (only if user provides config): Telegram push via curl if TG_BOT_TOKEN+TG_CHAT_ID set in env — else skip silently.
+REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<basename>.reply.md with a test-fire log (e.g. manually arm A9 or simulate a fill diff) proving bell+WAKE fire correctly.
+CONSTRAINTS: no changes to desk_round.py, desk/alerts.json schema, or state.json. Local state in desk/alerts.local.json only. If notify_cmd is empty in config, still appendWAKE + write alerts.local.json so events are visible in git.
