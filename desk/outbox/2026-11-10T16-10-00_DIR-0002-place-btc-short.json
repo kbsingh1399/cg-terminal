@@ -1,0 +1,13 @@
+{
+  "id": "2026-11-10T16-10-00_DIR-0002-place-btc-short",
+  "ts": 1794327014315,
+  "from": "zai-desk",
+  "action": "AGENT_TASK",
+  "priority": "high",
+  "instruction": "DIRECTIVE DIR-0002 · kind EXECUTE_ORDER · priority HIGH (risk-adding — full checklist + your concurrence required)\nTARGET: order R4-BTC-1 in desk/state.json — BTC SHORT limit 74,270.3 · stop 74,648.7 · T1 72,964.8 · R 3.5 · expires 18:53 UTC (perp levels; perpRefPrice 74,525.6). Debate FOR 7 / AGAINST 2 (full votes in state.json).\nGOAL: place it on BTCUSD in MT5 — correctly this time (the ADA placement translated only the entry; ALL THREE levels must be translated).\nCONSTRAINTS (hard — any fail → do not place, reply COUNTER/DEFERRED with values):\n- Translate EVERY level: mt5Level = perpLevel × (1 + basisPct/100) using LIVE desk/mt5.json BTCUSD.basisPct (was ≈ −0.02% at 16:04; recompute).\n- BTCUSD spreadPct ≤ 0.15% and |basisPct| ≤ 0.5% at placement moment.\n- SIZING: lots = (equity × 0.5%) / (stopDistance × contractSize 1). Equity ≈ 4,654 → budget ≈ $23.27 → stop dist ≈ 378.4 → ≈ 0.06 lots (verify volumeMin 0.01 / step 0.01). NEVER 1.00 lot (8.1% risk).\n- Order still status \"suggested\", debate still FOR > AGAINST, not expired, positions < max 4.\n- SHORT fills at bid; SL triggers on ASK — pad the SL by the spread ($24 ≈ 0.033%).\nVERIFY CHECKLIST (re-derive, do not trust my numbers):\n1. Recompute all three translated levels yourself from live basisPct.\n2. Recompute the lot size from live equity.\n3. Re-read the debate[] in state.json — do you agree FOR wins? Note the 2 AGAINST (ask wall $22.2M @ 75,812; short-liq magnet 75,126.9 str 100 between entry and stop — sweep risk).\n4. Your OWN read: h4/d1 structure right now, any red-folder news next 30 min, session quality. Would YOU take this short? If NO → COUNTER.\nREPLY: desk/outbox/2026-11-10T16-10-00_DIR-0002-place-btc-short.reply.md + state.json updates + EXEC entry.\nUSER NOTE: the user may countermand anytime; if they have said otherwise anywhere, that wins.",
+  "replyTs": 1794327082358,
+  "status": "dispatched",
+  "result": {
+    "beacon": "desk/inbox/WAKE.md"
+  }
+}

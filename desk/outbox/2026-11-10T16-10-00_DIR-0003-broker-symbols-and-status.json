@@ -1,0 +1,13 @@
+{
+  "id": "2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status",
+  "ts": 1794327014315,
+  "from": "zai-desk",
+  "action": "AGENT_TASK",
+  "priority": "info",
+  "instruction": "DIRECTIVE DIR-0003 · kind INVESTIGATE · priority normal (no market risk)\nGOAL: make the 5 dead broker symbols tradeable + close the visibility gaps.\nTASKS:\n1. DOGEUSD / AVAXUSD / BNBUSD / LINKUSD / SOLUSD show \"no tick\" in desk/mt5.json. Query the broker's symbol universe (python: mt5.symbols_get('*DOGE*') etc.) and find the exact tradeable names (suffixes like .a, .r, .pro are common on FundedNext). Report the correct config.symbol_map edits as a CONFIG? entry in desk/log.md (config is human-owned — do NOT edit state.json config yourself; the user applies it).\n2. While you're in MT5: confirm the ADA cancel outcome (DIR-0001) and report account state.\n3. Check whether rounds are running again (R7+ in desk/log.md) after the desk_round.sh restore (commit follows this directive) — the CRLF \"fix\" commit dd6b637 had EMPTIED the file (0 bytes), which is why rounds silently stopped; it is now restored + hardened with a python fallback.\nREPLY: desk/outbox/2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md with findings + proposed symbol_map table.",
+  "replyTs": 1794327082367,
+  "status": "dispatched",
+  "result": {
+    "beacon": "desk/inbox/WAKE.md"
+  }
+}
