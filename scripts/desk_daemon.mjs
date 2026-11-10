@@ -136,7 +136,19 @@ function spawnDetached(cmd, args = []) {
     c.unref();
   } catch { /* best effort */ }
 }
+function sendTelegram(text) {
+  const token = process.env.TG_BOT_TOKEN;
+  const chatId = process.env.TG_CHAT_ID;
+  if (!token || !chatId) return;
+  try {
+    const url = `https://api.telegram.org/bot${token}/sendMessage`;
+    const payload = JSON.stringify({ chat_id: chatId, text: text });
+    sh("curl", ["-s", "-X", "POST", "-H", "Content-Type: application/json", "-d", payload, url]).catch(() => {});
+  } catch {}
+}
+
 function notify(title, text) {
+  sendTelegram(`[${title}] ${text}`);
   if (cfg.notify_cmd === "") return;
   if (cfg.notify_cmd && cfg.notify_cmd !== "auto") {
     spawnDetached(`${cfg.notify_cmd} "${title}" "${text}"`);
@@ -293,6 +305,138 @@ async function processInbox() {
   }
 }
 
+// ---------------- alerts engine (DIR-0006, desk/alerts.json) ----------------
+const ALERTS_CFG = "desk/alerts.json";
+const ALERTS_LOCAL = "desk/alerts.local.json";
+
+function loadAlertsLocal() {
+  return loadJson(ALERTS_LOCAL, {
+    fired: {},
+    prevOrders: [],
+    prevPositions: [],
+    prevOutboxFiles: [],
+  });
+}
+
+function saveAlertsLocal(st) {
+  try {
+    writeFileSync(ALERTS_LOCAL, JSON.stringify(st, null, 2) + "\n");
+  } catch {}
+}
+
+async function checkAlerts() {
+  const alertsDef = loadJson(ALERTS_CFG, null);
+  if (!alertsDef || !Array.isArray(alertsDef.events)) return;
+
+  const local = loadAlertsLocal();
+  const mt = loadJson("desk/mt5.json", {});
+  const positions = mt.positions ?? [];
+  const orders = mt.orders ?? [];
+  const spreads = mt.spreads ?? {};
+
+  // Cadence control: tighten snapshot while position open
+  if (positions.length > 0) {
+    cfg.mt5.interval_secs = Math.min(cfg.mt5.interval_secs, 120);
+  }
+
+  for (const ev of alertsDef.events) {
+    const id = ev.id;
+    if (ev.oneShot && local.fired[id]) continue;
+
+    let triggered = false;
+    let alertMsg = ev.action;
+
+    switch (ev.type) {
+      case "fill": {
+        const targetTicket = ev.ticket;
+        const wasPending = local.prevOrders.some((o) => o.ticket === targetTicket);
+        const isPosition = positions.some((p) => p.ticket === targetTicket);
+        if (wasPending && isPosition) {
+          triggered = true;
+        }
+        break;
+      }
+
+      case "level": {
+        const isPosOpen = positions.some((p) => p.symbol === ev.sym);
+        if (isPosOpen && spreads[ev.sym] && spreads[ev.sym].ok) {
+          const sp = spreads[ev.sym];
+          const mid = sp.perpMid ?? ((sp.bid + sp.ask) / 2);
+          if (ev.level) {
+            if (ev.condition.includes(">=") && (sp.bid >= ev.level || sp.ask >= ev.level || mid >= ev.level)) {
+              triggered = true;
+            } else if (ev.condition.includes("<=") && (sp.bid <= ev.level || sp.ask <= ev.level || mid <= ev.level)) {
+              triggered = true;
+            }
+          }
+        }
+        break;
+      }
+
+      case "position-close": {
+        if (local.prevPositions.length > 0 && positions.length === 0) {
+          triggered = true;
+        }
+        break;
+      }
+
+      case "expiry": {
+        const nowUtc = new Date();
+        const expiryPassed = nowUtc.getTime() >= 1794336822399 || (nowUtc.getUTCHours() === 18 && nowUtc.getUTCMinutes() >= 53 && nowUtc.getUTCSeconds() >= 42) || nowUtc.getUTCHours() > 18;
+        const stillPending = orders.some((o) => o.ticket === ev.ticket);
+        if (expiryPassed && stillPending) {
+          triggered = true;
+        }
+        break;
+      }
+
+      case "broker-normalize": {
+        const sp = spreads[ev.sym];
+        if (sp) {
+          if (id === "A7" || id === "A8") {
+            if (sp.ok && sp.spreadPct != null && sp.spreadPct <= 0.15 && Math.abs(sp.basisPct ?? 999) <= 0.5) {
+              triggered = true;
+            }
+          } else if (id === "A9") {
+            if (sp.ok && sp.bid != null && sp.ask != null) {
+              triggered = true;
+            }
+          }
+        }
+        break;
+      }
+
+      case "outbox-reply": {
+        try {
+          const outboxFiles = readdirSync("desk/outbox").filter((f) => f.endsWith(".reply.md"));
+          const freshReplies = outboxFiles.filter((f) => !local.prevOutboxFiles.includes(f));
+          if (freshReplies.length > 0) {
+            triggered = true;
+            alertMsg = `BELL: atg replied to directive (${freshReplies.join(", ")}) — zai-desk to verify on next wake`;
+            local.prevOutboxFiles = outboxFiles;
+          }
+        } catch {}
+        break;
+      }
+    }
+
+    if (triggered) {
+      log(`[ALERT] fired ${id}: ${alertMsg}`);
+      notify(`ALERT ${id}`, alertMsg);
+      wakeAdd(`ALERT ${id} — ${ev.type}`, [alertMsg]);
+      local.fired[id] = Date.now();
+      saveAlertsLocal(local);
+    }
+  }
+
+  local.prevOrders = orders.map((o) => ({ ticket: o.ticket, symbol: o.symbol }));
+  local.prevPositions = positions.map((p) => ({ ticket: p.ticket, symbol: p.symbol }));
+  try {
+    local.prevOutboxFiles = readdirSync("desk/outbox").filter((f) => f.endsWith(".reply.md"));
+  } catch {}
+  saveAlertsLocal(local);
+}
+
 // ---------------- the cycle ----------------
 async function cycle() {
   cfg = getConfig();
@@ -303,6 +447,7 @@ async function cycle() {
   checkNewOrders();
   await processInbox();
   await runMt5(false);
+  await checkAlerts();
   const pushed = await pushDesk(`desk(daemon): ${new Date().toISOString().slice(0, 16)} — inbox/outbox/mt5/wake sync`);
   if (pushed !== "clean") log(`git: ${pushed}`);
   saveDstate();
