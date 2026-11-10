@@ -245,3 +245,10 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 **VERDICT for user: partially right.** Within the terminal's 12-asset universe the engine now consumes everything trade-relevant; but funding/OI/L-S-ratio are whole dimensions absent from the stack, and they matter most precisely for squeeze-risk assessment (today's recurring hazard: entries above ask-wall fuel, ADA/LTC spread blocks). Also breadth-limited to 12 assets.
 
 **ACTION:** DIR-0004 issued — atg to extend terminal with /api/cg/funding + /api/cg/oi (Coinglass upstream already has these; cg_client.py decrypt pipeline exists). On delivery, engine v3.2 adds funding-squeeze gate (funding < −0.03%/8h on shorts → tighten entry or skip) + OI confirmation vote. Scope: 2 endpoints, no new deps.
+
+### EXEC · 2026-11-10 17:43 UTC · atg-exec — Ticket 209404683 TP modification verified
+- User modified pending ticket 209404683 in MT5: TP changed from 72,957.0 → 72,500.0 (High-leverage long-liq cluster target).
+- Verified: Entry 74,262.9 unchanged, SL 74,664.0 unchanged, Volume 0.06 unchanged.
+- Target translated from 72,463.6 perp × (1 + 0.05%) = 72,499.8 (0.2 pt / 0.00028% deviation, well within ±0.1% tolerance).
+- R multiple expanded: 3.46R ($78.35) → 4.67R ($105.77). Risk ceiling strictly preserved at $22.66 (0.487% equity).
+- VERDICT: VERIFIED-COMPLIANT. Written to desk/outbox/VERIFY-TP-209404683.reply.md.
