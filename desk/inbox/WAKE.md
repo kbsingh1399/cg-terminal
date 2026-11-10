@@ -18,17 +18,23 @@ Bias: BTC −7.2 · LTC −7.1 · ADA −3.8 · XAG −3.3 · AVAX/BNB −2.7 ·
 No new order passed the gates. Standing orders re-debated: R4-BTC-1 6/1 · R7-LTC-1 6/0 · R4-DOGE-3 4/1.
 
 1. **VERIFY-TASK (when user places BTC)** — R4-BTC-1 BTC SHORT is the only broker-compliant trade.
-   Card (basis −0.010%, spread 0.032% at 16:40): SELL LIMIT 0.06 lots · entry 74,262.9 ·
-   SL 74,664.6 (ask-trigger, spread-padded; structural stop = perp 74,648.7) · TP 72,957.5 ·
-   risk $22.70 = 0.49% equity · expires 18:53 UTC. When the ticket appears in mt5.json orders[]:
+   Card REFRESHED 16:53 (basis +0.051%, spread 0.032%, spread$ 23.5): SELL LIMIT 0.06 lots ·
+   entry 74,308.1 · SL 74,710.2 (ask-trigger, spread-padded; structural stop = perp 74,648.7) ·
+   TP 73,001.9 · risk $22.72 = 0.49% equity · expires 18:53 UTC.
+   BASIS-DRIFT RULE (verification must use it, not frozen numbers): at click time take the
+   LATEST mt5.json BTCUSD.basisPct and compute mt5Level = perpLevel × (1 + basisPct/100)
+   for entry/TP, SL = stop×factor + current spread$ (ask-trigger pad). Perp levels: entry
+   74,270.3 · stop 74,648.7 · T1 72,964.8. A ±0.05% basis swing moves levels ~$37 — verify
+   against the placement-time basis, not this card. When the ticket appears in mt5.json orders[]:
    re-derive ALL levels + lots yourself, check entry/SL/TP translation & spread rule, then write
    desk/outbox/VERIFY-R4-BTC-1.reply.md (VERDICT/CHECKS/REASONING/EVIDENCE) + state.json → placed.
+   Tolerances: entry/TP within 0.1% of recomputed, SL within 0.15%, lots ±0.01.
 2. **DO NOT place LTC** — R7-LTC-1 is perp-valid (6/0) but broker-blocked: LTCUSD basis +0.841%
    (> 0.5%) AND spread 2.40% (> 0.15%) at 16:40. Same pathology as ADA. Re-check each round.
 3. **DO NOT place DOGE** — DOGEUSD still no tick (broker symbol unknown; DIR-0003 open). Expires 18:53.
-4. ⚠ **XAUUSD BUY 0.01 @ 4022.68 open, NO SL/TP** (user UI Market Buy ~16:37). Desk advice to user:
-   SL 3,999.4 (risk $23.3 = 0.50%, just under 4,000 psych). XAU confluence only +2.0 — early vs
-   engine framework. If user asks you: confirm the SL number from contract spec (100 oz/lot, tick $0.01/point).
+4. ✅ **XAUUSD BUY 0.01 @ 4022.68 CLOSED by user ~16:52** (realized −$4.46, balance 4,654.42 →
+   4,649.96). Account flat, margin 0. Quick exit after the naked-position flag = good discipline.
+   Log an EXEC entry recording this close when you next sync.
 
 ## Resolved / bookkeeping
 - DIR-0001 (cancel ADA 209375723): DONE — orders[] empty at 16:40, no ADA position. state.json → cancelled.

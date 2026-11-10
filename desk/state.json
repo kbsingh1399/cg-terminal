@@ -241,7 +241,7 @@
    "ticket": null,
    "actualEntry": null,
    "filledTs": null,
-   "notes": "R8 16:46 re-debate FOR 6/AGAINST 1 — stands. Broker gates PASS (16:40 snapshot): basisPct -0.010%, spreadPct 0.032%. MT5 card for MANUAL placement: SELL LIMIT 0.06 lots entry 74262.9 / SL 74664.6 (ask-trigger, spread-padded) / TP 72957.5 (T1). Risk $22.70 = 0.49% equity. Re-verify basisPct in fresh desk/mt5.json before placing; skip if |basis|>0.5% or spread>0.15%. Expires 18:53 UTC.",
+   "notes": "R8 16:46 re-debate FOR 6/AGAINST 1 — stands. Card REFRESHED 16:53 (basis +0.051%, spread 0.032%, spread$ 23.5): SELL LIMIT 0.06 lots · entry 74,308.1 · SL 74,710.2 (ask-trigger padded) · TP 73,001.9 · risk $22.72 = 0.49% equity. BASIS-DRIFT RULE: at click time recompute every level from LATEST mt5.json basisPct (mt5Level = perpLevel × (1 + basisPct/100); SL pad = current spread$). Perp levels: entry 74,270.3 / stop 74,648.7 / T1 72,964.8. Verify tolerances: entry/TP ±0.1%, SL ±0.15%, lots ±0.01. Expires 18:53 UTC.",
    "debate": [
     {
      "source": "overview",
