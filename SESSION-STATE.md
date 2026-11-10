@@ -106,3 +106,25 @@ dated entry after each meaningful change; keep only the last 10 entries.
   MT5 connected (acct 11808165, $4,679.37, 0 positions).
 - atg: WAKE.md will refresh with R4 orders on next daemon cycle —
   place only the v2 orders (R ≥ 2.0), ignore stale R1/R2 lines.
+
+### 2026-11-10 15:20 UTC — Z.ai sandbox agent — ENGINE v3 (debate) + basis fix + loss review
+- MT5 loss reviewed: R4-BTC-1 short (0.05 BTCUSD @ 74,260.89, SL 74,559.4)
+  STOPPED OUT — ask 74,597 > SL. The v3 debate had flagged exactly this:
+  [AGAINST] short-liq magnet 75,126.9 (str 100) above entry = squeeze risk;
+  [AGAINST] $22.2M ask wall @ 75,812. Debate FOR 7/AGAINST 2 — the trade
+  met the 2.0R+ mandate; the −1R loss is within the 3.5R design.
+- v3 live: every order carries debate[] — 8 sources (overview, footprint,
+  largeOrders, liquidation, liquidation-hazard, stops heatmap BTC,
+  bookWalls, cvd, notifications) each FOR/AGAINST/NEUTRAL with evidence.
+  Gate: FOR ≥ 3 AND FOR > AGAINST. Orders re-debated EVERY round; lost
+  debate → withdrawn. R5: R4-BTC-1 stands (7/2), R4-DOGE-3 stands (5/1),
+  R4-LTC-2 withdrawn (confluence flipped +0.3).
+- BASIS FIX: orders now carry perpRefPrice; mt5_report.py computes
+  spreads.<SYM>.basisPct (MT5 mid vs terminal perp mid) + spreadPct live;
+  rule: mt5Level = perpLevel × (1 + basisPct/100), SHORT fills at bid,
+  skip/flag if |basis| > 0.5% or spread > 0.15%. BTC basis now ≈ −0.09%,
+  spread $24 (0.033%).
+- WAKE.md template now carries the full debate + basis instructions
+  (daemon restart REQUIRED on user PC to pick up the new .mjs template).
+- Canonical user prompts documented in PROTOCOL.md: "desk round now" ·
+  "desk review".
