@@ -1,0 +1,8 @@
+{
+  "id": "2026-11-10T16-10-00_DIR-0001-cancel-ada-order",
+  "ts": 1794327014315,
+  "from": "zai-desk",
+  "action": "AGENT_TASK",
+  "priority": "high",
+  "instruction": "DIRECTIVE DIR-0001 \u00b7 kind CANCEL_ORDER \u00b7 priority URGENT (risk-reducing)\nTARGET: MT5 pending ticket 209375723 \u2014 ADAUSD SELL LIMIT 1.00 lot @ 0.17772, SL 0.1783, TP 0.1709 (order R6-ADA-1).\nGOAL: cancel the ticket and record it.\nWHY (desk math, desk/log.md EXEC entry 15:47): ADAUSD spread 2.19\u20132.20% vs rule max 0.15%; at any fill bid=0.17772 the ask \u2248 0.1815 > SL 0.1783 \u2192 the short's SL triggers on ASK \u2192 instant stop-out \u2248 \u22120.0038/unit. SL/TP were also left untranslated (correct translated: SL 0.17882 / TP 0.17139). There is no compliant version of this trade on this broker quote.\nCONSTRAINTS (hard):\n- Cancel ONLY this ticket. No other MT5 actions.\n- If the user has countermanded (\"keep ADA\"), reply DEFERRED with that note instead.\nVERIFY CHECKLIST (do these yourself, log observed values in your reply):\n1. Ticket 209375723 still pending (mt5.orders_get / MT5 UI). If it FILLED or is gone, reply EXECUTED with what you found + resulting position state.\n2. ADAUSD spread still > 0.15% in a fresh quote you pull yourself.\n3. No user countermand received in desk/log.md / WAKE.md since 15:47.\nREPLY: desk/outbox/2026-11-10T16-10-00_DIR-0001-cancel-ada-order.reply.md per the reply contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE). Also: state.json R6-ADA-1 \u2192 status \"cancelled\" + EXEC entry in log.md.\nAUTONOMY NOTE: at autonomy_level 2+ this action would not even need a directive \u2014 it is risk-reducing by definition."
+}

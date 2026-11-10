@@ -26,7 +26,7 @@
  * Windows: run from Git Bash (the round script needs bash).
  */
 import { execFile, spawn } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync, appendFileSync, mkdirSync, readdirSync, unlinkSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, appendFileSync, mkdirSync, readdirSync, unlinkSync, statSync } from "node:fs";
 import { promisify } from "node:util";
 import os from "node:os";
 import path from "node:path";
@@ -147,6 +147,16 @@ function wakeAdd(title, lines) {
 async function runRound(force = false) {
   const lastKnown = Math.max(dst.lastRoundTs ?? 0, deskState().analysis?.last_round_ts ?? 0);
   if (!force && Date.now() - lastKnown < cfg.round_every_min * 60_000) return false;
+  // guard: a clobbered/empty round script would exit 0 and silently no-op
+  try {
+    const st = statSync("scripts/desk_round.sh");
+    if (st.size < 500) {
+      log(`desk_round.sh is only ${st.size} bytes — REFUSING to run (clobbered?). Fix + push it.`);
+      notify("Trade desk", `desk_round.sh clobbered (${st.size}B) — rounds halted until fixed`);
+      dst.lastRoundTs = Date.now(); // retry in 15 min, not every cycle
+      return false;
+    }
+  } catch { /* fall through */ }
   log(`analysis round due (last ${Math.round((Date.now() - lastKnown) / 60000)} min ago) — running desk_round.sh`);
   appendFileSync("desk/rounds.local.log", `\n===== ${new Date().toISOString()} daemon round =====\n`);
   const r = await sh("bash", ["scripts/desk_round.sh"], {

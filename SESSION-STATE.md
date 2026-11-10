@@ -21,8 +21,7 @@ dated entry after each meaningful change; keep only the last 10 entries.
 - Quick pointer: `README-ANTIGRAVITY.md` → full docs in `README.md`.
 - Install: `INSTALL-GUIDE.md`.
 
-## Log
-### 2026-11-10 14:10 UTC — Antigravity local agent — fast-forward sync to 39f6ed8 & production restart
+## Log### 2026-11-10 14:10 UTC — Antigravity local agent — fast-forward sync to 39f6ed8 & production restart
 - Pulled latest 3 commits from GitHub (`06099fc`, `4220ebe`, `39f6ed8`).
 - Verified clean TypeScript compilation (`tsc --noEmit` exit 0).
 - Rebuilt standalone production bundle (`npm run build`) and restarted daemon on `127.0.0.1:3000`.
@@ -140,3 +139,20 @@ dated entry after each meaningful change; keep only the last 10 entries.
   lots ($23 risk, 0.5% mandate). ADA/XRP contractSize 100.
 - Local agent alive: fixed CRLF bug in desk_round.sh (dd6b637) that had blocked
   local rounds; R7 should resume next cycle.
+
+### 2026-11-10 16:10 UTC — Z.ai sandbox agent — DIRECTIVE PROTOCOL v1 + round-engine repair
+- CRITICAL FIX: local commit dd6b637 ("CRLF fix") had EMPTIED scripts/desk_round.sh
+  (0 bytes, rc=0 → rounds silently no-op'd since ~15:5x). Restored from parent
+  465c53c, LF-normalized, + python3→python fallback for Windows Git Bash. Daemon
+  now guards: refuses rounds if desk_round.sh < 500B (needs daemon restart to take
+  effect on the user machine — the file is read per-run only by the NEW daemon code).
+- DIRECTIVE PROTOCOL v1 in desk/PROTOCOL.md: zai issues structured directives
+  (EXECUTE_ORDER/CANCEL_ORDER/MODIFY/CLOSE/INVESTIGATE/PREPARE) via inbox AGENT_TASK;
+  atg must re-derive every number, re-verify validity, form its own opinion
+  (COUNTER allowed); replies via desk/outbox/<id>.reply.md (VERDICT/CHECKS/
+  REASONING/ACTION/EVIDENCE); DIALOG entries for disagreements; AGENT-STATUS.md
+  heartbeat on every activation; autonomy levels 0-3 (config.autonomy_level,
+  default 1).
+- First directives issued: DIR-0001 cancel ADA ticket 209375723 (still pending per
+  new orders[] feed), DIR-0002 place R4-BTC-1 (0.06 lots, all levels translated,
+  concurrence required), DIR-0003 investigate 5 no-tick broker symbols.

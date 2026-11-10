@@ -170,6 +170,79 @@ spread. Before placing ANY order in MT5:
 - **`desk review`** — no new orders: review open MT5 positions, running
   PnL, suggested/placed orders, verdicts and basis; report only.
 
+## Directive protocol — zai directs, atg reasons (v1)
+
+zai-desk issues **directives** as inbox instructions
+(`desk/inbox/<ts>-DIR-<n>-<slug>.json`, action `AGENT_TASK`, the directive
+embedded as structured markdown in `instruction`). The daemon routes them to
+WAKE.md + desktop notification as usual. Directives are how zai exercises
+directional control; the reasoning mandate below is how atg keeps its brain.
+
+### Directive kinds
+
+| kind | risk | use |
+| --- | --- | --- |
+| `EXECUTE_ORDER` | adds | place a `suggested` order in MT5 (levels + sizing per constraints) |
+| `CANCEL_ORDER` | reduces | cancel a pending ticket |
+| `MODIFY_POSITION` | reduces if tightening | move SL / TP on an open position |
+| `CLOSE_POSITION` | reduces | exit an open position |
+| `INVESTIGATE` | none | research + report (broker symbols, data quality, logs) |
+| `PREPARE` | none | analysis only, no action |
+
+### The reasoning mandate (non-negotiable)
+
+atg-exec **never executes a directive on trust**. Before acting it must:
+
+1. **Re-derive every number itself** — re-pull `desk/mt5.json`, recompute
+   the basis translation `mt5Level = perpLevel × (1 + basisPct/100)`, recompute
+   lot size from live equity × `max_risk_per_trade_pct`, re-check spread/side.
+2. **Re-verify validity** — order still `suggested`, debate still FOR > AGAINST,
+   not expired, position cap respected.
+3. **Apply local knowledge** — session, imminent news, broker quirks, terminal health.
+4. **Form its own opinion** — "would I take this trade / make this change?"
+   If NO → reply `COUNTER` with the alternative and reasoning. Do not execute.
+
+### Reply contract
+
+atg replies in `desk/outbox/<same-basename>.reply.md` (git-committed):
+
+```
+VERDICT: EXECUTED | COUNTER | REJECTED | DEFERRED
+CHECKS:   <each directive checklist item → pass/fail + the value YOU observed>
+REASONING: <your own analysis, 3–10 lines — why you agree or not>
+ACTION:    <what you did, or propose instead>
+EVIDENCE:  <tickets, order_send results, command output, screenshots>
+```
+
+- `EXECUTED` → also update `desk/state.json` (status/ticket/actualEntry/notes)
+  + `EXEC` entry in `desk/log.md`.
+- `COUNTER` → NO execution; the proposal + reasoning stand for zai to re-debate
+  or escalate to the user on the next wake.
+- `REJECTED` → missing data / mandate conflict; logged + escalated.
+- `DEFERRED` → waiting on a condition (e.g. spread normalization); re-check each round.
+
+### Disagreements
+
+Neither agent overrides the other. A `COUNTER`/`REJECTED` is logged in
+`desk/log.md` as a `DIALOG` entry; zai answers with the next directive or
+escalates to the user. The human remains the only config authority.
+
+### Autonomy levels — `config.autonomy_level` (human-owned, default 1)
+
+| level | meaning |
+| --- | --- |
+| 0 `PROPOSE` | nothing executes without explicit user approval |
+| 1 `REASON-EXECUTE` | atg executes directives that pass its checklist (**current default**) |
+| 2 `AUTO-GUARD` | risk-reducing acts (cancel / close / tighten SL) may execute without a directive; placements still need one |
+| 3 `FULL` | atg initiates trades within mandate caps and reports after |
+
+### Heartbeat
+
+Every atg activation **overwrites** `desk/outbox/AGENT-STATUS.md`: last-active
+ts, directives handled (ids + verdicts), open questions for zai, machine notes
+(terminal / MT5 health). zai reads it on every wake — this is how zai knows
+the agent's state without guessing.
+
 ## Levels are data-driven (institutional playbook — from AGENTS.md)
 
 - **Entry**: limit at the pullback magnet — day VWAP −1σ (long) / +1σ
