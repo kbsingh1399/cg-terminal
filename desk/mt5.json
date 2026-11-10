@@ -1,5 +1,5 @@
 {
-  "ts": 1794323504370,
+  "ts": 1794323860587,
   "error": null,
   "account": {
     "login": 11808165,
@@ -20,11 +20,14 @@
   "spreads": {
     "ADAUSD": {
       "ok": true,
-      "bid": 0.1759,
-      "ask": 0.1797,
-      "spreadPoints": 38.0,
-      "spreadPct": 2.1372,
-      "tradeAllowed": true
+      "bid": 0.0,
+      "ask": 0.0,
+      "spreadPoints": 0.0,
+      "spreadPct": null,
+      "tradeAllowed": true,
+      "asset": "ADA",
+      "perpMid": 0.1769,
+      "basisPct": null
     },
     "AVAXUSD": {
       "ok": false,
@@ -36,11 +39,14 @@
     },
     "BTCUSD": {
       "ok": true,
-      "bid": 74573.04,
-      "ask": 74597.36,
-      "spreadPoints": 2432.0,
-      "spreadPct": 0.0326,
-      "tradeAllowed": true
+      "bid": 0.0,
+      "ask": 0.0,
+      "spreadPoints": 0.0,
+      "spreadPct": null,
+      "tradeAllowed": true,
+      "asset": "BTC",
+      "perpMid": 74262.1,
+      "basisPct": null
     },
     "DOGEUSD": {
       "ok": false,
@@ -48,11 +54,14 @@
     },
     "ETHUSD": {
       "ok": true,
-      "bid": 2080.85,
-      "ask": 2081.4,
-      "spreadPoints": 55.0,
-      "spreadPct": 0.0264,
-      "tradeAllowed": true
+      "bid": 0.0,
+      "ask": 0.0,
+      "spreadPoints": 0.0,
+      "spreadPct": null,
+      "tradeAllowed": true,
+      "asset": "ETH",
+      "perpMid": 2069.61,
+      "basisPct": null
     },
     "LINKUSD": {
       "ok": false,
@@ -60,11 +69,14 @@
     },
     "LTCUSD": {
       "ok": true,
-      "bid": 51.43,
-      "ask": 52.64,
-      "spreadPoints": 121.0,
-      "spreadPct": 2.3254,
-      "tradeAllowed": true
+      "bid": 0.0,
+      "ask": 0.0,
+      "spreadPoints": 0.0,
+      "spreadPct": null,
+      "tradeAllowed": true,
+      "asset": "LTC",
+      "perpMid": 51.31,
+      "basisPct": null
     },
     "SOLUSD": {
       "ok": false,
@@ -72,27 +84,36 @@
     },
     "XAGUSD": {
       "ok": true,
-      "bid": 51.976,
-      "ask": 52.031,
-      "spreadPoints": 55.0,
-      "spreadPct": 0.1058,
-      "tradeAllowed": true
+      "bid": 0.0,
+      "ask": 0.0,
+      "spreadPoints": 0.0,
+      "spreadPct": null,
+      "tradeAllowed": true,
+      "asset": "XAG",
+      "perpMid": 52.095,
+      "basisPct": null
     },
     "XAUUSD": {
       "ok": true,
-      "bid": 4050.3,
-      "ask": 4050.65,
-      "spreadPoints": 35.0,
-      "spreadPct": 0.0086,
-      "tradeAllowed": true
+      "bid": 0.0,
+      "ask": 0.0,
+      "spreadPoints": 0.0,
+      "spreadPct": null,
+      "tradeAllowed": true,
+      "asset": "XAU",
+      "perpMid": 4056.57,
+      "basisPct": null
     },
     "XRPUSD": {
       "ok": true,
-      "bid": 1.0629,
-      "ask": 1.0639,
-      "spreadPoints": 10.0,
-      "spreadPct": 0.094,
-      "tradeAllowed": true
+      "bid": 0.0,
+      "ask": 0.0,
+      "spreadPoints": 0.0,
+      "spreadPct": null,
+      "tradeAllowed": true,
+      "asset": "XRP",
+      "perpMid": 1.0577,
+      "basisPct": null
     }
   }
 }
