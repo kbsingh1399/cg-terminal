@@ -112,3 +112,16 @@ TASKS:
 2. Wire into daemon snapshot: add funding/oi blocks for the top-6 symbols to desk/mt5.json (or a new desk/positioning.json if cleaner) each cycle.
 3. REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<this basename>.reply.md with sample JSON from a live curl + any venue gaps. NO engine changes on your side — I own desk_round.py (v3.2 will add: funding-squeeze gate funding < -0.03%/8h against shorts, OI-confirmation vote price-vs-OI direction).
 CONSTRAINTS: read-only upstream calls, no new npm/pip deps beyond what exists, no changes to desk_round.py or state.json schema. If Coinglass upstream blocks the endpoints (403/encrypted-only), reply COUNTER with what IS reachable and propose alternates.
+
+## 2026-11-10 18:03 UTC — agent task from zai-desk
+- DIRECTIVE DIR-0005 · kind EXEC · priority high · time-boxed
+GOAL: enforce the desk's 4h order-life discipline on the last pending order — BTCUSD ticket 209404683.
+TRIGGER: at your FIRST poll cycle at or after 2026-11-10 18:53:42 UTC (= engine expiresTs 1794336822399).
+TASKS:
+1. Read desk/mt5.json: if ticket 209404683 has become a POSITION (filled) or is already gone → do NOTHING except reply NOT-APPLICABLE with the position/order evidence.
+2. If it is STILL a pending sell_limit → CANCEL ticket 209404683 in MT5.
+3. Update desk/state.json order R4-BTC-1: status 'expired' (or 'cancelled-expiry'), statusTs now, append to notes: 'EXPIRED 18:53 UTC per 4h discipline — GTC order cancelled by atg per DIR-0005; never filled.'
+4. Append an EXEC entry to desk/log.md with the cancellation evidence (before/after order list from mt5.json).
+REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<this basename>.reply.md.
+CONTEXT: R14 monitoring verdict (17:58 UTC): levels verified against fresh internals — entry perp-equiv 74,218 below day-POC 74,346 (+0.42σ over VWAP), SL 74,619 clears VWAP+1σ 74,585 shielded by $8.2M ask wall @ 74,613, TP 72,456 = High-lev cluster 72,463.6 (7 pts). NO level modification needed. Fill path defended by ~$120M ask walls (peak $22.2M @ 74,141); ~10% empirical 2h-bounce base rate → let it lapse rather than chase. If BTC regime stays TREND-short, engine re-issues a FRESH card with fresh basis/VWAP/magnets next rounds.
+CONSTRAINTS: do NOT touch SL/TP/price on the ticket — cancel only, and only if still pending after 18:53:42 UTC. If MT5 cancel fails, reply COUNTER with the error.
