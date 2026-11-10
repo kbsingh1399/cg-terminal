@@ -1,6 +1,6 @@
 # CHECKLIST-360 · Master checklist for a 360° deep-research run
 
-v1.2 · 2026-11-10 · owner: zai-desk · engine: v3.2 · review: after every 10 runs or on data-source change
+v1.3 · 2026-11-11 · owner: zai-desk · engine: v3.2 · review: after every 10 runs or on data-source change
 
 **360° = all 12 assets × 8 dimensions × every data point the terminal exposes,
 ending in a fully constructed limit-trade list where EVERY tab carries a verdict
@@ -75,9 +75,9 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 - [ ] Reports **committed + pushed** (script auto-commits; if push loses the daemon race → `pull --rebase`, on `log.md` conflict keep BOTH records timestamp-ordered, rebase --continue, push)
 - [ ] `log.md` DEEPSCAN entry exists (auto)
-- [ ] **DIGEST with justification** — cross-asset digest file `DIGEST-<ts>.md`: complete trade list where every candidate carries its justification summary (not a bare table); blocked assets carry blocker + recovery condition
+- [ ] **DIGEST with justification (auto)** — `desk_deepscan.py` now writes `DIGEST-<ts>.md` itself: complete trade list (PLACEABLE/PARKED/REJECTED/NO-TRADE tables) **plus a "Why each trade" block per asset** (thesis / entry / stop / targets / size / invalidation); blocked + rejected assets carry reason → recovery condition
 - [ ] Chat digest: **the complete trade list** (PLACEABLE with levels+size+why / PARKED with blocker / REJECTED with reason / NO-TRADE) + correlation warning + data gaps — the user must see every potential trade WITH its reasoning in chat, not just in files
-- [ ] **WAKE.md beacon push (atg local wake)** — append a dated section to `desk/inbox/WAKE.md` with the digest pointer + compact trade cards so the Windows daemon's 45s poll wakes atg-exec locally (bell + agent activation). EVERY desk reply/digest goes to WAKE.md, not just directives and suggested orders (user directive 18:55 UTC: "are you pushing all such reply to wakeup.md — it will automatically wake up antigravity")
+- [ ] **WAKEUP.md broadcast + AGENT_TASK wake (atg local wake, auto)** — `desk_deepscan.py` appends the complete trade list (PLACEABLE with levels/size/why · PARKED with blocker+recovery · REJECTED with reason · NO-TRADE) to the DESK BROADCAST section of `desk/inbox/WAKEUP.md` (marker-scoped, latest run wins) AND drops `<ts>_AGENT_TASK-360-broadcast.json` in the same inbox — the Windows daemon's 45s poll + AGENT_TASK handler (wakeAdd + bell + fireWake) wakes atg-exec locally (user directive 2026-11-11: "are you pushing all such reply to wakeup.md — it will automatically wake up antigravity"). No hand-editing of the broadcast section.
 - [ ] Actionable setup → full level plan (entry/SL/TP perp AND broker levels, size, ladder) → user decides
 - [ ] Nothing left uncommitted — uncommitted files die with the sandbox (lesson: ETH-20261110-1827.md lost to recycling)
 
@@ -90,6 +90,7 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 ## I · Changelog
 
+- v1.3 · 2026-11-11 — **broadcast + auto-digest implemented in code** (was checklist-only in v1.2): `desk_deepscan.py` builds a machine trade-card per asset → auto-writes `DIGEST-<ts>.md` (trade tables + "Why each trade" justification blocks + reason→recovery for every non-trade) → refreshes the DESK BROADCAST section in `desk/inbox/WAKEUP.md` and drops an AGENT_TASK json so atg-exec auto-wakes locally on its 45s poll (bell + fireWake). First wired run: 360 all 19:1x UTC 2026-11-10.
 - v1.2 · 2026-11-10 — v3 justification layer: §9 now emits "WHY THIS TRADE" narrative + evidence manifest upgraded to reading/verdict(✓✗○)/written-justification per tab (opposing data flagged as prominently as supporting). Delivery upgraded: every 360 digest also lands as a WAKE.md beacon section so atg-exec wakes locally on the 45s poll.
 - v1.1 · 2026-11-10 — §9 limit-trade construction + evidence manifest added to every report; `360 all` now prints the complete trade list (user mandate: all potential limit trades, proper justification across all tabs, no data missed). First v2 run: 12× desk/deepscan/*-1848.md + DIGEST-20261110-1848.md (2 PLACEABLE, 4 PARKED, 5 REJECTED, 1 NO-TRADE; XAG min-lot risk mandate violation caught).
 - v1.0 · 2026-11-10 — initial, post playbook-audit DIALOG; pipeline validated end-to-end (BTC desk runs 18:28/18:33, BTC atg-exec run 18:35, ETH desk run 18:36 incl. daemon log.md race resolution)
