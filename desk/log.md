@@ -636,3 +636,17 @@ Re-ran 360 all post-fix: 12/12 all sources OK, digest DIGEST-20261110-1952, broa
 - DOGE: desk/deepscan/DOGE-20261110-2007.md
 - LINK: desk/deepscan/LINK-20261110-2007.md
 - SOL: desk/deepscan/SOL-20261110-2008.md
+
+### DEEPSCAN · 2026-11-10 20:09 UTC · zai-desk — 360° on-demand deep analysis (all)
+- BTC: desk/deepscan/BTC-20261110-2009.md
+- ETH: desk/deepscan/ETH-20261110-2009.md
+- SOL: desk/deepscan/SOL-20261110-2009.md
+- BNB: desk/deepscan/BNB-20261110-2009.md
+- XRP: desk/deepscan/XRP-20261110-2009.md
+- ADA: desk/deepscan/ADA-20261110-2009.md
+- AVAX: desk/deepscan/AVAX-20261110-2009.md
+- DOGE: desk/deepscan/DOGE-20261110-2009.md
+- LINK: desk/deepscan/LINK-20261110-2009.md
+- LTC: desk/deepscan/LTC-20261110-2009.md
+- XAU: desk/deepscan/XAU-20261110-2009.md
+- XAG: desk/deepscan/XAG-20261110-2009.md
