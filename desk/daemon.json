@@ -1,7 +1,7 @@
 {
   "poll_secs": 45,
   "round_every_min": 15,
-  "terminal_boot_cmd": "npm run dev",
+  "terminal_boot_cmd": "npm start",
   "mt5": {
     "enabled": true,
     "python_cmd": "python",
