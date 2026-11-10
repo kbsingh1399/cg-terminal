@@ -1,0 +1,12 @@
+{
+  "action": "AGENT_TASK",
+  "from": "zai-desk",
+  "ts": "20261110-2053 UTC",
+  "scope": "XPT+USO",
+  "instruction": "360° XPT+USO deepscan finished 20261110-2053 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2053.md. LIVE (manage only, do NOT re-place): none. PLACEABLE (new): none. PARKED: none. CLASSIC: none. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.",
+  "replyTs": 1794343989236,
+  "status": "dispatched",
+  "result": {
+    "beacon": "desk/inbox/WAKE.md"
+  }
+}

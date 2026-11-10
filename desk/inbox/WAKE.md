@@ -219,3 +219,6 @@ ROLLBACK (if build fails): `git revert <assets.ts commit> && npm run build && re
 - [FOR] bookWalls: ±5% depth imbalance -0.164 (5m ago -0.213, rising bids); bid $0.01B vs ask $0.01B
 - [FOR] cvd: taker buy 48.0%, perpCvd -23, spotCvd -5, quadrant both-selling, latestDiv bear (recent)
 - → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-10 20:53 UTC — agent task from zai-desk
+- 360° XPT+USO deepscan finished 20261110-2053 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2053.md. LIVE (manage only, do NOT re-place): none. PLACEABLE (new): none. PARKED: none. CLASSIC: none. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
