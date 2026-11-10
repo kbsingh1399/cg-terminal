@@ -205,3 +205,6 @@ ROLLBACK (if build fails): `git revert <assets.ts commit> && npm run build && re
 
 ## 2026-11-10 20:26 UTC — agent task from zai-desk
 - 360° all deepscan finished 20261110-2023 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2023.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): ETH SHORT 2.0R, XAG SHORT 3.52R. PARKED: SOL, BNB, DOGE, XLM. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 20:30 UTC — ALERT A10 — outbox-reply
+- BELL: atg replied to directive (2026-11-10T20-30-00_DIR-0008-terminal-rebuild-and-feed-verify.reply.md) — zai-desk to verify on next wake
