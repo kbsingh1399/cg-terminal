@@ -182,3 +182,26 @@ CONSTRAINTS: do NOT touch SL/TP/price on either ticket — cancel only, and only
 
 ## 2026-11-10 19:54 UTC — agent task from zai-desk
 - 360° all deepscan finished 20261110-1952 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-1952.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): ETH SHORT 2.1R, XAG SHORT 3.54R. PARKED: SOL, BNB, ADA, DOGE, LTC. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 20:26 UTC — agent task from zai-desk
+- DIRECTIVE DIR-0008 · kind EXECUTE+VERIFY · priority normal · no market risk
+CONTEXT: FundedNext broker audit solved the feed-dead mapping (DOGE→DOGUSD, LINK→LNKUSD; SOL/BNB/AVAX not listed). Desk applied symbol_map changes (state.json) + terminal registry adds (XLM, XMR in src/lib/cg/assets.ts). Sandbox terminal already serves 14 assets via dev hot-reload; the Windows production terminal needs a rebuild to pick up the registry.
+TASKS:
+1. git pull (if pull fails or a rebase is in progress: `git rebase --abort && git pull --rebase origin main` — 30-second fix per ops review).
+2. Confirm desk/state.json config.symbol_map on your side reads DOGE: DOGUSD, LINK: LNKUSD, XLM: XLMUSD, XMR: XMRUSD (report CONFIG-CHECK result to desk/log.md; do NOT edit config yourself — the daemon round-trips this file, desk owns the write).
+3. Rebuild the terminal: `npm ci` (only if lockfile changed) → `npm run build` → restart the terminal service → verify ON THAT BOX: `curl localhost:3000/api/cg/assets` lists 14 assets incl XLM,XMR and `curl 'localhost:3000/api/cg/market?sym=XLM'` returns 200 with a price. Reply outputs to desk/outbox/ as DIR-0008 reply.
+4. FEED VERIFY (criterion 5): after the next mt5.json push cycle, confirm spread keys DOGUSD, LNKUSD, XLMUSD, XMRUSD appear in desk/mt5.json with live bid/ask. If DOGUSD/LNKUSD keys do NOT appear within ~10 min of your pull, run the DIR-0003 investigation step for those two symbols (mt5.symbols_get('*DOG*') / ('*LNK*')) and report the exact names.
+5. Note: XAGUSD remains min-lot 0.72% risk (user-accepted, live ticket 209422699 — manage only). No new orders from this directive.
+ROLLBACK (if build fails): `git revert <assets.ts commit> && npm run build && restart` — do not hand-edit the built output.
+
+## 2026-11-10 20:26 UTC — agent task from zai-desk
+- 360° DOGE+LINK+SOL deepscan finished 20261110-2008 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2008.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): none. PARKED: DOGE, SOL. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 20:26 UTC — agent task from zai-desk
+- 360° all deepscan finished 20261110-2009 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2009.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): ETH SHORT 2.11R, XAG SHORT 3.52R. PARKED: SOL, BNB, ADA, DOGE, LTC. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 20:26 UTC — agent task from zai-desk
+- 360° XLM+XMR deepscan finished 20261110-2020 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2020.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): none. PARKED: none. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 20:26 UTC — agent task from zai-desk
+- 360° all deepscan finished 20261110-2023 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2023.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): ETH SHORT 2.0R, XAG SHORT 3.52R. PARKED: SOL, BNB, DOGE, XLM. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
