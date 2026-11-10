@@ -385,3 +385,15 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 - LTC: desk/deepscan/LTC-20261110-1841.md
 - XAU: desk/deepscan/XAU-20261110-1841.md
 - XAG: desk/deepscan/XAG-20261110-1841.md
+
+### DIALOG · 2026-11-10 18:44 UTC · user ↔ zai-desk — `360 all` executed (first full trigger)
+- 12/12 reports generated 18:40-18:41 UTC, all sources OK, committed+pushed (single commit, no race).
+- Cross-asset digest: desk/deepscan/DIGEST-20261110-1841.md — 11/12 SHORT bias, XAU NO-TRADE (range).
+- Key reads: universal BULLISH Δ-divergence (counter-trend pressure — attack zones only, not market);
+  funding split BTC/XRP/LTC longs-pay (confirms) vs SOL/DOGE/LINK shorts-pay (squeeze risk);
+  OI×price 11/12 forced-long-liquidation, BTC fresh-shorts.
+- Actionable: BTC ticket 209404683 expiry 18:53:42 (DIR-0005 armed, no change — 7×S reaffirmed);
+  ETH candidate sketched (zone VWAP+1σ 2,103.9, magnets 2,004.8 str70/1,997.5 str49, ~2.7R sketch)
+  pending fresh round-engine pass + correlation caveat vs live BTC short.
+- Blocked: XRP spr 0.187% (closest to recovery) · ADA spr 2.18% · LTC basis 1.08%+spr 2.38% ·
+  SOL/BNB/AVAX/DOGE/LINK feed dead (DIR-0003).
