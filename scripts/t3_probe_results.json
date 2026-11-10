@@ -1,0 +1,1433 @@
+{
+ "ts": 1794343169727,
+ "sections": {
+  "terminal": [
+   {
+    "route": "/assets",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/market?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/market?sym=US30",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/fp?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/fp?sym=US30",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/signals?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/signals?sym=US30",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/cvd?sym=BTC&itv=15m&limit=3",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/cvd?sym=US30&itv=15m&limit=3",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/liqlevels?sym=BTC&range=1d&lvR=4",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/liqlevels?sym=US30&range=1d&lvR=4",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/lto?symbol=BTC&minVolUsd=5000000",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/lto?symbol=US30&minVolUsd=5000000",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/bookwalls?sym=BTC&market=futures&interval=15m&limit=3",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/bookwalls?sym=US30&market=futures&interval=15m&limit=3",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/funding?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/funding?sym=US30",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/oi?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/oi?sym=US30",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/stopmap?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/stopmap?sym=US30",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/ticker?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/ticker?sym=US30",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/kline?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/kline?sym=US30",
+    "probe_sym": "US30",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/live?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/live?sym=US30",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/livebook?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 503,
+    "note": "live book warming up \u2014 retry"
+   },
+   {
+    "route": "/livebook?sym=US30",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/orderflow?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/orderflow?sym=US30",
+    "probe_sym": "US30",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/orderflow-agg?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/orderflow-agg?sym=US30",
+    "probe_sym": "US30",
+    "status": 400,
+    "note": "unknown asset US30"
+   },
+   {
+    "route": "/largeorder?sym=BTC",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/largeorder?sym=US30",
+    "probe_sym": "US30",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/notifications?limit=3",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   },
+   {
+    "route": "/engine/status",
+    "probe_sym": "BTC",
+    "status": 200,
+    "note": "ok"
+   }
+  ],
+  "yahoo": {
+   "indices": {
+    "US30": {
+     "yahoo": "^DJI",
+     "status": 200,
+     "price": 52213.12,
+     "instrumentType": "INDEX",
+     "exchange": "DJI",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343181
+    },
+    "SPX500": {
+     "yahoo": "^GSPC",
+     "status": 200,
+     "price": 7515.28,
+     "instrumentType": "INDEX",
+     "exchange": "SNP",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343180
+    },
+    "NDX100": {
+     "yahoo": "^NDX",
+     "status": 200,
+     "price": 27689.158,
+     "instrumentType": "INDEX",
+     "exchange": "Nasdaq GIDS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343179
+    },
+    "US2000": {
+     "yahoo": "^RUT",
+     "status": 200,
+     "price": 2818.4902,
+     "instrumentType": "INDEX",
+     "exchange": "Chicago Options",
+     "tz": "America/New_York",
+     "has_volume": false,
+     "n_bars_15m_1d": 25,
+     "market_time": 1794342280
+    },
+    "VIX": {
+     "yahoo": "^VIX",
+     "status": 200,
+     "price": 19.83,
+     "instrumentType": "INDEX",
+     "exchange": "Cboe Indices",
+     "tz": "America/Chicago",
+     "has_volume": false,
+     "n_bars_15m_1d": 50,
+     "market_time": 1794342271
+    },
+    "GER30": {
+     "yahoo": "^GDAXI",
+     "status": 200,
+     "price": 26347.45,
+     "instrumentType": "INDEX",
+     "exchange": "XETRA",
+     "tz": "Europe/Berlin",
+     "has_volume": false,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794330000
+    },
+    "UK100": {
+     "yahoo": "^FTSE",
+     "status": 200,
+     "price": 10751.59,
+     "instrumentType": "INDEX",
+     "exchange": "FTSE Index",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794328530
+    },
+    "FRA40": {
+     "yahoo": "^FCHI",
+     "status": 200,
+     "price": 8278.59,
+     "instrumentType": "INDEX",
+     "exchange": "Paris",
+     "tz": "Europe/Paris",
+     "has_volume": false,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794330302
+    },
+    "EUSTX50": {
+     "yahoo": "^STOXX50E",
+     "status": 200,
+     "price": 6327.87,
+     "instrumentType": "INDEX",
+     "exchange": "Zurich",
+     "tz": "Europe/Zurich",
+     "has_volume": false,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794330000
+    },
+    "SWI20": {
+     "yahoo": "^SSMI",
+     "status": 200,
+     "price": 15037.94,
+     "instrumentType": "INDEX",
+     "exchange": "Swiss",
+     "tz": "Europe/Zurich",
+     "has_volume": false,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794328257
+    },
+    "NTH25": {
+     "yahoo": "^AEX",
+     "status": 200,
+     "price": 1132.44,
+     "instrumentType": "INDEX",
+     "exchange": "Amsterdam",
+     "tz": "Europe/Amsterdam",
+     "has_volume": false,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794330302
+    },
+    "JP225": {
+     "yahoo": "^N225",
+     "status": 200,
+     "price": 60459.58,
+     "instrumentType": "INDEX",
+     "exchange": "Osaka",
+     "tz": "Asia/Tokyo",
+     "has_volume": false,
+     "n_bars_15m_1d": 27,
+     "market_time": 1794293103
+    },
+    "HK50": {
+     "yahoo": "^HSI",
+     "status": 200,
+     "price": 24557.04,
+     "instrumentType": "INDEX",
+     "exchange": "HKSE",
+     "tz": "Asia/Hong_Kong",
+     "has_volume": false,
+     "n_bars_15m_1d": 27,
+     "market_time": 1794298138
+    },
+    "AUS200": {
+     "yahoo": "^AXJO",
+     "status": 200,
+     "price": 9129.0,
+     "instrumentType": "INDEX",
+     "exchange": "ASX",
+     "tz": "Australia/Sydney",
+     "has_volume": false,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794291134
+    }
+   },
+   "commodities_metals": {
+    "XAU": {
+     "yahoo": "GC=F",
+     "status": 200,
+     "price": 4042.7,
+     "instrumentType": "FUTURE",
+     "exchange": "COMEX",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 63,
+     "market_time": 1794342579
+    },
+    "XAG": {
+     "yahoo": "SI=F",
+     "status": 200,
+     "price": 51.56,
+     "instrumentType": "FUTURE",
+     "exchange": "COMEX",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 63,
+     "market_time": 1794342574
+    },
+    "XPT": {
+     "yahoo": "PL=F",
+     "status": 200,
+     "price": 1542.8,
+     "instrumentType": "FUTURE",
+     "exchange": "NY Mercantile",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 63,
+     "market_time": 1794342569
+    },
+    "USO": {
+     "yahoo": "CL=F",
+     "status": 200,
+     "price": 86.36,
+     "instrumentType": "FUTURE",
+     "exchange": "NY Mercantile",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 63,
+     "market_time": 1794342585
+    },
+    "UKO": {
+     "yahoo": "BZ=F",
+     "status": 200,
+     "price": 91.96,
+     "instrumentType": "FUTURE",
+     "exchange": "NY Mercantile",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 63,
+     "market_time": 1794342585
+    },
+    "XAU_spot": {
+     "yahoo": "XAUUSD=X",
+     "status": 404,
+     "err": "No data found, symbol may be delisted"
+    },
+    "XAG_spot": {
+     "yahoo": "XAGUSD=X",
+     "status": 404,
+     "err": "No data found, symbol may be delisted"
+    }
+   },
+   "crypto_xcheck": {
+    "BTC": {
+     "yahoo": "BTC-USD",
+     "status": 200,
+     "price": 73573.6,
+     "instrumentType": "CRYPTOCURRENCY",
+     "exchange": "CCC",
+     "tz": "UTC",
+     "has_volume": true,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343186
+    },
+    "ETH": {
+     "yahoo": "ETH-USD",
+     "status": 200,
+     "price": 2049.51,
+     "instrumentType": "CRYPTOCURRENCY",
+     "exchange": "CCC",
+     "tz": "UTC",
+     "has_volume": true,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343182
+    },
+    "XRP": {
+     "yahoo": "XRP-USD",
+     "status": 200,
+     "price": 1.0595,
+     "instrumentType": "CRYPTOCURRENCY",
+     "exchange": "CCC",
+     "tz": "UTC",
+     "has_volume": true,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343187
+    },
+    "ADA": {
+     "yahoo": "ADA-USD",
+     "status": 200,
+     "price": 0.17422,
+     "instrumentType": "CRYPTOCURRENCY",
+     "exchange": "CCC",
+     "tz": "UTC",
+     "has_volume": true,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343182
+    },
+    "DOGE": {
+     "yahoo": "DOGE-USD",
+     "status": 200,
+     "price": 0.06751,
+     "instrumentType": "CRYPTOCURRENCY",
+     "exchange": "CCC",
+     "tz": "UTC",
+     "has_volume": true,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343176
+    },
+    "LINK": {
+     "yahoo": "LINK-USD",
+     "status": 200,
+     "price": 10.308,
+     "instrumentType": "CRYPTOCURRENCY",
+     "exchange": "CCC",
+     "tz": "UTC",
+     "has_volume": true,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343182
+    },
+    "LTC": {
+     "yahoo": "LTC-USD",
+     "status": 200,
+     "price": 50.247,
+     "instrumentType": "CRYPTOCURRENCY",
+     "exchange": "CCC",
+     "tz": "UTC",
+     "has_volume": true,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343186
+    },
+    "XLM": {
+     "yahoo": "XLM-USD",
+     "status": 200,
+     "price": 0.14393,
+     "instrumentType": "CRYPTOCURRENCY",
+     "exchange": "CCC",
+     "tz": "UTC",
+     "has_volume": true,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343181
+    },
+    "XMR": {
+     "yahoo": "XMR-USD",
+     "status": 200,
+     "price": 558.7218,
+     "instrumentType": "CRYPTOCURRENCY",
+     "exchange": "CCC",
+     "tz": "UTC",
+     "has_volume": true,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343083
+    }
+   },
+   "index_futures": {
+    "SPX500_fut": {
+     "yahoo": "ES=F",
+     "status": 200,
+     "price": 7538.25,
+     "instrumentType": "FUTURE",
+     "exchange": "CME",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 63,
+     "market_time": 1794342591
+    },
+    "NDX100_fut": {
+     "yahoo": "NQ=F",
+     "status": 200,
+     "price": 27809.5,
+     "instrumentType": "FUTURE",
+     "exchange": "CME",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 63,
+     "market_time": 1794342591
+    },
+    "US30_fut": {
+     "yahoo": "YM=F",
+     "status": 200,
+     "price": 52281.0,
+     "instrumentType": "FUTURE",
+     "exchange": "CBOT",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 63,
+     "market_time": 1794342591
+    },
+    "US2000_fut": {
+     "yahoo": "RTY=F",
+     "status": 200,
+     "price": 2825.2,
+     "instrumentType": "FUTURE",
+     "exchange": "CME",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 63,
+     "market_time": 1794342590
+    },
+    "VIX_fut": {
+     "yahoo": "VX=F",
+     "status": 404,
+     "err": "No data found, symbol may be delisted"
+    }
+   },
+   "fx": {
+    "AUDCAD": {
+     "yahoo": "AUDCAD=X",
+     "status": 200,
+     "price": 0.9739,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343192
+    },
+    "AUDCHF": {
+     "yahoo": "AUDCHF=X",
+     "status": 200,
+     "price": 0.5666,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343191
+    },
+    "AUDJPY": {
+     "yahoo": "AUDJPY=X",
+     "status": 200,
+     "price": 109.032,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343192
+    },
+    "AUDNZD": {
+     "yahoo": "AUDNZD=X",
+     "status": 200,
+     "price": 1.2253,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343192
+    },
+    "AUDSGD": {
+     "yahoo": "AUDSGD=X",
+     "status": 200,
+     "price": 0.8801,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343194
+    },
+    "AUDUSD": {
+     "yahoo": "AUDUSD=X",
+     "status": 200,
+     "price": 0.6868,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343169
+    },
+    "CADCHF": {
+     "yahoo": "CADCHF=X",
+     "status": 200,
+     "price": 0.5817,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343194
+    },
+    "CADJPY": {
+     "yahoo": "CADJPY=X",
+     "status": 200,
+     "price": 111.947,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343194
+    },
+    "CHFJPY": {
+     "yahoo": "CHFJPY=X",
+     "status": 200,
+     "price": 192.408,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343195
+    },
+    "EURAUD": {
+     "yahoo": "EURAUD=X",
+     "status": 200,
+     "price": 1.6259,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343195
+    },
+    "EURCAD": {
+     "yahoo": "EURCAD=X",
+     "status": 200,
+     "price": 1.5835,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343195
+    },
+    "EURCHF": {
+     "yahoo": "EURCHF=X",
+     "status": 200,
+     "price": 0.9213,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343196
+    },
+    "EURGBP": {
+     "yahoo": "EURGBP=X",
+     "status": 200,
+     "price": 0.8366,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343196
+    },
+    "EURHKD": {
+     "yahoo": "EURHKD=X",
+     "status": 200,
+     "price": 8.7583,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343190
+    },
+    "EURJPY": {
+     "yahoo": "EURJPY=X",
+     "status": 200,
+     "price": 177.288,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343197
+    },
+    "EURNOK": {
+     "yahoo": "EURNOK=X",
+     "status": 200,
+     "price": 10.6132,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343197
+    },
+    "EURNZD": {
+     "yahoo": "EURNZD=X",
+     "status": 200,
+     "price": 1.9924,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343197
+    },
+    "EURSGD": {
+     "yahoo": "EURSGD=X",
+     "status": 200,
+     "price": 1.4309,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343198
+    },
+    "EURUSD": {
+     "yahoo": "EURUSD=X",
+     "status": 200,
+     "price": 1.1167,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343169
+    },
+    "GBPAUD": {
+     "yahoo": "GBPAUD=X",
+     "status": 200,
+     "price": 1.9434,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343198
+    },
+    "GBPCAD": {
+     "yahoo": "GBPCAD=X",
+     "status": 200,
+     "price": 1.8928,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343199
+    },
+    "GBPCHF": {
+     "yahoo": "GBPCHF=X",
+     "status": 200,
+     "price": 1.1012,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343198
+    },
+    "GBPJPY": {
+     "yahoo": "GBPJPY=X",
+     "status": 200,
+     "price": 211.904,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343199
+    },
+    "GBPNZD": {
+     "yahoo": "GBPNZD=X",
+     "status": 200,
+     "price": 2.3815,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343200
+    },
+    "GBPSGD": {
+     "yahoo": "GBPSGD=X",
+     "status": 200,
+     "price": 1.7105,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343200
+    },
+    "GBPUSD": {
+     "yahoo": "GBPUSD=X",
+     "status": 200,
+     "price": 1.3345,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343169
+    },
+    "NZDCAD": {
+     "yahoo": "NZDCAD=X",
+     "status": 200,
+     "price": 0.7947,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343201
+    },
+    "NZDCHF": {
+     "yahoo": "NZDCHF=X",
+     "status": 200,
+     "price": 0.4623,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343200
+    },
+    "NZDJPY": {
+     "yahoo": "NZDJPY=X",
+     "status": 200,
+     "price": 88.968,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343201
+    },
+    "NZDSGD": {
+     "yahoo": "NZDSGD=X",
+     "status": 200,
+     "price": 0.7179,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343200
+    },
+    "SGDJPY": {
+     "yahoo": "SGDJPY=X",
+     "status": 200,
+     "price": 123.868,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343198
+    },
+    "USDCAD": {
+     "yahoo": "USDCAD=X",
+     "status": 200,
+     "price": 1.418,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343202
+    },
+    "USDCHF": {
+     "yahoo": "USDCHF=X",
+     "status": 200,
+     "price": 0.8253,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343203
+    },
+    "USDCNH": {
+     "yahoo": "USDCNH=X",
+     "status": 200,
+     "price": 6.6771,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343203
+    },
+    "USDDKK": {
+     "yahoo": "USDDKK=X",
+     "status": 200,
+     "price": 6.6952,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343203
+    },
+    "USDHUF": {
+     "yahoo": "USDHUF=X",
+     "status": 200,
+     "price": 326.32,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343204
+    },
+    "USDJPY": {
+     "yahoo": "USDJPY=X",
+     "status": 200,
+     "price": 158.799,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343204
+    },
+    "USDMXN": {
+     "yahoo": "USDMXN=X",
+     "status": 200,
+     "price": 18.6271,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343204
+    },
+    "USDNOK": {
+     "yahoo": "USDNOK=X",
+     "status": 200,
+     "price": 9.5061,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343204
+    },
+    "USDSEK": {
+     "yahoo": "USDSEK=X",
+     "status": 200,
+     "price": 9.8751,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343205
+    },
+    "USDSGD": {
+     "yahoo": "USDSGD=X",
+     "status": 200,
+     "price": 1.2819,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343205
+    },
+    "USDZAR": {
+     "yahoo": "USDZAR=X",
+     "status": 200,
+     "price": 16.5329,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343206
+    },
+    "NZDUSD": {
+     "yahoo": "NZDUSD=X",
+     "status": 200,
+     "price": 0.5604,
+     "instrumentType": "CURRENCY",
+     "exchange": "CCY",
+     "tz": "Europe/London",
+     "has_volume": false,
+     "n_bars_15m_1d": 84,
+     "market_time": 1794343169
+    }
+   },
+   "equities": {
+    "AAPL": {
+     "yahoo": "AAPL",
+     "status": 200,
+     "price": 349.14,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343205
+    },
+    "AMZN": {
+     "yahoo": "AMZN",
+     "status": 200,
+     "price": 271.63,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343206
+    },
+    "GOOG": {
+     "yahoo": "GOOG",
+     "status": 200,
+     "price": 285.12,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343205
+    },
+    "MSFT": {
+     "yahoo": "MSFT",
+     "status": 200,
+     "price": 534.185,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343204
+    },
+    "NVDA": {
+     "yahoo": "NVDA",
+     "status": 200,
+     "price": 168.17,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343208
+    },
+    "TSLA": {
+     "yahoo": "TSLA",
+     "status": 200,
+     "price": 377.26,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343207
+    },
+    "AMD": {
+     "yahoo": "AMD",
+     "status": 200,
+     "price": 513.93,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343207
+    },
+    "SPCX": {
+     "yahoo": "SPCX",
+     "status": 200,
+     "price": 142.075,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343209
+    },
+    "META": {
+     "yahoo": "META",
+     "status": 200,
+     "price": 644.725,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343209
+    },
+    "BABA": {
+     "yahoo": "BABA",
+     "status": 200,
+     "price": 102.54,
+     "instrumentType": "EQUITY",
+     "exchange": "NYSE",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343209
+    },
+    "NFLX": {
+     "yahoo": "NFLX",
+     "status": 200,
+     "price": 63.005,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343210
+    },
+    "INTC": {
+     "yahoo": "INTC",
+     "status": 200,
+     "price": 57.81,
+     "instrumentType": "EQUITY",
+     "exchange": "NasdaqGS",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343209
+    },
+    "NKE": {
+     "yahoo": "NKE",
+     "status": 200,
+     "price": 38.762,
+     "instrumentType": "EQUITY",
+     "exchange": "NYSE",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343210
+    },
+    "KO": {
+     "yahoo": "KO",
+     "status": 200,
+     "price": 96.935,
+     "instrumentType": "EQUITY",
+     "exchange": "NYSE",
+     "tz": "America/New_York",
+     "has_volume": true,
+     "n_bars_15m_1d": 26,
+     "market_time": 1794343210
+    },
+    "MBG": {
+     "yahoo": "MBG.DE",
+     "status": 200,
+     "price": 41.365,
+     "instrumentType": "EQUITY",
+     "exchange": "XETRA",
+     "tz": "Europe/Berlin",
+     "has_volume": true,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794328508
+    },
+    "BAYN": {
+     "yahoo": "BAYN.DE",
+     "status": 200,
+     "price": 57.08,
+     "instrumentType": "EQUITY",
+     "exchange": "XETRA",
+     "tz": "Europe/Berlin",
+     "has_volume": true,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794328731
+    },
+    "MC": {
+     "yahoo": "MC.PA",
+     "status": 200,
+     "price": 401.0,
+     "instrumentType": "EQUITY",
+     "exchange": "Paris",
+     "tz": "Europe/Paris",
+     "has_volume": true,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794328747
+    },
+    "VOW3": {
+     "yahoo": "VOW3.DE",
+     "status": 200,
+     "price": 68.48,
+     "instrumentType": "EQUITY",
+     "exchange": "XETRA",
+     "tz": "Europe/Berlin",
+     "has_volume": true,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794328720
+    },
+    "ADS": {
+     "yahoo": "ADS.DE",
+     "status": 200,
+     "price": 178.35,
+     "instrumentType": "EQUITY",
+     "exchange": "XETRA",
+     "tz": "Europe/Berlin",
+     "has_volume": true,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794328526
+    },
+    "BMW": {
+     "yahoo": "BMW.DE",
+     "status": 200,
+     "price": 58.12,
+     "instrumentType": "EQUITY",
+     "exchange": "XETRA",
+     "tz": "Europe/Berlin",
+     "has_volume": true,
+     "n_bars_15m_1d": 35,
+     "market_time": 1794328506
+    }
+   }
+  },
+  "yahoo_depth": {
+   "US30": {
+    "1m/1d": 372,
+    "5m/5d": 388,
+    "15m/5d": 130,
+    "1h/1mo": 155,
+    "1d/1y": 252
+   },
+   "EURUSD": {
+    "1m/1d": 1241,
+    "5m/5d": 1401,
+    "15m/5d": 468,
+    "1h/1mo": 526,
+    "1d/1y": 262
+   },
+   "AAPL": {
+    "1m/1d": 372,
+    "5m/5d": 388,
+    "15m/5d": 130,
+    "1h/1mo": 155,
+    "1d/1y": 252
+   },
+   "XPT": {
+    "1m/1d": 931,
+    "5m/5d": 1339,
+    "15m/5d": 447,
+    "1h/1mo": 624,
+    "1d/1y": 252
+   },
+   "UKO": {
+    "1m/1d": 932,
+    "5m/5d": 1340,
+    "15m/5d": 448,
+    "1h/1mo": 624,
+    "1d/1y": 252
+   },
+   "BTC": {
+    "1m/1d": 1242,
+    "5m/5d": 1402,
+    "15m/5d": 468,
+    "1h/1mo": 746,
+    "1d/1y": 366
+   }
+  },
+  "binance": {
+   "BTC": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "HTTP 418",
+    "open_interest": "HTTP 418"
+   },
+   "ETH": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "HTTP 418",
+    "open_interest": "ok"
+   },
+   "XRP": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "HTTP 418",
+    "open_interest": "HTTP 418"
+   },
+   "ADA": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "ok",
+    "open_interest": "ok"
+   },
+   "DOGE": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "HTTP 418",
+    "open_interest": "HTTP 418"
+   },
+   "LINK": {
+    "perp_kline": "ok",
+    "premium_funding": "ok",
+    "open_interest": "HTTP 418"
+   },
+   "LTC": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "HTTP 418",
+    "open_interest": "HTTP 418"
+   },
+   "XLM": {
+    "perp_kline": "ok",
+    "premium_funding": "HTTP 418",
+    "open_interest": "HTTP 418"
+   },
+   "XMR": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "HTTP 418",
+    "open_interest": "HTTP 418"
+   },
+   "XPT": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "HTTP 418",
+    "open_interest": "HTTP 418"
+   },
+   "USO": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "HTTP 418",
+    "open_interest": "HTTP 418"
+   },
+   "UKO": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "HTTP 418",
+    "open_interest": "HTTP 418"
+   },
+   "XAU": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "HTTP 418",
+    "open_interest": "HTTP 418"
+   },
+   "XAG": {
+    "perp_kline": "HTTP 418",
+    "premium_funding": "ok",
+    "open_interest": "ok"
+   }
+  },
+  "stooq": {
+   "spx_csv": {
+    "status": -1,
+    "body_head": "<urlopen error timed out>"
+   },
+   "eurusd_csv": {
+    "status": -1,
+    "body_head": "<urlopen error timed out>"
+   },
+   "hist_daily": {
+    "status": -1,
+    "body_head": "<urlopen error timed out>"
+   }
+  }
+ }
+}

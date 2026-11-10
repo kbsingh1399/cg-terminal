@@ -465,6 +465,8 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
 
     def stk(t):
         e = ema.get(t) or {}
+        if any(e.get(k) is None for k in ("e13", "e89", "e233")):
+            return "◆"  # short history (OKX-lead USO) — never crash on None EMAs
         return "▲" if e.get("e13", 0) > e.get("e89", 0) > e.get("e233", 0) else (
             "▼" if e.get("e13", 0) < e.get("e89", 0) < e.get("e233", 0) else "◆")
 
@@ -873,8 +875,13 @@ def deep_report(sym):
     for tf in ("m15", "h1", "h4", "d1"):
         e = ema.get(tf) or {}
         if e:
-            stack = "▲ bull" if e.get("e13", 0) > e.get("e89", 0) > e.get("e233", 0) else \
-                    ("▼ bear" if e.get("e13", 0) < e.get("e89", 0) < e.get("e233", 0) else "◆ mixed")
+            # OKX-lead assets (USO) can return short series → None EMAs: the
+            # stack reads "short history" instead of crashing (thin-asset honesty)
+            if any(e.get(k) is None for k in ("e13", "e89", "e233")):
+                stack = "◆ short history"
+            else:
+                stack = "▲ bull" if e.get("e13", 0) > e.get("e89", 0) > e.get("e233", 0) else \
+                        ("▼ bear" if e.get("e13", 0) < e.get("e89", 0) < e.get("e233", 0) else "◆ mixed")
             ap(f"- **{tf}**: {stack} · e13 {fmt(sym, e.get('e13'))} / e89 {fmt(sym, e.get('e89'))} / "
                f"e233 {fmt(sym, e.get('e233'))} · RSI {fnum(rsi.get(tf), 1)}")
     if price and vwap and sd1:
