@@ -235,13 +235,13 @@
       ],
       "riskR": 4.67,
       "expiresTs": 1794336822399,
-      "status": "placed",
-      "statusTs": 1794330566421,
+      "status": "expired",
+      "statusTs": 1794336860543,
       "rationale": "confluence -4.1 [notif -2.0 \u00b7 signals +0.0 \u00b7 trend -2 \u00b7 vwap -1 \u00b7 rsi +0.0 \u00b7 cvd +0.9]; entry VWAP+1\u03c3/day-POC 74,270.3; stop beyond 2\u03c3 zone; T1 long-liq cluster str 47 (~$642M est) \u00b7 T2 \u2014 \u00b7 T3 \u2014; bid wall $21.6M @ 73,260.0 mid-path (2.7R); liq clusters are Coinglass estimates",
       "ticket": 209404683,
       "actualEntry": 74262.9,
       "filledTs": null,
-      "notes": "PLACED by USER 16:53:56 UTC \u2014 BTCUSD SELL LIMIT 0.06 @ 74,262.9 SL 74,664.0 TP 72,957.0 (ticket 209404683, pending above market). DESK VERIFICATION (placement-time basis +0.051%, snapshot 16:53:34): entry dev -0.061% (tol \u00b10.1%), SL dev -0.030% (tol \u00b10.15%), TP dev -0.062% (tol \u00b10.1%) \u2014 uniform stale-basis shift, ALL WITHIN TOLERANCE. Stop geometry intact: bid-based stop dist 377.6 vs perp design 378.4 (SL pad present). Risk $22.66 = 0.487% equity (mandate 0.5%). R to T1 3.46. Spread 0.032% \u2713 basis +0.051% \u2713. VERDICT: EXECUTED-COMPLIANT. R10 17:07 re-debate FOR 6/AGAINST 1 \u2014 stands. Expires 18:53 UTC if never filled. | TP MODIFIED 17:42 UTC to 72,500.0 (High-lev liq cluster target @ 72,463.6 perp, R 4.67, profit .77). VERIFIED-COMPLIANT.",
+      "notes": "PLACED by USER 16:53:56 UTC \u2014 BTCUSD SELL LIMIT 0.06 @ 74,262.9 SL 74,664.0 TP 72,957.0 (ticket 209404683, pending above market). DESK VERIFICATION (placement-time basis +0.051%, snapshot 16:53:34): entry dev -0.061% (tol \u00b10.1%), SL dev -0.030% (tol \u00b10.15%), TP dev -0.062% (tol \u00b10.1%) \u2014 uniform stale-basis shift, ALL WITHIN TOLERANCE. Stop geometry intact: bid-based stop dist 377.6 vs perp design 378.4 (SL pad present). Risk $22.66 = 0.487% equity (mandate 0.5%). R to T1 3.46. Spread 0.032% \u2713 basis +0.051% \u2713. VERDICT: EXECUTED-COMPLIANT. R10 17:07 re-debate FOR 6/AGAINST 1 \u2014 stands. Expires 18:53 UTC if never filled. | TP MODIFIED 17:42 UTC to 72,500.0 (High-lev liq cluster target @ 72,463.6 perp, R 4.67, profit .77). VERIFIED-COMPLIANT. | EXPIRED 18:53 UTC per 4h discipline \u2014 GTC order cancelled per DIR-0005; never filled.",
       "debate": [
         {
           "source": "overview",
