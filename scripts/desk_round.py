@@ -669,7 +669,7 @@ watch = [{"sym": s, "score": scored[s]["score"]} for s in cands[:6] if abs(score
 state["analysis"] = {
     "last_round": rid,
     "last_round_ts": now_ms,
-    "engine": "v3 (debate-gated: 8 data sources FOR/AGAINST, FOR>=3 & FOR>AGAINST | full params | min R 2.0 | perpRefPrice basis stamp)",
+    "engine": "v3.2 (regime-aware: trend-pullback + mean-revert templates | 9-source debate + microFlow vote | FOR>=3 & FOR>AGAINST | min R 2.0 | perpRefPrice basis stamp)",
     "assets": {s: {"price": assets[s].get("price"), "chgDayPct": assets[s].get("chgDayPct"),
                    "score": scored.get(s, {}).get("score"),
                    "parts": scored.get(s, {}).get("parts"),

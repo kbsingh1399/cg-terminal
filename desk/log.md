@@ -283,3 +283,30 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 ### Positions
 - no open positions
 
+## R14 · 2026-11-10 17:56 UTC · zai-desk
+
+**Market**: BTC 73,179.7 (-2.9%)  ETH 2,027.01 (-5.0%)  SOL 82.28 (-5.1%)  XAU 4,024.90 (-2.9%)  XAG 51.320 (-4.1%)
+**Bias (|score|≥2)**: BTC-7(TREND)  ETH-4(TREND)  ADA-4(TREND)  LTC-4(TREND)  DOGE-4(TREND)  XAU+3(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R4-DOGE-3 re-debated: FOR 6/AGAINST 1 — stands
+- R7-LTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 6/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
+### MONITOR · 2026-11-10 17:58 UTC · zai-desk — R4-BTC-1 (ticket 209404683) fresh-level verification + expiry enforcement
+- Q (user): "any modification required in current limit orders?"
+- VERDICT: **NO level modification. Keep entry/SL/TP as placed.** Expiry enforcement armed via DIR-0005.
+- NOTE: round numbering reconciled post-merge — atg daemon ran R12 (17:46) + R13 (17:49) locally; desk's 17:56 round renumbered R14.
+- Fresh internals (R14, perp 73,209.8 · day VWAP 73,952.7 σ1 631.7 · day POC 74,345.7 · VAH 74,844.3 · VAL 73,348.3 · basis +0.060% · spread 0.032% ✓):
+  - ENTRY perp-equiv 74,218.3 = +0.42σ over VWAP (band drifted up from design-time +1σ), sits 127 pts BELOW day-POC 74,345.7 — still upper-value-area pullback location. Fill needs +1.38% bid rally.
+  - SL perp-equiv 74,619.2 clears VWAP+1σ 74,584.5 by 35 pts ✓; $8.2M ask wall @ 74,613 shields the stop approach. Note σ widened (632 vs ~280 at design) → stop now inside VWAP+2σ 75,216; NOT moved — moving wider breaks 0.5% risk mandate, tighter = whipsaw risk. Risk stays $22.66 = 0.487%.
+  - TP perp-equiv 72,456.4 = High-lev cluster 72,463.6 (Δ 7 pts ✓). Obstacle mapped: $113M+ passive bid stack 72,500-72,600 (Binance/OKX/HL/Bybit) — TP depends on trend-flush + liq cascade punching the stack, consistent with TREND regime call.
+- FILL PATH: ~$120M cumulative ask walls spot→entry, peak $22.2M @ 74,141 (77 pts below entry). Empirical 2h-bounce base rate ~10% → fill unlikely in remaining 55 min. DECISION: do not lower entry to chase (would park below the $22.2M wall, worse location, lower R).
+- EXPIRY: order is GTC in MT5 (no expiration field) — will NOT self-cancel. Engine discipline 4h (expiresTs 18:53:42 UTC). DIR-0005 sent to atg: at first poll ≥18:53:42, if ticket still pending → cancel + state→'expired' + EXEC log; if filled → NOT-APPLICABLE reply.
+- Broker sweep 17:49: BTC ✓ · ETH ✓ (no ≥2R candidate, score −4.0 TREND) · XAU ✓ (+3.1 TRANS, no candidate) · XRP ✓ (+0.5) · ADA BLOCKED spread 2.21% · LTC BLOCKED basis +1.09%/spread 2.40% · DOGE dead feed · SOL/BNB/LINK/AVAX no ticks. Standing suggestions R4-DOGE-3 / R7-LTC-1 / R9-ADA-1 remain unplaceable — nothing to modify until broker normalizes (DIR-0003 open on symbol names).
