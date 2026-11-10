@@ -441,3 +441,19 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 
 ### DEEPSCAN · 2026-11-10 19:03 UTC · zai-desk — 360° on-demand deep analysis
 - BTC: desk\deepscan\BTC-20261110-1903.md
+## R18 · 2026-11-10 19:05 UTC · zai-desk
+
+**Market**: BTC 73,383.0 (-2.6%)  ETH 2,043.20 (-4.3%)  SOL 82.90 (-4.4%)  XAU 4,034.28 (-2.7%)  XAG 51.410 (-3.9%)
+**Bias (|score|≥2)**: BTC-7(TREND)  ADA-4(TREND)  SOL-2(TREND)  BNB-3(TREND)  LTC-4(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R4-DOGE-3 EXPIRED (unfilled past expiry)
+- R7-LTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 6/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
