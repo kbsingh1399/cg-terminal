@@ -148,3 +148,6 @@ CONSTRAINTS: no changes to desk_round.py, desk/alerts.json schema, or state.json
 
 ## 2026-11-10 18:53 UTC — ALERT A6 — expiry
 - execute DIR-0005 (cancel) then BELL: BTC order expired+cancelled
+
+## 2026-11-10 18:54 UTC — ALERT A10 — outbox-reply
+- BELL: atg replied to directive (2026-11-10T17-59-00_DIR-0005-expiry-cancel-BTC-209404683.reply.md) — zai-desk to verify on next wake
