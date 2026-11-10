@@ -37,11 +37,11 @@
    never edit the broadcast section by hand.
 
 <!-- 360-BROADCAST-START (desk-managed — latest run wins; atg-exec: read on every poll) -->
-## DESK BROADCAST · 360 XPT+USO · 20261110-2053 UTC — latest deepscan result (auto-refreshed by scripts/desk_deepscan.py)
+## DESK BROADCAST · 360 classic · 20261110-2053 UTC — latest deepscan result (auto-refreshed by scripts/desk_deepscan.py)
 
 atg-exec: full justification per trade in desk/deepscan/DIGEST-20261110-2053.md (+ per-asset §9). Do NOT touch MT5 without a user-approved DIR-*. Broker gates re-verified at placement.
 
-### NO-TRADE
-- XPT: NO-TRADE — scorecard dimensions disagree; recovery: re-scan after the next impulse or when 2+ dimensions flip — do not force setups in a transition tape
-- USO: NO-TRADE — scorecard dimensions disagree; recovery: re-scan after the next impulse or when 2+ dimensions flip — do not force setups in a transition tape
 <!-- 360-BROADCAST-END -->
+### CLASSIC UNIVERSE (Tier-3) — 3/3 online (watchlist-only, engine v4 pending) · quotes via /api/cg/classic (Yahoo v8) · NO trade construction
+- full table: desk/deepscan/DIGEST-20261110-2053.md (classic section) — derivatives dims honestly n/a for this class
+

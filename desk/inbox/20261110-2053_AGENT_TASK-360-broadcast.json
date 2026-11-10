@@ -2,6 +2,6 @@
  "action": "AGENT_TASK",
  "from": "zai-desk",
  "ts": "20261110-2053 UTC",
- "scope": "XPT+USO",
- "instruction": "360\u00b0 XPT+USO deepscan finished 20261110-2053 UTC \u2014 broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2053.md. LIVE (manage only, do NOT re-place): none. PLACEABLE (new): none. PARKED: none. CLASSIC: none. All candidates are pullback LIMIT orders (never market); broker gates |basis|\u22640.5% & spread\u22640.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action."
+ "scope": "classic",
+ "instruction": "360\u00b0 classic deepscan finished 20261110-2053 UTC \u2014 broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2053.md. LIVE (manage only, do NOT re-place): none. PLACEABLE (new): none. PARKED: none. CLASSIC: 3/3 online (watchlist-only, engine v4 pending). All candidates are pullback LIMIT orders (never market); broker gates |basis|\u22640.5% & spread\u22640.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action."
 }

@@ -736,3 +736,6 @@ Deliverables: EXPANSION-PLAN-20261110.md (v1.1) · REVIEW-MULTIAGENT-20261110.md
 ### DEEPSCAN · 2026-11-10 20:53 UTC · zai-desk — 360° on-demand deep analysis (XPT+USO)
 - XPT: desk/deepscan/XPT-20261110-2053.md
 - USO: desk/deepscan/USO-20261110-2053.md · gaps: bookwalls: HTTP Error 400: Bad Request
+
+### DEEPSCAN · 2026-11-10 20:53 UTC · zai-desk — 360° on-demand deep analysis (classic)
+- CLASSIC universe (3): desk/deepscan/CLASSIC-20261110-2053.md — 3 online, watchlist-only (engine v4 pending)
