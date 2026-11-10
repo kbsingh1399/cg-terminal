@@ -208,3 +208,14 @@ ROLLBACK (if build fails): `git revert <assets.ts commit> && npm run build && re
 
 ## 2026-11-10 20:30 UTC — ALERT A10 — outbox-reply
 - BELL: atg replied to directive (2026-11-10T20-30-00_DIR-0008-terminal-rebuild-and-feed-verify.reply.md) — zai-desk to verify on next wake
+
+## 2026-11-10 20:34 UTC — new suggested order — place in MT5 (debate FOR 6/AGAINST 0)
+- R22-LTC-1 LTC SHORT limit entry 51.37 · stop 51.98 · targets 49.48 / 49.27 / 49.03 · R 3.1 · expires 2026-11-11 00:31 UTC
+- BASIS: levels are PERP prices (perpRef 50.24). Before placing in MT5 read spreads.LTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (50.24 vs 50.77), h4 RSI 39.5, day -2.2%
+- [FOR] footprint: bull 45 / bear 59; recent: none <6h
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:buy×6, abs:sell×7, div:buy×1, div:sell×5, exh:sell×3, sdiv:sell×2, trap:buy×2, trap:sell×1 — net 9 buy-side vs 18 sell-side
+- [FOR] liquidation: long-liq magnet 49.48 (str 71, ~$1M est, -1.41%) as target
+- [FOR] bookWalls: ±5% depth imbalance -0.164 (5m ago -0.213, rising bids); bid $0.01B vs ask $0.01B
+- [FOR] cvd: taker buy 48.0%, perpCvd -23, spotCvd -5, quadrant both-selling, latestDiv bear (recent)
+- → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
