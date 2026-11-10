@@ -31,7 +31,11 @@ ROOT = Path(__file__).resolve().parent.parent
 DESK = ROOT / "desk"
 BASE = "http://localhost:3000/api/cg"
 DECS = {"BTC": 1, "ETH": 2, "SOL": 2, "BNB": 2, "XRP": 4, "ADA": 4, "AVAX": 3,
-        "DOGE": 5, "LINK": 3, "LTC": 2, "XLM": 4, "XMR": 3, "XAU": 2, "XAG": 3}
+        "DOGE": 5, "LINK": 3, "LTC": 2, "XLM": 4, "XMR": 3, "XAU": 2, "XAG": 3,
+        # 2026-11-11 expansion (user directive): XPT (Binance+OKX perps) and
+        # USO (OKX-lead perp) join the perp universe. UKO has zero perp data
+        # on every Coinglass venue → classic registry (below).
+        "XPT": 2, "USO": 2}
 SYMS = list(DECS)
 DRY = "--dry-run" in sys.argv
 now_ms = int(time.time() * 1000)
@@ -48,11 +52,6 @@ MT5_MAP = _cfg.get("symbol_map") or {}
 # Confirmed absent from the FundedNext server (user broker audit 2026-11-10):
 # perp-side watchlist only — no execution path at this broker.
 NOT_LISTED = {"SOL", "BNB", "AVAX"}
-
-# 2026-11-11 expansion (user directive: metals + full classic universe):
-# XPT (Binance+OKX perps) and USO (OKX-lead perp) join the perp universe.
-# UKO has zero perp data on every Coinglass venue → classic registry below.
-DECS.update({"XPT": 2, "USO": 2})
 
 # v3.3 data-depth gate (multi-agent review Q1 — rank-normalized magnets pass
 # phantom strength on thin books). Calibrated live 2026-11-11 on open-levels
