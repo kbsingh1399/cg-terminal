@@ -1,0 +1,16 @@
+{
+  "id": "ping-diag",
+  "ts": 1794327955094,
+  "from": "zai-desk",
+  "action": "PING",
+  "priority": "info",
+  "replyTs": 1794327965816,
+  "status": "done",
+  "result": {
+    "pong": true,
+    "host": "DESKTOP-VM3OI80",
+    "node": "v24.16.0",
+    "uptimeSec": 1484,
+    "lastRoundTs": 1794327185777
+  }
+}
