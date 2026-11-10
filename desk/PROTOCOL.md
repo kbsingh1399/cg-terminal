@@ -109,9 +109,20 @@ suggested ──(atg places in MT5)──► placed ──(fill)──► filled
     └──(confluence invalidated)───► withdrawn            └──(zai review: CLOSE rec)
 ```
 
-- zai-desk creates an order only when: |confluence score| ≥ 3.0 AND ≥2 of 3
-  alignment checks pass (signal direction, h4/d1 EMA trend, VWAP regime)
-  AND the R multiple to T1 ≥ `config.min_r_multiple`.
+- zai-desk creates an order only when ALL gates pass (engine v2):
+  1. |confluence score| ≥ 3.0 — components: recency-weighted notification
+     bias, footprint signal counts, h4/d1 EMA trend, VWAP regime, RSI
+     exhaustion, CVD (taker buy share + recent divergence)
+  2. ≥2 of 3 alignment checks (signal direction, h4/d1 EMA trend, VWAP regime)
+  3. R multiple to T1 ≥ `config.min_r_multiple` (**2.0 — user mandate:
+     minimum 1:2, prefer more**); targets are structural magnets only
+     (day VAH/VAL, month POC, liquidation clusters ≥40 strength)
+  4. no opposite liquidation magnet (strength ≥50) within 1.2R of entry
+  5. no opposing whale wall ≥ $5M within 1.5R into the profit path
+  6. stop pushed beyond any liq magnet inside the risk zone, with the
+     geometry staying ≤ 1.6× base risk
+- Orders whose `riskR` falls below `config.min_r_multiple` (e.g. after a
+  config change) are auto-withdrawn on the next round.
 - Orders carry `expiresTs` (`config.order_expiry_hours` after creation). An
   unfilled, still-valid order survives rounds; an invalidated one is
   withdrawn with a reason in `log.md`.

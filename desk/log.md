@@ -42,3 +42,24 @@ entries. All timestamps UTC.
 ### Positions
 - no open positions
 
+## R4 · 2026-11-10 14:53 UTC · zai-desk
+
+**Market**: BTC 74,123.2 (-1.6%)  ETH 2,074.22 (-2.8%)  SOL 83.86 (-3.3%)  XAU 4,041.84 (-2.5%)  XAG 51.720 (-3.3%)
+**Bias (|score|≥2)**: BTC-4  ADA-5  LTC-5  DOGE-4  XAG+3
+
+### Opportunities (engine v2 — full parameter gates, min R 2.0)
+- NEW R4-BTC-1 BTC SHORT limit 74,270.3 · stop 74,648.7 · T1 72,964.8 · R 3.5
+      gates passed: confluence -4.1 [notif -2.0 · signals +0.0 · trend -2 · vwap -1 · rsi +0.0 · cvd +0.9]; entry VWAP+1σ/day-POC 74,270.3; stop beyond 2σ zone; T1 long-liq cluster str 47 (~$642M est) · T2 — · T3 —; bid wall $21.6M @ 73,260.0 mid-path (2.7R); liq clusters are Coinglass estimates
+- ADA SHORT confluence -5.0 — REJECTED by deep gates: no structural target >= 2.0R (nearest magnet 0.1766 = 1.1R)
+- NEW R4-LTC-2 LTC SHORT limit 51.40 · stop 51.61 · T1 50.20 · R 5.9
+      gates passed: confluence -4.8 [notif +0.7 · signals -1.0 · trend -2 · vwap -1 · rsi +0.0 · cvd -1.5]; entry VWAP+1σ/day-POC 51.40; stop beyond 2σ zone; T1 long-liq cluster str 49 (~$1M est) · T2 — · T3 —; liq clusters are Coinglass estimates
+- NEW R4-DOGE-3 DOGE SHORT limit 0.06982 · stop 0.07025 · T1 0.06788 · T2 0.06767 · T3 0.06747 · R 4.5
+      gates passed: confluence -3.6 [notif +1.9 · signals -1.0 · trend -2 · vwap -1 · rsi +0.0 · cvd -1.5]; entry VWAP+1σ/day-POC 0.06982; stop beyond 2σ zone; T1 long-liq cluster str 61 (~$7M est) · T2 long-liq cluster str 60 (~$6M est) · T3 long-liq cluster str 72 (~$8M est); liq clusters are Coinglass estimates
+
+### Order lifecycle
+- R1-BTC-1 WITHDRAWN (R 1.5 < min 2.0 — user mandate 1:2)
+- R2-LTC-1 WITHDRAWN (R 1.7 < min 2.0 — user mandate 1:2)
+
+### Positions
+- no open positions
+
