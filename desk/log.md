@@ -549,3 +549,17 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
   exempt (evidence in reply). 120s snapshot cadence stays per DIR-0006.
 - LIVE STATE at 19:26 UTC: equity $4,649.96, flat, 2 pending (ETH/XAG), correlation cap FULL
   (2 correlated shorts) — no NEW entries until one closes. Next desk cron: 00:30 IST.
+
+### DEEPSCAN · 2026-11-10 19:31 UTC · zai-desk — 360° on-demand deep analysis (all)
+- BTC: desk/deepscan/BTC-20261110-1931.md
+- ETH: desk/deepscan/ETH-20261110-1931.md
+- SOL: desk/deepscan/SOL-20261110-1931.md
+- BNB: desk/deepscan/BNB-20261110-1931.md
+- XRP: desk/deepscan/XRP-20261110-1931.md
+- ADA: desk/deepscan/ADA-20261110-1931.md
+- AVAX: desk/deepscan/AVAX-20261110-1931.md
+- DOGE: desk/deepscan/DOGE-20261110-1931.md
+- LINK: desk/deepscan/LINK-20261110-1932.md
+- LTC: desk/deepscan/LTC-20261110-1932.md
+- XAU: desk/deepscan/XAU-20261110-1932.md
+- XAG: desk/deepscan/XAG-20261110-1932.md
