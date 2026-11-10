@@ -1,0 +1,239 @@
+{
+  "version": 1,
+  "config": {
+    "round_interval_min": 15,
+    "order_expiry_hours": 4,
+    "max_risk_per_trade_pct": 0.5,
+    "max_concurrent_positions": 4,
+    "min_r_multiple": 1.5,
+    "symbol_map": {
+      "BTC": "BTCUSD",
+      "ETH": "ETHUSD",
+      "SOL": "SOLUSD",
+      "BNB": "BNBUSD",
+      "XRP": "XRPUSD",
+      "ADA": "ADAUSD",
+      "AVAX": "AVAXUSD",
+      "DOGE": "DOGEUSD",
+      "LINK": "LINKUSD",
+      "LTC": "LTCUSD",
+      "XAU": "XAUUSD",
+      "XAG": "XAGUSD"
+    }
+  },
+  "analysis": {
+    "last_round": "R1",
+    "last_round_ts": 1794320226989,
+    "assets": {
+      "BTC": {
+        "price": 73882.7,
+        "chgDayPct": -1.9173735845048958,
+        "score": -5.0,
+        "parts": {
+          "notif": -2,
+          "signals": 0.0,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0
+        },
+        "error": null
+      },
+      "ETH": {
+        "price": 2067.21,
+        "chgDayPct": -3.129803186504216,
+        "score": -0.77,
+        "parts": {
+          "notif": 0.73,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0.5
+        },
+        "error": null
+      },
+      "SOL": {
+        "price": 83.94,
+        "chgDayPct": -3.172222863075326,
+        "score": -2.51,
+        "parts": {
+          "notif": 1.15,
+          "signals": -0.66,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0
+        },
+        "error": null
+      },
+      "BNB": {
+        "price": 685.13,
+        "chgDayPct": -0.9756027056715038,
+        "score": -0.79,
+        "parts": {
+          "notif": 1.21,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0
+        },
+        "error": null
+      },
+      "XRP": {
+        "price": 1.0589,
+        "chgDayPct": -3.5961398397669417,
+        "score": 0.5,
+        "parts": {
+          "notif": 2,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0.5
+        },
+        "error": null
+      },
+      "ADA": {
+        "price": 0.1758,
+        "chgDayPct": -0.9019165727170183,
+        "score": -3.31,
+        "parts": {
+          "notif": 0.69,
+          "signals": -1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0
+        },
+        "error": null
+      },
+      "AVAX": {
+        "price": 8.298,
+        "chgDayPct": -4.069364161849714,
+        "score": -3.2,
+        "parts": {
+          "notif": -1.2,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0
+        },
+        "error": null
+      },
+      "DOGE": {
+        "price": 0.06875,
+        "chgDayPct": -1.7997428938723,
+        "score": -4.03,
+        "parts": {
+          "notif": -0.03,
+          "signals": -1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0
+        },
+        "error": null
+      },
+      "LINK": {
+        "price": 10.386,
+        "chgDayPct": -2.5520735597673134,
+        "score": -0.79,
+        "parts": {
+          "notif": 1.21,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0
+        },
+        "error": null
+      },
+      "LTC": {
+        "price": 50.97,
+        "chgDayPct": -0.8172796263864598,
+        "score": -2.85,
+        "parts": {
+          "notif": 1.15,
+          "signals": -1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0
+        },
+        "error": null
+      },
+      "XAU": {
+        "price": 4059.36,
+        "chgDayPct": -2.0729550887875114,
+        "score": 1.99,
+        "parts": {
+          "notif": 2,
+          "signals": 0.99,
+          "trend": 0.0,
+          "vwap": -1,
+          "rsi": 0
+        },
+        "error": null
+      },
+      "XAG": {
+        "price": 51.85,
+        "chgDayPct": -3.102223883386277,
+        "score": 1.88,
+        "parts": {
+          "notif": 1.88,
+          "signals": 1,
+          "trend": 0.0,
+          "vwap": -1,
+          "rsi": 0
+        },
+        "error": null
+      }
+    },
+    "watchlist": [
+      {
+        "sym": "BTC",
+        "score": -5.0
+      },
+      {
+        "sym": "DOGE",
+        "score": -4.03
+      },
+      {
+        "sym": "ADA",
+        "score": -3.31
+      },
+      {
+        "sym": "AVAX",
+        "score": -3.2
+      },
+      {
+        "sym": "LTC",
+        "score": -2.85
+      },
+      {
+        "sym": "SOL",
+        "score": -2.51
+      }
+    ]
+  },
+  "orders": [
+    {
+      "id": "R1-BTC-1",
+      "createdTs": 1794320226989,
+      "round": "R1",
+      "sym": "BTC",
+      "mt5Symbol": "BTCUSD",
+      "side": "short",
+      "type": "limit",
+      "entry": 74644.9,
+      "stop": 75025.6,
+      "targets": [
+        74066.0
+      ],
+      "riskR": 1.5,
+      "expiresTs": 1794334626989,
+      "status": "suggested",
+      "statusTs": 1794320226989,
+      "rationale": "confluence -5.0 (notif -2.0, signals +0.0, trend -2, vwap -1); entry at VWAP\u00b11\u03c3/POC, stop beyond 2\u03c3 zone",
+      "ticket": null,
+      "actualEntry": null,
+      "filledTs": null,
+      "notes": null
+    }
+  ],
+  "positions": [],
+  "closed": []
+}
