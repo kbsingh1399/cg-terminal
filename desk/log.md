@@ -670,3 +670,15 @@ Re-ran 360 all post-fix: 12/12 all sources OK, digest DIGEST-20261110-1952, broa
 - XMR: desk/deepscan/XMR-20261110-2023.md
 - XAU: desk/deepscan/XAU-20261110-2023.md
 - XAG: desk/deepscan/XAG-20261110-2023.md
+
+### DIALOG · 2026-11-10 20:35 UTC · zai-desk — EXPANSION DIRECTIVE (FundedNext 96-instrument universe + Karpathy skills + multi-agent review)
+
+User directive: expand terminal+deepscan to verified broker universe, install karpathy-guidelines + tech-team-agents, deploy multi-agent architecture review. Executed:
+1. TOOLS INSTALLED: github.com/multica-ai/andrej-karpathy-skills (4 rules applied: assumptions surfaced plan §7 · simplicity-first tiering · surgical diffs · verifiable criteria §6) + github.com/cliffano/tech-team-agents (external/, gitignored).
+2. DATA RESEARCH (live probe, sanity-passed on BTC/XAU first): XLM full 4-venue (kline+funding+liq 2263 lvls+CVD+takerflow) · XMR 3-venue (no OKX swap; 1748 lvls) · XPT 2-venue (Binance+OKX; 1363 lvls) · USO OKX-only (368 lvls — thin) · UKO zero data · indices/forex/equities (82): NOT on Coinglass — Tier 3 deferred (user decision; 4 of 8 scorecard dims don't exist for them).
+3. PHASE 1 SHIPPED: symbol_map DOGE→DOGUSD, LINK→LNKUSD (+XLM:XLMUSD, XMR:XMRUSD); desk_deepscan mt5sym() resolver (map-read, USD fallback); NOT_LISTED={SOL,BNB,AVAX} → "PARKED (not listed on FundedNext)" + §7 watchlist line.
+4. PHASE 2a SHIPPED: assets.ts +XLM +XMR (verified: sandbox terminal serves 14 assets via dev hot-reload; XLM 0.1448, XMR 558.89); DECS staging gate extended; 360 XLM XMR smoke test PASS (all sources OK, scorecards resolve).
+5. MULTI-AGENT REVIEW (4 parallel agents: Gilfoyle-architect, Elliot-security, Laurie-quant, Jared-QA; full text desk/deepscan/REVIEW-MULTIAGENT-20261110.md): consolidated APPROVE-WITH-CONDITIONS. Blockers fixed this run: uncommitted code (B1), silent BTC fallback → hard error (B2), missing map entries (B3), DECS+smoke (B4), criteria re-scoped (B5). Phase 2b (XPT/USO) BLOCKED on quant gates (str≥40 is rank-normalized → thin books pass phantom magnets; engine v3.3 rules proposed, user approval required). USER-SIDE URGENT (Elliot): repo is PUBLIC streaming live acct telemetry → make private; inbox channel unauthenticated → HMAC; daemon.json commands git-tracked+shell-executed → local.json+argv.
+6. DIR-0008 emitted (Windows: pull→rebuild→verify 14 assets + DOGUSD/LNKUSD/XLMUSD/XMRUSD feed keys).
+7. Regression: 360 all 14/14 all sources OK (digest 20261110-2023). XAG min-lot 0.72% flagged per review Q5 (live ticket — manage only).
+Deliverables: EXPANSION-PLAN-20261110.md (v1.1) · REVIEW-MULTIAGENT-20261110.md · code diffs (this commit series).
