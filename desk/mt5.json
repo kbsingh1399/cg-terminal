@@ -1,0 +1,98 @@
+{
+  "ts": 1794322139891,
+  "error": null,
+  "account": {
+    "login": 11808165,
+    "currency": "USD",
+    "leverage": 100,
+    "balance": 4679.37,
+    "equity": 4679.37,
+    "margin": 0.0,
+    "margin_free": 4679.37,
+    "margin_level": 0.0,
+    "profit": 0.0
+  },
+  "floating": {
+    "total": 0,
+    "positions": 0
+  },
+  "positions": [],
+  "spreads": {
+    "ADAUSD": {
+      "ok": true,
+      "bid": 0.1746,
+      "ask": 0.1784,
+      "spreadPoints": 38.0,
+      "spreadPct": 2.153,
+      "tradeAllowed": true
+    },
+    "AVAXUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "BNBUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "BTCUSD": {
+      "ok": true,
+      "bid": 73999.84,
+      "ask": 74025.1,
+      "spreadPoints": 2526.0,
+      "spreadPct": 0.0341,
+      "tradeAllowed": true
+    },
+    "DOGEUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "ETHUSD": {
+      "ok": true,
+      "bid": 2069.59,
+      "ask": 2070.14,
+      "spreadPoints": 55.0,
+      "spreadPct": 0.0266,
+      "tradeAllowed": true
+    },
+    "LINKUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "LTCUSD": {
+      "ok": true,
+      "bid": 51.1,
+      "ask": 52.31,
+      "spreadPoints": 121.0,
+      "spreadPct": 2.3402,
+      "tradeAllowed": true
+    },
+    "SOLUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "XAGUSD": {
+      "ok": true,
+      "bid": 51.631,
+      "ask": 51.687,
+      "spreadPoints": 56.0,
+      "spreadPct": 0.1084,
+      "tradeAllowed": true
+    },
+    "XAUUSD": {
+      "ok": true,
+      "bid": 4037.55,
+      "ask": 4037.91,
+      "spreadPoints": 36.0,
+      "spreadPct": 0.0089,
+      "tradeAllowed": true
+    },
+    "XRPUSD": {
+      "ok": true,
+      "bid": 1.0575,
+      "ask": 1.0594999999999999,
+      "spreadPoints": 20.0,
+      "spreadPct": 0.1889,
+      "tradeAllowed": true
+    }
+  }
+}
