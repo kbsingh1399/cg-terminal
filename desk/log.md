@@ -485,3 +485,25 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 - LTC: desk/deepscan/LTC-20261110-1913.md
 - XAU: desk/deepscan/XAU-20261110-1913.md
 - XAG: desk/deepscan/XAG-20261110-1913.md
+
+### DIALOG · 2026-11-10 19:15 UTC · user ↔ zai-desk — 360 output → WAKEUP.md broadcast (implemented)
+- USER: "are you pushing all such reply to wakeup.md — it will automatically wake up antigravity
+  for local wake up" + "proper explanation is still missing in your output".
+- IMPLEMENTED (v3.1 engine + CHECKLIST-360 v1.3): every 360° run now (a) auto-writes
+  DIGEST-<ts>.md with trade tables + per-asset "Why each trade" blocks (thesis/entry/stop/
+  targets/size/invalidation) + reason→recovery for every PARKED/REJECTED/NO-TRADE asset;
+  (b) refreshes the DESK BROADCAST section of desk/inbox/WAKEUP.md (marker-scoped, latest
+  wins) with the complete limit-trade list + justifications; (c) drops
+  <ts>_AGENT_TASK-360-broadcast.json → atg daemon wakeAdd + bell + fireWake = real local
+  auto-wake on its 45s poll. No MT5 action without user-approved DIR-*.
+- Wired end-to-end: 360 all 19:10 + 19:13 UTC (12/12 all sources OK) — 2 PLACEABLE
+  (ETH 2.08R $23.43=0.5% · XAG 3.55R but min-lot risk 0.72%>0.5% flagged SKIP), 4 PARKED
+  (BNB/DOGE feed-dead, ADA spr 2.19%, LTC basis 1.09%+spr 2.39%), 5 REJECTED (BTC no str≥40
+  magnet; SOL R=2.000 borderline; XRP 1.35; LINK 1.54; AVAX 0.69), XAU NO-TRADE.
+- Standing-suggestions sweep vs 19:13 spreads: R4-DOGE-3 (feed dead) · R7-LTC-1 (basis
+  1.086%+spr 2.385%) · R9-ADA-1 (spr 2.190%; basis 0.347% itself back inside 0.5%) — none normalized.
+- ⚠ INFRA: sandbox recycle wiped .git/config — remote origin + credentials GONE, pull/push
+  broken this wake (local commits pending). Need user to re-provide repo URL/token; until then
+  atg cannot see: broadcast, AGENT_TASK wake, DIR-0005 EXEC verification. Ticket 209404683
+  expired 18:53:42 UTC (still pending in 18:50:55Z local snapshot; DIR-0005 cancel armed —
+  verification blocked by the same outage).

@@ -273,13 +273,13 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
                 t1 = tgts[0]["price"]
                 r1 = abs(entry - t1) / risk_dist if risk_dist > 0 else 0
                 if r1 < 2.0:
-                    ap(f"- **REJECTED** — R to T1 = {r1:.2f} < 2.0 mandate "
+                    ap(f"- **REJECTED** — R to T1 = {r1:.3f} < 2.0 mandate "
                        f"(entry {fmt(sym, entry)}, stop {fmt(sym, stop)}, T1 {fmt(sym, t1)} str {tgts[0]['strength']:.0f})")
-                    status, why_out = "REJECTED", f"R to T1 {r1:.2f} < 2.0"
+                    status, why_out = "REJECTED", f"R to T1 {r1:.3f} < 2.0"
                     card["status"], card["reason"] = status, why_out
-                    card["entry"], card["confl"], card["stop"], card["r1"] = entry, confl, stop, round(r1, 2)
+                    card["entry"], card["confl"], card["stop"], card["r1"] = entry, confl, stop, round(r1, 3)
                     card["recovery"] = (f"re-check on σ-compression (tighter stop) or T1 extension — "
-                                        f"needs R ≥ 2.0, now {r1:.2f}")
+                                        f"needs R ≥ 2.0, now {r1:.3f}")
                 else:
                     # ---- broker translation + gates
                     if basis is not None:
@@ -295,6 +295,7 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
                         m_tgts = []
                         status = "PARKED (broker feed dead — DIR-0003)"
                         why = ""
+                        why_out = "broker feed dead (no ticks — DIR-0003 open)"
                     # ---- size from broker spec (0.5% equity risk mandate)
                     lots = risk_act = None
                     if spec and risk_usd:
@@ -375,7 +376,7 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
                     ap("  - *Invalidation*: " + "; ".join(risks) + ".")
                     # ---- fill trade card (digest + broadcast layer)
                     card["status"] = status
-                    card["reason"] = (why.strip(" —") or None) if "PLACEABLE" not in status else None
+                    card["reason"] = ((why.strip(" —") or why_out) if "PLACEABLE" not in status else None)
                     card["entry"], card["entry_b"], card["confl"] = entry, m_entry, confl
                     card["stop"], card["stop_b"], card["stop_src"] = stop, m_stop, stop_src
                     card["tgts"] = [{"price": lv["price"], "str": round(lv.get("strength") or 0),
@@ -1096,6 +1097,141 @@ def deep_report(sym):
     return "\n".join(L), d["errors"], card
 
 
+# ------------------------------------------------------------------ digest + broadcast
+def _card_row(sym, c):
+    e = fmt(sym, c["entry"]) + (f" → {fmt(sym, c['entry_b'])}" if c.get("entry_b") else "")
+    s = fmt(sym, c["stop"]) + (f" → {fmt(sym, c['stop_b'])}" if c.get("stop_b") else "")
+    t = " / ".join(f"{fmt(sym, t['price'])} str{t['str']}" for t in (c.get("tgts") or [])) or "—"
+    sz = (f"{fnum(c['lots'], 2)} lots ${fnum(c['risk_usd'], 2)} = {c['risk_pct']}%"
+          if c.get("lots") and c.get("risk_usd") else "size at placement")
+    return e, s, t, sz
+
+
+def write_digest(cards, scope, ts):
+    L = [f"# 360° DIGEST · {scope} · {ts} UTC — full limit-trade list (auto-generated)", "",
+         "Per-asset detail (§9 construction + WHY THIS TRADE + full evidence manifest): "
+         "`desk/deepscan/<SYM>-<ts>.md`. Outcomes: PLACEABLE (geometry + broker gates pass) · "
+         "PARKED (geometry passes, broker blocked — recovery condition printed) · REJECTED "
+         "(geometry fails, reason printed) · NO-TRADE (scorecard disagrees). No data dropped.", ""]
+    pl, pk = _sel(cards, "PLACEABLE"), _sel(cards, "PARKED")
+    rj = [c for c in cards if (c.get("status") or "").startswith("REJECTED")]
+    nt = [c for c in cards if (c.get("status") or "") in ("NO-TRADE", "NO-ZONE", "NO-DATA")]
+    if pl:
+        L += ["## PLACEABLE — passes geometry (R≥2.0, str≥40 magnet) AND broker gates",
+              "| Asset | Side | Entry (perp→broker) | Stop | T1 / T2 / T3 | R | Size / Risk |", "|---|---|---|---|---|---|---|"]
+        for c in pl:
+            e, s, t, sz = _card_row(c["sym"], c)
+            cav = " ⚠ " + c["caveat"] if c.get("caveat") else ""
+            L.append(f"| **{c['sym']}** | {c['side']} LIMIT | **{e}** ({c['confl']}) | {s} ({c['stop_src']}) | {t} | "
+                     f"**{c['r1']}R** | {sz}{cav} |")
+        L.append("")
+    if pk:
+        L += ["## PARKED — geometry passes, broker blocked (levels valid on the perp side)",
+              "| Asset | Side | Entry (perp) | Stop | T1 | R | Blocker → recovery |", "|---|---|---|---|---|---|---|"]
+        for c in pk:
+            e, s, t, sz = _card_row(c["sym"], c)
+            t1 = (c.get("tgts") or [{}])[0]
+            t1s = f"{fmt(c['sym'], t1.get('price'))} str{t1.get('str')}" if t1.get("price") else "—"
+            L.append(f"| **{c['sym']}** | {c['side']} LIMIT | {e} ({c['confl']}) | {s} | {t1s} | **{c['r1']}R** | "
+                     f"{c['reason']} → {c['recovery']} |")
+        L.append("")
+    if rj:
+        L += ["## REJECTED — geometry fails (reason printed, nothing skipped)",
+              "| Asset | Reason → recovery |", "|---|---|"]
+        for c in rj:
+            L.append(f"| **{c['sym']}** | {c['reason']} → {c['recovery']} |")
+        L.append("")
+    if nt:
+        L += ["## NO-TRADE / NO-ZONE / NO-DATA", "| Asset | Reason → recovery |", "|---|---|"]
+        for c in nt:
+            L.append(f"| **{c['sym']}** | {c['status']}: {c['reason']} → {c['recovery']} |")
+        L.append("")
+    L += ["## Why each trade — full justification (digest layer; per-tab detail in §9 reports)"]
+    for c in cards:
+        if c.get("why"):
+            L.append("")
+            L.append(f"### {c['sym']} {c['side']} — {c['status']} · {c['r1']}R")
+            for w in c["why"]:
+                L.append(f"- {w}")
+        elif c.get("reason"):
+            L.append("")
+            L.append(f"### {c['sym']} — {c['status']}")
+            L.append(f"- {c['reason']} → {c['recovery']}")
+    sides = {c.get("side") for c in cards if c.get("side")}
+    corr = ""
+    if len(sides) == 1 and next(iter(sides)):
+        corr = f"- Correlation: every candidate is a {next(iter(sides))} in one tape — cap concurrent NEW entries at 1-2."
+    L += ["", "## Cross-asset notes", corr,
+          "- All entries are pullback LIMIT orders in the attack zone — never market orders (universal Δ-divergence watch).",
+          "- Broker gates at placement: |basis| ≤ 0.5%, spread ≤ 0.15%, SHORT SL triggers on ASK, risk 0.5% equity.",
+          "", "> honesty: magnets/walls/stopmap/squeeze = Coinglass estimates; footprint = 4-venue perp aggregates; "
+          "all levels from live terminal pulls at generation time."]
+    return "\n".join(L)
+
+
+def _sel(cards, prefix):
+    return [c for c in cards if (c.get("status") or "").startswith(prefix)]
+
+
+def broadcast_wakeup(cards, scope, ts):
+    """User directive 2026-11-11: every 360 reply must land in WAKEUP.md so the
+    atg-exec daemon's 45s git poll auto-wakes the local Antigravity agent — plus
+    an AGENT_TASK inbox json that makes the daemon bell+fireWake for real."""
+    WUP = DESK / "inbox" / "WAKEUP.md"
+    START = "<!-- 360-BROADCAST-START (desk-managed — latest run wins; atg-exec: read on every poll) -->"
+    END = "<!-- 360-BROADCAST-END -->"
+    B = [START, f"## DESK BROADCAST · 360 {scope} · {ts} UTC — latest deepscan result (auto-refreshed by scripts/desk_deepscan.py)", "",
+         "atg-exec: full justification per trade in desk/deepscan/DIGEST-" + ts + ".md (+ per-asset §9). "
+         "Do NOT touch MT5 without a user-approved DIR-*. Broker gates re-verified at placement.", ""]
+    pl, pk = _sel(cards, "PLACEABLE"), _sel(cards, "PARKED")
+    rj = [c for c in cards if (c.get("status") or "").startswith("REJECTED")]
+    nt = [c for c in cards if (c.get("status") or "") in ("NO-TRADE", "NO-ZONE", "NO-DATA")]
+    if pl:
+        B.append("### PLACEABLE")
+        for c in pl:
+            e, s, t, sz = _card_row(c["sym"], c)
+            cav = f" ⚠ {c['caveat']}" if c.get("caveat") else ""
+            B.append(f"- **{c['sym']} {c['side']} LIMIT {e} · SL {s} · T: {t} · {c['r1']}R · {sz}**{cav}")
+            for w in c.get("why", []):
+                B.append(f"  - {w}")
+    if pk:
+        B.append("### PARKED (broker blocked — recovery printed)")
+        for c in pk:
+            e, s, t, sz = _card_row(c["sym"], c)
+            B.append(f"- {c['sym']} {c['side']} LIMIT {e} · SL {s} · T: {t} · {c['r1']}R — blocked: {c['reason']}; recovery: {c['recovery']}")
+    if rj:
+        B.append("### REJECTED (geometry)")
+        for c in rj:
+            B.append(f"- {c['sym']}: {c['reason']} — recovery: {c['recovery']}")
+    if nt:
+        B.append("### NO-TRADE")
+        for c in nt:
+            B.append(f"- {c['sym']}: {c['status']} — {c['reason']}; recovery: {c['recovery']}")
+    sides = {c.get("side") for c in cards if c.get("side")}
+    if len(sides) == 1 and next(iter(sides)):
+        B.append(f"- Correlation: all candidates {next(iter(sides))} in one tape — cap NEW entries at 1-2.")
+    B.append(END)
+    txt = WUP.read_text() if WUP.exists() else "# WAKEUP.md — user → zai-desk instruction channel\n"
+    if START in txt and END in txt:
+        pre, post = txt.split(START)[0], txt.split(END, 1)[1]
+        txt = pre.rstrip("\n") + "\n\n" + "\n".join(B) + "\n" + post.lstrip("\n")
+    else:
+        txt = txt.rstrip("\n") + "\n\n" + "\n".join(B) + "\n"
+    WUP.write_text(txt)
+    # AGENT_TASK → daemon wakeAdd + bell + fireWake (the actual local wake)
+    pln = ", ".join(f"{c['sym']} {c['side']} {c['r1']}R" for c in pl) or "none"
+    pkn = ", ".join(c["sym"] for c in pk) or "none"
+    ins = {"action": "AGENT_TASK", "from": "zai-desk", "ts": f"{ts} UTC", "scope": scope,
+           "instruction": (f"360° {scope} deepscan finished {ts} UTC — broadcast refreshed in "
+                           f"desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-{ts}.md. "
+                           f"PLACEABLE: {pln}. PARKED: {pkn}. All candidates are pullback LIMIT orders (never market); "
+                           f"broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; "
+                           f"await user-approved DIR-* before any MT5 action.")}
+    fp = DESK / "inbox" / f"{ts}_AGENT_TASK-360-broadcast.json"
+    fp.write_text(json.dumps(ins, indent=1))
+    return f"WAKEUP.md refreshed + {fp.name} ({len(pl)} placeable / {len(pk)} parked)"
+
+
 # ------------------------------------------------------------------ main
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
@@ -1116,18 +1252,28 @@ def main():
 
     outdir = DESK / "deepscan"
     outdir.mkdir(exist_ok=True)
-    log_entries = []
+    log_entries, cards = [], []
     for sym in syms:
-        rep, errs = deep_report(sym)
+        rep, errs, card = deep_report(sym)
+        card["gaps"] = list(errs)
+        cards.append(card)
         fn = outdir / f"{sym}-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M')}.md"
         fn.write_text(rep)
         print(f"=== {sym} → {fn.relative_to(ROOT)} ({len(rep.splitlines())} lines, "
               f"{'all sources OK' if not errs else str(len(errs)) + ' gap(s): ' + '; '.join(errs)}")
         log_entries.append(f"- {sym}: {fn.relative_to(ROOT)}" + (f" · gaps: {'; '.join(errs)}" if errs else ""))
 
+    ts_run = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+    scope = ("all" if set(syms) == set(SYMS)
+             else "top" + str(len(syms)) if "--top" in sys.argv
+             else "+".join(syms))
     if not DRY:
+        dig = outdir / f"DIGEST-{ts_run}.md"
+        dig.write_text(write_digest(cards, scope, ts_run))
+        bstat = broadcast_wakeup(cards, scope, ts_run)
+        print(f"digest → {dig.relative_to(ROOT)} · broadcast → {bstat}")
         with (DESK / "log.md").open("a") as f:
-            f.write(f"\n### DEEPSCAN · {now_iso} · zai-desk — 360° on-demand deep analysis\n")
+            f.write(f"\n### DEEPSCAN · {now_iso} · zai-desk — 360° on-demand deep analysis ({scope})\n")
             f.write("\n".join(log_entries) + "\n")
         import subprocess
         def run(cmd):
