@@ -1,21 +1,25 @@
 #!/usr/bin/env python3
-"""Trade-desk round — the 15-minute analysis brain (zai-desk). v2
+"""Trade-desk round — the 15-minute analysis brain (zai-desk). v3
 
-Full-parameter trade formulation:
-  Stage 1 (all 12 assets): market snapshot (price, VWAP+-1/2/3sigma,
-    EMA 13/89/233 h4/d1, RSI, auction POC/VAH/VAL day/month), footprint
-    signal engine counts, recency-weighted notification bias.
-  Stage 1b (top candidates): CVD — taker buy share, perp CVD slope,
-    latest divergence + recency.
-  Stage 2 (order candidates only): liquidation clusters (sweep magnets +
-    hazards), whale resting walls (path blockers + stop supports).
+Full-parameter trade formulation WITH A DEBATE. Every order carries a
+`debate` list citing every terminal data source — overview, footprint
+signals, large orders (whale walls), liquidation clusters, stops heatmap
+(BTC only), book walls, CVD, notifications — each with FOR/AGAINST/NEUTRAL
++ evidence. Orders are only emitted when the debate is won:
+FOR >= 3 AND FOR > AGAINST (on top of the numeric gates).
 
-Order gates (ALL must pass):
-  |confluence| >= 3.0 · >=2/3 alignment (signals/trend/vwap) ·
-  R to T1 >= config.min_r_multiple (2.0) · no opposite liq magnet within
-  1.2R of entry (strength>=50) · no opposing whale wall >= $5M within 1.5R
-  in the profit path · stop pushed beyond any liq magnet inside the risk
-  zone (geometry must stay <= 1.6x base risk).
+Numeric gates (unchanged from v2, all must pass):
+  |confluence| >= 3.0 · >=2/3 alignment · R to T1 >= config.min_r_multiple
+  (2.0, user mandate) · no opposite liq magnet within 1.2R (str>=50) ·
+  no opposing whale wall >= $5M within 1.5R into the path · stop beyond
+  any liq magnet inside the risk zone (<= 1.6x base risk geometry).
+
+Every order is stamped with `perpRefPrice` (the perp price the levels were
+built from) — the local side translates to broker prices via the live
+basis (desk/mt5.json `spreads.*.basisPct`) before placing in MT5.
+
+Existing suggested orders are re-debated every round with fresh data;
+a lost debate withdraws them.
 
 Usage: python3 scripts/desk_round.py [--dry-run]
 """
@@ -23,7 +27,7 @@ import json, sys, time, urllib.request, urllib.error, re
 from pathlib import Path
 from datetime import datetime, timezone
 
-ROOT = Path(__file__).resolve().parent.parent          # repo root
+ROOT = Path(__file__).resolve().parent.parent
 DESK = ROOT / "desk"
 STATE_FILE = DESK / "state.json"
 LOG_FILE = DESK / "log.md"
@@ -32,13 +36,14 @@ SYMS = ["BTC", "ETH", "SOL", "BNB", "XRP", "ADA", "AVAX", "DOGE", "LINK", "LTC",
 DECS = {"BTC": 1, "ETH": 2, "SOL": 2, "BNB": 2, "XRP": 4, "ADA": 4, "AVAX": 3,
         "DOGE": 5, "LINK": 3, "LTC": 2, "XAU": 2, "XAG": 3}
 
-# engine constants (technical thresholds, not human config)
-WALL_MIN_USD = 5_000_000        # whale wall that matters
-CLUSTER_MIN_STRENGTH = 40.0     # liq cluster counts as a target magnet
-CLUSTER_HAZARD_STRENGTH = 50.0  # opposite magnet too close -> skip
-MAX_TARGET_R = 6.0              # targets beyond this are not tradable
-MIN_CONF = 3.0                  # |score| bar for order candidacy
-CVD_TOP_N = 6                   # cvd fetch budget per round
+WALL_MIN_USD = 5_000_000
+CLUSTER_MIN_STRENGTH = 40.0
+CLUSTER_HAZARD_STRENGTH = 50.0
+MAX_TARGET_R = 6.0
+MIN_CONF = 3.0
+CVD_TOP_N = 6
+DEBATE_MIN_FOR = 3          # debate gate: FOR >= 3
+IMB_FOR, IMB_AGAINST = 0.55, 0.45   # book-wall imbalance thresholds
 
 DRY = "--dry-run" in sys.argv
 now_ms = int(time.time() * 1000)
@@ -60,11 +65,18 @@ def clamp(x, lo, hi):
     return max(lo, min(hi, x))
 
 
+def cluster_usd(lv):
+    """usd field is in base-coin units — honest $ approximation."""
+    try:
+        return lv.get("usd", 0) * lv["price"] / 1e6
+    except Exception:
+        return 0.0
+
+
 # ---------------------------------------------------------------- load state
 state = json.loads(STATE_FILE.read_text())
 cfg = state["config"]
 
-# ---------------------------------------------------------------- round no.
 log_txt = LOG_FILE.read_text()
 round_no = len(re.findall(r"^## R(\d+)", log_txt, re.M)) + 1
 rid = f"R{round_no}"
@@ -114,7 +126,6 @@ for sym in SYMS:
 
 # ---------------------------------------------------------------- 2. score
 def score_asset(sym, rec, cvd=None):
-    """Confluence score: >0 bullish, <0 bearish."""
     parts = {}
     nb = 0.0
     for n in fresh:
@@ -134,22 +145,18 @@ def score_asset(sym, rec, cvd=None):
             tr += 1 if e["e13"] > e["e89"] else -1
     parts["trend"] = tr
     vw = rec.get("vwap") or {}
-    if rec.get("price") and vw.get("vwap"):
-        parts["vwap"] = 1 if rec["price"] > vw["vwap"] else -1
-    else:
-        parts["vwap"] = 0
+    parts["vwap"] = (1 if rec.get("price") and rec["price"] > (vw.get("vwap") or 0) else -1) if rec.get("price") else 0
     rsi = (rec.get("rsi") or {}).get("h4")
     parts["rsi"] = -0.5 if (rsi or 50) > 70 else (0.5 if (rsi or 50) < 30 else 0)
-    # CVD component (fetched for top candidates only)
     if cvd:
         k = cvd.get("kpis", {})
         comp = 0.0
         br = k.get("buyRatio")
         if br is not None:
-            comp += clamp((br - 50) / 4, -0.5, 0.5)          # taker buy share
+            comp += clamp((br - 50) / 4, -0.5, 0.5)
         ld = k.get("latestDiv") or {}
         if ld.get("type") and now_ms - ld.get("ts", 0) < 24 * 3600_000:
-            comp += 1 if ld["type"] == "bull" else -1         # recent divergence
+            comp += 1 if ld["type"] == "bull" else -1
         parts["cvd"] = clamp(comp, -1.5, 1.5)
     s = sum(parts.values())
     return s, parts
@@ -164,7 +171,6 @@ for sym, rec in assets.items():
     scored[sym] = {"score": round(s, 2), "parts": {k: round(v, 2) for k, v in parts.items()},
                    "error": rec.get("error")}
 
-# stage 1b: CVD for the top candidates by |score|
 pre_rank = sorted([s for s in SYMS if scored.get(s, {}).get("score") is not None],
                   key=lambda s: -abs(scored[s]["score"]))
 for sym in pre_rank[:CVD_TOP_N]:
@@ -175,10 +181,11 @@ for sym in pre_rank[:CVD_TOP_N]:
         s, parts = score_asset(sym, assets[sym], cvd)
         scored[sym] = {"score": round(s, 2), "parts": {k: round(v, 2) for k, v in parts.items()},
                        "error": assets[sym].get("error")}
+        assets[sym]["cvd"] = cvd
     except Exception as e:
         print(f"[warn] cvd {sym} failed: {e}", file=sys.stderr)
 
-# ------------------------------------------------- 3. order lifecycle (old)
+# ------------------------------------------------- 3. order lifecycle
 lifecycle_events = []
 orders = state.get("orders", [])
 live_positions = state.get("positions", [])
@@ -191,7 +198,6 @@ for o in orders:
         o["statusTs"] = now_ms
         lifecycle_events.append(f"{o['id']} EXPIRED (unfilled past expiry)")
         continue
-    # user mandate: orders below the configured minimum R are withdrawn
     if o.get("status") == "suggested" and o.get("riskR") is not None and o["riskR"] < cfg["min_r_multiple"]:
         o["status"] = "withdrawn"
         o["statusTs"] = now_ms
@@ -210,10 +216,9 @@ for o in orders:
 state["closed"] = state.get("closed", []) + [o for o in orders if o.get("status") in ("expired", "withdrawn")]
 state["orders"] = [o for o in orders if o.get("status") not in ("expired", "withdrawn")]
 
-# ------------------------------------------------- 4. deep data (candidates)
+# ------------------------------------------------- 4. deep data
 def fetch_deep(sym):
-    """Liquidation clusters + whale walls for one asset. Never raises."""
-    deep = {"liq": None, "walls": None, "errors": []}
+    deep = {"liq": None, "walls": None, "bw": None, "sm": None, "errors": []}
     try:
         d = get(f"/liqlevels?sym={sym}&range=3d&lvR=4", timeout=90)
         deep["liq"] = d.get("stats", {})
@@ -230,16 +235,152 @@ def fetch_deep(sym):
         deep["walls"] = sorted(walls, key=lambda w: -w["usd"])[:12]
     except Exception as e:
         deep["errors"].append(f"lto: {e}")
+    try:
+        d = get(f"/bookwalls?sym={sym}&market=futures&interval=15m&limit=30", timeout=60)
+        m = d.get("model", {})
+        deep["bw"] = {"imbalance": m.get("imbalance"), "imbalance5mAgo": m.get("imbalance5mAgo"),
+                      "bidUsd": (m.get("depth") or {}).get("bidUsd"),
+                      "askUsd": (m.get("depth") or {}).get("askUsd"),
+                      "last": m.get("last", {})}
+    except Exception as e:
+        deep["errors"].append(f"bookwalls: {e}")
+    if sym == "BTC":
+        try:
+            d = get(f"/stopmap?sym={sym}", timeout=60)
+            m = d.get("model", {})
+            y = m.get("y") or []
+            grid = m.get("grid") or []
+            lp = m.get("lastPrice") or 0
+            if y and grid and lp:
+                cells = (grid[-1].get("cells") or [])
+                above = sum(c[1] for c in cells if 0 <= c[0] < len(y) and y[c[0]] > lp)
+                below = sum(c[1] for c in cells if 0 <= c[0] < len(y) and y[c[0]] <= lp)
+                deep["sm"] = {"aboveUsd": above, "belowUsd": below, "lastPrice": lp}
+        except Exception as e:
+            deep["errors"].append(f"stopmap: {e}")
     return deep
 
 
-# ------------------------------------------------- 5. new opportunities
+# ------------------------------------------------- 5. THE DEBATE
+def build_debate(sym, side, rec, deep):
+    """One FOR/AGAINST/NEUTRAL verdict per terminal data source."""
+    long = side == "long"
+    sgn = 1 if long else -1
+    d = []
+    price, vw = rec.get("price"), rec.get("vwap") or {}
+    # 1. overview — trend + vwap + rsi + day change
+    ema = rec.get("ema") or {}
+    h4_up = ((ema.get("h4") or {}).get("e13") or 0) > ((ema.get("h4") or {}).get("e89") or 1)
+    d1_up = ((ema.get("d1") or {}).get("e13") or 0) > ((ema.get("d1") or {}).get("e89") or 1)
+    above_v = bool(price and (vw.get("vwap") or 0) and price > vw["vwap"])
+    align = (h4_up == long) + (d1_up == long) + (above_v == long)
+    rsi = (rec.get("rsi") or {}).get("h4")
+    ev = (f"h4 {'↑' if h4_up else '↓'}/d1 {'↑' if d1_up else '↓'} EMA, price {'above' if above_v else 'below'} day VWAP "
+          f"({fmt(sym, price)} vs {fmt(sym, vw.get('vwap'))}), h4 RSI {rsi and round(rsi, 1)}, day {(rec.get('chgDayPct') or 0):+.1f}%")
+    d.append({"source": "overview", "verdict": "FOR" if align >= 2 else ("AGAINST" if align <= 1 and (1 - align) >= 2 else "NEUTRAL"), "evidence": ev})
+    # 2. footprint signals
+    c = rec.get("signals") or {}
+    sig_sign = (c.get("bullish", 0) - c.get("bearish", 0)) * sgn
+    names = []
+    for st in (rec.get("sigSets") or []):
+        lv = st.get("latest")
+        if lv and now_ms - lv.get("barTs", 0) < 6 * 3600_000:
+            names.append(f"{lv.get('name')}/{lv.get('side')}[{st['bt']}]")
+    ev = f"bull {c.get('bullish', 0)} / bear {c.get('bearish', 0)}; recent: {', '.join(names[:3]) or 'none <6h'}"
+    d.append({"source": "footprint", "verdict": "FOR" if sig_sign > 0 else ("AGAINST" if sig_sign < 0 else "NEUTRAL"), "evidence": ev})
+    # 3. large orders (whale walls)
+    walls = deep.get("walls") or []
+    near = [w for w in walls if abs(w["price"] - (price or 0)) / (price or 1) <= 0.02]
+    opp_near = [w for w in near if (w["side"] == "ask") != long]
+    sup_near = [w for w in near if (w["side"] == "bid") == long]
+    if opp_near:
+        w = opp_near[0]
+        d.append({"source": "largeOrders", "verdict": "AGAINST",
+                  "evidence": f"{w['side']} wall ${w['usd'] / 1e6:.1f}M @ {fmt(sym, w['price'])} within 2% — opposing resting size" if False else
+                  f"{w['side']} wall ${w['usd'] / 1e6:.1f}M @ {fmt(sym, w['price'])} within 2% opposes"})
+    elif sup_near:
+        w = sup_near[0]
+        d.append({"source": "largeOrders", "verdict": "FOR",
+                  "evidence": f"{w['side']} wall ${w['usd'] / 1e6:.1f}M @ {fmt(sym, w['price'])} within 2% supports"})
+    else:
+        d.append({"source": "largeOrders", "verdict": "NEUTRAL",
+                  "evidence": f"{len(walls)} walls ≥$5M, none within 2% of price"})
+    # 4. liquidation clusters
+    liq = deep.get("liq") or {}
+    kl = liq.get("keyLevels", {})
+    tg = (kl.get("above") if long else kl.get("below")) or []
+    hz = (kl.get("below") if long else kl.get("above")) or []
+    good = [lv for lv in tg if lv.get("strength", 0) >= CLUSTER_MIN_STRENGTH]
+    bad = [lv for lv in hz if lv.get("strength", 0) >= CLUSTER_HAZARD_STRENGTH and 0 < ((price or 0) - lv["price"]) * sgn <= (price or 1) * 0.012]
+    if good:
+        lv = good[0]
+        d.append({"source": "liquidation", "verdict": "FOR",
+                  "evidence": f"{'short' if long else 'long'}-liq magnet {fmt(sym, lv['price'])} (str {lv['strength']:.0f}, ~${cluster_usd(lv):,.0f}M est, {lv.get('distPct', 0):+.2f}%) as target"})
+    else:
+        d.append({"source": "liquidation", "verdict": "NEUTRAL", "evidence": "no strong same-direction magnet in ±4%"})
+    if bad:
+        lv = bad[0]
+        d.append({"source": "liquidation-hazard", "verdict": "AGAINST",
+                  "evidence": f"{'long' if long else 'short'}-liq magnet {fmt(sym, lv['price'])} (str {lv['strength']:.0f}) sits between entry and stop — sweep risk"})
+    # 5. stops heatmap (BTC only)
+    sm = deep.get("sm")
+    if sm:
+        fuel_down, fuel_up = sm["belowUsd"], sm["aboveUsd"]
+        lean = (fuel_down - fuel_up) * sgn  # short: more below = fuel down = FOR
+        d.append({"source": "stops(BTC heatmap)", "verdict": "FOR" if lean > 0 else ("AGAINST" if lean < 0 else "NEUTRAL"),
+                  "evidence": f"24h liq exposure below ${fuel_down / 1e6:,.0f}M vs above ${fuel_up / 1e6:,.0f}M"})
+    else:
+        d.append({"source": "stops(BTC heatmap)", "verdict": "NEUTRAL", "evidence": "n/a (upstream: BTC-only)"})
+    # 6. book walls
+    bw = deep.get("bw") or {}
+    imb = bw.get("imbalance")
+    if imb is not None:
+        imb_long_fav = imb > IMB_FOR
+        imb_short_fav = imb < IMB_AGAINST
+        v = "FOR" if (imb_long_fav if long else imb_short_fav) else ("AGAINST" if (imb_short_fav if long else imb_long_fav) else "NEUTRAL")
+        delta = (imb - (bw.get("imbalance5mAgo") or imb))
+        d.append({"source": "bookWalls", "verdict": v,
+                  "evidence": f"±5% depth imbalance {imb:+.3f} (5m ago {bw.get('imbalance5mAgo'):+.3f}, {'rising' if delta > 0 else 'falling'} bids); bid ${ (bw.get('bidUsd') or 0) / 1e9:.2f}B vs ask ${(bw.get('askUsd') or 0) / 1e9:.2f}B"})
+    else:
+        d.append({"source": "bookWalls", "verdict": "NEUTRAL", "evidence": "unavailable"})
+    # 7. cvd
+    k = ((rec.get("cvd") or {}).get("kpis")) or {}
+    br = k.get("buyRatio")
+    if br is not None:
+        ld = k.get("latestDiv") or {}
+        q = k.get("quadrant")
+        v_sign = clamp((br - 50) / 4, -1, 1) * sgn
+        div_align = (ld.get("type") == ("bull" if long else "bear")) if ld.get("type") and now_ms - ld.get("ts", 0) < 24 * 3600_000 else None
+        d.append({"source": "cvd", "verdict": "FOR" if v_sign > 0.1 or div_align else ("AGAINST" if v_sign < -0.1 else "NEUTRAL"),
+                  "evidence": f"taker buy {br:.1f}%, perpCvd {k.get('perpCvd', 0):+.0f}, spotCvd {k.get('spotCvd', 0):+.0f}, quadrant {q}, latestDiv {ld.get('type') or 'none'} ({'recent' if div_align is not None else 'stale/none'})"})
+    else:
+        d.append({"source": "cvd", "verdict": "NEUTRAL", "evidence": "unavailable"})
+    # 8. notifications
+    nb = 0.0
+    for n in fresh:
+        if n.get("asset") != sym:
+            continue
+        dd = 1 if n.get("dir") == "bullish" else -1
+        w = 2 if n.get("severity") == "high" else 1
+        age_h = (now_ms - n.get("ts", 0)) / 3600_000
+        nb += dd * w * (1 - 0.5 * clamp(age_h / 6, 0, 1))
+    d.append({"source": "notifications", "verdict": "FOR" if nb * sgn > 0.5 else ("AGAINST" if nb * sgn < -0.5 else "NEUTRAL"),
+              "evidence": f"6h weighted bias {nb:+.1f} ({len([n for n in fresh if n.get('asset') == sym])} events)"})
+    return d
+
+
+def debate_ok(deb, side):
+    f = sum(1 for x in deb if x["verdict"] == "FOR")
+    a = sum(1 for x in deb if x["verdict"] == "AGAINST")
+    return f >= DEBATE_MIN_FOR and f > a, f, a
+
+
+# ------------------------------------------------- 6. build orders
 new_orders, opp_lines = [], []
 cands = [s for s in pre_rank if scored[s]["score"] is not None]
 
 
 def build_order(sym, side, score, parts, rec, deep):
-    """Full-parameter level construction. Returns (order|None, note)."""
     price, vw = rec.get("price"), rec.get("vwap") or {}
     vwap, b = vw.get("vwap") or price, vw.get("bands") or {}
     sd1, sd2 = b.get("sd1") or price * 0.005, b.get("sd2") or price * 0.01
@@ -249,7 +390,6 @@ def build_order(sym, side, score, parts, rec, deep):
     long = side == "long"
     sgn = 1 if long else -1
 
-    # ---- entry: pullback magnet (VWAP -1σ / +1σ, or day POC nearer)
     if long:
         entry = min(price, vwap - sd1)
         if day.get("poc") and day["poc"] < price and day["poc"] > entry:
@@ -259,21 +399,17 @@ def build_order(sym, side, score, parts, rec, deep):
         if day.get("poc") and day["poc"] > price and day["poc"] < entry:
             entry = day["poc"]
 
-    # ---- stop: beyond the ±2σ zone
     base_risk = max(sd2 - sd1, price * 0.004)
     stop = entry - sgn * base_risk
-
-    # ---- stop pushed beyond any liq magnet inside the risk zone
-    #   long: long-liq clusters below entry; short: short-liq clusters above
     kl = liq.get("keyLevels", {})
     in_zone = (kl.get("below") if long else kl.get("above")) or []
     stop_note = ""
     for lv in in_zone:
-        if long and entry - lv["price"] > 0 and entry - lv["price"] <= abs(entry - stop) and lv.get("strength", 0) >= CLUSTER_MIN_STRENGTH:
+        if long and 0 < entry - lv["price"] <= abs(entry - stop) and lv.get("strength", 0) >= CLUSTER_MIN_STRENGTH:
             new_stop = lv["price"] - base_risk * 0.15
             if abs(entry - new_stop) <= 1.6 * base_risk:
                 stop, stop_note = new_stop, f"stop beyond long-liq magnet {fmt(sym, lv['price'])} (str {lv['strength']:.0f})"
-        elif (not long) and (lv["price"] - entry) > 0 and (lv["price"] - entry) <= abs(entry - stop) and lv.get("strength", 0) >= CLUSTER_MIN_STRENGTH:
+        elif (not long) and 0 < (lv["price"] - entry) <= abs(entry - stop) and lv.get("strength", 0) >= CLUSTER_MIN_STRENGTH:
             new_stop = lv["price"] + base_risk * 0.15
             if abs(entry - new_stop) <= 1.6 * base_risk:
                 stop, stop_note = new_stop, f"stop beyond short-liq magnet {fmt(sym, lv['price'])} (str {lv['strength']:.0f})"
@@ -281,16 +417,12 @@ def build_order(sym, side, score, parts, rec, deep):
     if risk <= 0:
         return None, "degenerate risk"
 
-    # ---- hazard: opposite magnet within 1.2R of entry
-    hz = (kl.get("below") if long else kl.get("above")) or []  # same side list = magnets; opposite list:
-    opp = (kl.get("above") if long else kl.get("below")) or []
-    # for a long, magnets ABOVE are short-liq (targets); long-liq BELOW within stop are handled; but a strong long-liq just below entry (not yet beyond stop) = sweep danger
     for lv in in_zone:
         dist = (entry - lv["price"]) if long else (lv["price"] - entry)
         if 0 < dist <= 1.2 * risk and lv.get("strength", 0) >= CLUSTER_HAZARD_STRENGTH:
-            return None, f"opposite liq magnet {fmt(sym, lv['price'])} (str {lv['strength']:.0f}, ~${lv.get('usd', 0) * lv['price'] / 1e6:,.0f}M est) within 1.2R of entry — wait for sweep"
+            return None, (f"opposite liq magnet {fmt(sym, lv['price'])} (str {lv['strength']:.0f}, "
+                          f"~${cluster_usd(lv):,.0f}M est) within 1.2R of entry — wait for sweep")
 
-    # ---- target ladder from structural magnets (nearest first, same direction)
     magnets = []
     if long:
         if day.get("vah") and day["vah"] > entry:
@@ -299,7 +431,7 @@ def build_order(sym, side, score, parts, rec, deep):
             magnets.append((month["poc"], "month POC"))
         for lv in (kl.get("above") or []):
             if lv["price"] > entry and lv.get("strength", 0) >= CLUSTER_MIN_STRENGTH:
-                magnets.append((lv["price"], f"short-liq cluster str {lv['strength']:.0f} (~${lv.get('usd', 0) * lv['price'] / 1e6:,.0f}M est)"))
+                magnets.append((lv["price"], f"short-liq cluster str {lv['strength']:.0f} (~${cluster_usd(lv):,.0f}M est)"))
     else:
         if day.get("val") and day["val"] < entry:
             magnets.append((day["val"], "day VAL"))
@@ -307,15 +439,13 @@ def build_order(sym, side, score, parts, rec, deep):
             magnets.append((month["poc"], "month POC"))
         for lv in (kl.get("below") or []):
             if lv["price"] < entry and lv.get("strength", 0) >= CLUSTER_MIN_STRENGTH:
-                magnets.append((lv["price"], f"long-liq cluster str {lv['strength']:.0f} (~${lv.get('usd', 0) * lv['price'] / 1e6:,.0f}M est)"))
+                magnets.append((lv["price"], f"long-liq cluster str {lv['strength']:.0f} (~${cluster_usd(lv):,.0f}M est)"))
     magnets = sorted(magnets, key=lambda m: abs(m[0] - entry))
-    # keep only magnets >= min R away; first one is T1
-    tgts = [m for m in magnets if abs(m[0] - entry) / risk >= cfg["min_r_multiple"] and abs(m[0] - entry) / risk <= MAX_TARGET_R]
+    tgts = [m for m in magnets if cfg["min_r_multiple"] <= abs(m[0] - entry) / risk <= MAX_TARGET_R]
     if not tgts:
         near = magnets[0] if magnets else None
         nr = abs(near[0] - entry) / risk if near else 0
         return None, f"no structural target >= {cfg['min_r_multiple']}R (nearest magnet {fmt(sym, near[0]) if near else 'none'} = {nr:.1f}R)"
-    # de-dup close targets (within 0.3R of each other) and cap at 3
     ladder = []
     for m in tgts:
         if ladder and abs(m[0] - ladder[-1][0]) < 0.3 * risk:
@@ -324,17 +454,15 @@ def build_order(sym, side, score, parts, rec, deep):
         if len(ladder) == 3:
             break
 
-    # ---- whale walls: opposing wall in the profit path?
     wall_note = ""
     for w in walls:
         adverse = (w["side"] == "ask") if long else (w["side"] == "bid")
         in_path = (entry < w["price"] < ladder[0][0]) if long else (ladder[0][0] < w["price"] < entry)
         if adverse and in_path:
-            d = abs(w["price"] - entry) / risk
-            if d < 1.5:
-                return None, f"opposing {w['side']} wall ${w['usd'] / 1e6:.1f}M @ {fmt(sym, w['price'])} ({d:.1f}R into path) caps the move to T1"
-            wall_note = f"; {w['side']} wall ${w['usd'] / 1e6:.1f}M @ {fmt(sym, w['price'])} mid-path ({d:.1f}R)"
-    # supporting wall behind stop (adds conviction)
+            dr = abs(w["price"] - entry) / risk
+            if dr < 1.5:
+                return None, f"opposing {w['side']} wall ${w['usd'] / 1e6:.1f}M @ {fmt(sym, w['price'])} ({dr:.1f}R into path) caps the move to T1"
+            wall_note = f"; {w['side']} wall ${w['usd'] / 1e6:.1f}M @ {fmt(sym, w['price'])} mid-path ({dr:.1f}R)"
     for w in walls:
         support = (w["side"] == "bid") if long else (w["side"] == "ask")
         between = (stop < w["price"] < entry) if long else (entry < w["price"] < stop)
@@ -346,6 +474,11 @@ def build_order(sym, side, score, parts, rec, deep):
     if r1 < cfg["min_r_multiple"]:
         return None, f"R to T1 {r1:.1f} < {cfg['min_r_multiple']}"
 
+    debate = build_debate(sym, side, rec, deep)
+    ok, nf, na = debate_ok(debate, side)
+    if not ok:
+        return None, f"debate lost: FOR {nf} / AGAINST {na} (" + "; ".join(f"{x['source']}:{x['verdict']}" for x in debate if x['verdict'] != 'NEUTRAL') + ")"
+
     sig_names = []
     for st in (rec.get("sigSets") or []):
         lv = st.get("latest")
@@ -354,17 +487,17 @@ def build_order(sym, side, score, parts, rec, deep):
     rationale = (
         f"confluence {score:+.1f} [notif {parts.get('notif', 0):+.1f} · signals {parts.get('signals', 0):+.1f} · "
         f"trend {parts.get('trend', 0):+.0f} · vwap {parts.get('vwap', 0):+.0f} · rsi {parts.get('rsi', 0):+.1f} · cvd {parts.get('cvd', 0):+.1f}]"
-        f"; entry {('VWAP-1σ/day-POC' if long else 'VWAP+1σ/day-POC')} {fmt(sym, entry)}"
+        f" · debate FOR {nf}/AGAINST {na}"
+        f"; entry {'VWAP-1σ/day-POC' if long else 'VWAP+1σ/day-POC'} {fmt(sym, entry)}"
         f"; stop beyond 2σ zone{' — ' + stop_note if stop_note else ''}"
         f"; T1 {ladder[0][1]} · T2 {ladder[1][1] if len(ladder) > 1 else '—'} · T3 {ladder[2][1] if len(ladder) > 2 else '—'}"
-        f"{wall_note}; liq clusters are Coinglass estimates"
+        f"{wall_note}; levels are PERP prices — translate to broker via live basis before MT5; liq clusters are Coinglass estimates"
     )
     if sig_names:
         rationale = f"recent signals: {', '.join(sig_names[:3])}; " + rationale
 
     return {
-        "id": None,  # filled by caller
-        "createdTs": now_ms, "round": rid, "sym": sym,
+        "id": None, "createdTs": now_ms, "round": rid, "sym": sym,
         "mt5Symbol": cfg["symbol_map"].get(sym, sym),
         "side": side, "type": "limit",
         "entry": round(entry, DECS.get(sym, 2)),
@@ -373,10 +506,41 @@ def build_order(sym, side, score, parts, rec, deep):
         "targetSources": [m[1] for m in ladder],
         "riskR": round(r1, 1), "expiresTs": now_ms + cfg["order_expiry_hours"] * 3600_000,
         "status": "suggested", "statusTs": now_ms,
+        "perpRefPrice": price,
+        "debate": debate,
         "rationale": rationale,
         "ticket": None, "actualEntry": None, "filledTs": None, "notes": None,
     }, None
 
+
+deep_cache = {}
+def deep_for(sym):
+    if sym not in deep_cache:
+        deep_cache[sym] = fetch_deep(sym)
+    return deep_cache[sym]
+
+
+# re-debate existing suggested orders with fresh data (proper review)
+for o in state["orders"]:
+    if o.get("status") != "suggested":
+        continue
+    sym = o["sym"]
+    if scored.get(sym, {}).get("score") is None:
+        continue
+    deb = build_debate(sym, o["side"], assets[sym], deep_for(sym))
+    o["debate"] = deb
+    o["perpRefPrice"] = assets[sym].get("price")
+    ok, nf, na = debate_ok(deb, o["side"])
+    if not ok:
+        o["status"] = "withdrawn"
+        o["statusTs"] = now_ms
+        o["withdrawReason"] = f"debate lost (FOR {nf}/AGAINST {na}) on fresh data"
+        lifecycle_events.append(f"{o['id']} WITHDRAWN (re-debate lost: FOR {nf}/AGAINST {na})")
+    else:
+        lifecycle_events.append(f"{o['id']} re-debated: FOR {nf}/AGAINST {na} — stands")
+
+state["closed"] = state.get("closed", []) + [o for o in state["orders"] if o.get("status") in ("expired", "withdrawn")]
+state["orders"] = [o for o in state["orders"] if o.get("status") not in ("expired", "withdrawn")]
 
 for sym in cands:
     sc = scored[sym]
@@ -395,19 +559,20 @@ for sym in cands:
     if n_open_positions + len([o for o in state["orders"] if o.get("status") in ("suggested", "placed")]) >= cfg["max_concurrent_positions"]:
         break
 
-    deep = fetch_deep(sym)
-    order, note = build_order(sym, side, score, parts, assets[sym], deep)
+    order, note = build_order(sym, side, score, parts, assets[sym], deep_for(sym))
     if order is None:
-        opp_lines.append(f"- {sym} {side.upper()} confluence {score:+.1f} — REJECTED by deep gates: {note}")
+        opp_lines.append(f"- {sym} {side.upper()} confluence {score:+.1f} — REJECTED: {note}")
         continue
     order["id"] = f"{rid}-{sym}-{len(new_orders) + 1}"
     new_orders.append(order)
     state["orders"].append(order)
     tg = " · ".join(f"T{i+1} {fmt(sym, t)}" for i, t in enumerate(order["targets"]))
     opp_lines.append(f"- NEW {order['id']} {sym} {side.upper()} limit {fmt(sym, order['entry'])} · stop {fmt(sym, order['stop'])} · {tg} · R {order['riskR']}")
-    opp_lines.append(f"      gates passed: {order['rationale']}")
+    for x in order["debate"]:
+        if x["verdict"] != "NEUTRAL":
+            opp_lines.append(f"      [{x['verdict']:<7}] {x['source']}: {x['evidence']}")
 
-# ------------------------------------------------- 6. running-trade review
+# ------------------------------------------------- 7. running-trade review
 pos_lines = []
 for p in live_positions:
     sym = p.get("sym")
@@ -439,12 +604,12 @@ for p in live_positions:
             verdict = f"CLOSE_RECOMMENDED (VWAP regime + confluence {sc:+.1f} flipped against)"
     pos_lines.append(f"- {p.get('id', sym)} {sym} {p.get('side', '').upper()}: {open_r:+.1f}R open @ {fmt(sym, price)} → {verdict}")
 
-# ------------------------------------------------- 7. write state + log
+# ------------------------------------------------- 8. write state + log
 watch = [{"sym": s, "score": scored[s]["score"]} for s in cands[:6] if abs(scored[s]["score"]) >= 1.5]
 state["analysis"] = {
     "last_round": rid,
     "last_round_ts": now_ms,
-    "engine": "v2 (full params: notif+signals+trend+vwap+rsi+cvd | liq clusters + whale walls in levels | min R 2.0)",
+    "engine": "v3 (debate-gated: 8 data sources FOR/AGAINST, FOR>=3 & FOR>AGAINST | full params | min R 2.0 | perpRefPrice basis stamp)",
     "assets": {s: {"price": assets[s].get("price"), "chgDayPct": assets[s].get("chgDayPct"),
                    "score": scored.get(s, {}).get("score"),
                    "parts": scored.get(s, {}).get("parts"),
@@ -455,13 +620,12 @@ state["analysis"] = {
 if not DRY:
     STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
 
-bias_tbl = "  ".join(f"{s}{scored[s]['score']:+.0f}"
-                     for s in cands if abs(scored[s]["score"]) >= 2)
+bias_tbl = "  ".join(f"{s}{scored[s]['score']:+.0f}" for s in cands if abs(scored[s]["score"]) >= 2)
 lines = [f"## {rid} · {now_iso} · zai-desk", ""]
 mkt = "  ".join(f"{s} {fmt(s, assets[s].get('price'))} ({(assets[s].get('chgDayPct') or 0):+.1f}%)"
                 for s in ("BTC", "ETH", "SOL", "XAU", "XAG") if assets.get(s, {}).get("price"))
 lines += [f"**Market**: {mkt}", f"**Bias (|score|≥2)**: {bias_tbl or 'none significant'}", ""]
-lines += ["### Opportunities (engine v2 — full parameter gates, min R %.1f)" % cfg["min_r_multiple"]] + (opp_lines or ["- none meeting the confluence bar this round"]) + [""]
+lines += [f"### Opportunities (engine v3 — debate-gated, min R {cfg['min_r_multiple']})"] + (opp_lines or ["- none meeting the gates this round"]) + [""]
 if lifecycle_events:
     lines += ["### Order lifecycle"] + [f"- {e}" for e in lifecycle_events] + [""]
 lines += ["### Positions"] + (pos_lines or ["- no open positions"]) + [""]
@@ -469,9 +633,8 @@ if not DRY:
     with LOG_FILE.open("a") as f:
         f.write("\n".join(lines) + "\n")
 
-# ------------------------------------------------- 8. stdout summary
 print("=" * 96)
-print(f"TRADE DESK {rid} · {now_iso} · engine v2 · {'DRY-RUN' if DRY else 'COMMITTED LOCALLY'}")
+print(f"TRADE DESK {rid} · {now_iso} · engine v3 · {'DRY-RUN' if DRY else 'COMMITTED LOCALLY'}")
 print("=" * 96)
 for s in cands:
     sc = scored[s]

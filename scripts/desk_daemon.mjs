@@ -172,10 +172,15 @@ function checkNewOrders() {
   for (const o of sug.filter((o) => fresh.includes(o.id))) {
     if (wakeTxt.includes(o.id)) continue; // already queued
     const exp = o.expiresTs ? new Date(o.expiresTs).toISOString().slice(0, 16).replace("T", " ") + " UTC" : "?";
-    wakeAdd("new suggested order — place in MT5", [
-      `${o.id} ${o.sym} ${o.side.toUpperCase()} ${o.type} entry ${o.entry} · stop ${o.stop} · targets ${(o.targets ?? []).join(" / ")} · expires ${exp}`,
-      `→ place on ${o.mt5Symbol} in MT5, then set status "placed" + ticket in desk/state.json and append an EXEC entry to desk/log.md`,
-    ]);
+    const lines = [
+      `${o.id} ${o.sym} ${o.side.toUpperCase()} ${o.type} entry ${o.entry} · stop ${o.stop} · targets ${(o.targets ?? []).join(" / ")} · R ${o.riskR} · expires ${exp}`,
+      `BASIS: levels are PERP prices (perpRef ${o.perpRefPrice ?? "?"}). Before placing in MT5 read spreads.${o.mt5Symbol}.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.`,
+    ];
+    for (const x of o.debate ?? []) {
+      if (x.verdict !== "NEUTRAL") lines.push(`[${x.verdict}] ${x.source}: ${x.evidence}`);
+    }
+    lines.push(`→ place on ${o.mt5Symbol} in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md`);
+    wakeAdd(`new suggested order — place in MT5 (debate FOR ${(o.debate ?? []).filter((x) => x.verdict === "FOR").length}/AGAINST ${(o.debate ?? []).filter((x) => x.verdict === "AGAINST").length})`, lines);
     notify("Trade desk", `new ${o.side} ${o.sym} order ${o.id} — wake agent`);
   }
   dst.orderSig = ids;

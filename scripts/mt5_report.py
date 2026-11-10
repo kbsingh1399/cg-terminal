@@ -7,11 +7,24 @@ The desk daemon (scripts/desk_daemon.mjs) calls this every mt5.interval_secs.
 Output is committed to git — zai-desk reads it on every wake to review
 running trades and quote honest spreads. Errors are reported, never guessed.
 """
-import json, sys, time
+import json, sys, time, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "desk" / "mt5.json"
+TERMINAL = "http://localhost:3000/api/cg"
+
+
+def perp_price(asset):
+    """Terminal perp mid price (the terminal runs on this same PC)."""
+    try:
+        with urllib.request.urlopen(f"{TERMINAL}/live?sym={asset}", timeout=5) as r:
+            d = json.loads(r.read())
+        if d.get("ok") and d.get("price"):
+            return float(d["price"])
+    except Exception:
+        pass
+    return None
 
 
 def fail(msg):
@@ -65,7 +78,7 @@ try:
     floating = round(sum(p["profit"] + p["swap"] for p in positions), 2)
 
     spreads = {}
-    for sym in sorted(set(smap.values())):
+    for asset, sym in sorted(smap.items()):
         try:
             mt5.symbol_select(sym, True)
             t = mt5.symbol_info_tick(sym)
@@ -74,11 +87,16 @@ try:
                 spreads[sym] = {"ok": False, "reason": "no tick — check broker symbol name/suffix in config.symbol_map"}
                 continue
             mid = (t.ask + t.bid) / 2 if (t.ask + t.bid) > 0 else None
+            pp = perp_price(asset)
+            basis = round((mid / pp - 1) * 100, 4) if (mid and pp) else None
             spreads[sym] = {
                 "ok": True, "bid": t.bid, "ask": t.ask,
                 "spreadPoints": round((t.ask - t.bid) / info.point, 1) if info.point else None,
                 "spreadPct": round((t.ask - t.bid) / mid * 100, 4) if mid else None,
                 "tradeAllowed": info.trade_mode == 4,  # SYMBOL_TRADE_MODE_FULL
+                "asset": asset,
+                "perpMid": pp,                # terminal price the levels are built from
+                "basisPct": basis,            # mt5 mid vs perp mid, % — translate levels: mt5 = perp * (1 + basis/100)
             }
         except Exception as e:
             spreads[sym] = {"ok": False, "reason": str(e)[:120]}
