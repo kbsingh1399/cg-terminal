@@ -346,3 +346,19 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 - BUILT: scripts/desk_deepscan.py — on-demand 360° per-asset report, 8 sections, 8-dimension synthesis scorecard (bias/h4/d1/CVD/footprintΔ24h/signals/funding/OI×price) with playbook verdict (bias + attack zone + magnet targets) or explicit NO-TRADE. Includes absorption/exhaustion detection, Δ-divergence, bar-POC migration, squeeze-fuel ratio, whale walls, stopmap heat, broker tradeability, live exposure. Evidence: desk/deepscan/BTC-20261110-1828.md (BTC: 7×SHORT vs 1×LONG — OI×price dissents: price↓+OI↑24h = fresh shorts, squeeze fuel).
 - USER PROMPT (chat triggers, also documented in WAKEUP.md): `360 <SYM>` / `360 top` / `360 all`.
 - NEXT (v3.3 candidate): fold a fast fp-derived vote (net Δ24h + absorption flag) + funding gate into the 15-min round engine; deepscan remains the on-demand full-forensics layer.
+## R16 · 2026-11-10 18:30 UTC · zai-desk
+
+**Market**: BTC 73,358.1 (-2.6%)  ETH 2,033.79 (-4.7%)  SOL 82.83 (-4.5%)  XAU 4,030.56 (-2.8%)  XAG 51.370 (-4.0%)
+**Bias (|score|≥2)**: BTC-7(TREND)  ADA-4(TREND)  DOGE-6(TREND)  LTC-6(TREND)  BNB-3(TREND)  AVAX-2(TREND)  XAG-2(TREND)  LINK-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R4-DOGE-3 re-debated: FOR 6/AGAINST 0 — stands
+- R7-LTC-1 re-debated: FOR 6/AGAINST 0 — stands
+- R9-ADA-1 re-debated: FOR 5/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
