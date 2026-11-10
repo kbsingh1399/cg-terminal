@@ -1119,11 +1119,13 @@ def write_digest(cards, scope, ts):
     if pl:
         L += ["## PLACEABLE — passes geometry (R≥2.0, str≥40 magnet) AND broker gates",
               "| Asset | Side | Entry (perp→broker) | Stop | T1 / T2 / T3 | R | Size / Risk |", "|---|---|---|---|---|---|---|"]
+        lv = _live()
         for c in pl:
             e, s, t, sz = _card_row(c["sym"], c)
             cav = " ⚠ " + c["caveat"] if c.get("caveat") else ""
+            liv = f" · ● LIVE {lv[c['sym']]}" if c["sym"] in lv else ""
             L.append(f"| **{c['sym']}** | {c['side']} LIMIT | **{e}** ({c['confl']}) | {s} ({c['stop_src']}) | {t} | "
-                     f"**{c['r1']}R** | {sz}{cav} |")
+                     f"**{c['r1']}R**{liv} | {sz}{cav} |")
         L.append("")
     if pk:
         L += ["## PARKED — geometry passes, broker blocked (levels valid on the perp side)",
@@ -1147,10 +1149,12 @@ def write_digest(cards, scope, ts):
             L.append(f"| **{c['sym']}** | {c['status']}: {c['reason']} → {c['recovery']} |")
         L.append("")
     L += ["## Why each trade — full justification (digest layer; per-tab detail in §9 reports)"]
+    lv = _live()
     for c in cards:
+        liv = f" · ● LIVE {lv[c['sym']]}" if c["sym"] in lv else ""
         if c.get("why"):
             L.append("")
-            L.append(f"### {c['sym']} {c['side']} — {c['status']} · {c['r1']}R")
+            L.append(f"### {c['sym']} {c['side']} — {c['status']}{liv} · {c['r1']}R")
             for w in c["why"]:
                 L.append(f"- {w}")
         elif c.get("reason"):
@@ -1173,6 +1177,26 @@ def _sel(cards, prefix):
     return [c for c in cards if (c.get("status") or "").startswith(prefix)]
 
 
+def _live():
+    """v3.2: placed/filled orders from desk/state.json → {SYM: 'ticket N (status)'}.
+    A card whose symbol already has a live order is tagged ●LIVE — never re-pitched
+    as a fresh suggestion (user placed ETH+XAG from the 1848 digest at 19:02 UTC)."""
+    try:
+        st = json.loads((DESK / "state.json").read_text())
+        out = {}
+        for o in st.get("orders", []):
+            if o.get("status") in ("placed", "filled", "open"):
+                a = o.get("asset")
+                if not a:
+                    parts = (o.get("id") or "").split("-")
+                    a = parts[1].upper() if len(parts) > 2 and parts[1].isalpha() else None
+                if a and o.get("ticket"):
+                    out[a] = f"ticket {o['ticket']} ({o['status']})"
+        return out
+    except Exception:
+        return {}
+
+
 def broadcast_wakeup(cards, scope, ts):
     """User directive 2026-11-11: every 360 reply must land in WAKEUP.md so the
     atg-exec daemon's 45s git poll auto-wakes the local Antigravity agent — plus
@@ -1186,12 +1210,19 @@ def broadcast_wakeup(cards, scope, ts):
     pl, pk = _sel(cards, "PLACEABLE"), _sel(cards, "PARKED")
     rj = [c for c in cards if (c.get("status") or "").startswith("REJECTED")]
     nt = [c for c in cards if (c.get("status") or "") in ("NO-TRADE", "NO-ZONE", "NO-DATA")]
+    lv = _live()
+    if lv:
+        B.append(f"### LIVE ORDERS (already working — do NOT re-place)")
+        for a, tkt in sorted(lv.items()):
+            B.append(f"- {a}: {tkt} — manage only (fills/expiry/SL per protocol; A1-A6 alerts armed)")
+        B.append("")
     if pl:
         B.append("### PLACEABLE")
         for c in pl:
             e, s, t, sz = _card_row(c["sym"], c)
             cav = f" ⚠ {c['caveat']}" if c.get("caveat") else ""
-            B.append(f"- **{c['sym']} {c['side']} LIMIT {e} · SL {s} · T: {t} · {c['r1']}R · {sz}**{cav}")
+            liv = f" ● LIVE {lv[c['sym']]}" if c["sym"] in lv else ""
+            B.append(f"- **{c['sym']} {c['side']} LIMIT {e} · SL {s} · T: {t} · {c['r1']}R · {sz}**{liv}{cav}")
             for w in c.get("why", []):
                 B.append(f"  - {w}")
     if pk:
@@ -1221,10 +1252,12 @@ def broadcast_wakeup(cards, scope, ts):
     # AGENT_TASK → daemon wakeAdd + bell + fireWake (the actual local wake)
     pln = ", ".join(f"{c['sym']} {c['side']} {c['r1']}R" for c in pl) or "none"
     pkn = ", ".join(c["sym"] for c in pk) or "none"
+    lvn = ", ".join(f"{a} {t}" for a, t in sorted(lv.items())) or "none"
     ins = {"action": "AGENT_TASK", "from": "zai-desk", "ts": f"{ts} UTC", "scope": scope,
            "instruction": (f"360° {scope} deepscan finished {ts} UTC — broadcast refreshed in "
                            f"desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-{ts}.md. "
-                           f"PLACEABLE: {pln}. PARKED: {pkn}. All candidates are pullback LIMIT orders (never market); "
+                           f"LIVE (manage only, do NOT re-place): {lvn}. PLACEABLE (new): {pln}. PARKED: {pkn}. "
+                           f"All candidates are pullback LIMIT orders (never market); "
                            f"broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; "
                            f"await user-approved DIR-* before any MT5 action.")}
     fp = DESK / "inbox" / f"{ts}_AGENT_TASK-360-broadcast.json"

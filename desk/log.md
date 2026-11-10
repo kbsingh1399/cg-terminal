@@ -507,3 +507,29 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
   atg cannot see: broadcast, AGENT_TASK wake, DIR-0005 EXEC verification. Ticket 209404683
   expired 18:53:42 UTC (still pending in 18:50:55Z local snapshot; DIR-0005 cancel armed —
   verification blocked by the same outage).
+
+### DIALOG · 2026-11-10 19:18 UTC · user ↔ zai-desk — 360 output closure: live orders verified, DIR-0005 closed, v3.2 live-tag
+- ANSWER to user 18:55 (WAKEUP.md push): YES, now automatic — every 360 run (a) refreshes the
+  DESK BROADCAST section of desk/inbox/WAKEUP.md (marker-scoped, atg reads on every 45s poll),
+  (b) drops an <ts>_AGENT_TASK-360-broadcast.json → atg daemon bell + wakeAdd + fireWake = real
+  local wake. Codified: CHECKLIST-360 v1.2/v1.3 §G + AGENTS.md. For a HARD agent launch set
+  wake_cmd in desk/daemon.json (still empty).
+- EXPLANATION mandate: v3 (WHY THIS TRADE + per-tab ✓/✗/○ written justification) built by this
+  session (commit ae4cb1d); v3.1 auto-digest/broadcast cards built during the parallel 00:30 IST
+  cron wake (8fca803); v3.2 adds LIVE-order tagging (placed orders from state.json are marked
+  ●LIVE, never re-pitched as new) — wired after discovering the user had ALREADY placed both
+  1848-digest cards.
+- LIVE ORDERS: ETH 209422601 (0.53 lots, atg VERIFIED-COMPLIANT, 2.07R, 0.497% risk) ·
+  XAG 209422699 (0.01 lots, min-lot 0.72% risk — user-accepted). Levels re-validated vs 19:13
+  construction: drift ≤0.015% / ≤0.006% — NO modification. Both expire ~22:58 UTC.
+  Correlation: 2 correlated shorts = AT the cap — no NEW entries until one closes.
+- DIR-0005 CLOSED ✓: BTC 209404683 expired 18:53:42 unfilled → atg EXECUTED cancel 18:54:30
+  (reply filed, state.json updated, bell rang) — verified by desk via origin fetch this wake.
+  R4-DOGE-3 also expired unfilled. Standing blocked suggestions: R7-LTC-1 (basis 1.086%+spr
+  2.385%) · R9-ADA-1 (spr 2.19%) — re-checked each round.
+- INFRA (recycle 19:03:53 UTC): .git rolled back to platform snapshot — remote+credentials lost.
+  Recovered: origin re-added (public read — fetch/pull OK), working tree reconciled, all desk
+  work re-committed locally (ae4cb1d..HEAD). PUSH STILL BLOCKED — authenticated remote URL/token
+  must be re-provided by user; until then atg cannot see the broadcast/AGENT_TASK/this log.
+  Note: repo is PUBLIC-read — desk/account data visible to anyone with the URL; recommend a
+  fine-grained PAT scoped to this repo when re-providing (and consider private if unintended.

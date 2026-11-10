@@ -41,15 +41,20 @@
 
 atg-exec: full justification per trade in desk/deepscan/DIGEST-20261110-1913.md (+ per-asset §9). Do NOT touch MT5 without a user-approved DIR-*. Broker gates re-verified at placement.
 
+### LIVE ORDERS (already working — do NOT re-place)
+- ETH: ticket 209422601 (placed) — manage only (fills/expiry/SL per protocol; A1-A6 alerts armed). Levels re-validated 19:13 UTC: live entry 2,095.26 / SL 2,138.89 / TP 2,004.76 vs fresh construction 2,095.19 / 2,138.58 / 2,004.8 — drift ≤0.015%, NO modification needed. Expiry ~22:58 UTC (4h life).
+- XAG: ticket 209422699 (placed) — manage only. Live entry 53.099 / SL 53.763 / TP 50.813 vs fresh 53.100 / 53.766 / 50.81 — drift ≤0.006%, NO modification. ⚠ min-lot risk 0.72% > 0.5% mandate (user-accepted at placement). Expiry ~22:58 UTC.
+- Correlation: ETH+XAG = 2 correlated shorts in one risk-off tape = AT the 1-2 cap — no further NEW entries until one closes.
+
 ### PLACEABLE
-- **ETH SHORT LIMIT 2,095.10 → 2,095.19 · SL 2,138.48 → 2,138.58 · T: 2,004.76 str70 / 1,997.52 str49 · 2.08R · 0.54 lots $23.43 = 0.5%**
+- **ETH SHORT LIMIT 2,095.10 → 2,095.19 · SL 2,138.48 → 2,138.58 · T: 2,004.76 str70 / 1,997.52 str49 · 2.08R · 0.54 lots $23.43 = 0.5%** ● LIVE ticket 209422601 (placed)
   - Thesis: 6×SHORT vs 1×LONG scorecard · 24h Δ -397,489 (sell-dominant) · CVD quadrant both-selling
   - Entry 2,095.10 (day VAH+VWAP+1σ, +2.60% from spot): a paid-for bounce into supply — never chase
   - Stop 2,138.48 (VWAP±2σ zone): the idea is wrong only beyond the 2σ premium band, not on noise
   - Targets: T1 2,004.76 str70 · T2 1,997.52 str49 (liquidation magnets price is structurally drawn to unwind)
   - Size: 0.54 lots → $23.43 = 0.5% of $4,649.96
   - Invalidation: BULLISH Δ-divergence (lower high on stronger delta) = counter-trend pressure live → limit-only, cancel if it persists; all desk candidates share one risk-off tape — cap NEW entries at 1-2
-- **XAG SHORT LIMIT 53.184 → 53.100 · SL 53.852 → 53.766 · T: 50.813 str87 · 3.55R · 0.01 lots $33.33 = 0.72%** ⚠ lot-step/min-lot floor makes real risk 0.72% > 0.5% mandate — SKIP unless the user explicitly accepts
+- **XAG SHORT LIMIT 53.184 → 53.100 · SL 53.852 → 53.766 · T: 50.813 str87 · 3.55R · 0.01 lots $33.33 = 0.72%** ● LIVE ticket 209422699 (placed) ⚠ min-lot risk 0.72% > 0.5% mandate — accepted at placement
   - Thesis: 6×SHORT vs 2×LONG scorecard · 24h Δ -129,439 (sell-dominant) · CVD quadrant both-buying
   - Entry 53.184 (VWAP+1σ+day POC, +3.37% from spot): a paid-for bounce into supply — never chase
   - Stop 53.852 (VWAP±2σ zone): the idea is wrong only beyond the 2σ premium band, not on noise
