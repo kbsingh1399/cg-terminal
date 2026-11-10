@@ -80,3 +80,7 @@ data/*
 # desk daemon local state (never commit)
 desk/.daemon.lock
 desk/.daemon-state.json
+
+# multi-agent review tooling (cloned externals + probe w/ key copy — never commit)
+external/
+scripts/probe-new-syms.mjs

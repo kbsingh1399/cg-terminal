@@ -31,11 +31,27 @@ ROOT = Path(__file__).resolve().parent.parent
 DESK = ROOT / "desk"
 BASE = "http://localhost:3000/api/cg"
 DECS = {"BTC": 1, "ETH": 2, "SOL": 2, "BNB": 2, "XRP": 4, "ADA": 4, "AVAX": 3,
-        "DOGE": 5, "LINK": 3, "LTC": 2, "XAU": 2, "XAG": 3}
+        "DOGE": 5, "LINK": 3, "LTC": 2, "XLM": 4, "XMR": 3, "XAU": 2, "XAG": 3}
 SYMS = list(DECS)
 DRY = "--dry-run" in sys.argv
 now_ms = int(time.time() * 1000)
 now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
+# MT5 symbol resolution — config.symbol_map in desk/state.json is the source of
+# truth (user directive 2026-11-10: DOGE→DOGUSD, LINK→LNKUSD). Absent symbols
+# fall back to the legacy <SYM>USD form.
+try:
+    _cfg = json.loads((DESK / "state.json").read_text()).get("config") or {}
+except Exception:
+    _cfg = {}
+MT5_MAP = _cfg.get("symbol_map") or {}
+# Confirmed absent from the FundedNext server (user broker audit 2026-11-10):
+# perp-side watchlist only — no execution path at this broker.
+NOT_LISTED = {"SOL", "BNB", "AVAX"}
+
+
+def mt5sym(sym):
+    return MT5_MAP.get(sym, f"{sym}USD")
 
 
 def get(path, timeout=90):
@@ -188,7 +204,7 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
     ap = L.append
     mt = d["mt5"] or {}
     eq = (mt.get("account") or {}).get("equity") or 0
-    sp = (mt.get("spreads") or {}).get(f"{sym}USD") or {}
+    sp = (mt.get("spreads") or {}).get(mt5sym(sym)) or {}
     basis, spread, spec = sp.get("basisPct"), sp.get("spreadPct"), sp.get("spec") or {}
     risk_usd = (eq * 0.005) if eq else None
     # v3: construction state for the justification layer
@@ -293,9 +309,13 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
                     else:
                         m_entry = m_stop = None
                         m_tgts = []
-                        status = "PARKED (broker feed dead — DIR-0003)"
+                        if sym in NOT_LISTED:
+                            status = "PARKED (not listed on FundedNext — perp-side watchlist)"
+                            why_out = "broker: symbol not listed on FundedNext (audit 2026-11-10)"
+                        else:
+                            status = "PARKED (broker feed dead — DIR-0003)"
+                            why_out = "broker feed dead (no ticks — DIR-0003 open)"
                         why = ""
-                        why_out = "broker feed dead (no ticks — DIR-0003 open)"
                     # ---- size from broker spec (0.5% equity risk mandate)
                     lots = risk_act = None
                     if spec and risk_usd:
@@ -390,6 +410,8 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
                                               f"> 0.5% mandate — SKIP unless the user explicitly accepts")
                     if "feed dead" in status:
                         card["recovery"] = "needs the broker feed restored (DIR-0003) — levels stay valid on the perp side"
+                    elif "not listed" in status:
+                        card["recovery"] = "execution impossible at FundedNext — perp-side levels remain watchlist-only"
                     else:
                         card["recovery"] = (f"re-check when |basis| ≤ 0.5% and spread ≤ 0.15% "
                                             f"(now basis {basis:+.3f}% / spread {fnum(spread, 3)}%)")
@@ -1058,7 +1080,7 @@ def deep_report(sym):
     # 6 — broker & exposure
     ap("## 7 · Broker state & current exposure")
     mt = d["mt5"] or {}
-    mtsym = f"{sym}USD"
+    mtsym = mt5sym(sym)
     sp = (mt.get("spreads") or {}).get(mtsym) or {}
     basis, spread = sp.get("basisPct"), sp.get("spreadPct")
     if basis is not None:
@@ -1066,7 +1088,10 @@ def deep_report(sym):
         ap(f"- {mtsym}: bid {fmt(sym, sp.get('bid'))} / ask {fmt(sym, sp.get('ask'))} · basis {basis:+.3f}% · "
            f"spread {fnum(spread, 3)}% → {'TRADEABLE' if ok else 'BLOCKED (outside limits)'}")
     else:
-        ap(f"- {mtsym}: no ticks (feed dead or symbol mismatch — DIR-0003 open)")
+        if sym in NOT_LISTED:
+            ap(f"- {mtsym}: NOT LISTED on FundedNext — perp-side watchlist only (broker audit 2026-11-10)")
+        else:
+            ap(f"- {mtsym}: no ticks (feed dead or symbol mismatch — DIR-0003 open)")
     pos = [p for p in (mt.get("positions") or []) if p.get("symbol") == mtsym]
     ords = [o for o in (mt.get("orders") or []) if o.get("symbol") == mtsym]
     for p in pos:
@@ -1324,6 +1349,11 @@ def main():
     elif args and args[0].lower() == "all":
         syms = SYMS
     else:
+        bad = [a.upper() for a in args if a.upper() not in SYMS]
+        if bad:
+            sys.exit(f"ERROR: unknown symbol(s) {bad} — known: {', '.join(SYMS)}. "
+                     f"New assets need a DECS entry (staging gate) — refusing the "
+                     f"legacy silent BTC fallback (multi-agent review 2026-11-10).")
         syms = [a.upper() for a in args if a.upper() in SYMS] or ["BTC"]
     if "--top" in sys.argv and not args:
         st = json.loads((DESK / "state.json").read_text())

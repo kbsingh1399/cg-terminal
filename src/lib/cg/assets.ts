@@ -55,6 +55,13 @@ export const ASSETS: AssetCfg[] = [
   mk("DOGE", "Dogecoin", "crypto", 5),
   mk("LINK", "Chainlink", "crypto", 3),
   mk("LTC", "Litecoin", "crypto", 2),
+  // 2026-11-10 broker-universe expansion (FundedNext audit + live Coinglass probe):
+  // XLM (4-venue perp) and XMR (3-venue: Binance/Bybit/Hyperliquid — no OKX swap).
+  // XPT (Binance+OKX only) and USO (OKX only, no Binance kline) stay OUT until
+  // mk() supports a leadKey override + aggVenues venue branch — see
+  // desk/deepscan/EXPANSION-PLAN-20261110.md Phase 2b. UKO: no data at all.
+  mk("XLM", "Stellar", "crypto", 4),
+  mk("XMR", "Monero", "crypto", 3),
   mk("XAU", "Gold", "metal", 2, "slow", false),
   mk("XAG", "Silver", "metal", 3, "slow", false),
 ];
