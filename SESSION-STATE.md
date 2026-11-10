@@ -90,3 +90,19 @@ dated entry after each meaningful change; keep only the last 10 entries.
   `node scripts/desk_daemon.mjs` (Git Bash) → handle `desk/inbox/WAKE.md`
   (R1-BTC-1 + R2-LTC-1 pending placement) → optionally set `wake_cmd` if a
   CLI/URL trigger exists for the agent.
+
+### 2026-11-10 14:57 UTC — Z.ai sandbox agent — ENGINE v2 (user mandate: min 1:2 RR)
+- Honest audit: v1 orders used confluence + VWAP/POC levels only; liq
+  clusters, whale walls, CVD were NOT in level construction, and both
+  suggested orders were R 1.5/1.7 — below the user's 1:2 minimum.
+- v2 now live (scripts/desk_round.py): CVD component (taker share +
+  recent divergence) in scoring; liq clusters as target magnets + hazard
+  gates; whale-wall path/stop checks; config.min_r_multiple = 2.0;
+  sub-2R orders auto-withdrawn (R1-BTC-1, R2-LTC-1 pulled).
+- R4 (v2): BTC SHORT R3.5 (T1 72,964.8 long-liq cluster str 47) ·
+  LTC SHORT R5.9 · DOGE SHORT R4.5 (T1-T3 clusters str 64-65) ·
+  ADA rejected (nearest magnet 1.1R).
+- Confirmed: local daemon LIVE on user PC (commits 17fa573, fa57fd7),
+  MT5 connected (acct 11808165, $4,679.37, 0 positions).
+- atg: WAKE.md will refresh with R4 orders on next daemon cycle —
+  place only the v2 orders (R ≥ 2.0), ignore stale R1/R2 lines.
