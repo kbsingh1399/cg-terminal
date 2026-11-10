@@ -601,3 +601,18 @@ User demanded full audit of trade-formulation pipeline vs 9-section parameter ch
 - UPSTREAM-UNAVAILABLE (marked in reports, not silently dropped): stopmap non-BTC (BTC-only endpoint) · continuous CVD divergence history (only latestDiv + hitRate exposed).
 - Q3 confirmed: every outcome (PLACEABLE/PARKED/REJECTED/NO-TRADE/NO-ZONE/NO-DATA) prints reason + recovery; evidence manifest renders all ~22 rows for every outcome incl. NO-TRADE.
 Re-ran 360 all post-fix: 12/12 all sources OK, digest DIGEST-20261110-1952, broadcast refreshed.
+## R20 · 2026-11-10 19:57 UTC · zai-desk
+
+**Market**: BTC 73,389.3 (-2.6%)  ETH 2,042.38 (-4.3%)  SOL 82.80 (-4.5%)  XAU 4,036.62 (-2.6%)  XAG 51.530 (-3.7%)
+**Bias (|score|≥2)**: BTC-7(TREND)  ADA-4(TREND)  BNB-3(TREND)  SOL-3(TREND)  LTC-4(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R7-LTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 6/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
