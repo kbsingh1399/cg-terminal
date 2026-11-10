@@ -62,3 +62,6 @@ predates commit 7713c08, RESTART the daemon first (`node scripts/desk_daemon.mjs
 - Fill `ticket`, `actualEntry`, `filledTs`, `notes` in `desk/state.json`;
   status → `placed`; append an `EXEC` entry to `desk/log.md`; clear handled
   sections here.
+
+## 2026-11-10 15:33 UTC — agent task from zai-desk
+- RESTART the desk daemon — the running process predates commit 7713c08 and still appends the OLD compact WAKE.md template (no debate votes, no basis line). Steps: 1) stop the current node scripts/desk_daemon.mjs process; 2) git pull --rebase origin main; 3) restart: node scripts/desk_daemon.mjs (Git Bash). Verify after one cycle: (a) desk/mt5.json spreads.<SYM>.basisPct present, (b) any FUTURE WAKE.md order entry shows [FOR]/[AGAINST] vote lines + a BASIS: line. Do NOT re-place anything from the old compact entry: the current WAKE.md on origin already carries full debates — R6-ADA-1 SKIP (ADAUSD spread 2.14% >> 0.15% rule), R4-BTC-1 clean (translate levels via live basisPct), R4-DOGE-3 SKIP until DOGEUSD ticks. If you already restarted and see basisPct in mt5.json, ignore this.
