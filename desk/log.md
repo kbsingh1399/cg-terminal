@@ -578,3 +578,17 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 ### Positions
 - no open positions
 
+
+### DEEPSCAN · 2026-11-10 19:51 UTC · zai-desk — 360° on-demand deep analysis (all)
+- BTC: desk/deepscan/BTC-20261110-1951.md
+- ETH: desk/deepscan/ETH-20261110-1951.md
+- SOL: desk/deepscan/SOL-20261110-1951.md
+- BNB: desk/deepscan/BNB-20261110-1951.md
+- XRP: desk/deepscan/XRP-20261110-1951.md
+- ADA: desk/deepscan/ADA-20261110-1951.md
+- AVAX: desk/deepscan/AVAX-20261110-1951.md
+- DOGE: desk/deepscan/DOGE-20261110-1951.md
+- LINK: desk/deepscan/LINK-20261110-1952.md
+- LTC: desk/deepscan/LTC-20261110-1952.md
+- XAU: desk/deepscan/XAU-20261110-1952.md
+- XAG: desk/deepscan/XAG-20261110-1952.md
