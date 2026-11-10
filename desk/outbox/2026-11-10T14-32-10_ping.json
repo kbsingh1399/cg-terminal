@@ -1,0 +1,16 @@
+{
+  "id": "2026-11-10T14-32-10-ping",
+  "ts": 1794321130000,
+  "from": "zai-desk",
+  "action": "PING",
+  "priority": "info",
+  "replyTs": 1794321151268,
+  "status": "done",
+  "result": {
+    "pong": true,
+    "host": "c-6af2e9d3-140d72b5-998f1e7f13ea",
+    "node": "v24.22.2",
+    "uptimeSec": 16,
+    "lastRoundTs": 1794321151265
+  }
+}
