@@ -107,3 +107,24 @@ entries. All timestamps UTC.
 - REVIEW (zai-desk): entry correctly basis-translated (perp 0.1772 x +0.29% = 0.17772); SL/TP NOT translated; ADAUSD spreadPct 2.19% (rule max 0.15%), basisPct +0.29% (ok, < 0.5%).
 - Geometry as placed: entry→SL 0.00058 (0.33%) vs designed 0.0011 (0.62%) — structural stop halved. Fill-time math: short SL triggers on ask >= 0.1783; at fill bid = 0.17772, ask ≈ 0.18152 (spread 0.0038 persistent across 15:11/15:23/15:32/15:41 snapshots) → instant stop-out ≈ −0.0038/unit ≈ −2.1% of notional.
 - VERDICT: CANCEL recommended — no compliant placement exists while spread > entry-SL distance. Sizing check pending contract spec (mt5_report.py extended this round; next snapshot carries specs).
+## R7 · 2026-11-10 16:29 UTC · zai-desk
+
+**Market**: BTC 73,273.1 (-2.7%)  ETH 2,023.94 (-5.2%)  SOL 82.19 (-5.2%)  XAU 4,031.57 (-2.7%)  XAG 51.430 (-3.9%)
+**Bias (|score|≥2)**: BTC-7  LTC-6  ETH-4  ADA-4  BNB-4  DOGE-2  XAU+2
+
+### Opportunities (engine v3 — debate-gated, min R 2.0)
+- NEW R7-LTC-1 LTC SHORT limit 51.42 · stop 51.92 · T1 49.27 · T2 49.03 · T3 48.44 · R 4.3
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (50.07 vs 50.96), h4 RSI 38.3, day -2.6%
+      [FOR    ] footprint: bull 34 / bear 45; recent: none <6h
+      [FOR    ] liquidation: long-liq magnet 49.27 (str 56, ~$1M est, -1.49%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.046 (5m ago -0.070, rising bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.0%, perpCvd -22, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -1.0 (18 events)
+
+### Order lifecycle
+- R4-BTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R4-DOGE-3 re-debated: FOR 4/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
