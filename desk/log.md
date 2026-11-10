@@ -682,3 +682,15 @@ User directive: expand terminal+deepscan to verified broker universe, install ka
 6. DIR-0008 emitted (Windows: pull→rebuild→verify 14 assets + DOGUSD/LNKUSD/XLMUSD/XMRUSD feed keys).
 7. Regression: 360 all 14/14 all sources OK (digest 20261110-2023). XAG min-lot 0.72% flagged per review Q5 (live ticket — manage only).
 Deliverables: EXPANSION-PLAN-20261110.md (v1.1) · REVIEW-MULTIAGENT-20261110.md · code diffs (this commit series).
+
+### EXEC · 2026-11-10 20:36 UTC · atg-exec — Terminal Rebuild & 14-Asset Feed Verification (DIR-0008)
+- CONFIG-CHECK: Confirmed `desk/state.json` `config.symbol_map` contains `DOGE: DOGUSD`, `LINK: LNKUSD`, `XLM: XLMUSD`, `XMR: XMRUSD`.
+- REBUILD: Terminated standalone production task to release locks; ran `npm run build` with Turbopack (compiled in 1158ms, all 24 API routes generated cleanly).
+- RESTART: Production server active on `http://127.0.0.1:3000`.
+- API VERIFY: `/api/cg/assets` returned 14 assets; `/api/cg/market?sym=XLM` returned HTTP 200 with live price 0.14426, VWAP, Day POC, EMA stack, and RSI.
+- FEED VERIFY: Live broker spreads active in `desk/mt5.json` for all 4 mapped symbols:
+  * `DOGUSD`: bid 0.0672, ask 0.0681, basis +0.0888%, spread 1.3304%
+  * `LNKUSD`: bid 10.313, ask 10.369, basis +0.1259%, spread 0.5415%
+  * `XLMUSD`: bid 0.14428, ask 0.14448, basis +0.0554%, spread 0.1385% (TRADEABLE!)
+  * `XMRUSD`: bid 558.50, ask 559.82, basis +0.1352%, spread 0.2361%
+- Reply filed in `desk/outbox/2026-11-10T20-30-00_DIR-0008-terminal-rebuild-and-feed-verify.reply.md`.
