@@ -206,3 +206,13 @@ entries. All timestamps UTC.
 - VERDICT: EXECUTED-COMPLIANT. Lesson logged: place from the LATEST mt5.json basis, not an older card — deviation was harmless this time.
 - Trade ledger: R6-ADA-1 (209375723) cancelled ✓ · XAU 0.01 (209400100) closed −$4.46 ✓ · R4-BTC-1 (209404683) placed pending ✓ · R7-LTC-1 not placeable (basis +1.13%, spread 2.40%) · R9-ADA-1 not placeable (spread 2.20%) · R4-DOGE-3 not placeable (no tick).
 - R10 17:07: bias BTC −7.2 · ADA −6.3 (rising) · LTC −4.9 · XAG −3.7 · ETH −3.3; no new candidates; all 4 standing orders re-debated and stand.
+
+### DIALOG · 2026-11-10 17:30 UTC · user ↔ zai-desk — TP targeting on high-leverage liq zones (BTC 209404683)
+- User (with order-flow terminal screenshot, circled Long cluster 72,463.6 / High-lev / str 27.3): "we have high leverage zone... can't we target that for TP?"
+- CONFIRMED: this is exactly the engine's TP design — targets are structural liq magnets (str>=40, 2R-6R window). R4 picked T1 72,964.8 as the then-str-47 long-liq magnet (~$642M est).
+- Live read 17:27 (liqlevels 3d/lvR4): below-field DECAYED because price already traded into it — 4.2K of 5.4K open levels triggered; strongest below magnet now 72,216.8 str 31; circled 72,463.6 str 23.1 High-lev tier, -0.75% from spot; totals shorts 290.7K vs longs 107.5K (2.7x — squeeze fuel above dominates, consistent with Coinglass cross-check).
+- Option math (ticket 209404683, entry 74,262.9, stop-dist 377.6): TP 72,957 = 3.46R / $78.35 · TP 72,499.8 (circled, translated at basis +0.05%) = 4.67R / $105.78.
+- DESK RECOMMENDATION: LADDER — set order TP to far target 72,500 (MT5); if filled, manually close half (0.03) at ~72,957, run 0.03 to 72,500. Rationale: banks the decayed-magnet level while hunting the High-lev zone; cap risk unchanged (SL untouched, $22.66).
+- HONEST CAVEATS logged: (a) circled zone str 23-27 is BELOW the engine's str-40 target-grade bar — field decay, not a design flaw; (b) High-lev tier is a plus (hair-trigger clusters); (c) fill tension: spot 73,012 is 1.71% below entry, order expires 18:53 UTC unfilled-by-design.
+- Future orders: no engine change needed — magnet targeting is already automatic; this decay is why re-debates re-read the field each round.
+- PENDING USER ACTION: modify TP on pending ticket (or reply "keep TP" to close this DIALOG). atg to verify modification per WAKE task.

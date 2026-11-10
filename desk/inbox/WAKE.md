@@ -13,6 +13,14 @@
 The USER now places trades manually at MT5. atg-exec's market-side role = VERIFY every
 placement against the desk card (reply contract below). zai-desk runs rounds + arbitration.
 
+## 17:30 UTC — TP-MODIFY WATCH (user decision pending) — ticket 209404683
+User proposed targeting the High-lev long-liq zone (72,463.6 perp) as TP — desk recommends the
+LADDER: modify pending order TP 72,957.0 → **72,500** (MT5, translated at basis +0.05%; perp 72,463.6);
+if filled, manually close 0.03 at ~72,957 and run 0.03 to 72,500 (4.67R on runner vs 3.46R flat).
+IF the ticket shows TP 72,500 in the next snapshot: verify (a) TP ≈ 72,463.6 × (1+latest basisPct/100),
+tolerance ±0.1%, (b) SL unchanged 74,664.0, volume unchanged 0.06; write VERIFY-TP reply + log.md EXEC.
+IF user says "keep TP": close this watch item. Full math in log.md DIALOG 17:30.
+
 ## 17:09 UTC — R9/R10 STATUS: BTC PLACED & VERIFIED — desk sweep done
 R9 17:01 (run LOCALLY by atg desk — engine healthy again): NEW R9-ADA-1 ADA SHORT (R 3.0, debate 5/0,
 T1 long-liq magnet str 92 @ 0.1702). R10 17:07 (zai): bias BTC −7.2 · ADA −6.3 · LTC −4.9 · XAG −3.7 ·
