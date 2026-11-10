@@ -23,18 +23,65 @@ notification bias, footprint signals, h4/d1 EMA trend, VWAP regime, RSI
 modifier, order lifecycle, position verdicts). zai-desk adds the
 interpretation layer on top at each wake + whenever the user messages.
 
-**atg-exec local scheduler** (pick one, keep it offset from zai wakes):
+**The local daemon is the recommended scheduler** — see the next section.
+Plain-cron alternative (rounds only, no inbox/MT5/wake):
 
 ```bash
 # Linux/macOS cron — every 15 min at :05/:20/:35/:50
 5,20,35,50 * * * * cd /path/to/cg-terminal && bash scripts/desk_round.sh >> desk/rounds.local.log 2>&1
 ```
 
-Windows: Task Scheduler every 15 min on `bash scripts/desk_round.sh`
-(Git Bash), or a small always-on loop in the Antigravity agent. The script
-pulls-before-edit and pushes-after — it is safe to run from both machines
-as long as the schedules stay offset (never run both sides in the same
-minute).
+## The local daemon — `scripts/desk_daemon.mjs`
+
+One always-on process on the atg machine does everything:
+
+```bash
+node scripts/desk_daemon.mjs          # daemon, forever (Git Bash on Windows)
+node scripts/desk_daemon.mjs --once   # single cycle (testing)
+```
+
+Each cycle (default 45 s — `desk/daemon.json`):
+1. auto-commit dirty `desk/` files → `git fetch` → `pull --rebase` when behind
+2. run `scripts/desk_round.sh` when a round is due (default every 15 min;
+   rounds run by EITHER machine count, via `analysis.last_round_ts`)
+3. process new `desk/inbox/*.json` instructions → `desk/outbox/`
+4. new suggested orders / agent tasks → append `desk/inbox/WAKE.md`
+   (wake beacon) + desktop notification + optional `wake_cmd`
+5. refresh `desk/mt5.json` — account, positions, running PnL, spread per
+   mapped symbol (Windows + MT5 terminal running + `pip install
+   MetaTrader5`; failures are reported in the file, never guessed)
+6. commit + push all `desk/` changes
+
+`desk/daemon.json` is atg/human-owned runtime config (poll interval,
+terminal boot command, MT5 python command, wake/notify commands). Local
+files `desk/.daemon.lock`, `desk/.daemon-state.json`,
+`desk/rounds.local.log` are gitignored.
+
+## Instruction channel — git as the message bus
+
+zai-desk remote-controls the local machine by pushing one JSON file per
+instruction into `desk/inbox/`; the daemon replies in `desk/outbox/` with
+the same filename. **Fixed action vocabulary — the daemon never runs
+arbitrary shell from the repo.**
+
+| action | effect | reply contains |
+| --- | --- | --- |
+| `PING` | liveness check | host, uptime, last round ts |
+| `MT5_SNAPSHOT` | force a fresh `desk/mt5.json` | ok / error |
+| `ROUND_NOW` | force an analysis round immediately | round id |
+| `REPORT` | MT5 refresh + compact desk report | orders, positions, PnL, equity |
+| `AGENT_TASK` | queue text for the local agent (WAKE.md + notify + `wake_cmd`) | dispatched |
+
+Instruction file shape:
+`{"id":"...","ts":<ms>,"from":"zai-desk","action":"...","priority":"info|high","instruction":"text (AGENT_TASK)"}`
+
+**Waking the agent**: `desk/inbox/WAKE.md` is the beacon — the daemon
+appends tasks (new suggested orders, zai agent tasks), the local agent
+handles them on activation (place MT5 orders, update state, EXEC log
+entries) and clears the handled sections. If your Antigravity install
+exposes a CLI/URL trigger for agents, set it as `wake_cmd` in
+`desk/daemon.json` (`{msg}` is replaced with the task text) for a hard
+wake; beacon + desktop notification is the baseline otherwise.
 
 ## Files (field ownership)
 

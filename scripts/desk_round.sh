@@ -19,9 +19,9 @@ git pull --rebase origin main >/dev/null 2>&1 && log "git: pulled" || log "git: 
 if curl -sf -m 5 http://localhost:3000/api/cg/assets >/dev/null 2>&1; then
   log "terminal: up"
 else
-  log "terminal: down — booting npm run dev"
+  log "terminal: down — booting (${DESK_BOOT_CMD:-npm run dev})"
   if [ -f /tmp/cg-terminal-dev.log ]; then mv /tmp/cg-terminal-dev.log "/tmp/cg-terminal-dev.$(date -u +%s).log"; fi
-  nohup npm run dev >/tmp/cg-terminal-dev.log 2>&1 &
+  nohup ${DESK_BOOT_CMD:-npm run dev} >/tmp/cg-terminal-dev.log 2>&1 &
   ok=""
   for i in $(seq 1 30); do
     sleep 5

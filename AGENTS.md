@@ -43,10 +43,15 @@ rules, git conflict discipline. Quick version:
 - zai-desk runs a 15-min analysis round (clock quarters), appending
   `## R<n>` entries to `desk/log.md` and updating `desk/state.json`
   (`analysis`, `orders[]`).
-- You poll GitHub (~every 5 min, offset from quarters), read
-  `orders[]` for `status:"suggested"` entries, punch them in MT5, and
-  write back `status`/`ticket`/`actualEntry` + mirror open positions
-  into `positions[]`. Append `EXEC` entries to `desk/log.md`.
+- The **desk daemon** (`scripts/desk_daemon.mjs`, run it on this machine)
+  is the local event loop: 15-min rounds, MT5 snapshots (`desk/mt5.json`),
+  git sync, and the wake beacon. Start it once and leave it running:
+  `node scripts/desk_daemon.mjs` (Git Bash on Windows).
+- **On every activation, check `desk/inbox/WAKE.md` FIRST** — the daemon
+  queues new suggested orders and zai agent tasks there. Handle them:
+  punch MT5 orders, write back `status`/`ticket`/`actualEntry`, mirror
+  open positions into `positions[]`, append `EXEC` entries to
+  `desk/log.md`, then clear the handled WAKE sections and push.
 - `config` in `state.json` belongs to the human; never edit it.
 - Never force-push; always `git pull --rebase` before editing.
 

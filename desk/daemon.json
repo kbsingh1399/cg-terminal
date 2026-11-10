@@ -1,0 +1,13 @@
+{
+  "poll_secs": 45,
+  "round_every_min": 15,
+  "terminal_boot_cmd": "npm run dev",
+  "mt5": {
+    "enabled": true,
+    "python_cmd": "python",
+    "interval_secs": 300,
+    "max_consecutive_errors": 10
+  },
+  "wake_cmd": "",
+  "notify_cmd": "auto"
+}

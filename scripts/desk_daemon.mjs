@@ -1,0 +1,301 @@
+#!/usr/bin/env node
+/**
+ * desk_daemon.mjs — the local trade-desk event loop (atg-exec machine).
+ *
+ * Git is the message bus between the two agents:
+ *   zai-desk (sandbox)  ──push──►  GitHub main  ──fetch/pull──►  this daemon
+ *   daemon results (desk/outbox, desk/mt5.json, WAKE.md) ──push──► GitHub
+ *
+ * Every cycle (default 45 s — desk/daemon.json):
+ *   1. auto-commit dirty desk/ files, git fetch, pull --rebase when behind
+ *   2. run scripts/desk_round.sh when a 15-min analysis round is due
+ *   3. process new desk/inbox/*.json instructions → desk/outbox/<same name>
+ *      (fixed action vocabulary: PING · MT5_SNAPSHOT · ROUND_NOW · REPORT ·
+ *       AGENT_TASK — NEVER arbitrary shell from the repo)
+ *   4. new suggested orders / agent tasks → append desk/inbox/WAKE.md
+ *      (the wake beacon for the local agent) + desktop notification
+ *      + optional wake_cmd hook
+ *   5. refresh desk/mt5.json (account, positions, running PnL, spreads)
+ *      via scripts/mt5_report.py when due
+ *   6. commit + push all desk/ changes
+ *
+ * Run:   node scripts/desk_daemon.mjs          (daemon, forever)
+ *        node scripts/desk_daemon.mjs --once   (single cycle, testing)
+ *        DESK_MT5_ENABLED=0 node ... --once    (env overrides config)
+ *
+ * Windows: run from Git Bash (the round script needs bash).
+ */
+import { execFile, spawn } from "node:child_process";
+import { existsSync, readFileSync, writeFileSync, appendFileSync, mkdirSync, readdirSync, unlinkSync } from "node:fs";
+import { promisify } from "node:util";
+import os from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+process.chdir(ROOT);
+const X = promisify(execFile);
+const ONCE = process.argv.includes("--once");
+
+const log = (m) => console.log(`[desk-daemon ${new Date().toISOString().slice(11, 19)}] ${m}`);
+const loadJson = (p, dflt) => { try { return JSON.parse(readFileSync(p, "utf8")); } catch { return dflt; } };
+const deskState = () => loadJson("desk/state.json", {});
+
+// ---------------- config (env overrides json) ----------------
+const raw = loadJson("desk/daemon.json", {});
+const envBool = (k, dflt) => (process.env[k] === undefined ? dflt : !["0", "false", "off"].includes(process.env[k]));
+const cfg = {
+  poll_secs: raw.poll_secs ?? 45,
+  round_every_min: raw.round_every_min ?? 15,
+  terminal_boot_cmd: raw.terminal_boot_cmd ?? "npm run dev",
+  mt5: {
+    enabled: envBool("DESK_MT5_ENABLED", raw.mt5?.enabled ?? true),
+    python_cmd: raw.mt5?.python_cmd ?? "python",
+    interval_secs: raw.mt5?.interval_secs ?? 300,
+    max_consecutive_errors: raw.mt5?.max_consecutive_errors ?? 10,
+  },
+  wake_cmd: raw.wake_cmd ?? "",
+  notify_cmd: raw.notify_cmd ?? "auto",
+};
+
+// ---------------- daemon bookkeeping (local only, gitignored) ----------------
+const DSTATE = "desk/.daemon-state.json";
+let dst = loadJson(DSTATE, {});
+if (!dst.startedTs) dst.startedTs = Date.now();
+if (!dst.lastRoundTs) dst.lastRoundTs = deskState().analysis?.last_round_ts ?? 0;
+if (!Array.isArray(dst.orderSig)) dst.orderSig = [];
+let roundFails = dst.roundFails ?? 0;
+const saveDstate = () => writeFileSync(DSTATE, JSON.stringify(dst, null, 2));
+
+// ---------------- shell helper (never throws) ----------------
+async function sh(cmd, args, opts = {}) {
+  try {
+    const { stdout, stderr } = await X(cmd, args, { timeout: 120_000, ...opts });
+    return { code: 0, out: stdout, err: stderr };
+  } catch (e) {
+    return { code: typeof e.code === "number" ? e.code : 1, out: e.stdout ?? "", err: String(e.stderr || e.message || "").slice(0, 400) };
+  }
+}
+
+// ---------------- git helpers ----------------
+async function gitDeskDirty() {
+  const r = await sh("git", ["status", "--porcelain", "--", "desk/"]);
+  return r.out.trim();
+}
+async function commitDesk(msg) {
+  if (!(await gitDeskDirty())) return false;
+  await sh("git", ["add", "--", "desk/"]);
+  await sh("git", ["-c", "user.name=atg-desk-daemon", "-c", "user.email=atg-desk-daemon@local", "commit", "-q", "-m", msg]);
+  return true;
+}
+async function pushDesk(msg) {
+  const did = await commitDesk(msg);
+  let r = await sh("git", ["push", "--quiet", "origin", "main"]);
+  if (r.code !== 0) {
+    await sh("git", ["pull", "--rebase", "--quiet", "origin", "main"]);
+    r = await sh("git", ["push", "--quiet", "origin", "main"]);
+  }
+  if (r.code !== 0) return `PUSH FAILED: ${r.err}`;
+  return did ? "pushed" : "clean";
+}
+async function gitSync() {
+  const f = await sh("git", ["fetch", "--quiet", "origin", "main"]);
+  if (f.code !== 0) return `fetch failed: ${f.err}`;
+  const h = await sh("git", ["rev-parse", "HEAD"]);
+  const o = await sh("git", ["rev-parse", "origin/main"]);
+  if (h.out.trim() === o.out.trim()) return "up-to-date";
+  const p = await sh("git", ["pull", "--rebase", "--quiet", "origin", "main"]);
+  return p.code === 0 ? "pulled" : `pull failed: ${p.err}`;
+}
+
+// ---------------- notifications / wake ----------------
+function notify(title, text) {
+  if (cfg.notify_cmd === "") return;
+  try {
+    if (cfg.notify_cmd && cfg.notify_cmd !== "auto") {
+      spawn(`${cfg.notify_cmd} "${title}: ${text}"`, { shell: true, detached: true, stdio: "ignore" }).unref();
+    } else if (process.platform === "win32") {
+      spawn(`msg * "${title}: ${text}"`, { shell: true, detached: true, stdio: "ignore" }).unref();
+    } else {
+      spawn("notify-send", [title, text], { detached: true, stdio: "ignore" }).unref();
+    }
+  } catch { /* best effort */ }
+}
+function fireWake(text) {
+  if (!cfg.wake_cmd) return;
+  try {
+    const cmd = cfg.wake_cmd.replace("{msg}", () => text);
+    spawn(cmd, { shell: true, detached: true, stdio: "ignore" }).unref();
+  } catch { /* best effort */ }
+}
+
+// ---------------- WAKE.md beacon (daemon appends, agent clears) ----------------
+const WAKE = "desk/inbox/WAKE.md";
+const readWake = () => { try { return readFileSync(WAKE, "utf8"); } catch { return ""; } };
+function wakeAdd(title, lines) {
+  mkdirSync("desk/inbox", { recursive: true });
+  const base = readWake() || "# WAKE — pending tasks for atg-exec (daemon appends; agent handles then clears)\n";
+  const ts = new Date().toISOString().replace("T", " ").slice(0, 16);
+  writeFileSync(WAKE, base.replace(/\n*$/, "\n") + `\n## ${ts} UTC — ${title}\n` + lines.map((l) => `- ${l}`).join("\n") + "\n");
+}
+
+// ---------------- 15-min analysis round ----------------
+async function runRound(force = false) {
+  const lastKnown = Math.max(dst.lastRoundTs ?? 0, deskState().analysis?.last_round_ts ?? 0);
+  if (!force && Date.now() - lastKnown < cfg.round_every_min * 60_000) return false;
+  log(`analysis round due (last ${Math.round((Date.now() - lastKnown) / 60000)} min ago) — running desk_round.sh`);
+  appendFileSync("desk/rounds.local.log", `\n===== ${new Date().toISOString()} daemon round =====\n`);
+  const r = await sh("bash", ["scripts/desk_round.sh"], {
+    timeout: 600_000,
+    env: { ...process.env, DESK_BOOT_CMD: cfg.terminal_boot_cmd },
+  });
+  appendFileSync("desk/rounds.local.log", (r.out || "") + (r.err ? `\n[stderr] ${r.err}\n` : ""));
+  dst.lastRoundTs = Date.now();
+  if (r.code !== 0) {
+    roundFails++; dst.roundFails = roundFails;
+    log(`round FAILED rc=${r.code} (see desk/rounds.local.log)`);
+    if (roundFails >= 2) notify("Trade desk", `analysis round failed ${roundFails}x in a row — check desk/rounds.local.log`);
+  } else if (roundFails) { roundFails = 0; dst.roundFails = 0; }
+  return true;
+}
+
+// ---------------- wake on new suggested orders ----------------
+function checkNewOrders() {
+  const sug = (deskState().orders ?? []).filter((o) => o.status === "suggested");
+  const ids = sug.map((o) => o.id);
+  const fresh = ids.filter((id) => !dst.orderSig.includes(id));
+  const wakeTxt = readWake();
+  for (const o of sug.filter((o) => fresh.includes(o.id))) {
+    if (wakeTxt.includes(o.id)) continue; // already queued
+    const exp = o.expiresTs ? new Date(o.expiresTs).toISOString().slice(0, 16).replace("T", " ") + " UTC" : "?";
+    wakeAdd("new suggested order — place in MT5", [
+      `${o.id} ${o.sym} ${o.side.toUpperCase()} ${o.type} entry ${o.entry} · stop ${o.stop} · targets ${(o.targets ?? []).join(" / ")} · expires ${exp}`,
+      `→ place on ${o.mt5Symbol} in MT5, then set status "placed" + ticket in desk/state.json and append an EXEC entry to desk/log.md`,
+    ]);
+    notify("Trade desk", `new ${o.side} ${o.sym} order ${o.id} — wake agent`);
+  }
+  dst.orderSig = ids;
+}
+
+// ---------------- MT5 snapshot ----------------
+async function runMt5(force = false) {
+  if (!cfg.mt5.enabled) return { ok: false, skipped: "mt5 disabled in config" };
+  if (!force && Date.now() - (dst.lastMt5Ts ?? 0) < cfg.mt5.interval_secs * 1000) return { ok: true, skipped: "not due" };
+  if (!force && (dst.mt5Errors ?? 0) >= cfg.mt5.max_consecutive_errors)
+    return { ok: false, skipped: "mt5 errored too many times — send an MT5_SNAPSHOT inbox instruction to retry" };
+  const r = await sh(cfg.mt5.python_cmd, ["scripts/mt5_report.py"], { timeout: 90_000 });
+  dst.lastMt5Ts = Date.now();
+  const mt = loadJson("desk/mt5.json", {});
+  if (r.code !== 0 || mt.error) {
+    dst.mt5Errors = (dst.mt5Errors ?? 0) + 1;
+    return { ok: false, error: mt.error || r.err || `rc=${r.code}` };
+  }
+  dst.mt5Errors = 0;
+  return { ok: true, positions: (mt.positions ?? []).length, equity: mt.account?.equity, floating: mt.floating?.total };
+}
+
+// ---------------- inbox processing (fixed vocabulary) ----------------
+async function processInbox() {
+  mkdirSync("desk/outbox", { recursive: true });
+  let files = [];
+  try { files = readdirSync("desk/inbox").filter((f) => f.endsWith(".json")).sort(); } catch { return; }
+  for (const f of files) {
+    const outp = path.join("desk/outbox", f);
+    if (existsSync(outp)) continue; // already replied
+    const ins = loadJson(path.join("desk/inbox", f), null);
+    if (!ins || !ins.action) {
+      writeFileSync(outp, JSON.stringify({ file: f, replyTs: Date.now(), status: "error", reason: "unparseable JSON or missing action" }, null, 2));
+      continue;
+    }
+    let res;
+    switch (ins.action) {
+      case "PING":
+        res = { status: "done", result: { pong: true, host: os.hostname(), node: process.version, uptimeSec: Math.round(process.uptime()), lastRoundTs: dst.lastRoundTs } };
+        break;
+      case "MT5_SNAPSHOT": {
+        dst.mt5Errors = 0;
+        const r = await runMt5(true);
+        res = { status: r.ok ? "done" : "error", result: r };
+        break;
+      }
+      case "ROUND_NOW": {
+        await runRound(true);
+        const a = deskState().analysis ?? {};
+        res = { status: "done", result: { round: a.last_round, ts: a.last_round_ts } };
+        break;
+      }
+      case "REPORT": {
+        await runMt5(true);
+        const st = deskState();
+        const mt = loadJson("desk/mt5.json", {});
+        res = { status: "done", result: {
+          round: st.analysis?.last_round,
+          suggested: (st.orders ?? []).filter((o) => o.status === "suggested").map((o) => `${o.id} ${o.sym} ${o.side} @${o.entry}`),
+          placed: (st.orders ?? []).filter((o) => o.status === "placed").map((o) => `${o.id} ${o.sym} ticket ${o.ticket}`),
+          mt5: mt.error ? `unavailable: ${mt.error}` : {
+            equity: mt.account?.equity,
+            floatingPnl: mt.floating?.total,
+            positions: (mt.positions ?? []).map((p) => `${p.symbol} ${p.side} ${p.volume} ${p.profit >= 0 ? "+" : ""}${p.profit}`),
+          },
+        } };
+        break;
+      }
+      case "AGENT_TASK": {
+        const text = String(ins.instruction ?? ins.payload?.instruction ?? "(no instruction text)");
+        wakeAdd("agent task from zai-desk", [text]);
+        notify("Trade desk", "agent task from zai — see desk/inbox/WAKE.md");
+        fireWake(text);
+        res = { status: "dispatched", result: { beacon: "desk/inbox/WAKE.md" } };
+        break;
+      }
+      default:
+        res = { status: "skipped", reason: `unknown action ${ins.action}` };
+    }
+    writeFileSync(outp, JSON.stringify({ ...ins, replyTs: Date.now(), ...res }, null, 2));
+    log(`inbox ${f}: ${res.status}`);
+  }
+}
+
+// ---------------- the cycle ----------------
+async function cycle() {
+  const t0 = Date.now();
+  await commitDesk("desk(daemon): auto-commit (pre-sync)");
+  log(`sync: ${await gitSync()}`);
+  await runRound(false);
+  checkNewOrders();
+  await processInbox();
+  await runMt5(false);
+  const pushed = await pushDesk(`desk(daemon): ${new Date().toISOString().slice(0, 16)} — inbox/outbox/mt5/wake sync`);
+  if (pushed !== "clean") log(`git: ${pushed}`);
+  saveDstate();
+  log(`cycle done in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+}
+
+// ---------------- single-instance lock + lifecycle ----------------
+const LOCK = "desk/.daemon.lock";
+function acquireLock() {
+  if (existsSync(LOCK)) {
+    const pid = Number(readFileSync(LOCK, "utf8").trim());
+    if (Number.isFinite(pid) && pid > 0) {
+      try { process.kill(pid, 0); console.error(`[desk-daemon] already running (pid ${pid}) — exiting`); process.exit(1); } catch { /* stale lock */ }
+    }
+  }
+  writeFileSync(LOCK, String(process.pid));
+}
+const release = () => { try { unlinkSync(LOCK); } catch {} saveDstate(); };
+process.on("SIGINT", () => { release(); process.exit(0); });
+process.on("SIGTERM", () => { release(); process.exit(0); });
+process.on("exit", () => { try { unlinkSync(LOCK); } catch {} });
+
+acquireLock();
+if (ONCE) {
+  cycle().then(() => { release(); process.exit(0); }).catch((e) => { console.error("[desk-daemon] cycle error:", e); release(); process.exit(1); });
+} else {
+  log(`starting — poll ${cfg.poll_secs}s · round every ${cfg.round_every_min}min · mt5 ${cfg.mt5.enabled ? "on" : "off"} · wake_cmd ${cfg.wake_cmd ? "set" : "off"}`);
+  (async function loop() {
+    for (;;) {
+      try { await cycle(); } catch (e) { console.error("[desk-daemon] cycle error:", e.message); }
+      await new Promise((r) => setTimeout(r, cfg.poll_secs * 1000));
+    }
+  })();
+}

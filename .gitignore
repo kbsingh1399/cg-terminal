@@ -73,3 +73,7 @@ data/*
 
 # session continuity notes (assistant memory, local only)
 /SESSION-MEMORY.md
+
+# desk daemon local state (never commit)
+desk/.daemon.lock
+desk/.daemon-state.json
