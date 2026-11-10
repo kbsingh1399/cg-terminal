@@ -362,3 +362,6 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 ### Positions
 - no open positions
 
+
+### DEEPSCAN · 2026-11-10 18:33 UTC · zai-desk — 360° on-demand deep analysis
+- BTC: desk\deepscan\BTC-20261110-1834.md
