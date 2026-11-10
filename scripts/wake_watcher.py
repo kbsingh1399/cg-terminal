@@ -34,7 +34,7 @@ def main():
 
     print(f"[wake_watcher] watching {WAKE_FILE.name} (initial hash: {initial_hash[:8]})...", flush=True)
 
-    while time.time() - start_time < max_duration:
+    while True:
         time.sleep(2)
         current_hash = get_hash()
         if current_hash and current_hash != initial_hash:
@@ -55,9 +55,6 @@ def main():
                 for l in new_lines[:20]:
                     print(l, flush=True)
             sys.exit(0)
-
-    print("[wake_watcher] 5-minute heartbeat reached without WAKE.md change. Re-arming watcher.", flush=True)
-    sys.exit(0)
 
 if __name__ == "__main__":
     main()

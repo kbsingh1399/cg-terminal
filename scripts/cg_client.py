@@ -14,7 +14,8 @@ Flow (reverse-engineered for interoperability):
 import base64, json, sys, time, zlib, importlib.util
 import urllib.request
 
-spec = importlib.util.spec_from_file_location('cgt', '/home/z/my-project/scripts/cg_token.py')
+from pathlib import Path
+spec = importlib.util.spec_from_file_location('cgt', str(Path(__file__).parent / 'cg_token.py'))
 m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 from Crypto.Cipher import AES
 

@@ -59,17 +59,11 @@ if [ $rc -ne 0 ]; then
   exit $rc
 fi
 
-# ---- 4. commit + push -------------------------------------------------------
+# ---- 4. commit (daemon handles push via system git) -------------------------
 if [ -n "$(git status --porcelain desk/)" ]; then
   git add desk/
   if git commit -q -m "desk(round): ${TS} — 15-min analysis round"; then
-    if git push origin main 2>/dev/null; then
-      log "git: pushed"
-    elif git pull --rebase origin main >/dev/null 2>&1 && git push origin main 2>/dev/null; then
-      log "git: pushed after rebase retry"
-    else
-      log "git: PUSH FAILED — will sync next round"
-    fi
+    log "git: committed locally (daemon pushes)"
   fi
 else
   log "git: no desk changes"
