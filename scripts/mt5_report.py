@@ -77,6 +77,25 @@ try:
         })
     floating = round(sum(p["profit"] + p["swap"] for p in positions), 2)
 
+    # pending orders (limits/stops not yet filled) — the desk's eyes on
+    # unexecuted tickets (e.g. verifying a placement or a cancel)
+    ORDER_TYPES = {0: "buy", 1: "sell", 2: "buy_limit", 3: "sell_limit",
+                   4: "buy_stop", 5: "sell_stop", 6: "buy_stop_limit", 7: "sell_stop_limit"}
+    orders = []
+    for o in (mt5.orders_get() or []):
+        d = o._asdict()
+        orders.append({
+            "ticket": d.get("ticket"),
+            "asset": rev.get(d.get("symbol")),
+            "symbol": d.get("symbol"),
+            "type": ORDER_TYPES.get(d.get("type"), str(d.get("type"))),
+            "volume": d.get("volume_current"),
+            "price": d.get("price_open"),
+            "sl": d.get("sl"), "tp": d.get("tp"),
+            "placedTs": int(d.get("time_setup", 0)) * 1000,
+            "comment": d.get("comment"),
+        })
+
     spreads = {}
     for asset, sym in sorted(smap.items()):
         try:
@@ -116,8 +135,10 @@ try:
         "ts": int(time.time() * 1000), "error": None,
         "account": account,
         "floating": {"total": floating, "positions": len(positions)},
-        "positions": positions, "spreads": spreads,
+        "positions": positions,
+        "orders": orders,   # pending (unfilled) orders — mt5.orders_get()
+        "spreads": spreads,
     }, indent=2) + "\n")
-    print(f"[mt5_report] ok — {len(positions)} positions, floating {floating:+.2f} {account.get('currency')}")
+    print(f"[mt5_report] ok — {len(positions)} positions, {len(orders)} pending orders, floating {floating:+.2f} {account.get('currency')}")
 finally:
     mt5.shutdown()

@@ -22,7 +22,6 @@ dated entry after each meaningful change; keep only the last 10 entries.
 - Install: `INSTALL-GUIDE.md`.
 
 ## Log
-
 ### 2026-11-10 14:10 UTC — Antigravity local agent — fast-forward sync to 39f6ed8 & production restart
 - Pulled latest 3 commits from GitHub (`06099fc`, `4220ebe`, `39f6ed8`).
 - Verified clean TypeScript compilation (`tsc --noEmit` exit 0).
@@ -128,3 +127,16 @@ dated entry after each meaningful change; keep only the last 10 entries.
   (daemon restart REQUIRED on user PC to pick up the new .mjs template).
 - Canonical user prompts documented in PROTOCOL.md: "desk round now" ·
   "desk review".
+
+### 2026-11-10 15:59 UTC — Z.ai sandbox agent — pending-order visibility + beacon refresh
+- mt5_report.py now emits: contract specs (contractSize/volume limits/tick value)
+  per symbol AND pending orders (mt5.orders_get → orders[]) — the desk can now
+  verify placements/cancels/fills of unexecuted tickets remotely.
+- USER placed R6-ADA-1 manually on MT5 (ticket 209375723, 1.00 lot @ 0.17772,
+  SL/TP untranslated, ADAUSD spread 2.19%) — recorded in state.json/log.md,
+  verdict CANCEL (instant-stop geometry), awaiting user decision.
+- WAKE.md beacon refreshed to current truth (was stale: ADA listed as unplaced).
+- Sizing verified vs specs: BTCUSD 1 lot = 1 BTC → R4-BTC-1 compliant size 0.06
+  lots ($23 risk, 0.5% mandate). ADA/XRP contractSize 100.
+- Local agent alive: fixed CRLF bug in desk_round.sh (dd6b637) that had blocked
+  local rounds; R7 should resume next cycle.
