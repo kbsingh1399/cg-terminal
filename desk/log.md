@@ -397,3 +397,19 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
   pending fresh round-engine pass + correlation caveat vs live BTC short.
 - Blocked: XRP spr 0.187% (closest to recovery) · ADA spr 2.18% · LTC basis 1.08%+spr 2.38% ·
   SOL/BNB/AVAX/DOGE/LINK feed dead (DIR-0003).
+## R17 · 2026-11-10 18:47 UTC · zai-desk
+
+**Market**: BTC 73,440.0 (-2.5%)  ETH 2,041.67 (-4.3%)  SOL 82.89 (-4.4%)  XAU 4,035.68 (-2.6%)  XAG 51.420 (-3.9%)
+**Bias (|score|≥2)**: BTC-7(TREND)  ADA-4(TREND)  DOGE-6(TREND)  LTC-5(TREND)  SOL-2(TREND)  BNB-3(TREND)  AVAX-2(TREND)  LINK-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R4-DOGE-3 re-debated: FOR 6/AGAINST 0 — stands
+- R7-LTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 6/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
