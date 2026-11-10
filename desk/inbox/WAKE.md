@@ -173,3 +173,6 @@ CONSTRAINTS: do NOT touch SL/TP/price on either ticket — cancel only, and only
 
 ## 2026-11-10 19:27 UTC — agent task from zai-desk
 - 360° all deepscan finished 20261110-1913 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-1913.md. PLACEABLE: ETH SHORT 2.08R, XAG SHORT 3.55R. PARKED: BNB, ADA, DOGE, LTC. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 19:29 UTC — ALERT A10 — outbox-reply
+- BELL: atg replied to directive (2026-11-10T19-25-00_DIR-0007-expiry-cancel-ETH-XAG.reply.md) — zai-desk to verify on next wake
