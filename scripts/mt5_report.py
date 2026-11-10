@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "desk" / "mt5.json"
-TERMINAL = "http://localhost:3000/api/cg"
+TERMINAL = "http://127.0.0.1:3000/api/cg"
 
 
 def perp_price(asset):
@@ -131,6 +131,33 @@ try:
         except Exception as e:
             spreads[sym] = {"ok": False, "reason": str(e)[:120]}
 
+    # DIR-0004: fetch funding & open interest positioning for top assets
+    positioning = {}
+    top_symbols = ["BTC", "ETH", "SOL", "BNB", "DOGE", "XAU"]
+    for s in top_symbols:
+        try:
+            with urllib.request.urlopen(f"{TERMINAL}/funding?sym={s}", timeout=3) as r:
+                f_data = json.loads(r.read())
+            with urllib.request.urlopen(f"{TERMINAL}/oi?sym={s}", timeout=3) as r:
+                oi_data = json.loads(r.read())
+            f_agg = f_data.get("aggregate", {})
+            oi_agg = oi_data.get("aggregate", {})
+            positioning[s] = {
+                "fundingPct8h": f_agg.get("fundingPct8h"),
+                "oiUsd": oi_agg.get("oiUsd"),
+                "oiDelta1hPct": oi_agg.get("oiDelta1hPct"),
+                "oiDelta4hPct": oi_agg.get("oiDelta4hPct"),
+                "oiDelta24hPct": oi_agg.get("oiDelta24hPct"),
+            }
+        except Exception as e:
+            positioning[s] = {"error": str(e)[:100]}
+
+    pos_file = ROOT / "desk" / "positioning.json"
+    pos_file.write_text(json.dumps({
+        "ts": int(time.time() * 1000),
+        "positioning": positioning,
+    }, indent=2) + "\n")
+
     OUT.write_text(json.dumps({
         "ts": int(time.time() * 1000), "error": None,
         "account": account,
@@ -138,6 +165,7 @@ try:
         "positions": positions,
         "orders": orders,   # pending (unfilled) orders — mt5.orders_get()
         "spreads": spreads,
+        "positioning": positioning,
     }, indent=2) + "\n")
     print(f"[mt5_report] ok — {len(positions)} positions, {len(orders)} pending orders, floating {floating:+.2f} {account.get('currency')}")
 finally:

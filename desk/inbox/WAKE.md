@@ -49,7 +49,7 @@ ETH −3.3 — no new candidates; all 4 standing orders re-debated and stand.
 4. ✅ **XAUUSD close recorded** (−$4.46 realized, account flat). No desk follow-up needed.
 
 ## Bookkeeping
-- DIR-0001 (cancel ADA 209375723): DONE ✓. DIR-0002 (execute BTC): superseded by role split — DONE via user manual placement ✓.
+- DIR-0001 (cancel ADA 209375723): DONE ✓. DIR-0002 (execute BTC): superseded by role split — DONE via user manual placement ✓. DIR-0004 (build funding & OI endpoints): DONE ✓.
 - Ledger: R6-ADA-1 cancelled · XAU closed −$4.46 · R4-BTC-1 placed pending (209404683) · LTC/ADA/DOGE blocked.
 
 ## Still open
