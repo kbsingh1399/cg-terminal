@@ -6,11 +6,15 @@
 #   4. commit + push desk/ changes (desk(round): ...)
 set -uo pipefail
 cd "$(dirname "$0")/.."
+# self-report to a TRACKED log (zai reads it via git; rounds.local.log is the
+# daemon's local copy). Also dumps environment — rounds must never fail silently.
+exec > >(tee -a desk/rounds.log) 2>&1
 export GIT_AUTHOR_NAME="kbsingh1399" GIT_AUTHOR_EMAIL="kbsingh1399@users.noreply.github.com"
 export GIT_COMMITTER_NAME="kbsingh1399" GIT_COMMITTER_EMAIL="kbsingh1399@users.noreply.github.com"
 TS=$(date -u +"%Y-%m-%dT%H%MZ")
 
 log() { echo "[desk_round $TS] $*"; }
+log "env: bash=${BASH:-?} v${BASH_VERSION:-?} · uname=$(uname -a 2>/dev/null | cut -c1-100) · pwd=$PWD"
 
 # ---- 1. sync (best effort; analysis proceeds regardless) -------------------
 git pull --rebase origin main >/dev/null 2>&1 && log "git: pulled" || log "git: pull failed (continuing offline)"
@@ -41,6 +45,7 @@ fi
 # mt5.python_cmd uses "python" for the same reason).
 PY="${DESK_PYTHON:-$(command -v python3 || command -v python || true)}"
 [ -z "$PY" ] && PY=python
+log "python resolved: $PY ($($PY --version 2>&1 || echo 'VERSION CHECK FAILED'))"
 "$PY" scripts/desk_round.py
 rc=$?
 if [ $rc -ne 0 ]; then
