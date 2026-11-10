@@ -41,22 +41,25 @@ const log = (m) => console.log(`[desk-daemon ${new Date().toISOString().slice(11
 const loadJson = (p, dflt) => { try { return JSON.parse(readFileSync(p, "utf8")); } catch { return dflt; } };
 const deskState = () => loadJson("desk/state.json", {});
 
-// ---------------- config (env overrides json) ----------------
-const raw = loadJson("desk/daemon.json", {});
-const envBool = (k, dflt) => (process.env[k] === undefined ? dflt : !["0", "false", "off"].includes(process.env[k]));
-const cfg = {
-  poll_secs: raw.poll_secs ?? 45,
-  round_every_min: raw.round_every_min ?? 15,
-  terminal_boot_cmd: raw.terminal_boot_cmd ?? "npm run dev",
-  mt5: {
-    enabled: envBool("DESK_MT5_ENABLED", raw.mt5?.enabled ?? true),
-    python_cmd: raw.mt5?.python_cmd ?? "python",
-    interval_secs: raw.mt5?.interval_secs ?? 300,
-    max_consecutive_errors: raw.mt5?.max_consecutive_errors ?? 10,
-  },
-  wake_cmd: raw.wake_cmd ?? "",
-  notify_cmd: raw.notify_cmd ?? "auto",
-};
+// ---------------- config (env overrides json, reloaded every cycle) ----------------
+function getConfig() {
+  const raw = loadJson("desk/daemon.json", {});
+  const envBool = (k, dflt) => (process.env[k] === undefined ? dflt : !["0", "false", "off"].includes(process.env[k]));
+  return {
+    poll_secs: raw.poll_secs ?? 45,
+    round_every_min: raw.round_every_min ?? 15,
+    terminal_boot_cmd: raw.terminal_boot_cmd ?? "npm run dev",
+    mt5: {
+      enabled: envBool("DESK_MT5_ENABLED", raw.mt5?.enabled ?? true),
+      python_cmd: raw.mt5?.python_cmd ?? "python",
+      interval_secs: raw.mt5?.interval_secs ?? 45,
+      max_consecutive_errors: raw.mt5?.max_consecutive_errors ?? 10,
+    },
+    wake_cmd: raw.wake_cmd ?? "",
+    notify_cmd: raw.notify_cmd ?? "python scripts/bell_alert.py",
+  };
+}
+let cfg = getConfig();
 
 // ---------------- daemon bookkeeping (local only, gitignored) ----------------
 const DSTATE = "desk/.daemon-state.json";
@@ -292,6 +295,7 @@ async function processInbox() {
 
 // ---------------- the cycle ----------------
 async function cycle() {
+  cfg = getConfig();
   const t0 = Date.now();
   await commitDesk("desk(daemon): auto-commit (pre-sync)");
   log(`sync: ${await gitSync()}`);
