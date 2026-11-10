@@ -54,3 +54,13 @@ No new order passed the gates. Standing orders re-debated: R4-BTC-1 6/1 · R7-LT
 - Levels are PERP prices → translate via live basisPct; SHORT fills at bid, SL on ask.
   |basis| > 0.5% or spread > 0.15% → SKIP + log. Sizing: equity × 0.5% risk mandate.
 - After any action: state.json update + EXEC/DIALOG entry in log.md + clear handled sections here.
+
+## 2026-11-10 17:07 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 0)
+- R9-ADA-1 ADA SHORT limit entry 0.1773 · stop 0.1796 · targets 0.1702 / 0.1692 / 0.1678 · R 3 · expires 2026-11-10 21:01 UTC
+- BASIS: levels are PERP prices (perpRef 0.1725). Before placing in MT5 read spreads.ADAUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.1725 vs 0.1758), h4 RSI 37.0, day -2.8%
+- [FOR] footprint: bull 41 / bear 60; recent: none <6h
+- [FOR] liquidation: long-liq magnet 0.1702 (str 92, ~$4M est, -1.36%) as target
+- [FOR] bookWalls: ±5% depth imbalance -0.144 (5m ago -0.228, rising bids); bid $0.01B vs ask $0.02B
+- [FOR] cvd: taker buy 48.5%, perpCvd -23, spotCvd -4, quadrant both-selling, latestDiv bull (stale/none)
+- → place on ADAUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
