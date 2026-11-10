@@ -1,0 +1,88 @@
+{
+ "version": 1,
+ "updated": "2026-11-10T18:12:00Z",
+ "note": "Machine-readable alert rules. atg daemon evaluates each MT5 snapshot cycle (300s); fires notify_cmd (bell) + appends WAKE.md, then sets fired='true' (oneShot) so it never repeats. zai-desk re-arms or edits on wakes. Level conditions use broker bid/ask from desk/mt5.json.",
+ "events": [
+  {
+   "id": "A1",
+   "type": "fill",
+   "sym": "BTCUSD",
+   "ticket": 209404683,
+   "condition": "pending order becomes position",
+   "action": "BELL + WAKE: BTC SHORT 0.06 filled @74,262.9 \u2014 ladder armed: partial 0.03 at 72,957, runner to TP 72,500; SL 74,664"
+  },
+  {
+   "id": "A2",
+   "type": "level",
+   "sym": "BTCUSD",
+   "condition": "price >= 74,500 while position open",
+   "action": "BELL + WAKE: BTC short danger zone \u2014 164 pts to SL 74,664, check for early exit",
+   "level": 74500,
+   "oneShot": true
+  },
+  {
+   "id": "A3",
+   "type": "level",
+   "sym": "BTCUSD",
+   "condition": "price <= 72,957 while position open",
+   "action": "BELL + WAKE: LADDER TRIGGER \u2014 close 0.03 now @ ~72,957 (banks ~$39), move SL to entry 74,262.9 (breakeven) on runner",
+   "level": 72957,
+   "oneShot": true
+  },
+  {
+   "id": "A4",
+   "type": "level",
+   "sym": "BTCUSD",
+   "condition": "price <= 72,550 while position open",
+   "action": "BELL + WAKE: TP proximity \u2014 runner ~140 pts from 72,500 target, consider final exit",
+   "level": 72550,
+   "oneShot": true
+  },
+  {
+   "id": "A5",
+   "type": "position-close",
+   "sym": "BTCUSD",
+   "condition": "position count drops to 0 (SL/TP/manual)",
+   "action": "BELL + WAKE: BTC position closed \u2014 capture close price + PnL for desk/log.md"
+  },
+  {
+   "id": "A6",
+   "type": "expiry",
+   "sym": "BTCUSD",
+   "ticket": 209404683,
+   "condition": "ts >= 18:53:42 UTC 2026-11-10 and order still pending",
+   "action": "execute DIR-0005 (cancel) then BELL: BTC order expired+cancelled",
+   "oneShot": true
+  },
+  {
+   "id": "A7",
+   "type": "broker-normalize",
+   "sym": "ADAUSD",
+   "condition": "spreadPct <= 0.15 and |basisPct| <= 0.5",
+   "action": "BELL + WAKE: ADA broker normalized \u2014 R9-ADA-1 (SHORT 0.1773/stop 0.1796/T1 0.1702, R 3.0) may be placeable",
+   "oneShot": true
+  },
+  {
+   "id": "A8",
+   "type": "broker-normalize",
+   "sym": "LTCUSD",
+   "condition": "spreadPct <= 0.15 and |basisPct| <= 0.5",
+   "action": "BELL + WAKE: LTC broker normalized \u2014 R7-LTC-1 (SHORT 51.42/51.92, R 4.3) may be placeable (note: debate basis stale >1h, needs fresh round first)",
+   "oneShot": true
+  },
+  {
+   "id": "A9",
+   "type": "broker-normalize",
+   "sym": "DOGEUSD",
+   "condition": "tick data returns (bid/ask non-null)",
+   "action": "BELL + WAKE: DOGE feed alive \u2014 R4-DOGE-3 (SHORT 0.06982/0.07025, R 4.5) may be placeable (needs fresh round)",
+   "oneShot": true
+  },
+  {
+   "id": "A10",
+   "type": "outbox-reply",
+   "condition": "new *.reply.md appears in desk/outbox/",
+   "action": "BELL: atg replied to a directive \u2014 zai-desk to verify on next wake"
+  }
+ ]
+}

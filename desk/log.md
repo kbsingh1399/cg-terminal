@@ -326,3 +326,9 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 ### Positions
 - no open positions
 
+### DIALOG · 2026-11-10 18:12 UTC · user ↔ zai-desk — alert coverage audit
+- Q (user): "I hope we are considering alerts as well."
+- AUDIT: existing = new-suggestion bell + infra-failure bell (atg daemon notify_cmd → bell_alert.py, wake_cmd still empty user-side); desk-side = 3x/day wakes with material-events chat rule. MISSING: fills, SL/TP/ladder level crossings, broker normalization, directive replies — all silent between desk wakes.
+- BUILT: desk/alerts.json v1 — 10 events (A1 fill BTC 209404683 + ladder arming; A2 SL-proximity 74,500; A3 LADDER TRIGGER 72,957 close 0.03 + SL→breakeven; A4 TP proximity 72,550; A5 position close capture; A6 expiry 18:53:42 → DIR-0005; A7-A9 ADA/LTC/DOGE broker normalization; A10 outbox replies).
+- DIR-0006 sent to atg: daemon event-diff + level-crossing + oneShot armed-state (desk/alerts.local.json, desk-owned alerts.json untouched) + 120s snapshot cadence while position open + optional Telegram. Test-fire evidence required in reply.
+- USER-SIDE (recommended, 30 seconds, only truly instant channel): MT5 Tools → Options → Notifications → enable push + install MT5 Mobile with MetaQuotes ID — then set native alerts at 74,500 / 72,957 / 72,550. Works even if both agents are down; phone push on any fill/SL/TP execution.
