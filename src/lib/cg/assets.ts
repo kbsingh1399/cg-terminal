@@ -1,12 +1,16 @@
 /**
- * Multi-asset registry — the 12 traded assets of the terminal.
+ * Multi-asset registry — the perp-scanned assets of the terminal.
  *
  * All venue instruments are REAL Coinglass instrument ids (verified live):
- *   - 10 crypto perps: BTC ETH SOL BNB XRP ADA AVAX DOGE LINK LTC
+ *   - 12 crypto perps: BTC ETH SOL BNB XRP ADA AVAX DOGE LINK LTC XLM XMR
  *     (Binance + OKX + Bybit + Hyperliquid aggregated futures)
- *   - 2 metals: XAU (gold) / XAG (silver) — listed as USDT perps on
- *     Binance/OKX/Bybit in 2026; Hyperliquid does not carry them yet,
- *     so the footprint aggregate falls back to 3 venues (handled).
+ *   - 4 metals/commodities: XAU (gold) / XAG (silver) / XPT (platinum) /
+ *     USO (WTI crude) — USDT perps on the crypto venues; Hyperliquid does
+ *     not carry them, so footprints aggregate over 1-3 venues.
+ *
+ * Tier-3 instruments (14 indices · 42 FX · 20 equities · UKO) have NO perp
+ * data anywhere — they live in src/lib/cg/classic.ts (Yahoo-backed quotes)
+ * and never enter this perp registry.
  *
  * Every downstream route derives its instrument keys from this table so
  * adding a new asset is a one-line change.
@@ -31,7 +35,9 @@ function mk(
   kind: "crypto" | "metal",
   priceDecs: number,
   tier: "fast" | "slow" = "slow",
-  hl = true
+  hl = true,
+  /** optional lead-instrument override (USO: no Binance perp — OKX lead) */
+  lead?: string
 ): AssetCfg {
   return {
     sym,
@@ -40,7 +46,7 @@ function mk(
     hl,
     tier,
     priceDecs,
-    leadKey: (s: string) => `Binance_${s}USDT`,
+    leadKey: (s: string) => lead ?? `Binance_${s}USDT`,
   };
 }
 
@@ -57,13 +63,17 @@ export const ASSETS: AssetCfg[] = [
   mk("LTC", "Litecoin", "crypto", 2),
   // 2026-11-10 broker-universe expansion (FundedNext audit + live Coinglass probe):
   // XLM (4-venue perp) and XMR (3-venue: Binance/Bybit/Hyperliquid — no OKX swap).
-  // XPT (Binance+OKX only) and USO (OKX only, no Binance kline) stay OUT until
-  // mk() supports a leadKey override + aggVenues venue branch — see
-  // desk/deepscan/EXPANSION-PLAN-20261110.md Phase 2b. UKO: no data at all.
   mk("XLM", "Stellar", "crypto", 4),
   mk("XMR", "Monero", "crypto", 3),
   mk("XAU", "Gold", "metal", 2, "slow", false),
   mk("XAG", "Silver", "metal", 3, "slow", false),
+  // 2026-11-11 expansion (user directive: metals + classic universe):
+  // XPT = platinum perp (Binance+OKX only — metals venue branch, no Hyperliquid).
+  // USO = WTI oil perp, OKX-LEAD (no Binance kline — the registry's only
+  // non-Binance lead; see leadInstr() for the centralized derivation).
+  // UKO (Brent) has zero perp data on every Coinglass venue → classic.ts.
+  mk("XPT", "Platinum", "metal", 2, "slow", false),
+  mk("USO", "WTI Crude Oil", "metal", 2, "slow", false, "OKX_USO-USDT-SWAP"),
 ];
 
 export const ASSET_SYMS = ASSETS.map((a) => a.sym);
@@ -78,7 +88,17 @@ export function isAsset(sym: string): boolean {
   return bySym.has(sym.toUpperCase());
 }
 
-/** Perp aggregation venues for a symbol — mirrors the fp route's VENUES. */
+/** Centralized lead-instrument derivation — the ONLY place that builds the
+ *  kline/lead key (multi-agent review A2: 5 call sites hardcoded
+ *  `Binance_${sym}USDT`, which would silently keep USO on a dead Binance
+ *  lead). Unknown symbols keep the legacy Binance form. */
+export function leadInstr(sym: string): string {
+  return assetOf(sym)?.leadKey(sym) ?? `Binance_${sym.toUpperCase()}USDT`;
+}
+
+/** Perp aggregation venues for a symbol — mirrors the fp route's VENUES.
+ * The registry's LEAD instrument goes first (fp-load merges onto keys[0]):
+ * USO's lead is OKX (no Binance kline), every other asset leads on Binance. */
 export function fpVenues(sym: string): { id: string; key: string; usd: boolean }[] {
   const s = sym.toUpperCase();
   const a = assetOf(s);
@@ -88,6 +108,9 @@ export function fpVenues(sym: string): { id: string; key: string; usd: boolean }
     { id: "bybit-perp", key: `Bybit_${s}USDT`, usd: false },
   ];
   if (!a || a.hl) venues.push({ id: "hyperliquid-perp", key: `Hyperliquid_${s}-USD`, usd: true });
+  const lead = a?.leadKey(s);
+  const li = venues.findIndex((v) => v.key === lead);
+  if (li > 0) venues.unshift(...venues.splice(li, 1));
   return venues;
 }
 
@@ -117,6 +140,7 @@ export function aggVenues(sym: string, market: "futures" | "spot"): string[] {
   const a = assetOf(s);
   if (market === "futures") {
     if (s === "BTC" || s === "ETH") return ["Binance", "OKX", "Gate", "Bitget", "Hyperliquid"];
+    if (s === "USO") return []; // OKX-only oil perp — no heatmap aggregate pair exists (honest 400, not a stream error)
     if (a?.kind === "metal") return ["Binance"];
     return ["Binance", "Hyperliquid"];
   }

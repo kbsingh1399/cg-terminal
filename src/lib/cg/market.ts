@@ -21,7 +21,7 @@ import {
   type AuctionSet,
   type VwapResult,
 } from "./indicators";
-import { assetOf, type AssetCfg } from "./assets";
+import { assetOf, leadInstr, type AssetCfg } from "./assets";
 
 export interface MarketSnapshot {
   ok: boolean;
@@ -69,7 +69,7 @@ export async function buildMarketSnapshot(symRaw: string): Promise<MarketSnapsho
     throw hit.err ?? new Error("snapshot unavailable");
   }
   const cfg: AssetCfg | undefined = assetOf(sym);
-  const lead = `Binance_${sym}USDT`;
+  const lead = leadInstr(sym); // centralized (review A2): USO rides an OKX lead
   const [m15Raw, h1Raw, h4Raw, d1Raw] = await Promise.all([
     fetchKlines(lead, "m15", 1000),
     fetchKlines(lead, "h1", 1000),

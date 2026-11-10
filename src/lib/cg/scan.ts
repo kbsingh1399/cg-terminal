@@ -31,7 +31,7 @@ import {
 import { loadFpBars } from "./fp-load";
 import { buildMarketSnapshot, type MarketSnapshot } from "./market";
 import { buildLiqModel, liqStats, type RawLiqPayload, type KeyLevel } from "./liq-model";
-import { ASSETS, assetOf, liqVenues } from "./assets";
+import { ASSETS, assetOf, leadInstr, liqVenues } from "./assets";
 import { getLivePrice } from "../live/server-price";
 import { emit, type CgNotification } from "./notify";
 import { fmtAssetPrice } from "./assets";
@@ -474,7 +474,7 @@ async function scanCvd(sym: string) {
   const st = stateOf(sym);
   const venues = liqVenues(sym);
   const [klineR, ...flowRs] = await Promise.all([
-    cgGet(`/api/v2/kline?symbol=${encodeURIComponent(`Binance_${sym}USDT#kline`)}&interval=m15&minLimit=false&limit=200`, 5 * 60_000) as Promise<unknown>,
+    cgGet(`/api/v2/kline?symbol=${encodeURIComponent(`${leadInstr(sym)}#kline`)}&interval=m15&minLimit=false&limit=200`, 5 * 60_000) as Promise<unknown>,
     ...venues.map((v) => cgGet(`/api/v2/kline?symbol=${encodeURIComponent(`${v.key}#bs_usd`)}&interval=m15&minLimit=false&limit=200`, 5 * 60_000).catch(() => null)),
   ]);
   const kr = Array.isArray(klineR) ? klineR : ((klineR as { data?: unknown[] }).data ?? []);

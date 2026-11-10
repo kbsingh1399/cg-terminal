@@ -23,7 +23,7 @@ import { makeObeToken } from "./crypto";
 import { decodeRow, fetchAggregateStream, rebin, type BookSnapshot } from "./book-walls";
 import { append, lastTs, markPoll, markBackfilling, stat, gapCount } from "./store";
 import type { KlineRow } from "./types";
-import { ASSETS, aggVenues, liqVenues } from "./assets";
+import { ASSETS, aggVenues, leadInstr, liqVenues } from "./assets";
 import { startScanner } from "./scan";
 
 const STEP_MS = 900_000; // m15 master step
@@ -122,7 +122,7 @@ async function pollKline() {
 /** round-robin kline poller for every asset of the registry */
 let assetPollIdx = 0;
 async function pollAssetKlines() {
-  const list = ASSETS.map((a) => `Binance_${a.sym}USDT`);
+  const list = ASSETS.map((a) => leadInstr(a.sym));
   for (let k = 0; k < 2; k++) {
     const inst = list[assetPollIdx % list.length];
     assetPollIdx++;
@@ -342,7 +342,7 @@ async function backfillKlineAndFlows(days: number) {
 async function backfillAllAssets(days: number) {
   const backMs = days * 86_400_000;
   for (const a of ASSETS) {
-    const inst = `Binance_${a.sym}USDT`;
+    const inst = leadInstr(a.sym);
     const name = `kline:${inst}:m15`;
     const stored = lastTs(name, keyKline) ?? 0;
     const targetFrom = Math.max(Date.now() - backMs, stored);
@@ -494,8 +494,8 @@ export function engineStatus() {
   const assetSeries: { asset: string; count: number; lastTs: number | null; lastError: string | null; gaps: number }[] = [];
   for (const a of ASSETS) {
     if (a.sym === "BTC") continue;
-    const s = stat(`kline:Binance_${a.sym}USDT:m15`, keyKline);
-    assetSeries.push({ asset: a.sym, count: s.count, lastTs: s.lastTs, lastError: s.lastError, gaps: gapCount(`kline:Binance_${a.sym}USDT:m15`, keyKline, STEP_MS) });
+    const s = stat(`kline:${leadInstr(a.sym)}:m15`, keyKline);
+    assetSeries.push({ asset: a.sym, count: s.count, lastTs: s.lastTs, lastError: s.lastError, gaps: gapCount(`kline:${leadInstr(a.sym)}:m15`, keyKline, STEP_MS) });
   }
   // per-instrument flows
   const flowNames = engine.instrumentKeys ?? [];
