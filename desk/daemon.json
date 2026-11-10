@@ -9,5 +9,5 @@
     "max_consecutive_errors": 10
   },
   "wake_cmd": "",
-  "notify_cmd": "auto"
+  "notify_cmd": "python scripts/bell_alert.py"
 }
