@@ -1,7 +1,7 @@
 # WAKE — pending tasks for atg-exec (daemon appends; agent handles then clears)
 
 <!-- DIRECTIVE PROTOCOL v1 ACTIVE (16:10 UTC) — spec: desk/PROTOCOL.md §Directive protocol.
-     zai now issues structured directives via desk/inbox/*DIR-*.json. Every directive
+     zai issues structured directives via desk/inbox/*DIR-*.json. Every directive
      REQUIRES a reply file desk/outbox/<same-basename>.reply.md:
      VERDICT (EXECUTED|COUNTER|REJECTED|DEFERRED) / CHECKS / REASONING / ACTION / EVIDENCE.
      Reasoning mandate: NEVER execute on trust — re-derive every number yourself
@@ -9,80 +9,42 @@
      opinion; if you disagree → COUNTER, don't execute.
      On activation also overwrite desk/outbox/AGENT-STATUS.md (heartbeat). -->
 
-## 16:10 UTC — 3 DIRECTIVES QUEUED (full texts in desk/inbox/, appended below by the daemon)
+## ROLE SPLIT (user directive 16:44 UTC) — supersedes DIR-0002 execution
+The USER now places trades manually at MT5. atg-exec's market-side role = VERIFY every
+placement against the desk card (reply contract below). zai-desk runs rounds + arbitration.
 
-1. **DIR-0001 · URGENT · CANCEL_ORDER** — ADA ticket 209375723 (desk verdict CANCEL:
-   spread 2.19% → instant-stop geometry; math in log.md EXEC 15:47). Risk-reducing.
-2. **DIR-0002 · HIGH · EXECUTE_ORDER** — R4-BTC-1 BTC SHORT (R 3.5, debate 7/2):
-   translate ALL levels via live basisPct, size ≈ 0.06 lots (never 1.00), your
-   concurrence required. Expires 18:53 UTC.
-3. **DIR-0003 · INVESTIGATE** — find tradeable names for the 5 no-tick symbols
-   (DOGE/AVAX/BNB/LINK/SOL) → propose symbol_map CONFIG? entry; confirm ADA cancel;
-   verify rounds resumed (desk_round.sh was EMPTIED by the CRLF commit dd6b637 —
-   restored + hardened in the commit that carries this beacon; R7 should follow).
+## 16:49 UTC — R8 DESK BRIEF (round run 16:46, engine v3)
+Bias: BTC −7.2 · LTC −7.1 · ADA −3.8 · XAG −3.3 · AVAX/BNB −2.7 · ETH −2.1 · DOGE −2.0 · XAU +2.0.
+No new order passed the gates. Standing orders re-debated: R4-BTC-1 6/1 · R7-LTC-1 6/0 · R4-DOGE-3 4/1.
+
+1. **VERIFY-TASK (when user places BTC)** — R4-BTC-1 BTC SHORT is the only broker-compliant trade.
+   Card (basis −0.010%, spread 0.032% at 16:40): SELL LIMIT 0.06 lots · entry 74,262.9 ·
+   SL 74,664.6 (ask-trigger, spread-padded; structural stop = perp 74,648.7) · TP 72,957.5 ·
+   risk $22.70 = 0.49% equity · expires 18:53 UTC. When the ticket appears in mt5.json orders[]:
+   re-derive ALL levels + lots yourself, check entry/SL/TP translation & spread rule, then write
+   desk/outbox/VERIFY-R4-BTC-1.reply.md (VERDICT/CHECKS/REASONING/EVIDENCE) + state.json → placed.
+2. **DO NOT place LTC** — R7-LTC-1 is perp-valid (6/0) but broker-blocked: LTCUSD basis +0.841%
+   (> 0.5%) AND spread 2.40% (> 0.15%) at 16:40. Same pathology as ADA. Re-check each round.
+3. **DO NOT place DOGE** — DOGEUSD still no tick (broker symbol unknown; DIR-0003 open). Expires 18:53.
+4. ⚠ **XAUUSD BUY 0.01 @ 4022.68 open, NO SL/TP** (user UI Market Buy ~16:37). Desk advice to user:
+   SL 3,999.4 (risk $23.3 = 0.50%, just under 4,000 psych). XAU confluence only +2.0 — early vs
+   engine framework. If user asks you: confirm the SL number from contract spec (100 oz/lot, tick $0.01/point).
+
+## Resolved / bookkeeping
+- DIR-0001 (cancel ADA 209375723): DONE — orders[] empty at 16:40, no ADA position. state.json → cancelled.
+- DIR-0002 (execute BTC): SUPERSEDED by role split above — verify, don't execute. Reply still welcome.
+
+## Still open
+- **DIR-0003 · INVESTIGATE** — find tradeable names for DOGEUSD/AVAXUSD/BNBUSD/LINKUSD/SOLUSD
+  (mt5.symbols_get('*DOGE*') etc.); propose symbol_map CONFIG? entry in log.md; report account state.
+  Reply: desk/outbox/2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md
 
 ## User-decision items (zai escalation)
-- ADA cancel: DIR-0001 issued per desk verdict — say **"keep ADA"** to countermand.
-- Autonomy is level 1 (REASON-EXECUTE). Say **"autonomy 2"** to let risk-reducing
-  acts run without directives, or **"autonomy 3"** for full initiative within caps.
-- `wake_cmd` still empty — the daemon can toast but cannot launch the agent itself;
-  set it in desk/daemon.json if a CLI/URL trigger exists (uses {msg} placeholder).
+- XAU long: add SL 3,999.4? (naked 0.01 lot currently, −$1.54 floating)
+- Autonomy is level 1 (REASON-EXECUTE). Say "autonomy 2" to let risk-reducing acts run without directives.
+- `wake_cmd` still empty — daemon can toast but cannot launch the agent; set it in desk/daemon.json if a CLI/URL trigger exists.
 
 ## Standing rules (unchanged)
 - Levels are PERP prices → translate via live basisPct; SHORT fills at bid, SL on ask.
   |basis| > 0.5% or spread > 0.15% → SKIP + log. Sizing: equity × 0.5% risk mandate.
-- After any action: state.json update + EXEC/DIALOG entry in log.md + clear handled
-  sections here + heartbeat file refresh.
-
-## 2026-11-10 16:11 UTC — agent task from zai-desk
-- DIRECTIVE DIR-0001 · kind CANCEL_ORDER · priority URGENT (risk-reducing)
-TARGET: MT5 pending ticket 209375723 — ADAUSD SELL LIMIT 1.00 lot @ 0.17772, SL 0.1783, TP 0.1709 (order R6-ADA-1).
-GOAL: cancel the ticket and record it.
-WHY (desk math, desk/log.md EXEC entry 15:47): ADAUSD spread 2.19–2.20% vs rule max 0.15%; at any fill bid=0.17772 the ask ≈ 0.1815 > SL 0.1783 → the short's SL triggers on ASK → instant stop-out ≈ −0.0038/unit. SL/TP were also left untranslated (correct translated: SL 0.17882 / TP 0.17139). There is no compliant version of this trade on this broker quote.
-CONSTRAINTS (hard):
-- Cancel ONLY this ticket. No other MT5 actions.
-- If the user has countermanded ("keep ADA"), reply DEFERRED with that note instead.
-VERIFY CHECKLIST (do these yourself, log observed values in your reply):
-1. Ticket 209375723 still pending (mt5.orders_get / MT5 UI). If it FILLED or is gone, reply EXECUTED with what you found + resulting position state.
-2. ADAUSD spread still > 0.15% in a fresh quote you pull yourself.
-3. No user countermand received in desk/log.md / WAKE.md since 15:47.
-REPLY: desk/outbox/2026-11-10T16-10-00_DIR-0001-cancel-ada-order.reply.md per the reply contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE). Also: state.json R6-ADA-1 → status "cancelled" + EXEC entry in log.md.
-AUTONOMY NOTE: at autonomy_level 2+ this action would not even need a directive — it is risk-reducing by definition.
-
-## 2026-11-10 16:11 UTC — agent task from zai-desk
-- DIRECTIVE DIR-0002 · kind EXECUTE_ORDER · priority HIGH (risk-adding — full checklist + your concurrence required)
-TARGET: order R4-BTC-1 in desk/state.json — BTC SHORT limit 74,270.3 · stop 74,648.7 · T1 72,964.8 · R 3.5 · expires 18:53 UTC (perp levels; perpRefPrice 74,525.6). Debate FOR 7 / AGAINST 2 (full votes in state.json).
-GOAL: place it on BTCUSD in MT5 — correctly this time (the ADA placement translated only the entry; ALL THREE levels must be translated).
-CONSTRAINTS (hard — any fail → do not place, reply COUNTER/DEFERRED with values):
-- Translate EVERY level: mt5Level = perpLevel × (1 + basisPct/100) using LIVE desk/mt5.json BTCUSD.basisPct (was ≈ −0.02% at 16:04; recompute).
-- BTCUSD spreadPct ≤ 0.15% and |basisPct| ≤ 0.5% at placement moment.
-- SIZING: lots = (equity × 0.5%) / (stopDistance × contractSize 1). Equity ≈ 4,654 → budget ≈ $23.27 → stop dist ≈ 378.4 → ≈ 0.06 lots (verify volumeMin 0.01 / step 0.01). NEVER 1.00 lot (8.1% risk).
-- Order still status "suggested", debate still FOR > AGAINST, not expired, positions < max 4.
-- SHORT fills at bid; SL triggers on ASK — pad the SL by the spread ($24 ≈ 0.033%).
-VERIFY CHECKLIST (re-derive, do not trust my numbers):
-1. Recompute all three translated levels yourself from live basisPct.
-2. Recompute the lot size from live equity.
-3. Re-read the debate[] in state.json — do you agree FOR wins? Note the 2 AGAINST (ask wall $22.2M @ 75,812; short-liq magnet 75,126.9 str 100 between entry and stop — sweep risk).
-4. Your OWN read: h4/d1 structure right now, any red-folder news next 30 min, session quality. Would YOU take this short? If NO → COUNTER.
-REPLY: desk/outbox/2026-11-10T16-10-00_DIR-0002-place-btc-short.reply.md + state.json updates + EXEC entry.
-USER NOTE: the user may countermand anytime; if they have said otherwise anywhere, that wins.
-
-## 2026-11-10 16:11 UTC — agent task from zai-desk
-- DIRECTIVE DIR-0003 · kind INVESTIGATE · priority normal (no market risk)
-GOAL: make the 5 dead broker symbols tradeable + close the visibility gaps.
-TASKS:
-1. DOGEUSD / AVAXUSD / BNBUSD / LINKUSD / SOLUSD show "no tick" in desk/mt5.json. Query the broker's symbol universe (python: mt5.symbols_get('*DOGE*') etc.) and find the exact tradeable names (suffixes like .a, .r, .pro are common on FundedNext). Report the correct config.symbol_map edits as a CONFIG? entry in desk/log.md (config is human-owned — do NOT edit state.json config yourself; the user applies it).
-2. While you're in MT5: confirm the ADA cancel outcome (DIR-0001) and report account state.
-3. Check whether rounds are running again (R7+ in desk/log.md) after the desk_round.sh restore (commit follows this directive) — the CRLF "fix" commit dd6b637 had EMPTIED the file (0 bytes), which is why rounds silently stopped; it is now restored + hardened with a python fallback.
-REPLY: desk/outbox/2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md with findings + proposed symbol_map table.
-
-## 2026-11-10 16:29 UTC — new suggested order — place in MT5 (debate FOR 6/AGAINST 0)
-- R7-LTC-1 LTC SHORT limit entry 51.42 · stop 51.92 · targets 49.27 / 49.03 / 48.44 · R 4.3 · expires 2026-11-10 20:29 UTC
-- BASIS: levels are PERP prices (perpRef 50.07). Before placing in MT5 read spreads.LTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
-- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (50.07 vs 50.96), h4 RSI 38.3, day -2.6%
-- [FOR] footprint: bull 34 / bear 45; recent: none <6h
-- [FOR] liquidation: long-liq magnet 49.27 (str 56, ~$1M est, -1.49%) as target
-- [FOR] bookWalls: ±5% depth imbalance +0.046 (5m ago -0.070, rising bids); bid $0.01B vs ask $0.01B
-- [FOR] cvd: taker buy 48.0%, perpCvd -22, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
-- [FOR] notifications: 6h weighted bias -1.0 (18 events)
-- → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+- After any action: state.json update + EXEC/DIALOG entry in log.md + clear handled sections here.

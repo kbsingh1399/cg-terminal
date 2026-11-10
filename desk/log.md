@@ -128,3 +128,30 @@ entries. All timestamps UTC.
 ### Positions
 - no open positions
 
+## R8 · 2026-11-10 16:46 UTC · zai-desk
+
+**Market**: BTC 73,021.1 (-3.1%)  ETH 2,019.56 (-5.4%)  SOL 82.02 (-5.4%)  XAU 4,028.29 (-2.8%)  XAG 51.400 (-3.9%)
+**Bias (|score|≥2)**: BTC-7  LTC-7  AVAX-3  ADA-4  XAG-3  BNB-3  ETH-2  DOGE-2  XAU+2
+
+### Opportunities (engine v3 — debate-gated, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R4-BTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R4-DOGE-3 re-debated: FOR 4/AGAINST 1 — stands
+- R7-LTC-1 re-debated: FOR 6/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
+
+### EXEC · 2026-11-10 16:49 UTC · zai-desk — R8 desk brief for MANUAL placement
+- Account: equity 4,652.88 · balance 4,654.42 · margin_level 2,892% · risk budget 0.5% = $23.26
+- R6-ADA-1 ticket 209375723 confirmed GONE (orders[] empty 16:40, no ADA position) → status cancelled. DIR-0001 outcome verified remotely.
+- ⚠ OPEN POSITION FOUND: XAUUSD BUY 0.01 lot @ 4022.68 (UI Market Buy ~16:37 UTC), NO SL, NO TP. Floating -1.54.
+  Desk advice: add SL 3999.4 (risk $23.3 = 0.50% — sits just below 4,000 psych level). XAU confluence only +2.0 (< 3.0 order threshold): news flow bullish, trend/vwap not yet supportive — position is early vs engine framework, discipline via stop.
+- R4-BTC-1 (BTC SHORT, R 3.5, debate 6/1): ONLY broker-compliant trade. Gates: basis -0.010% ✓, spread 0.032% ✓.
+  MT5 card (re-verify basis at click time): SELL LIMIT 0.06 lots · entry 74,262.9 · SL 74,664.6 (ask-trigger, padded) · TP 72,957.5 · risk $22.70 (0.49%) · expires 18:53 UTC.
+- R7-LTC-1 (LTC SHORT, R 4.3, debate 6/0): BROKER BLOCKED — basis +0.841% (>0.5%) AND spread 2.40% (>0.15%). Skip; re-check each round.
+- R4-DOGE-3 (DOGE SHORT, R 4.5, debate 4/1): BROKER BLOCKED — no tick (symbol name TBD, DIR-0003).
+- Role split (user directive 16:44): USER places manually at MT5 · atg-exec VERIFIES (reply contract on the placement card) · zai-desk runs rounds + arbitration.
