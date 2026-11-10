@@ -654,3 +654,19 @@ Re-ran 360 all post-fix: 12/12 all sources OK, digest DIGEST-20261110-1952, broa
 ### DEEPSCAN · 2026-11-10 20:20 UTC · zai-desk — 360° on-demand deep analysis (XLM+XMR)
 - XLM: desk/deepscan/XLM-20261110-2020.md
 - XMR: desk/deepscan/XMR-20261110-2020.md
+
+### DEEPSCAN · 2026-11-10 20:23 UTC · zai-desk — 360° on-demand deep analysis (all)
+- BTC: desk/deepscan/BTC-20261110-2023.md
+- ETH: desk/deepscan/ETH-20261110-2023.md
+- SOL: desk/deepscan/SOL-20261110-2023.md
+- BNB: desk/deepscan/BNB-20261110-2023.md
+- XRP: desk/deepscan/XRP-20261110-2023.md
+- ADA: desk/deepscan/ADA-20261110-2023.md
+- AVAX: desk/deepscan/AVAX-20261110-2023.md
+- DOGE: desk/deepscan/DOGE-20261110-2023.md
+- LINK: desk/deepscan/LINK-20261110-2023.md
+- LTC: desk/deepscan/LTC-20261110-2023.md
+- XLM: desk/deepscan/XLM-20261110-2023.md
+- XMR: desk/deepscan/XMR-20261110-2023.md
+- XAU: desk/deepscan/XAU-20261110-2023.md
+- XAG: desk/deepscan/XAG-20261110-2023.md

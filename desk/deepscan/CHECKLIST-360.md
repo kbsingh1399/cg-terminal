@@ -1,13 +1,13 @@
 # CHECKLIST-360 · Master checklist for a 360° deep-research run
 
-v1.3 · 2026-11-11 · owner: zai-desk · engine: v3.2 · review: after every 10 runs or on data-source change
+v1.4 · 2026-11-10 20:30 UTC · owner: zai-desk · engine: v3.2 (deepscan v3.3 symbols) · review: after every 10 runs or on data-source change
 
 **360° = all 12 assets × 8 dimensions × every data point the terminal exposes,
 ending in a fully constructed limit-trade list where EVERY tab carries a verdict
 (✓/✗/○) and a WRITTEN justification tied to the trade's levels, plus a
 "WHY THIS TRADE" narrative — no data point may be silently dropped, no
 number may go unexplained (user mandate 2026-11-10, reinforced 18:55 UTC).**
-Universe: BTC · ETH · SOL · BNB · XRP · ADA · AVAX · DOGE · LINK · LTC · XAU · XAG
+Universe (14, v1.4): BTC · ETH · SOL† · BNB† · XRP · ADA · AVAX† · DOGE · LINK · LTC · XLM · XMR · XAU · XAG († NOT LISTED on FundedNext — perp-side watchlist only, always PARKED-not-listed)
 Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 ---
@@ -29,7 +29,8 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 - [ ] `git pull --rebase` — sync daemon pushes (45s poll, 300s mt5 push)
 - [ ] Terminal server health: `curl -s -m 3 localhost:3000/api/cg/market?sym=BTC` → HTTP 200
-      (if down: `node scripts/start-server.mjs` from repo root, wait for 200; needs `.next/standalone`)
+      (sandbox: dev server `npm run dev` — hot-reloads src/lib/cg/assets.ts; start-server.mjs + `.next/standalone`
+      applies to the production box only. Record which terminal served the run.)
 - [ ] `desk/mt5.json` fresh (< 5 min old) — broker basis/spread/exposure sections depend on it
 - [ ] Note `state.json → analysis.last_round` + watchlist (for `360 top` ranking and cross-checks)
 - [ ] Check WAKEUP.md queue for URGENT items that outrank the scan
@@ -38,7 +39,8 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 - [ ] Execute trigger / command; expect per-symbol stdout: `=== SYM → path (N lines, all sources OK | k gap(s))`
 - [ ] Any endpoint gap → re-run that one symbol once; persistent gap stays visible in the report header (`data gaps:`)
-- [ ] 12-asset full run ≈ 2-4 min (10 endpoints per asset, up to 90s timeout each)
+- [ ] 14-asset full run ≈ 2.5-4.5 min (10 endpoints per asset, up to 90s timeout each); unknown
+      symbols now HARD-ERROR (staging gate = DECS entry; legacy silent BTC fallback removed)
 
 ## D · Per-asset review — the 8 sections every report contains
 

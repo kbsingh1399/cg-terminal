@@ -1,6 +1,6 @@
 # EXPANSION PLAN · 360° Universe Across Verified FundedNext Assets
 
-v1.0 · 2026-11-10 20:10 UTC · owner: zai-desk · method: Karpathy guidelines (assumptions surfaced, surgical changes, verifiable criteria)
+v1.1 · 2026-11-10 20:30 UTC (post multi-agent review) · owner: zai-desk · method: Karpathy guidelines (assumptions surfaced, surgical changes, verifiable criteria)
 inputs: user broker audit (FundedNext-Server, acct 11808165, 96 instruments) · live Coinglass web-API probe (19:55–20:00 UTC, this desk) · repo source audit (`src/lib/cg/assets.ts`, `scripts/desk_deepscan.py`, `desk/state.json`)
 
 ---
@@ -77,7 +77,7 @@ Surgical diff, every line traceable to the directive:
 ### Phase 2a — TERMINAL registry adds ✅ CODE COMMITTED, ⏳ REBUILD REQUIRED
 `src/lib/cg/assets.ts`: `mk("XLM","Stellar","crypto",4)` + `mk("XMR","Monero","crypto",3)` (both `hl:true` — Hyperliquid verified for both). Verification below (§6). The running sandbox server serves the old standalone build — **takes effect after `next build` + standalone redeploy** (same procedure the daemon used originally).
 
-### Phase 2b — XPT/USO extension (planned, NOT coded)
+### Phase 2b — XPT/USO extension (**BLOCKED by multi-agent quant review** — see REVIEW-MULTIAGENT-20261110.md Q1-Q3: str≥40 is rank-normalized per symbol, so thin books pass phantom magnets; ship only after engine v3.3 data-depth gates. Implementation when unblocked: XPT = `mk("XPT","Platinum","metal",2,"slow",false)` — the existing metals branch handles it, NO new abstraction; USO additionally needs centralized lead derivation — 5 hardcoded `Binance_${sym}USDT` call sites)
 Two changes, both small but real:
 1. `mk()` hardcodes `leadKey = Binance_${s}USDT`. USO has no Binance kline → add an optional lead-override param (default unchanged): `mk("USO","WTI Crude","commodity",2,"slow",false, lead\`OKX_USO-USDT-SWAP\`)`.
 2. `aggVenues()`: non-BTC/ETH crypto returns `["Binance","Hyperliquid"]` — Hyperliquid carries neither XPT nor USO → heatmap stream errors ("No supported futures heatmap pair", the exact trap the code comment warns about). Add a commodity branch mirroring the metals branch (`["Binance"]` for XPT; `["OKX"]` for USO).
@@ -117,9 +117,9 @@ Current sizing is **spec-driven and class-agnostic**: `lots = risk_usd / (stopDi
 | 2 | Resolver correct | `DOGE §7 shows "DOGUSD"`, `LINK §7 shows "LNKUSD"` (reports 20261110-2009) | ✅ pass |
 | 3 | NOT_LISTED handling | `SOL §7 "NOT LISTED…"` + §9 `PARKED (not listed on FundedNext)` + card recovery | ✅ pass |
 | 4 | No regression | `360 all` → 12/12 "all sources OK", digest+broadcast written | ✅ pass (20261110-2009) |
-| 5 | DOGE/LINK tradeable | next daemon `mt5.json` push carries DOGUSD/LNKUSD spread keys → §7 shows basis/spread/TRADEABLE | ⏳ pending atg-exec feed refresh |
-| 6 | Terminal serves XLM/XMR | after rebuild: `GET /api/cg/assets` includes XLM,XMR; `GET /api/cg/market?sym=XLM` → 200 with price | ⏳ pending rebuild |
-| 7 | XLM 360 round-trip | `360 XLM XMR` produces full 8-section reports with no venue-gap errors | ⏳ blocked by 6 |
+| 5 | DOGE/LINK + XLM/XMR tradeable | next daemon `mt5.json` push carries DOGUSD/LNKUSD/XLMUSD/XMRUSD spread keys → §7 shows basis/spread/TRADEABLE | ⏳ DIR-0008 verification task |
+| 6 | Terminal serves XLM/XMR | `GET /api/cg/assets` includes XLM,XMR; `market?sym=XLM` → 200 | ✅ pass on sandbox terminal (dev hot-reload, verified 20:15 UTC: 14 syms, XLM 0.1448); Windows prod box needs rebuild (DIR-0008) |
+| 7 | XLM 360 round-trip | `360 XLM XMR` produces full 8-section reports with no venue-gap errors | ✅ pass (reports 20261110-2020, all sources OK, both scorecards resolve; XLMUSD/XMRUSD broker keys pending feed) |
 
 ## 7 · Assumptions (surfaced, per Karpathy rule 1)
 
