@@ -1,0 +1,651 @@
+(!(function () {
+  try {
+    var t =
+        "u" > typeof window
+          ? window
+          : "u" > typeof global
+            ? global
+            : "u" > typeof globalThis
+              ? globalThis
+              : "u" > typeof self
+                ? self
+                : {},
+      e = new t.Error().stack;
+    e &&
+      ((t._sentryDebugIds = t._sentryDebugIds || {}),
+      (t._sentryDebugIds[e] = "e8f78abc-3257-4b35-aa97-fe587476bd89"),
+      (t._sentryDebugIdIdentifier =
+        "sentry-dbid-e8f78abc-3257-4b35-aa97-fe587476bd89"));
+  } catch (t) {}
+})(),
+  (self.webpackChunk_N_E = self.webpackChunk_N_E || []).push([
+    [13e3, 33016, 59519, 64458],
+    {
+      3160: (t, e, n) => {
+        "use strict";
+        n.d(e, { Y: () => a });
+        var s = n(68635);
+        n(16647);
+        var o = n(83617);
+        async function a(t) {
+          o.Ru?.language == "zh" && "en_ex_okx" == t.id
+            ? ((t.from = "zh_ex_okx"), (t.to = "zh_ex_okx"))
+            : ((t.from = t.id), (t.to = t.id));
+          let { data: e } = await (0, s.jzg)(t);
+          e && window.open(e, "_blank");
+        }
+        n(35850);
+      },
+      4140: (t) => {
+        "use strict";
+        t.exports = "SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED";
+      },
+      12792: (t, e, n) => {
+        "use strict";
+        n.d(e, { V: () => o, y: () => s });
+        let s = (t, e = "BTC") => (t === e ? {} : { symbol: t }),
+          o = (t) => (t ? null : {});
+      },
+      14842: (t, e, n) => {
+        (window.__NEXT_P = window.__NEXT_P || []).push([
+          "/pro/futures/LiquidationHeatMap",
+          function () {
+            return n(98815);
+          },
+        ]);
+      },
+      31057: (t, e, n) => {
+        "use strict";
+        n.d(e, { A: () => _ });
+        var s = n(6029),
+          o = n(55729),
+          a = n(83617),
+          i = n(16647),
+          r = n(97117);
+        n(82203);
+        var l = n(68635);
+        (n(35850), n(29685));
+        var c = n(3160),
+          d = n(57027);
+        let u = "str-ad",
+          p = `(function(){var s=document.currentScript,b=s&&s.previousElementSibling,i=b&&b.querySelector('img');
+if(i&&!document.documentElement.classList.contains('cg-top-ad-off'))i.loading='eager'})();`;
+        var m = n(98025),
+          g = n.n(m);
+        let h = [
+            "/prime",
+            "/CryptoApi",
+            "/pricing",
+            "/login",
+            "/signup",
+            "/reset",
+            "/payment",
+            "/download",
+            "/aboutus",
+            "/Disclaimer",
+            "/privacy-policy",
+          ],
+          b = (t) => {
+            for (let e = 0; e < h.length; e++)
+              if (-1 != t.indexOf(h[e])) return !1;
+            return !0;
+          };
+        class x extends o.Component {
+          constructor(t) {
+            (super(t),
+              (this.state = {
+                title: "",
+                but: "",
+                link: "",
+                crypto_ad: {},
+                url_ad: b(this.props.router.asPath),
+                ad: null,
+                ...t,
+                ...i.A.getState(),
+              }));
+          }
+          handleRouteChange(t) {
+            this.setState({ url_ad: b(t) });
+          }
+          componentWillUnmount() {
+            this.props.router.events.off(
+              "routeChangeComplete",
+              this.handleRouteChange.bind(this),
+            );
+          }
+          componentDidMount() {
+            (this.props.router.events.on(
+              "routeChangeComplete",
+              this.handleRouteChange.bind(this),
+            ),
+              this.getData());
+          }
+          async getData() {
+            let t = !1;
+            try {
+              let e;
+              ((e = window.localStorage.getItem(u)),
+                (t = null != e && Date.now() <= Number(e)));
+            } catch (e) {
+              t = !0;
+            }
+            if ("zh" == a.Ru.language || (0, d._o)() || t)
+              return void this.setState({ ad: !1 });
+            try {
+              let { data: t } = await (0, l.XpC)();
+              if (t && "CN" == t) return void this.setState({ ad: !1 });
+            } catch (t) {}
+            !1 !== this.state.ad && this.setState({ ad: !0 });
+          }
+          closeAd(t) {
+            (t.stopPropagation(),
+              this.setState({ ad: !1 }),
+              window.localStorage.setItem(
+                u,
+                Number(new Date().getTime()) + Number(18e5),
+              ));
+          }
+          async getBurialpoint() {
+            (0, c.Y)({ id: "top_ad", type: 4, language: a.Ru.language });
+          }
+          storeChange() {
+            this.setState({ user: i.A.getState().user });
+          }
+          render() {
+            let t = () =>
+              "ko" == a.Ru.language ||
+              "nl" == a.Ru.language ||
+              "tr" == a.Ru.language
+                ? "en"
+                : a.Ru.language;
+            return !1 !== this.state.ad && this.state.url_ad
+              ? (0, s.jsxs)("div", {
+                  className: [
+                    g().box1,
+                    null === this.state.ad ? g().pending : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" "),
+                  children: [
+                    (0, s.jsxs)("div", {
+                      onClick: this.getBurialpoint.bind(this),
+                      className: `${g().box2}  shou`,
+                      children: [
+                        (0, s.jsxs)("picture", {
+                          children: [
+                            (0, s.jsx)("source", {
+                              media: "(min-width: 900px)",
+                              srcSet: `https://cdn.coinglasscdn.com/static/bitunix/20260901/pc/${t()}.gif`,
+                              width: 728,
+                              height: 90,
+                            }),
+                            (0, s.jsx)("img", {
+                              alt: "bitunix",
+                              src: `https://cdn.coinglasscdn.com/static/bitunix/20260901/m/${t()}.gif`,
+                              width: 320,
+                              height: 50,
+                              loading: "lazy",
+                              className: g().img,
+                              suppressHydrationWarning: !0,
+                            }),
+                          ],
+                        }),
+                        (0, s.jsx)("div", {
+                          onClick: this.closeAd.bind(this),
+                          className: `${g().box7} shou`,
+                          children: (0, s.jsx)(r.lr4, {
+                            fontSize: "16px",
+                            color: "#000",
+                          }),
+                        }),
+                        (0, s.jsx)("div", {
+                          onClick: this.closeAd.bind(this),
+                          className: `${g().box8} shou`,
+                          children: (0, s.jsx)(r.lr4, {
+                            fontSize: "16px",
+                            color: "#000",
+                          }),
+                        }),
+                      ],
+                    }),
+                    null === this.state.ad
+                      ? (0, s.jsx)("script", {
+                          dangerouslySetInnerHTML: { __html: p },
+                        })
+                      : "",
+                  ],
+                })
+              : "";
+          }
+        }
+        let _ = (0, a.CI)()(x);
+      },
+      42493: (t, e, n) => {
+        "use strict";
+        (n.d(e, { A: () => d }), n(6029));
+        var s = n(55729),
+          o = n(83617),
+          a = n(16647);
+        n(82203);
+        var i = n(68635);
+        (n(35850), n(29685));
+        let r = [
+            "/prime",
+            "/CryptoApi",
+            "/pricing",
+            "/login",
+            "/signup",
+            "/reset",
+            "/payment",
+            "/download",
+            "/aboutus",
+            "/Disclaimer",
+            "/privacy-policy",
+          ],
+          l = (t) => {
+            for (let e = 0; e < r.length; e++)
+              if (-1 != t.indexOf(r[e])) return !1;
+            return !0;
+          };
+        class c extends s.Component {
+          constructor(t) {
+            (super(t),
+              (this.state = {
+                title: "",
+                but: "",
+                link: "",
+                crypto_ad: {},
+                url_ad: l(this.props.router.asPath),
+                ad: !1,
+                ...t,
+                ...a.A.getState(),
+              }));
+          }
+          handleRouteChange(t) {
+            this.setState({ url_ad: l(t) });
+          }
+          componentWillUnmount() {
+            this.props.router.events.off(
+              "routeChangeComplete",
+              this.handleRouteChange.bind(this),
+            );
+          }
+          componentDidMount() {
+            this.props.router.events.on(
+              "routeChangeComplete",
+              this.handleRouteChange.bind(this),
+            );
+            let t = new Date().getTime(),
+              e = window.localStorage.getItem("str-ad");
+            (null == e || t > e) && this.setState({ ad: !0 });
+          }
+          closeAd(t) {
+            (t.stopPropagation(),
+              this.setState({ ad: !1 }),
+              window.localStorage.setItem(
+                "str-ad",
+                Number(new Date().getTime()) + Number(18e5),
+              ));
+          }
+          async getBurialpoint() {
+            (window.open("https://www.hugging.com", "_blank"),
+              await (0, i.jzg)({ to: "hg_ad", from: "hg_ad" }));
+          }
+          storeChange() {
+            this.setState({ user: a.A.getState().user });
+          }
+          render() {
+            return "";
+          }
+        }
+        let d = (0, o.CI)()(c);
+      },
+      56121: (t, e, n) => {
+        t.exports = n(61847)();
+      },
+      57027: (t, e, n) => {
+        "use strict";
+        n.d(e, { Dx: () => a, _o: () => l, m9: () => i });
+        var s = n(74312),
+          o = n.n(s);
+        function a(t, e = "en") {
+          return o()(t).format("YYYY-MM-DD");
+        }
+        function i(t, e = "en") {
+          return o()(t).format("HH:mm");
+        }
+        let r = [
+          "Asia/Shanghai",
+          "Asia/Chongqing",
+          "Asia/Harbin",
+          "Asia/Urumqi",
+        ];
+        function l() {
+          try {
+            let t = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            return r.includes(t);
+          } catch (t) {
+            return !1;
+          }
+        }
+      },
+      61847: (t, e, n) => {
+        "use strict";
+        var s = n(4140);
+        function o() {}
+        function a() {}
+        ((a.resetWarningCache = o),
+          (t.exports = function () {
+            function t(t, e, n, o, a, i) {
+              if (i !== s) {
+                var r = Error(
+                  "Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types",
+                );
+                throw ((r.name = "Invariant Violation"), r);
+              }
+            }
+            function e() {
+              return t;
+            }
+            t.isRequired = t;
+            var n = {
+              array: t,
+              bigint: t,
+              bool: t,
+              func: t,
+              number: t,
+              object: t,
+              string: t,
+              symbol: t,
+              any: t,
+              arrayOf: e,
+              element: t,
+              elementType: t,
+              instanceOf: e,
+              node: t,
+              objectOf: e,
+              oneOf: e,
+              oneOfType: e,
+              shape: e,
+              exact: e,
+              checkPropTypes: a,
+              resetWarningCache: o,
+            };
+            return ((n.PropTypes = n), n);
+          }));
+      },
+      68549: (t, e, n) => {
+        "use strict";
+        n.d(e, { A: () => u });
+        var s = n(6029),
+          o = n(55729),
+          a = n(83617),
+          i = n(68635),
+          r = n(68667),
+          l = n(99181),
+          c = n.n(l);
+        class d extends o.Component {
+          constructor(t) {
+            (super(t),
+              (this.state = { id: "yes", contentClosed: !0, data: {} }));
+          }
+          componentDidMount() {
+            this.getData();
+          }
+          async getData() {
+            let t = a.Ru.language;
+            "zh-TW" == t && (t = "tw");
+            let e = this.props.router.asPath;
+            var n = (e = "/" === e.charAt(0) ? e.substring(1) : e)
+              .replace(/^\//, "-")
+              .replace(/\//g, "-");
+            if (("" == n && (n = "home"), "LongShortRatio" == n)) return;
+            let s = await (0, i.n$V)({ slug: n.split("?")[0], lang: t });
+            try {
+              this.setState(
+                { id: "no", data: s, contentClosed: !s?.open },
+                () => {},
+              );
+            } catch (t) {}
+          }
+          componentWillUnmount() {}
+          render() {
+            return (0, s.jsx)(s.Fragment, {
+              children: this.state.data.content
+                ? (0, s.jsxs)("div", {
+                    className:
+                      this.props?.router?.asPath?.indexOf("stock-heatmap") != -1
+                        ? c().box2
+                        : c().box3,
+                    children: [
+                      (0, s.jsx)("div", {
+                        className: `pagestr ${this.state.contentClosed ? "contentClosed" : "contentOpen"}`,
+                        children: (0, s.jsx)("div", {
+                          dangerouslySetInnerHTML: {
+                            __html: (function (t) {
+                              try {
+                                let e = document.createElement("div");
+                                e.innerHTML = t;
+                                let n = e.getElementsByTagName("a"),
+                                  s = [
+                                    "https://www.coinglass.com",
+                                    "https://docs.coinglass.com",
+                                    "https://legend.coinglass.com",
+                                  ];
+                                for (let t = 0; t < n.length; t++) {
+                                  let e = n[t];
+                                  e.href &&
+                                    !s.some((t) => e.href.includes(t)) &&
+                                    e.setAttribute(
+                                      "rel",
+                                      "noopener noreferrer",
+                                    );
+                                }
+                                return e.innerHTML;
+                              } catch (e) {
+                                return t;
+                              }
+                            })(this.state.data.content),
+                          },
+                        }),
+                      }),
+                      this.state.contentClosed
+                        ? (0, s.jsxs)("div", {
+                            onClick: () => {
+                              this.setState({
+                                contentClosed: !this.state.contentClosed,
+                              });
+                            },
+                            className: `${c().box1} shou`,
+                            children: [
+                              this.props.t("showall"),
+                              " ",
+                              (0, s.jsx)(r.Vr3, {
+                                style: { paddingLeft: "10px" },
+                              }),
+                            ],
+                          })
+                        : "",
+                    ],
+                  })
+                : "",
+            });
+          }
+        }
+        let u = (0, a.CI)()(d);
+      },
+      75227: (t, e, n) => {
+        "use strict";
+        n.d(e, { A: () => l });
+        var s = n(6029);
+        n(55729);
+        var o = n(95669),
+          a = n.n(o),
+          i = n(83617),
+          r = n(81278);
+        let l = (0, i.CI)()(({ ...t }) => {
+          let e = (e, n) => (t.raw ? e : t.t(e, n)),
+            n = "/" == (0, r.useRouter)().asPath;
+          return (0, s.jsxs)(a(), {
+            children: [
+              t.startTitle
+                ? (0, s.jsxs)("title", {
+                    children: [t.startTitle, e(t.title, t.tObj)],
+                  })
+                : (0, s.jsx)("title", { children: e(t.title, t.tObj) }),
+              (0, s.jsx)("meta", {
+                name: "description",
+                content: e(`${t.d}`, t.dObj),
+              }),
+              null == t.keywords
+                ? (0, s.jsx)(s.Fragment, {})
+                : (0, s.jsx)("meta", {
+                    name: "keywords",
+                    content: e(`${t.keywords}`, t.kObj),
+                  }),
+              (0, s.jsx)("meta", {
+                name: "twitter:title",
+                content: e(t.title, t.tObj),
+              }),
+              (0, s.jsx)("meta", {
+                name: "twitter:description",
+                content: e(`${t.d}`, t.dObj),
+              }),
+              (0, s.jsx)("meta", {
+                name: "twitter:image",
+                content: n
+                  ? "https://cdn.coinglasscdn.com/static/icon_600_315.png"
+                  : "https://cdn.coinglasscdn.com/static/icon_200.png",
+              }),
+              (0, s.jsx)("meta", {
+                name: "twitter:card",
+                content: n ? "summary_large_image" : "summary",
+              }),
+              (0, s.jsx)("meta", {
+                name: "twitter:image:alt",
+                content: e(t.title, t.tObj),
+              }),
+              (0, s.jsx)("meta", {
+                name: "twitter:creator",
+                content: "@coinglass_com",
+              }),
+              (0, s.jsx)("meta", {
+                name: "twitter:site",
+                content: "@coinglass_com",
+              }),
+              (0, s.jsx)("meta", {
+                name: "twitter:domain",
+                content: "www.coinglass.com",
+              }),
+              (0, s.jsx)("meta", {
+                property: "og:site_name",
+                content: "coinglass",
+              }),
+              (0, s.jsx)("meta", { property: "og:type", content: "website" }),
+              (0, s.jsx)("meta", {
+                property: "og:title",
+                content: e(t.title, t.tObj),
+              }),
+              (0, s.jsx)("meta", {
+                property: "og:description",
+                content: e(`${t.d}`, t.dObj),
+              }),
+              (0, s.jsx)("meta", {
+                property: "og:image",
+                content: n
+                  ? "https://cdn.coinglasscdn.com/static/icon_600_315.png"
+                  : "https://cdn.coinglasscdn.com/static/icon_200.png",
+              }),
+              (0, s.jsx)("meta", {
+                property: "og:image:type",
+                content: "image/png",
+              }),
+              (0, s.jsx)("meta", {
+                property: "og:image:width",
+                content: n ? "600" : "200",
+              }),
+              (0, s.jsx)("meta", {
+                property: "og:image:height",
+                content: n ? "315" : "200",
+              }),
+            ],
+          });
+        });
+      },
+      98025: (t) => {
+        t.exports = {
+          box1: "StrAdBybit_box1__sKuDi",
+          box2: "StrAdBybit_box2__N9lMV",
+          img: "StrAdBybit_img__4Zw19",
+          box7: "StrAdBybit_box7__N7X4s",
+          box8: "StrAdBybit_box8__XPp9A",
+          pending: "StrAdBybit_pending__MxZ8H",
+        };
+      },
+      98815: (t, e, n) => {
+        "use strict";
+        (n.r(e), n.d(e, { __N_SSP: () => d, default: () => u }));
+        var s = n(6029),
+          o = n(38762),
+          a = n(75227),
+          i = n(12792),
+          r = n(81278),
+          l = n(13475),
+          c = n(91068),
+          d = !0;
+        function u(t) {
+          let e = (0, r.useRouter)(),
+            n = e.query.coin,
+            o = "symbol" == e.query.type ? 2 : 1,
+            i = e.query.time,
+            d = n;
+          if (((0, c.Bd)("common"), d)) {
+            let e = t._nextI18Next?.initialI18nStore ?? {},
+              n = t._nextI18Next?.initialLocale ?? "en",
+              s = (t) => e[n]?.common?.symbol?.[t] ?? e.en?.common?.symbol?.[t];
+            ("BTC" == d && (d = s("btc") ?? d),
+              "ETH" == d && (d = s("eth") ?? d));
+          }
+          return (0, s.jsxs)("div", {
+            className: "plr20",
+            children: [
+              (0, s.jsx)(a.A, {
+                title: n ? "liqmeatmap_symbol.t" : "liqmeatmap.t",
+                d: "liqmeatmap.d",
+                tObj: { coin: d || "BTC" },
+              }),
+              (0, s.jsx)(l.A, {
+                coin: n || "BTC",
+                router: e,
+                type: o || 1,
+                selectTime: i,
+              }),
+            ],
+          });
+        }
+        ((u.canonicalQueryOf = (t) => (0, i.V)(t.coin)),
+          (u.getLayout = function (t) {
+            return (0, s.jsx)(o.A, { children: t });
+          }));
+      },
+      99181: (t) => {
+        t.exports = {
+          box1: "PageStr_box1__wWKiB",
+          box2: "PageStr_box2__eMO4s",
+          box3: "PageStr_box3__uWdT8",
+        };
+      },
+    },
+    (t) => {
+      (t.O(
+        0,
+        [
+          47532, 4958, 15789, 45474, 36501, 34790, 88185, 38370, 16301, 69897,
+          84023, 12985, 62256, 55394, 25727, 3753, 89831, 28906, 2785, 62770,
+          55692, 9767, 73693, 25766, 73305, 23199, 53256, 90636, 46593, 38792,
+        ],
+        () => t((t.s = 14842)),
+      ),
+        (_N_E = t.O()));
+    },
+  ]));

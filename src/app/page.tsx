@@ -43,7 +43,9 @@ export default function Home() {
             </div>
             <div className="leading-tight">
               <div className="text-sm font-semibold text-neutral-100">Order-Flow Terminal</div>
-              <div className="text-[10px] text-neutral-500">12 assets · live Coinglass API · local continuity engine</div>
+              <div className="text-[10px] text-neutral-500">
+                12 assets · real-time Binance WS + live Coinglass aggregates · continuity engine
+              </div>
             </div>
           </div>
 

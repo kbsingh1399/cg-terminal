@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
   try {
     const results = await Promise.allSettled(
       VENUES.map((v) =>
-        cgGet(`/api/liquidationLevels/v2?symbol=${encodeURIComponent(v.key)}&limit=${limit}&range=${range}`, 60_000)
+        cgGet(`/api/liquidationLevels/v2?symbol=${encodeURIComponent(v.key)}&limit=${limit}&range=${range}`, 30_000)
       )
     );
 

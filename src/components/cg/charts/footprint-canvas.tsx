@@ -120,6 +120,29 @@ export default function FootprintCanvas({
       });
     }
   }
+  // live follow (render-adjust): the real-time forming bar must never clip —
+  // when live prints extend past the visible price range, expand it; when a
+  // new bar appends while the tail is on screen, keep the tail on screen.
+  // Manual pan/zoom into history is never stolen.
+  if (view && merged.length) {
+    const last = merged[merged.length - 1];
+    let { pLo, pHi, start, count } = view;
+    let changed = false;
+    if (last.pLo < pLo) {
+      pLo = last.pLo - (pHi - pLo) * 0.02;
+      changed = true;
+    }
+    if (last.pHi > pHi) {
+      const span = pHi - pLo;
+      pHi = last.pHi + span * 0.02;
+      changed = true;
+    }
+    if (count < merged.length && start + count >= merged.length - 1 && start + count < merged.length) {
+      start = Math.max(0, merged.length - count);
+      changed = true;
+    }
+    if (changed) setView({ start, count, pLo, pHi });
+  }
 
   useEffect(() => {
     const el = wrapRef.current;

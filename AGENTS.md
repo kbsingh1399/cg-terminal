@@ -21,9 +21,13 @@ USDT perps (Binance+OKX+Bybit — Hyperliquid does not list metals).
 | `notifications` | the live event feed (cursor-based). Sources: `footprint`, `indicators`, `whale-orders`, `liqlevels`, `cvd`, `engine` |
 | `liquidation_levels` | aggregated liquidation clusters 3d/7d/30d ±4% — the sweep magnets |
 | `whale_orders` | resting whale orders per exchange, aggregate bid/ask walls + imbalance |
-| `book_walls` | order-book depth ±5%, largest bid/ask walls |
-| `cvd_state` | perp/spot CVD, taker buy share, active divergences |
-| `analyze_setup` | one-call context bundle for trade formulation |
+| `book_walls` | order-book walls: depth/imbalance (now vs 5m ago), confirmed wall list with age + touched state, add/fill/pull events. Params: `market`, `interval`, `limit`, `band`, `endTime` (30-day history) |
+| `cvd_state` | perp/spot CVD, taker buy share, active divergences. Params: `mode`, `itv` (1m–1d), `limit`, `anchor` (all/day/week) |
+| `stopmap` | BTC liquidation heatmap: 24h exposure grid, strongest clusters above/below, distance bands. `endTime` = historical window (BTC-only — upstream limitation) |
+| `footprint` | aggregated order-flow bars: per-bar taker buy/sell USD, delta %, POC. Params: `interval`, `limit`, `last` |
+| `large_orders` | large resting orders AND executed large trades per instrument: resting bid/ask walls, executed notional split. Params: `symbol`, `hours`, `interval` |
+| `kline_series` | raw candles or open-interest rows for any instrument key (type `kline`\|`oi`, any interval, ≤1000 rows) |
+| `analyze_setup` | one-call context bundle: market + signals + liquidation clusters + whale walls + book walls + CVD + recent events + formulation guide |
 
 The `notifications` tool persists a cursor in `data/mcp-cursor.json` — calling
 it with no arguments returns only events newer than the cursor and advances it.
@@ -74,6 +78,33 @@ it with no arguments returns only events newer than the cursor and advances it.
 - XAU/XAG have no Hyperliquid venue and no anonymous stopmap — if a tool
   errors for them, report the limitation, do not guess.
 - If two tools disagree, prefer the more recent `updatedAt` and say so.
+
+## REAL-TIME architecture (the live ladder)
+
+Every displayed number is driven by the fastest tier that can serve it —
+the UI badge always names the tier currently active:
+
+| Tier | Latency | What | Source |
+| --- | --- | --- | --- |
+| 0 · WS | sub-100 ms | price (last trade + best bid/ask), footprint forming bar, CVD live delta | browser → `wss://fstream.binance.com` (`<sym>usdt@bookTicker` + `<sym>usdt@trade`), single connection, live SUBSCRIBE on symbol switch, 5 s watchdog, 10 Hz render throttle |
+| 1 · REST | 250 ms / 1.2 s | price fallback (`/api/cg/live`), live order book (`/api/cg/livebook`: Binance top-1000 depth, self-driven 2.5 s poller per active symbol, same wall scanner as the aggregate) | server → fapi.binance.com |
+| 2 · CG | 3–30 s | multi-venue aggregates (footprint venues, book-walls depth/imbalance, CVD, market, signals, liq levels, stopmap, whale orders) | Coinglass API via the existing routes |
+
+Key invariants:
+- **One price, everywhere.** The header, Overview, Footprint and Book-Walls
+  "last price" all read the same WS ticker — the heatmap's own snapshot mid
+  (a different, 5-venue aggregate) is never shown as "the price".
+- **No double counting.** The footprint forming bar = the multi-venue
+  aggregate (8 s resync, `?live=1` lane) + Binance tape strictly NEWER than
+  the aggregate's `updatedAt` (+1.5 s guard). It can undercount for a
+  moment; it can never show phantom volume.
+- **Weight-bounded.** All fapi traffic flows through a shared circuit
+  breaker (`src/lib/live/fapi.ts`): on HTTP 429/418 everything backs off
+  (60 s probe-capped) and serves stale-marked data — the terminal never
+  extends a ban by hammering.
+- **Honest coverage.** The live book covers Binance top-1000 levels
+  (≈ ±0.2% around mid on BTC — narrower on alts); every live KPI prints
+  its covered range, and the full-depth numbers stay Coinglass aggregates.
 
 ## Operating the terminal
 

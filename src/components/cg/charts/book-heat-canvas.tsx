@@ -10,20 +10,38 @@ export interface StripModel {
   walls: { side: "b" | "a"; price: number; usd: number }[];
 }
 
+export interface LiveOverlay {
+  /** real-time WS price (last trade) */
+  price: number;
+  /** real-time book column: resting USD per price bucket, updates ~1.5 s */
+  cells: [number, number][];
+  /** live near-book ladder (Binance top-1000) */
+  ladder: { price: number; qty: number; usd: number; side: "b" | "a" }[];
+  /** ms — how fresh the live column is */
+  at: number;
+}
+
 /**
  * Order-book heat strip (time → price, intensity = resting USD) with the
  * current ladder profile on the right edge — the Coinglass LiquidityHeatmap
  * look in compact form.
+ *
+ * `live` adds the REAL-TIME layer: the live Binance book column pinned to
+ * the right edge (bright border), the mid line extended to the live WS
+ * price, and the near-book ladder drawn bright on top of the dim aggregate
+ * profile.
  */
 export default function BookHeatCanvas({
   model,
   height = 300,
   priceDecs = 1,
+  live = null,
 }: {
   model: StripModel;
   height?: number;
   /** per-asset price decimals (assetOf(sym).priceDecs) for axis/tag labels */
   priceDecs?: number;
+  live?: LiveOverlay | null;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -49,6 +67,7 @@ export default function BookHeatCanvas({
     const plotH = H - padT - padB;
 
     const prices = strip.flatMap((s) => s.cells.map((c) => c[0]));
+    if (live) prices.push(live.price, ...live.cells.map((c) => c[0]));
     let yLo = Math.min(...prices, last.price);
     let yHi = Math.max(...prices, last.price);
     const pad = (yHi - yLo) * 0.04;
@@ -61,8 +80,9 @@ export default function BookHeatCanvas({
     const t1 = strip[strip.length - 1].t;
     const xOf = (t: number) => padL + ((t - t0) / Math.max(1, t1 - t0)) * plotW;
     const bw = Math.max(1.5, plotW / strip.length);
+    const edgeX = padL + plotW;
 
-    const maxCell = Math.max(1, ...strip.flatMap((s) => s.cells.map((c) => c[1])));
+    const maxCell = Math.max(1, ...strip.flatMap((s) => s.cells.map((c) => c[1])), ...(live ? live.cells.map((c) => c[1]) : []));
     for (const s of strip) {
       const x = xOf(s.t);
       for (const [price, usd] of s.cells) {
@@ -73,7 +93,7 @@ export default function BookHeatCanvas({
       }
     }
 
-    // mid line
+    // mid line — historical, then extended to the REAL-TIME price at the edge
     ctx.strokeStyle = "rgba(232,232,232,0.75)";
     ctx.lineWidth = 1.2;
     ctx.beginPath();
@@ -84,6 +104,18 @@ export default function BookHeatCanvas({
       else ctx.lineTo(x, yy);
     });
     ctx.stroke();
+    if (live) {
+      const lastMid = strip[strip.length - 1].mid;
+      const grad = ctx.createLinearGradient(edgeX - Math.min(90, plotW * 0.1), 0, edgeX, 0);
+      grad.addColorStop(0, "rgba(232,232,232,0.75)");
+      grad.addColorStop(1, "rgba(52,211,153,0.95)");
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.moveTo(edgeX - Math.min(90, plotW * 0.1), yOf(lastMid));
+      ctx.lineTo(edgeX, yOf(live.price));
+      ctx.stroke();
+    }
 
     // walls markers
     for (const w of walls.slice(0, 12)) {
@@ -93,15 +125,32 @@ export default function BookHeatCanvas({
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(padL, yy);
-      ctx.lineTo(padL + plotW, yy);
+      ctx.lineTo(edgeX, yy);
       ctx.stroke();
       ctx.setLineDash([]);
     }
 
-    // ladder profile (right edge)
-    const maxUsd = Math.max(1, ...ladder.map((l) => l.usd));
+    // LIVE book column pinned to the right edge (Binance top-1000, ~1.5 s)
+    if (live && live.cells.length) {
+      const lw = Math.max(bw * 0.9, 5);
+      for (const [price, usd] of live.cells) {
+        const k = Math.min(1, Math.pow(usd / maxCell, 0.5));
+        ctx.fillStyle = `rgba(${Math.round(30 + 130 * k)},${Math.round(60 + 60 * k)},${Math.round(220 - 60 * k)},${(0.3 + 0.7 * k).toFixed(3)})`;
+        const yy = yOf(price);
+        ctx.fillRect(edgeX - lw, yy - 2, lw, 4.5);
+      }
+      ctx.strokeStyle = "rgba(52,211,153,0.8)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(edgeX - lw - 1.5, padT, lw + 3, plotH);
+      ctx.fillStyle = "rgba(52,211,153,0.95)";
+      ctx.font = "bold 8px ui-monospace, monospace";
+      ctx.fillText("LIVE", edgeX - lw - 1.5, padT - 2);
+    }
+
+    // ladder profile (right edge): aggregate dim, live bright on top
+    const maxUsd = Math.max(1, ...ladder.map((l) => l.usd), ...(live ? live.ladder.map((l) => l.usd) : []));
     const profW = 72;
-    ctx.globalAlpha = 0.9;
+    ctx.globalAlpha = live ? 0.45 : 0.9;
     for (const l of ladder) {
       const w = (l.usd / maxUsd) * profW;
       const yy = yOf(l.price);
@@ -109,13 +158,21 @@ export default function BookHeatCanvas({
       ctx.fillRect(padL + plotW + 18 - w, yy - 1.2, w, 2.6);
     }
     ctx.globalAlpha = 1;
+    if (live) {
+      for (const l of live.ladder) {
+        const w = (l.usd / maxUsd) * profW;
+        const yy = yOf(l.price);
+        ctx.fillStyle = l.side === "b" ? "rgba(16,224,143,0.95)" : "rgba(255,90,110,0.95)";
+        ctx.fillRect(padL + plotW + 18 - w, yy - 1.2, w, 2.6);
+      }
+    }
 
     // price axis
     const step = niceStep(yHi - yLo, 7);
     ctx.font = "10px ui-monospace, SFMono-Regular, Menlo, monospace";
     for (let p = Math.ceil(yLo / step) * step; p <= yHi; p += step) {
       const yy = yOf(p);
-      drawGridLine(ctx, padL, yy, padL + plotW, yy);
+      drawGridLine(ctx, padL, yy, edgeX, yy);
       ctx.fillStyle = COLORS.text;
       ctx.fillText(p.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs }), padL + plotW + 6, yy + 3);
     }
@@ -130,14 +187,15 @@ export default function BookHeatCanvas({
       ctx.fillText(`${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`, x - 12, H - 6);
     }
 
-    // last price tag
-    const ly = yOf(last.price);
-    ctx.fillStyle = "#e8e8e8";
+    // last price tag — REAL-TIME when the live layer is on
+    const tagPrice = live ? live.price : last.price;
+    const ly = yOf(tagPrice);
+    ctx.fillStyle = live ? "#10e08f" : "#e8e8e8";
     ctx.fillRect(padL + plotW + 2, ly - 8, 60, 16);
     ctx.fillStyle = "#000";
     ctx.font = "bold 10px ui-monospace, monospace";
-    ctx.fillText(last.price.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs }), padL + plotW + 6, ly + 4);
-  }, [model, priceDecs]);
+    ctx.fillText(tagPrice.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs }), padL + plotW + 6, ly + 4);
+  }, [model, priceDecs, live]);
 
   return <canvas ref={ref} style={{ width: "100%", height }} className="rounded-md" />;
 }

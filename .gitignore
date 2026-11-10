@@ -62,3 +62,11 @@ prisma/db/
 # continuity engine store
 data/*
 !data/.gitkeep
+
+# sandbox artifacts — never commit (local machine only)
+/.zscripts/
+/tool-results/
+/upload/
+/download/
+/mini-services/
+/db/

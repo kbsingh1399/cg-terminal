@@ -76,7 +76,9 @@ export async function GET(req: NextRequest) {
 
   const key = `${sym}|${market}|${interval}|${limit}|${band}|${endTime ?? "now"}`;
   const hit = cache.get(key);
-  if (hit && Date.now() - hit.at < 45_000) return NextResponse.json(hit.body);
+  // 18s: the aggregate resync cadence — the client polls every 15s and the
+  // REAL-TIME layer (WS price + /api/cg/livebook) covers the gap between
+  if (hit && Date.now() - hit.at < 18_000) return NextResponse.json(hit.body);
 
   try {
     // per-asset venue list: the full 5-venue futures aggregate only exists

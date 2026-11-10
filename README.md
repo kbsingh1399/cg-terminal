@@ -7,7 +7,15 @@ bundled **MCP server that plugs straight into Antigravity** for automated
 signal analysis and trade formulation.
 
 No API keys required — the terminal speaks the Coinglass web API directly
-(same endpoints the coinglass.com website uses in your browser).
+(same endpoints the coinglass.com website uses in your browser), plus a
+**real-time Binance futures WebSocket layer** for the numbers that must
+never lag: prices are the exchange tape itself (sub-100 ms, last trade +
+best bid/ask), the footprint forming bar accumulates trade-by-trade, and
+the order book heatmap carries a live Binance depth column — all merged
+on top of the multi-venue Coinglass aggregates without double counting.
+Every price badge names its active tier (`real-time` WS · `0.25s` REST ·
+`3s` Coinglass), and a shared circuit breaker keeps Binance weight limits
+respected under all conditions.
 
 ---
 

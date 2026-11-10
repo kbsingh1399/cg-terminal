@@ -43,7 +43,7 @@ function fmtB(n: number): string {
 }
 
 export default function StopmapSection({ sym = "BTC" }: { sym?: string }) {
-  const q = usePolling<StopmapResponse>(`/api/cg/stopmap?sym=${sym}`, 60_000);
+  const q = usePolling<StopmapResponse>(`/api/cg/stopmap?sym=${sym}`, 30_000);
   // defense-in-depth: never render a model that belongs to another symbol
   const m = q.data && q.data.sym === sym ? q.data.model : undefined;
   const decs = assetOf(sym)?.priceDecs ?? 2;

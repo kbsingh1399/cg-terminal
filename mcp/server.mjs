@@ -9,7 +9,16 @@
  *   - signals           Coinglass-exact footprint signals (3 bar types)
  *   - notifications     the live event feed (cursor-based polling)
  *   - liquidation_levels, whale_orders, book_walls, cvd_state
+ *   - stopmap           BTC liquidation-heatmap window (24h, endTime history)
+ *   - footprint         aggregated order-flow bars (per-bar delta + POC)
+ *   - large_orders       large resting orders AND executed large trades
+ *   - kline_series       raw candles / open-interest series per instrument
  *   - analyze_setup     one-call context bundle for trade formulation
+ *
+ * Every tool exposes the full dimension set of its HTTP route (asset,
+ * timeframe, market, band, history endTime) so the agent has access to each
+ * data point at each dimension — see the access matrix in the Trade
+ * Formulation Playbook.
  *
  * Configure in Antigravity (Settings → MCP → add server):
  *   command: node  /ABSOLUTE/PATH/TO/mcp/server.mjs
@@ -56,6 +65,16 @@ function ensureDataDir() {
 }
 
 const fmtP = (v, d = 2) => (v == null || !Number.isFinite(v) ? null : +Number(v).toFixed(d));
+const fmtUsd = (v) =>
+  v == null || !Number.isFinite(v)
+    ? "—"
+    : Math.abs(v) >= 1e9
+      ? `$${(v / 1e9).toFixed(2)}B`
+      : Math.abs(v) >= 1e6
+        ? `$${(v / 1e6).toFixed(1)}M`
+        : `$${Math.round(v / 1e3)}K`;
+const fmtM = (v) => (v == null || !Number.isFinite(v) ? "—" : `$${(v / 1e6).toFixed(1)}M`);
+const tsOf = (t) => new Date(t > 1e12 ? t : t * 1000).toISOString().slice(5, 16).replace("T", " ");
 
 // ---------------------------------------------------------------------------
 // Tool implementations — each returns MCP content (text + structured)
@@ -185,41 +204,185 @@ async function toolWhaleOrders(args) {
 
 async function toolBookWalls(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
-  const d = await api(`/api/cg/bookwalls?sym=${sym}&market=futures&interval=m15&limit=150&band=5`);
+  const interval = ["1m", "5m", "15m", "1h", "4h", "1d"].includes(args?.interval) ? args.interval : "15m";
+  const limit = Math.min(Math.max(Number(args?.limit ?? 150) || 150, 10), 500);
+  const band = Math.min(Math.max(Number(args?.band ?? 5) || 5, 0.5), 20);
+  const market = args?.market === "spot" ? "spot" : "futures";
+  let endQ = "";
+  const endN = Number(args?.endTime);
+  if (Number.isFinite(endN) && endN > 0) endQ = `&endTime=${Math.floor(endN)}`;
+  const d = await api(`/api/cg/bookwalls?sym=${sym}&market=${market}&interval=${interval}&limit=${limit}&band=${band}${endQ}`);
   if (!d.ok) throw new Error(d.error || "book walls failed");
   const m = d.model;
-  const fmtUsd = (v) => (Math.abs(v) >= 1e9 ? `$${(v / 1e9).toFixed(2)}B` : Math.abs(v) >= 1e6 ? `$${(v / 1e6).toFixed(1)}M` : `$${Math.round(v / 1e3)}K`);
+  const pct = (v) => (v == null || !Number.isFinite(v) ? "—" : `${(v * 100).toFixed(1)}%`);
+  const walls = (m.walls ?? []).slice(0, 10);
+  const events = (m.events ?? []).slice(0, 8);
   const lines = [
-    `${sym} order-book depth ±5% (aggregate ${d.venues.join("+")}, m15 snapshots) — price ${m.last ?? m.price ?? ""}`,
-    `bid depth ${fmtUsd(m.depth?.bidUsd ?? 0)} · ask depth ${fmtUsd(m.depth?.askUsd ?? 0)} · imbalance ${fmtP(((m.depth?.imbalance ?? 0) * 100), 1)}%`,
-    m.kpis ? `largest bid wall ${fmtUsd(m.kpis.maxBid?.usd ?? 0)} @ ${m.kpis.maxBid?.price} · largest ask wall ${fmtUsd(m.kpis.maxAsk?.usd ?? 0)} @ ${m.kpis.maxAsk?.price}` : "",
-  ].filter(Boolean);
-  return { text: lines.join("\n"), data: m };
+    `${sym} order-book depth ±${band}% (${market} aggregate ${d.venues?.join("+") ?? ""}, ${interval} snapshots, ${m.snapshots} frames) — price ${m.last?.price ?? "—"}`,
+    `bid depth ${fmtUsd(m.depth?.bidUsd)} · ask depth ${fmtUsd(m.depth?.askUsd)} · imbalance ${pct(m.imbalance)} (5m ago ${pct(m.imbalance5mAgo)}) · min wall ${fmtUsd(d.minWallUsd)}`,
+    walls.length ? `live walls (±3% of mid):` : "no confirmed walls within ±3%",
+    ...walls.map(
+      (w) =>
+        `  ${w.side === "b" ? "BID" : "ASK"} ${fmtUsd(w.usd)} @ ${w.price} (${w.distPct > 0 ? "+" : ""}${w.distPct}%, age ${Math.round((w.ageMs ?? 0) / 60000)}min${w.touched ? ", touched" : ""})`
+    ),
+  ];
+  if (events.length) {
+    lines.push("recent wall events (newest first):");
+    for (const e of events) {
+      lines.push(`  ${tsOf(e.t)} ${String(e.type).toUpperCase()} ${e.side === "b" ? "BID" : "ASK"} ${fmtUsd(e.usd)} @ ${e.p}`);
+    }
+  }
+  return {
+    text: lines.join("\n"),
+    data: { sym, market, interval, band, depth: m.depth, imbalance: m.imbalance, imbalance5mAgo: m.imbalance5mAgo, walls, events: m.events?.slice(0, 30) },
+  };
 }
 
 async function toolCvdState(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
   const mode = ["perp", "spot", "total"].includes(args?.mode) ? args.mode : "total";
-  const d = await api(`/api/cg/cvd?sym=${sym}&itv=m15&limit=600&mode=${mode}`);
+  const itv = ["1m", "5m", "15m", "30m", "1h", "4h", "1d"].includes(args?.itv) ? args.itv : "15m";
+  const limit = Math.min(Math.max(Number(args?.limit ?? 600) || 600, 50), 1500);
+  const anchor = ["all", "day", "week"].includes(args?.anchor) ? args.anchor : "all";
+  const d = await api(`/api/cg/cvd?sym=${sym}&itv=${itv}&limit=${limit}&mode=${mode}&anchor=${anchor}`);
   if (!d.ok) throw new Error(d.error || "cvd failed");
-  const fmtM = (v) => (v == null ? null : `${(v / 1000).toFixed(1)}M`);
   const lines = [
-    `${sym} CVD (${mode}, m15, ${d.n} bars) — perp ${fmtM(d.kpis.perpCvd)} · spot ${fmtM(d.kpis.spotCvd)} · buy share ${d.kpis.buyRatio}%`,
+    `${sym} CVD (${mode}, ${itv}, ${d.n} bars, anchor ${anchor}) — perp ${fmtM(d.kpis.perpCvd)} · spot ${fmtM(d.kpis.spotCvd)} · buy share ${d.kpis.buyRatio}%`,
     `24h perp taker: buy ${fmtM(d.kpis.perpBuy)} vs sell ${fmtM(d.kpis.perpSell)}`,
     d.divergences.length
       ? `divergences:\n${d.divergences.slice(-6).map((x) => `  ${x.type} @ ${new Date(x.ts).toISOString().slice(5, 16).replace("T", " ")} prices ${x.priceA}→${x.priceB}→${x.priceC} ret12 ${x.ret12}% hit:${x.hit}`).join("\n")}`
       : "no active divergences",
   ];
-  return { text: lines.join("\n"), data: { kpis: d.kpis, divergences: d.divergences.slice(-10), n: d.n } };
+  return { text: lines.join("\n"), data: { kpis: d.kpis, divergences: d.divergences.slice(-10), n: d.n, itv, anchor } };
+}
+
+async function toolStopmap(args) {
+  const sym = (args?.sym ?? "BTC").toUpperCase();
+  let endQ = "";
+  const endN = Number(args?.endTime);
+  if (Number.isFinite(endN) && endN > 0) endQ = `&endTime=${Math.floor(endN)}`;
+  const d = await api(`/api/cg/stopmap?sym=${sym}${endQ}`);
+  if (!d.ok) throw new Error(d.error || "stopmap failed");
+  const m = d.model;
+  const lines = [
+    `${sym} liquidation heatmap (24h window @ 5m bars, ${m.totals?.rows ?? 0} priced rows${endQ ? ", historical" : ""}) — price ${m.lastPrice}`,
+    `est. resting liq exposure: ${fmtUsd(m.totals?.below)} below (longs) · ${fmtUsd(m.totals?.above)} above (shorts)`,
+    `strongest below (long-liq magnets):`,
+    ...(m.clusters?.below ?? []).slice(0, 5).map((c) => `  ${fmtUsd(c.usd)} @ ${c.price} (−${Math.abs(c.distPct)}%, str ${c.strength})`),
+    `strongest above (short-liq magnets):`,
+    ...(m.clusters?.above ?? []).slice(0, 5).map((c) => `  ${fmtUsd(c.usd)} @ ${c.price} (+${c.distPct}%, str ${c.strength})`),
+    `distance bands: ` + (m.bands ?? []).map((b) => `±${b.a}-${b.b}% ↓${fmtUsd(b.below)} ↑${fmtUsd(b.above)}`).join(" · "),
+  ];
+  return { text: lines.join("\n"), data: { sym, lastPrice: m.lastPrice, totals: m.totals, clusters: m.clusters, bands: m.bands, window: d.window } };
+}
+
+async function toolFootprint(args) {
+  const sym = (args?.sym ?? "BTC").toUpperCase();
+  const interval = ["1m", "5m", "15m", "30m", "1h"].includes(args?.interval) ? args.interval : "15m";
+  const limit = Math.min(Math.max(Number(args?.limit ?? 96) || 96, 10), 500);
+  const lastN = Math.min(Math.max(Number(args?.last ?? 12) || 12, 1), 48);
+  const d = await api(`/api/cg/orderflow-agg?sym=${sym}&interval=${interval}&limit=${limit}`);
+  if (!d.ok) throw new Error(d.error || "footprint failed");
+  const rows = [];
+  for (const bar of (d.bars ?? []).slice(-lastN)) {
+    let buy = 0;
+    let sell = 0;
+    let pocUsd = -1;
+    let pocP = null;
+    for (const bk of bar.buckets ?? []) {
+      const b = Number(bk[4]) || 0;
+      const s = Number(bk[5]) || 0;
+      buy += b;
+      sell += s;
+      if (b + s > pocUsd) {
+        pocUsd = b + s;
+        pocP = +((Number(bk[0]) + Number(bk[1])) / 2).toPrecision(6);
+      }
+    }
+    const delta = buy - sell;
+    const dpct = buy + sell > 0 ? (100 * delta) / (buy + sell) : 0;
+    rows.push({ ts: bar.ts, buyUsd: Math.round(buy), sellUsd: Math.round(sell), deltaUsd: Math.round(delta), deltaPct: +dpct.toFixed(1), poc: pocP });
+  }
+  const lines = [
+    `${sym} aggregated footprint (${interval}, ${d.venuesOk}/${d.venues} venues ok) — last ${rows.length} bars`,
+    ...rows.slice(-12).reverse().map((r) => `  ${tsOf(r.ts)} buy ${fmtM(r.buyUsd)} sell ${fmtM(r.sellUsd)} Δ ${r.deltaPct > 0 ? "+" : ""}${r.deltaPct}% POC ${r.poc ?? "—"}`),
+  ];
+  return { text: lines.join("\n"), data: { sym, interval, bars: rows } };
+}
+
+async function toolLargeOrders(args) {
+  const sym = (args?.sym ?? "BTC").toUpperCase();
+  const hours = Math.min(Math.max(Number(args?.hours ?? 24) || 24, 1), 720);
+  const interval = ["1m", "5m", "15m", "1h", "4h"].includes(args?.interval) ? args.interval : "15m";
+  let symbol = String(args?.symbol ?? "");
+  if (!/^[A-Za-z0-9_-]{3,48}$/.test(symbol)) symbol = `Binance_${sym}USDT`;
+  const d = await api(`/api/cg/largeorder?symbol=${encodeURIComponent(symbol)}&interval=${interval}&hours=${hours}`);
+  if (!d.ok) throw new Error(d.error || "large orders failed");
+  let restingBid = 0;
+  let restingAsk = 0;
+  let tradedBuy = 0;
+  let tradedSell = 0;
+  const resting = [];
+  const trades = [];
+  for (const g of d.groups ?? []) {
+    const ex = g.instrument?.exName ?? "?";
+    for (const o of g.list ?? []) {
+      const usd = Number(o.quoteVol ?? 0) || 0;
+      if (o.turnoverTime) {
+        if (o.side === 2) tradedBuy += usd;
+        else tradedSell += usd;
+        trades.push({ ex, side: o.side === 2 ? "buy" : "sell", price: o.price, usd, fills: o.turnoverNumber ?? 0, at: o.turnoverTime });
+      } else {
+        if (o.side === 2) restingBid += usd;
+        else restingAsk += usd;
+        resting.push({ ex, side: o.side === 2 ? "bid" : "ask", price: o.price, usd, remainingUsd: o.volUsd ?? usd, at: o.createTime });
+      }
+    }
+  }
+  resting.sort((a, b) => b.usd - a.usd);
+  trades.sort((a, b) => b.usd - a.usd);
+  const imb = restingBid + restingAsk > 0 ? ((restingBid - restingAsk) / (restingBid + restingAsk)) * 100 : 0;
+  const lines = [
+    `${symbol} large orders (last ${hours}h, ${interval}) — ${resting.length} resting · ${trades.length} executed`,
+    `resting: bids ${fmtUsd(restingBid)} vs asks ${fmtUsd(restingAsk)} · imbalance ${fmtP(imb, 1)}% ${imb > 0 ? "(bid-heavy)" : "(ask-heavy)"}`,
+    `executed notional: buys ${fmtUsd(tradedBuy)} vs sells ${fmtUsd(tradedSell)}`,
+    resting.length ? `largest resting:` : "no resting walls",
+    ...resting.slice(0, 8).map((r) => `  ${r.side.toUpperCase()} ${fmtUsd(r.usd)} @ ${r.price} (${r.ex}) · remaining ${fmtUsd(r.remainingUsd)}`),
+  ];
+  if (trades.length) {
+    lines.push("largest executed:");
+    lines.push(...trades.slice(0, 8).map((t) => `  ${t.side.toUpperCase()} ${fmtUsd(t.usd)} @ ${t.price} (${t.ex}, ${t.fills} fills, ${tsOf(t.at)})`));
+  }
+  return { text: lines.join("\n"), data: { symbol, hours, restingBid, restingAsk, tradedBuy, tradedSell, resting: resting.slice(0, 25), trades: trades.slice(0, 25) } };
+}
+
+async function toolKline(args) {
+  const sym = (args?.sym ?? "BTC").toUpperCase();
+  const type = args?.type === "oi" ? "oi" : "kline";
+  const interval = String(args?.interval ?? "15m");
+  const limit = Math.min(Math.max(Number(args?.limit ?? 300) || 300, 10), 1000);
+  let symbol = String(args?.symbol ?? "");
+  if (!/^[A-Za-z0-9_-]{3,48}$/.test(symbol)) symbol = `Binance_${sym}USDT`;
+  const d = await api(`/api/cg/kline?symbol=${encodeURIComponent(symbol)}&type=${type}&interval=${interval}&limit=${limit}`);
+  if (!d.ok) throw new Error(d.error || "kline failed");
+  const rows = d.rows ?? [];
+  const last = rows[rows.length - 1] ?? [];
+  const lines = [
+    `${symbol} ${type === "oi" ? "open-interest" : "kline"} ${interval} — ${rows.length} rows`,
+    `last: ${tsOf(Number(last[0]) || 0)} O ${last[1]} H ${last[2]} L ${last[3]} C ${last[4]}${type === "kline" ? ` V ${last[5]}` : ""}`,
+  ];
+  return { text: lines.join("\n"), data: { symbol, type, interval, rows: rows.slice(-Math.min(rows.length, 500)) } };
 }
 
 async function toolAnalyzeSetup(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
-  const [market, signals, liq, whale, notif] = await Promise.all([
+  const [market, signals, liq, whale, book, cvd, notif] = await Promise.all([
     toolMarketSnapshot({ sym }).catch(() => null),
     toolSignals({ sym }).catch(() => null),
     toolLiquidationLevels({ sym, range: "3d" }).catch(() => null),
     toolWhaleOrders({ sym }).catch(() => null),
+    toolBookWalls({ sym }).catch(() => null),
+    toolCvdState({ sym }).catch(() => null),
     api(`/api/cg/notifications?asset=${sym}&limit=15`).catch(() => null),
   ]);
   const parts = [];
@@ -228,6 +391,8 @@ async function toolAnalyzeSetup(args) {
   if (signals) parts.push(`\n--- FOOTPRINT SIGNALS ---\n${signals.text}`);
   if (liq) parts.push(`\n--- LIQUIDATION CLUSTERS (sweep magnets) ---\n${liq.text}`);
   if (whale) parts.push(`\n--- WHALE OPEN ORDERS ---\n${whale.text}`);
+  if (book) parts.push(`\n--- ORDER-BOOK WALLS ---\n${book.text}`);
+  if (cvd) parts.push(`\n--- CVD STATE ---\n${cvd.text}`);
   if (notif?.items?.length) {
     parts.push(
       `\n--- RECENT EVENTS ---\n` +
@@ -329,23 +494,96 @@ const TOOLS = [
   },
   {
     name: "book_walls",
-    description: "Order-book depth walls (±5%) from the aggregate liquidity-heatmap stream: bid/ask depth, imbalance, largest walls.",
-    inputSchema: { type: "object", properties: { sym: { type: "string" } }, required: ["sym"] },
+    description: "Order-book depth walls from the aggregate liquidity-heatmap stream: bid/ask depth, imbalance (now vs 5m ago), confirmed wall list with age/touched state and the add/fill/pull event feed. Full dimension control: market (futures/spot), interval, limit, band %, endTime history.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sym: { type: "string" },
+        market: { type: "string", enum: ["futures", "spot"] },
+        interval: { type: "string", enum: ["1m", "5m", "15m", "1h", "4h", "1d"] },
+        limit: { type: "number", description: "Snapshot frames (10-500, default 150)" },
+        band: { type: "number", description: "Depth band % around mid (0.5-20, default 5)" },
+        endTime: { type: "number", description: "Unix seconds — historical window (up to 30 days back)" },
+      },
+      required: ["sym"],
+    },
     handler: toolBookWalls,
   },
   {
     name: "cvd_state",
-    description: "Cumulative Volume Delta state: perp/spot CVD, taker buy share and the active price/CVD divergences.",
+    description: "Cumulative Volume Delta state: perp/spot CVD, taker buy share, active price/CVD divergences. Timeframe (itv), bar count and KPI anchor (all/day/week) configurable.",
     inputSchema: {
       type: "object",
-      properties: { sym: { type: "string" }, mode: { type: "string", enum: ["perp", "spot", "total"] } },
+      properties: {
+        sym: { type: "string" },
+        mode: { type: "string", enum: ["perp", "spot", "total"] },
+        itv: { type: "string", enum: ["1m", "5m", "15m", "30m", "1h", "4h", "1d"] },
+        limit: { type: "number", description: "Bars (50-1500, default 600)" },
+        anchor: { type: "string", enum: ["all", "day", "week"] },
+      },
       required: ["sym"],
     },
     handler: toolCvdState,
   },
   {
+    name: "stopmap",
+    description: "BTC liquidation heatmap (stops map): the 24h estimated leveraged-position exposure grid — strongest clusters above/below (sweep magnets), distance bands and totals. Anonymous API is BTC-only; pass endTime (unix sec, up to 30 days back) for historical windows.",
+    inputSchema: {
+      type: "object",
+      properties: { sym: { type: "string", description: "BTC only (upstream limitation)" }, endTime: { type: "number", description: "Unix seconds — historical 24h window" } },
+      required: ["sym"],
+    },
+    handler: toolStopmap,
+  },
+  {
+    name: "footprint",
+    description: "Aggregated order-flow bars across the deepest perp venues: per-bar taker buy/sell USD, delta %, POC price — the footprint series behind the signal engine. Interval and bar count configurable.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sym: { type: "string" },
+        interval: { type: "string", enum: ["1m", "5m", "15m", "30m", "1h"] },
+        limit: { type: "number", description: "Bars to fetch (10-500, default 96)" },
+        last: { type: "number", description: "Bars to return in detail (1-48, default 12)" },
+      },
+      required: ["sym"],
+    },
+    handler: toolFootprint,
+  },
+  {
+    name: "large_orders",
+    description: "Large resting orders AND executed large trades for one instrument (default Binance perp): resting bid/ask walls + executed notional split — the aggressive-whale tape. hours + interval configurable.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sym: { type: "string", description: "Asset symbol — derives the default Binance instrument key" },
+        symbol: { type: "string", description: "Explicit instrument key, e.g. OKX_BTC-USDT-SWAP (overrides sym)" },
+        hours: { type: "number", description: "Lookback hours (1-720, default 24)" },
+        interval: { type: "string", enum: ["1m", "5m", "15m", "1h", "4h"] },
+      },
+      required: ["sym"],
+    },
+    handler: toolLargeOrders,
+  },
+  {
+    name: "kline_series",
+    description: "Raw candle or open-interest series for any instrument key (default Binance perp): type kline|oi, any interval, up to 1000 rows — the building block for custom studies.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sym: { type: "string", description: "Asset symbol — derives the default Binance instrument key" },
+        symbol: { type: "string", description: "Explicit instrument key, e.g. Hyperliquid_BTC-USD (overrides sym)" },
+        type: { type: "string", enum: ["kline", "oi"] },
+        interval: { type: "string", description: "m1/m5/m15/m30/h1/h4/d1" },
+        limit: { type: "number", description: "Rows (10-1000, default 300)" },
+      },
+      required: ["sym"],
+    },
+    handler: toolKline,
+  },
+  {
     name: "analyze_setup",
-    description: "One-call trade-formulation context for an asset: market snapshot + footprint signals + liquidation clusters + whale walls + recent events + the formulation guide (bias / entry / stop / targets).",
+    description: "One-call trade-formulation context for an asset: market snapshot + footprint signals + liquidation clusters + whale walls + book walls + CVD state + recent events + the formulation guide (bias / entry / stop / targets).",
     inputSchema: { type: "object", properties: { sym: { type: "string" } }, required: ["sym"] },
     handler: toolAnalyzeSetup,
   },

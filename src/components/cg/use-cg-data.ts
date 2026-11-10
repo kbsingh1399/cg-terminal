@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLiveQuote } from "@/lib/live/feed";
 import type {
   KlineRow,
   OiKlineRow,
@@ -76,6 +77,9 @@ export interface TickerPayload {
   ok: boolean;
   sym: string;
   price: number | null;
+  bid?: number | null;
+  ask?: number | null;
+  source?: "binance-fapi" | "coinglass";
   dir?: "up" | "down" | "flat";
   candleT?: number | null;
   fetchedAt?: number;
@@ -84,21 +88,61 @@ export interface TickerPayload {
   ttlMs?: number;
 }
 
+export type TickerSource = "ws" | "rest" | "rest-cg" | null;
+
 /**
- * 1-second live price ticker (shared server cache → Coinglass kline).
- * Falls back to `null` price on error so callers can degrade gracefully.
+ * REAL-TIME price — 3-tier ladder, fastest tier wins:
+ *
+ *  1. Binance USDT-M futures WebSocket (browser → fstream, bookTicker +
+ *     aggTrade): sub-100 ms — the price the exchange itself shows.
+ *  2. /api/cg/live — server-side Binance futures bookTicker at 250 ms
+ *     shared TTL (kicked in when the browser cannot hold the WS).
+ *  3. Coinglass m1 forming-candle close (inside the same route, ~3 s) —
+ *     the legacy source, last resort.
+ *
+ * The returned `source` always names the tier currently driving the price —
+ * no silent mixing. `dir` is computed tick-to-tick from the live tape.
  */
-export function useTicker(sym: string, intervalMs = 1_000) {
-  const q = usePolling<TickerPayload>(`/api/cg/ticker?sym=${encodeURIComponent(sym)}`, intervalMs);
-  // defense-in-depth: only trust the payload when it belongs to this symbol
-  const mine = q.data?.sym === sym;
+export function useTicker(sym: string, restIntervalMs = 500) {
+  const { quote, lastTrade, live: wsLive, status } = useLiveQuote(sym);
+  const wsUsable = wsLive && !!quote;
+  // REST fallback only runs while the WS is down — zero upstream cost when live
+  const q = usePolling<TickerPayload>(wsUsable ? null : `/api/cg/live?sym=${encodeURIComponent(sym)}`, restIntervalMs);
+
+  // tick-to-tick direction from whichever tier is feeding us
+  const prevRef = useRef<number | null>(null);
+  const prevSrcRef = useRef<TickerSource>(null);
+  const priceWs = lastTrade?.p ?? quote?.mid ?? null;
+  const priceRest = q.data?.sym === sym ? q.data?.price ?? null : null;
+  const price = wsUsable ? priceWs : priceRest;
+  const source: TickerSource = wsUsable ? "ws" : q.data?.source === "coinglass" ? "rest-cg" : q.data?.source ? "rest" : null;
+  if (price != null && prevSrcRef.current !== source) prevRef.current = null; // tier switch → no bogus flash
+  const dir =
+    price == null || prevRef.current == null || price === prevRef.current
+      ? "flat"
+      : price > prevRef.current
+        ? "up"
+        : "down";
+  if (price != null) prevRef.current = price;
+  prevSrcRef.current = source;
+
+  const fetchedAt = wsUsable ? quote?.t ?? null : q.updatedAt || null;
+  const ageMs = wsUsable ? Math.max(0, Date.now() - (lastTrade?.t ?? quote?.t ?? Date.now())) : q.data?.ageMs ?? null;
+  const live =
+    price != null &&
+    (wsUsable || (q.data?.ok === true && q.data?.sym === sym && source === "rest" && !q.error));
+
   return {
-    price: mine ? q.data?.price ?? null : null,
-    dir: mine ? q.data?.dir ?? "flat" : "flat",
-    live: mine && !!q.data?.ok && !q.data?.stale && q.data?.price != null && !q.error,
-    ageMs: mine ? q.data?.ageMs ?? null : null,
-    fetchedAt: mine ? q.data?.fetchedAt ?? null : null,
-    error: q.error,
+    price,
+    bid: wsUsable ? quote?.bid ?? null : (q.data?.sym === sym ? q.data?.bid ?? null : null),
+    ask: wsUsable ? quote?.ask ?? null : (q.data?.sym === sym ? q.data?.ask ?? null : null),
+    dir,
+    live,
+    source,
+    wsStatus: status,
+    ageMs,
+    fetchedAt,
+    error: wsUsable ? null : q.error,
     updatedAt: q.updatedAt,
   };
 }

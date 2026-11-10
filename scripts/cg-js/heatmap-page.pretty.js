@@ -1,0 +1,9883 @@
+(!(function () {
+  try {
+    var e =
+        "u" > typeof window
+          ? window
+          : "u" > typeof global
+            ? global
+            : "u" > typeof globalThis
+              ? globalThis
+              : "u" > typeof self
+                ? self
+                : {},
+      t = new e.Error().stack;
+    t &&
+      ((e._sentryDebugIds = e._sentryDebugIds || {}),
+      (e._sentryDebugIds[t] = "9b322898-f7d0-40e5-8101-28c52c3681ba"),
+      (e._sentryDebugIdIdentifier =
+        "sentry-dbid-9b322898-f7d0-40e5-8101-28c52c3681ba"));
+  } catch (e) {}
+})(),
+  (self.webpackChunk_N_E = self.webpackChunk_N_E || []).push([
+    [34959],
+    {
+      1877: (e) => {
+        e.exports = {
+          card: "ChartCard_card__wWOwA",
+          full: "ChartCard_full__bbIwC",
+          toolbar: "ChartCard_toolbar__oaehQ",
+          subbar: "ChartCard_subbar__Zn3yi",
+          h: "ChartCard_h__Nzlh_",
+          eyebrow: "ChartCard_eyebrow__zPutR",
+          vsep: "ChartCard_vsep__IlEeG",
+          lbl: "ChartCard_lbl__LSRaA",
+          sp: "ChartCard_sp__h8sFN",
+          n: "ChartCard_n__KZGLr",
+          f1: "ChartCard_f1__XGorX",
+          f2: "ChartCard_f2__CBzqF",
+          tx: "ChartCard_tx__c_4q9",
+          f3: "ChartCard_f3__TqHnz",
+          f4: "ChartCard_f4__UhMpu",
+          f5: "ChartCard_f5__nOUx2",
+          cv: "ChartCard_cv__StG8Y",
+          dual: "ChartCard_dual__RwQju",
+          f6: "ChartCard_f6__1z6m5",
+          crange: "ChartCard_crange__70Q0q",
+          opt: "ChartCard_opt__nCGQK",
+          dualMask: "ChartCard_dualMask__hYOLb",
+          dualFill: "ChartCard_dualFill__T2s5I",
+          dualH: "ChartCard_dualH__ETa_T",
+          mb: "ChartCard_mb__roIT2",
+          mrow: "ChartCard_mrow__VGa8I",
+          dk: "ChartCard_dk__i_6m8",
+          ib: "ChartCard_ib__KGTAV",
+          plot: "ChartCard_plot__ynG6A",
+          wm: "ChartCard_wm__4NyHk",
+          ploading: "ChartCard_ploading__Eg18A",
+          spin: "ChartCard_spin__ImpdP",
+          on: "ChartCard_on__CH73E",
+          edge: "ChartCard_edge__sCFNI",
+          pnote: "ChartCard_pnote__LJRVM",
+          tip: "ChartCard_tip__enYsM",
+          th: "ChartCard_th__NfkJ_",
+          thm: "ChartCard_thm__E59pp",
+          cl: "ChartCard_cl__CDQo8",
+          th2: "ChartCard_th2__zZhTb",
+          ng: "ChartCard_ng__6LNu3",
+          ng3: "ChartCard_ng3__aBnMy",
+          ngh: "ChartCard_ngh__EZHjk",
+          c: "ChartCard_c__3ia51",
+          hr: "ChartCard_hr__43Vgm",
+          cOn: "ChartCard_cOn___qWCY",
+          pp: "ChartCard_pp__QLkXj",
+          ppb: "ChartCard_ppb__vUwR4",
+          ppa: "ChartCard_ppa__VfQ0L",
+          ppOn: "ChartCard_ppOn__GLiF_",
+          r: "ChartCard_r__5OXIA",
+          num: "ChartCard_num__IJX_e",
+          pos: "ChartCard_pos__1JmFp",
+          neg: "ChartCard_neg__3YwpC",
+          tg: "ChartCard_tg__KcDzy",
+          tgB: "ChartCard_tgB__5jTyr",
+          tgS: "ChartCard_tgS__e6fZT",
+        };
+      },
+      12384: (e) => {
+        e.exports = {
+          ha: "PalettePanel_ha__mZXUh",
+          pal: "PalettePanel_pal__VQi5_",
+          ph: "PalettePanel_ph__75tY_",
+          sec: "PalettePanel_sec__NUxWK",
+          pre: "PalettePanel_pre__SPOjh",
+          hpre: "PalettePanel_hpre__prGi4",
+          chip: "PalettePanel_chip__vl1qm",
+          dots: "PalettePanel_dots__8GrgU",
+          on: "PalettePanel_on__Q25rB",
+          ksw: "PalettePanel_ksw__0KUKp",
+          sw: "PalettePanel_sw__Uz4Ti",
+          swOn: "PalettePanel_swOn__8HkzG",
+          ft: "PalettePanel_ft___jH4l",
+          ico: "PalettePanel_ico__Ly9X_",
+        };
+      },
+      14995: (e) => {
+        e.exports = {
+          scope: "ui_scope__wbmAR",
+          button: "ui_button__cM1ap",
+          compact: "ui_compact__RZ8jm",
+          icon: "ui_icon__V7VXu",
+          primary: "ui_primary__zvsua",
+          selected: "ui_selected__vtBRv",
+          open: "ui_open__b5L__",
+          tabs: "ui_tabs__7Rp16",
+          selBox: "ui_selBox__J5SC7",
+          selVal: "ui_selVal__c6Yzb",
+          select: "ui_select__y2dKO",
+          caption: "ui_caption__8ILZs",
+          menu: "ui_menu__w7XsP",
+          content: "ui_content__sQyWs",
+          popMenu: "ui_popMenu__KpjRH",
+          popBody: "ui_popBody__yFsuj",
+          checkbox: "ui_checkbox___Rx7x",
+          lbl: "ui_lbl__CtNGy",
+          chev: "ui_chev__FaTDM",
+          sec: "ui_sec__uvAjY",
+          row: "ui_row__IqJTK",
+          rowOn: "ui_rowOn__si97S",
+          rowDis: "ui_rowDis__sNMoA",
+          rowText: "ui_rowText__u3cc_",
+        };
+      },
+      20297: (e) => {
+        e.exports = {
+          kpis: "KpiStrip_kpis__tgIDE",
+          kpi: "KpiStrip_kpi__vrLsL",
+          l: "KpiStrip_l__Ti5n5",
+          d: "KpiStrip_d__AGE8L",
+          v: "KpiStrip_v__qQpw8",
+          coin: "KpiStrip_coin__4EncJ",
+          btn: "KpiStrip_btn__EqBn5",
+          tight: "KpiStrip_tight__Bk8pE",
+          pos: "KpiStrip_pos__rvkYX",
+          neg: "KpiStrip_neg__nnoOu",
+        };
+      },
+      20658: (e) => {
+        e.exports = {
+          rel: "Related_rel__65Bb4",
+          fh: "Related_fh__2_2Rb",
+          grid: "Related_grid__elwio",
+          relcard: "Related_relcard__TGYl0",
+          rtext: "Related_rtext__BRv2e",
+          rico: "Related_rico__R1Bxn",
+          coins: "Related_coins__g6CcF",
+          chips: "Related_chips__VaVeB",
+          chip: "Related_chip__9j3Ca",
+          nm: "Related_nm__UeTme",
+          sfx: "Related_sfx__bUsIM",
+        };
+      },
+      29673: (e) => {
+        e.exports = {
+          slot: "TopBar_slot__1Tfcp",
+          top: "TopBar_top___k6RK",
+          grow: "TopBar_grow__YMCgU",
+          compact: "TopBar_compact__v8adZ",
+          title: "TopBar_title__ZyJLK",
+          pairBtn: "TopBar_pairBtn__vO3oU",
+          pex: "TopBar_pex__A_VD1",
+          foldBtn: "TopBar_foldBtn__a9G0G",
+          ico: "TopBar_ico__BVkcL",
+          sheet: "TopBar_sheet__JhcZk",
+          sheetRow: "TopBar_sheetRow__jbOgQ",
+          lg: "TopBar_lg__rDkZy",
+          lgTxt: "TopBar_lgTxt__h_iYs",
+          exLg: "TopBar_exLg__Dar5E",
+          ps: "TopBar_ps__5mCDW",
+          tag: "TopBar_tag__WXDAc",
+          kPerp: "TopBar_kPerp__3p8ph",
+          kSpot: "TopBar_kSpot__aXqiK",
+          pairLab: "TopBar_pairLab__o3c2G",
+          pairPop: "TopBar_pairPop__4zE2p",
+          phead: "TopBar_phead__LXKHT",
+          search: "TopBar_search__CfrXv",
+          plist: "TopBar_plist__c86QK",
+          pgh: "TopBar_pgh__Y2lAM",
+          prow: "TopBar_prow___FrAr",
+          kb: "TopBar_kb__xwYtS",
+          on: "TopBar_on__GR1wj",
+          empty: "TopBar_empty__zwONg",
+          aggLab: "TopBar_aggLab__zwgL_",
+          lgs: "TopBar_lgs__4umh7",
+          vx: "TopBar_vx__u2pCS",
+          aggFt: "TopBar_aggFt__5fhan",
+          live: "TopBar_live__W9GhY",
+          st_live: "TopBar_st_live__Z7hGi",
+          st_conn: "TopBar_st_conn__MHYbo",
+          st_error: "TopBar_st_error___zGI6",
+          uico: "TopBar_uico__1yEYe",
+          ha: "TopBar_ha__8AW0Y",
+        };
+      },
+      31977: (e) => {
+        e.exports = {
+          root: "ob-heatmap_root__5ePFK",
+          main: "ob-heatmap_main__hSOJx",
+        };
+      },
+      41514: (e) => {
+        e.exports = {
+          side: "SidePanel_side__vNv2v",
+          tabs: "SidePanel_tabs__5E1Xp",
+          view: "SidePanel_view__V275H",
+          sum: "SidePanel_sum__b26nA",
+          sigf: "SidePanel_sigf__KuNYU",
+          list: "SidePanel_list__6cpcW",
+          lrow: "SidePanel_lrow__gLWe2",
+          sel: "SidePanel_sel__9PzNq",
+          lhead: "SidePanel_lhead__ulAtc",
+          rt: "SidePanel_rt__Z2n95",
+          wl: "SidePanel_wl__ioRHS",
+          ev: "SidePanel_ev__Y_x9Y",
+          tm: "SidePanel_tm__DJwzT",
+          tag: "SidePanel_tag__yLwub",
+          buy: "SidePanel_buy__GKlC4",
+          sell: "SidePanel_sell__ckh2X",
+          mute: "SidePanel_mute__du236",
+          pos: "SidePanel_pos__QQgPx",
+          neg: "SidePanel_neg__IDaf9",
+          bhead: "SidePanel_bhead__SMJfi",
+          t: "SidePanel_t__7OzQQ",
+          o: "SidePanel_o__s3IHg",
+          ld: "SidePanel_ld__BpDB_",
+          ldB: "SidePanel_ldB__0OmFd",
+          ldA: "SidePanel_ldA__tKhBx",
+          wtag: "SidePanel_wtag__Opw4V",
+          mid: "SidePanel_mid__rB4wr",
+          mp: "SidePanel_mp___Xv22",
+          sp2: "SidePanel_sp2__6sZUP",
+        };
+      },
+      45004: (e) => {
+        e.exports = {
+          modal: "ShotModal_modal__kIrNg",
+          content: "ShotModal_content__Bw6ZT",
+          box: "ShotModal_box__phNlH",
+          sub: "ShotModal_sub__e5flE",
+          tools: "ShotModal_tools__WxZtD",
+          grow: "ShotModal_grow__3XGtp",
+          sws: "ShotModal_sws__Ll6TV",
+          sw: "ShotModal_sw__sZ0IQ",
+          on: "ShotModal_on__Y3WQI",
+          stage: "ShotModal_stage__C2VEx",
+          ann: "ShotModal_ann__lNday",
+          txt: "ShotModal_txt__BRFmI",
+          note: "ShotModal_note__e84cg",
+        };
+      },
+      55223: (e) => {
+        e.exports = {
+          banner: "Banner_banner__Y_6Ec",
+          bad: "Banner_bad__b3dhy",
+          grow: "Banner_grow__dVdD3",
+        };
+      },
+      71155: (e) => {
+        e.exports = {
+          faq: "Faq_faq__u1vq7",
+          fh: "Faq_fh__hVcFK",
+          card: "Faq_card__xl_jt",
+          col: "Faq_col__SwuCo",
+          what: "Faq_what__ucVbH",
+          fig: "Faq_fig__48dg5",
+          ax: "Faq_ax__4afT8",
+          h1: "Faq_h1__O1w79",
+          h2: "Faq_h2__HAFkf",
+          h3: "Faq_h3__1yUqZ",
+          h4: "Faq_h4__Idvo0",
+          px: "Faq_px__4Fsr6",
+          ub: "Faq_ub__UgEaQ",
+          us: "Faq_us__EKvuW",
+          l: "Faq_l__VMt_9",
+          t: "Faq_t__ySRCh",
+          k: "Faq_k__bdnC2",
+          cols: "Faq_cols__dXzuJ",
+          a: "Faq_a__2wMIp",
+        };
+      },
+      81589: (e, t, s) => {
+        (window.__NEXT_P = window.__NEXT_P || []).push([
+          "/LiquidityHeatmap/[symbol]",
+          function () {
+            return s(92826);
+          },
+        ]);
+      },
+      92826: (e, t, s) => {
+        "use strict";
+        (s.r(t), s.d(t, { __N_SSP: () => sq, default: () => sI }));
+        var i = s(6029),
+          a = s(63046),
+          l = s(55729),
+          r = s(81278),
+          n = s(83617),
+          o = s(79690),
+          h = s(75227),
+          d = s(60880),
+          c = s(31977),
+          u = s.n(c);
+        let p = (e) => "string" == typeof e && /^[A-Z0-9]{1,20}$/.test(e),
+          f = {
+            "1m": 6e4,
+            "5m": 3e5,
+            "15m": 9e5,
+            "1h": 36e5,
+            "4h": 144e5,
+            "1d": 864e5,
+          },
+          m = {
+            "1m": "m1",
+            "5m": "m5",
+            "15m": "m15",
+            "1h": "h1",
+            "4h": "h4",
+            "1d": "d1",
+          },
+          g = {
+            "1m": "1m",
+            "5m": "5m",
+            "15m": "15m",
+            "1h": "1H",
+            "4h": "4H",
+            "1d": "1D",
+          },
+          b = { "1m": 4, "5m": 3, "15m": 3, "1h": 3, "4h": 2, "1d": 2 },
+          x = {
+            "1m": 144e5,
+            "5m": 72e6,
+            "15m": 2592e5,
+            "1h": 864e6,
+            "4h": 3456e6,
+            "1d": 13824e6,
+          },
+          v = [0.5, 1, 2, 5],
+          y = {
+            BTC: 15e5,
+            ETH: 8e5,
+            SOL: 3e5,
+            XRP: 3e5,
+            BNB: 3e5,
+            DOGE: 3e5,
+            HYPE: 3e5,
+          },
+          w = (e) => y[e] || 1e5,
+          _ = (e) => ("BTC" === e ? "XBT" : e),
+          k = ["BTC", "ETH"],
+          T = [
+            {
+              id: "agg-perp",
+              agg: !0,
+              kind: "perp",
+              venues: [
+                "binance-perp",
+                "okx-perp",
+                "gate-perp",
+                "bitget-perp",
+                "hyperliquid-perp",
+              ],
+              syms: k,
+            },
+            {
+              id: "binance-perp",
+              ex: "Binance",
+              kind: "perp",
+              pair: (e) => e + "USDT",
+              key: (e) => "Binance_" + e + "USDT",
+              tk: "USDT",
+            },
+            {
+              id: "okx-perp",
+              ex: "OKX",
+              kind: "perp",
+              pair: (e) => e + "-USDT-SWAP",
+              key: (e) => "OKX_" + e + "-USDT-SWAP",
+              syms: k,
+            },
+            {
+              id: "gate-perp",
+              ex: "Gate",
+              kind: "perp",
+              pair: (e) => e + "_USDT",
+              key: (e) => "Gate_" + e + "_USDT",
+              syms: k,
+            },
+            {
+              id: "bitget-perp",
+              ex: "Bitget",
+              kind: "perp",
+              pair: (e) => e + "USDT",
+              key: (e) => "Bitget_" + e + "USDT_UMCBL",
+              syms: k,
+            },
+            {
+              id: "hyperliquid-perp",
+              ex: "Hyperliquid",
+              kind: "perp",
+              pair: (e) => e + "-USD",
+              key: (e) => "Hyperliquid_" + e + "-USD",
+              tk: "USD",
+              usd: !0,
+            },
+            {
+              id: "tradexyz-perp",
+              ex: "tradeXYZ",
+              kind: "perp",
+              pair: (e) => e + "-USD",
+              key: (e) => "tradeXYZ_" + e + "-USD",
+              tk: "USD",
+              fb: [],
+              usd: !0,
+            },
+            {
+              id: "agg-spot",
+              agg: !0,
+              kind: "spot",
+              venues: [
+                "binance-spot",
+                "coinbase-spot",
+                "okx-spot",
+                "bitget-spot",
+                "gate-spot",
+                "kraken-spot",
+                "bitfinex-spot",
+              ],
+              syms: k,
+            },
+            {
+              id: "binance-spot",
+              ex: "Binance",
+              kind: "spot",
+              pair: (e) => e + "USDT",
+              key: (e) => "Binance_SPOT_" + e + "USDT",
+              tk: "USDT",
+            },
+            {
+              id: "coinbase-spot",
+              ex: "Coinbase",
+              kind: "spot",
+              pair: (e) => e + "-USD",
+              key: (e) => "Coinbase_SPOT_" + e + "-USD",
+              syms: k,
+              usd: !0,
+            },
+            {
+              id: "okx-spot",
+              ex: "OKX",
+              kind: "spot",
+              pair: (e) => e + "-USDT",
+              key: (e) => "OKX_SPOT_" + e + "-USDT",
+              syms: k,
+            },
+            {
+              id: "bitget-spot",
+              ex: "Bitget",
+              kind: "spot",
+              pair: (e) => e + "USDT",
+              key: (e) => "Bitget_SPOT_" + e + "USDT",
+              syms: k,
+            },
+            {
+              id: "gate-spot",
+              ex: "Gate",
+              kind: "spot",
+              pair: (e) => e + "_USDT",
+              key: (e) => "Gate_SPOT_" + e + "_USDT",
+              syms: k,
+            },
+            {
+              id: "kraken-spot",
+              ex: "Kraken",
+              kind: "spot",
+              pair: (e) => _(e) + "/USD",
+              key: (e) => "Kraken_SPOT_" + _(e) + "/USD",
+              syms: k,
+              usd: !0,
+            },
+            {
+              id: "bitfinex-spot",
+              ex: "Bitfinex",
+              kind: "spot",
+              pair: (e) => e + "USD",
+              key: (e) => "Bitfinex_SPOT_" + e + "USD",
+              syms: k,
+              usd: !0,
+            },
+          ],
+          j = Object.fromEntries(T.map((e) => [e.id, e])),
+          S = (e) => {
+            let t = e[0][1],
+              s = e[e.length - 1][1];
+            return {
+              stops: e.map((e) => e[0]),
+              at: e.map((e) => ((e[1] - t) / (s - t)) * 100),
+            };
+          },
+          C = {
+            aurora: {
+              en: "Aurora",
+              ...S([
+                ["#121212", 0],
+                ["#1f1037", 40],
+                ["#453781", 50],
+                ["#2d6583", 60],
+                ["#4b9980", 70],
+                ["#88cd66", 80],
+                ["#e7f052", 90],
+                ["#ffff00", 100],
+              ]),
+            },
+            lava: {
+              en: "Lava",
+              ...S([
+                ["#121212", 0],
+                ["#190831", 50],
+                ["#2f1055", 55],
+                ["#4c1a69", 60],
+                ["#772d6d", 65],
+                ["#9f3e71", 70],
+                ["#bd4e71", 75],
+                ["#ce5b6c", 80],
+                ["#e16968", 85],
+                ["#ea927f", 90],
+                ["#f1c4a0", 95],
+                ["#faf1be", 100],
+              ]),
+            },
+            afterglow: {
+              en: "Afterglow",
+              ...S([
+                ["#2f1055", 10],
+                ["#4c1a69", 20],
+                ["#772d6d", 30],
+                ["#9f3e71", 40],
+                ["#bd4e71", 50],
+                ["#ce5b6c", 55],
+                ["#e16968", 60],
+                ["#ea927f", 65],
+                ["#f1c4a0", 70],
+                ["#faf1be", 100],
+              ]),
+            },
+            daylight: {
+              en: "Daylight",
+              ...S([
+                ["#ffffff", 0],
+                ["#f7f2d5", 50],
+                ["#ea927f", 55],
+                ["#e16968", 60],
+                ["#ce5b6c", 70],
+                ["#bd4e71", 80],
+                ["#9f3e71", 90],
+                ["#772d6d", 100],
+              ]),
+            },
+          },
+          M = (e, t) => ("auto" !== e && C[e] ? e : t ? "daylight" : "aurora"),
+          N = [
+            { id: "default", en: "Default" },
+            { id: "blred", en: "Blue / red", bid: "#3d8bff", ask: "#ff4d5e" },
+            {
+              id: "blorange",
+              en: "Blue / orange",
+              bid: "#3b82f6",
+              ask: "#ff8a3d",
+            },
+            { id: "soft", en: "Soft", bid: "#7fb8ff", ask: "#ff8fb1" },
+          ],
+          A = [
+            {
+              id: "classic",
+              en: "Classic",
+              up: ["#00c805", "#00c805"],
+              dn: ["#fa5000", "#fa5000"],
+            },
+            {
+              id: "gr",
+              en: "Green up, red down",
+              up: ["#0ecb81", "#089981"],
+              dn: ["#f6465d", "#f23645"],
+            },
+            {
+              id: "rg",
+              en: "Red up, green down",
+              up: ["#f6465d", "#f6465d"],
+              dn: ["#0ecb81", "#0ecb81"],
+            },
+            {
+              id: "teal",
+              en: "Teal / red",
+              up: ["#26a69a", "#26a69a"],
+              dn: ["#ef5350", "#ef5350"],
+            },
+            {
+              id: "mono",
+              en: "Black and white",
+              up: ["#e6e7ec", "#e6e7ec"],
+              dn: ["#6b6e78", "#6b6e78"],
+            },
+            {
+              id: "cvd",
+              en: "Colour-blind friendly",
+              up: ["#2962ff", "#2962ff"],
+              dn: ["#ff9800", "#ff9800"],
+            },
+            { id: "side", en: "Follow bid / ask colours" },
+          ],
+          B = [
+            "#0ecb81",
+            "#00c805",
+            "#26a69a",
+            "#2962ff",
+            "#e6e7ec",
+            "#f6465d",
+            "#fa5000",
+            "#ef5350",
+            "#ff9800",
+            "#6b6e78",
+          ],
+          L = ["kline", "bub", "wall", "cob"],
+          D = ["vol", "imb"],
+          R = [
+            {
+              id: "largeOrders",
+              path: (0, d.sQ)("largeOrders"),
+              icon: '<path d="M2.5 14.5h12M4.5 14.5v-6M8.5 14.5v-11M12.5 14.5v-4"/>',
+            },
+            {
+              id: "aggBook",
+              path: "/mergev2/BTC-USDT",
+              icon: '<path d="M8.5 2.5l6 3-6 3-6-3z"/><path d="M2.5 9l6 3 6-3M2.5 12.5l6 3 6-3"/>',
+            },
+            {
+              id: "depth",
+              path: "/pro/depth-delta",
+              icon: '<path d="M8.5 2.5v12M8.5 5h-5M8.5 8.5h3.5M8.5 12h-2.5"/>',
+            },
+            {
+              id: "footprint",
+              path: (0, d.sQ)("footprint"),
+              icon: '<rect x="5" y="2.5" width="7" height="12" rx="1"/><path d="M5 6.5h7M5 10.5h7M8.5 2.5v12"/>',
+            },
+            {
+              id: "cvd",
+              path: (0, d.sQ)("cvd"),
+              icon: '<path d="M2.5 13.5l3.5-4 3 2 5.5-7"/><path d="M2.5 15.5h12"/>',
+            },
+            {
+              id: "liqHeatmap",
+              path: "/pro/futures/LiquidationHeatMap",
+              icon: '<path d="M8.5 15c3 0 5-2 5-4.8 0-2.6-2-4.2-3-6.7-1.5 1.5-1.2 3.5-2.2 4.2C7.5 6.5 7 4.5 7 3 4.5 5 3.5 7.6 3.5 10.2 3.5 13 5.5 15 8.5 15z"/>',
+            },
+          ];
+        var E = s(57326);
+        let P = (0, l.createContext)(null),
+          H = () => (0, l.useContext)(P),
+          F = (...e) => e.filter(Boolean).join(" "),
+          O = (e, t, s, i) =>
+            e("liquidity_heatmap." + t, { ...i, defaultValue: s }),
+          W = {
+            BTC: "Bitcoin",
+            ETH: "Ethereum",
+            XRP: "XRP",
+            DOGE: "Dogecoin",
+            BNB: "BNB",
+            ADA: "Cardano",
+            LTC: "Litecoin",
+            TRX: "TRON",
+            DOT: "Polkadot",
+            BCH: "Bitcoin Cash",
+          },
+          V = {
+            SOL: "Solana",
+            SUI: "Sui",
+            LINK: "Chainlink",
+            AVAX: "Avalanche",
+            NEAR: "NEAR",
+            APT: "Aptos",
+            HYPE: "Hyperliquid",
+            ZEC: "Zcash",
+            UNI: "Uniswap",
+            ENA: "Ethena",
+            WLD: "Worldcoin",
+            TAO: "Bittensor",
+          },
+          q = (e, t) => (W[t] ? O(e, "coin." + t, W[t]) : V[t] || t),
+          I = (e, t) =>
+            "perp" === t
+              ? O(e, "kind.perp", "Perp")
+              : O(e, "kind.spot", "Spot");
+        function U(e, t, s) {
+          if (s.agg) {
+            let i =
+                "perp" === s.kind
+                  ? O(e, "agg.perp", "Futures aggregate")
+                  : O(e, "agg.spot", "Spot aggregate"),
+              a = t.aggOf(s).length;
+            return a < s.venues.length
+              ? O(e, "agg.some", "{{name}} ({{n}} exchanges)", {
+                  name: i,
+                  n: a,
+                })
+              : i;
+          }
+          return "perp" === s.kind
+            ? O(e, "vPerp", "{{ex}} Perp", { ex: s.ex })
+            : O(e, "vSpot", "{{ex}} Spot", { ex: s.ex });
+        }
+        let G = (e, t) =>
+            t.agg
+              ? e
+                  .aggOf(t)
+                  .map((e) => j[e].ex)
+                  .join(" + ")
+              : t.ex,
+          X = (e, t) => (t.agg ? e : t.pair(e)),
+          z = (e, t) => {
+            let s = t.D.sym ? t.D : t.p,
+              i = j[s.mkt];
+            return s.sym + " \xb7 " + U(e, t, i) + " \xb7 " + g[s.itv];
+          },
+          Y = null,
+          K = () => Y || (Y = window.matchMedia("(max-width: 640px)")),
+          $ = (e) => {
+            let t = K();
+            return (
+              t.addEventListener("change", e),
+              () => t.removeEventListener("change", e)
+            );
+          };
+        function Q(e) {
+          let t = j[e];
+          return {
+            exName: t.agg ? "agg" : t.ex,
+            type: "perp" === t.kind ? "Futures" : "SPOT",
+          };
+        }
+        function Z(e) {
+          let t = (0, l.useRef)(null);
+          return (s) =>
+            e.swapping && t.current ? t.current : ((t.current = s), s);
+        }
+        var J = s(98532),
+          ee = s(52509),
+          et = s(26152),
+          es = s(95284);
+        let ei =
+            es.a1.baseURL + "/liquidity-heatmap/api/liquidity/heatmap/stream",
+          ea = ({
+            key: e,
+            interval: t,
+            limit: s,
+            endTime: i,
+            signal: a,
+            onRows: l,
+          }) =>
+            eo(
+              ei +
+                "?" +
+                new URLSearchParams({
+                  symbol: e + "#heatmap",
+                  interval: t,
+                  limit: String(s),
+                  batchSize: "10",
+                  endTime: String(i || Math.floor(Date.now() / 1e3)),
+                }),
+              a,
+              l,
+            ),
+          el =
+            es.a1.baseURL +
+            "/liquidity-heatmap/api/liquidity/heatmap/aggregate/stream";
+        async function er({
+          coin: e,
+          exchanges: t,
+          market: s,
+          interval: i,
+          limit: a,
+          endTime: l,
+          signal: r,
+          onRows: n,
+        }) {
+          let o =
+            el +
+            "?" +
+            new URLSearchParams({
+              coin: e,
+              exchanges: t.join(","),
+              market: s,
+              interval: i,
+              limit: String(a),
+              batchSize: "10",
+              endTime: String(l || Math.floor(Date.now() / 1e3)),
+            });
+          for (let e = 0; ; e++)
+            try {
+              return await eo(o, r, n);
+            } catch (t) {
+              if (e >= 3 || !(503 === t.status || en(t)) || (r && r.aborted))
+                throw t;
+              await new Promise((t) =>
+                setTimeout(t, 1e3 + 1e3 * Math.random() * (e + 1)),
+              );
+            }
+        }
+        let en = (e) =>
+          !!e && "40001" === String(e.code) && /service/i.test(e.message || "");
+        async function eo(e, t, s) {
+          let i = new AbortController(),
+            a = () => i.abort(),
+            l = setTimeout(a, 9e4);
+          t && (t.aborted ? a() : t.addEventListener("abort", a, { once: !0 }));
+          try {
+            let t = await fetch(e, { signal: i.signal });
+            if (!t.ok)
+              throw Object.assign(Error("HTTP " + t.status), {
+                status: t.status,
+              });
+            if (!/ndjson/.test(t.headers.get("content-type") || ""))
+              throw new et.Dr(await t.json());
+            let a = t.body.getReader(),
+              l = new TextDecoder(),
+              r = [],
+              n = "",
+              o = null,
+              h = !1,
+              d = (e) => {
+                if (!e) return;
+                let t = JSON.parse(e);
+                if ("meta" === t.type) {
+                  if ("0" !== String(t.code)) throw new et.Dr(t);
+                  o = t;
+                } else if ("batch" === t.type || "data" === t.type) {
+                  let e = "batch" === t.type ? t.data : [t.data];
+                  for (let t of e) r.push(t);
+                  s && o && s(e, o);
+                } else if ("end" === t.type) {
+                  if (t.count !== r.length || (o && o.total !== r.length))
+                    throw Error("stream count mismatch");
+                  h = !0;
+                } else if ("error" === t.type) throw new et.Dr(t);
+              };
+            for (;;) {
+              let e,
+                { done: t, value: s } = await a.read();
+              for (
+                n += l.decode(s || new Uint8Array(), { stream: !t });
+                (e = n.indexOf("\n")) >= 0;
+              ) {
+                let t = n.slice(0, e);
+                ((n = n.slice(e + 1)), d(t));
+              }
+              if (t) break;
+            }
+            if ((d(n.trim()), !h || !o)) throw Error("stream ended early");
+            return { code: "0", data: { data: r, size: o.size, max: o.max } };
+          } finally {
+            (clearTimeout(l), a(), t && t.removeEventListener("abort", a));
+          }
+        }
+        let eh = ({
+            key: e,
+            ch: t,
+            interval: s,
+            limit: i,
+            endTime: a,
+            signal: l,
+          }) =>
+            es.ud.get("/api/v2/kline", {
+              params: {
+                symbol: e + "#" + t,
+                interval: s,
+                limit: i,
+                minLimit: !1,
+                ...(a ? { endTime: a } : {}),
+              },
+              signal: l,
+              timeout: 2e4,
+            }),
+          ed = ({ type: e, exName: t, keyword: s = "", signal: i }) =>
+            es.ud.get("/api/select/coins/tickers", {
+              params: { keyword: s, type: e, exName: t },
+              signal: i,
+              timeout: 15e3,
+            }),
+          ec = "v2-cg-obh",
+          eu = ["cg-obh"],
+          ep = (e, t, s) => (e < t ? t : e > s ? s : e),
+          ef = /^#[0-9a-f]{6}$/i,
+          em = {
+            sym: "BTC",
+            mkt: "binance-perp",
+            itv: "1m",
+            tick: "auto",
+            band: 1,
+            unit: "usd",
+            color: "heat",
+            tab: "ladder",
+            evf: "all",
+            flags: { kline: !0, bub: !1, wall: !0, cob: !1 },
+            subs: { vol: !0, imb: !0 },
+            subH: { vol: 96, imb: 96 },
+            aggV: Object.fromEntries(
+              T.filter((e) => e.agg).map((e) => [e.kind, e.venues]),
+            ),
+            pal: {
+              p: "default",
+              heat: "auto",
+              inten: 2,
+              cut: 0,
+              rv: 6,
+              c: {},
+              k: { p: "classic", up: "", dn: "" },
+            },
+          },
+          eg = { inten: 2, cut: 0 },
+          eb = (e, t) => !e.syms || e.syms.includes(t),
+          ex = 0;
+        function ev(e, t, s) {
+          if (!Array.isArray(e) || !(t > 0)) return null;
+          let i = Array.isArray(e[1]) ? e[1] : [],
+            a = Array.isArray(e[2]) ? e[2] : [],
+            l = 1 / 0,
+            r = -1 / 0;
+          for (let e of a) {
+            let t = +e[0];
+            +e[1] > 0 && t < l && (l = t);
+          }
+          for (let e of i) {
+            let t = +e[0];
+            +e[1] > 0 && t > r && t < l && (r = t);
+          }
+          if (!(r > 0) && 1 / 0 === l) return null;
+          (r > 0 || (r = l - t), 1 / 0 === l && (l = r + t));
+          let n = 1 / 0,
+            o = -1 / 0,
+            h = [];
+          for (let e of i) {
+            let s = +e[0],
+              i = +e[1];
+            if (!(i > 0) || s > r) continue;
+            let a = Math.round(s / t);
+            (h.push(a, i), a < n && (n = a), a > o && (o = a));
+          }
+          for (let e of a) {
+            let s = +e[0],
+              i = +e[1];
+            if (!(i > 0) || s < l) continue;
+            let a = Math.round(s / t);
+            (h.push(a, i), a < n && (n = a), a > o && (o = a));
+          }
+          if (!h.length) return null;
+          let d = new Float32Array(o - n + 1);
+          for (let e = 0; e < h.length; e += 2) d[h[e] - n] += h[e + 1];
+          return {
+            t: 1e3 * e[0],
+            g: t,
+            k0: n,
+            q: d,
+            bb: r,
+            ba: l,
+            mid: (r + l) / 2,
+            src: "h",
+            dur: s,
+          };
+        }
+        function ey(e, t) {
+          let s = e.filter((e) => e && e.s);
+          if (!s.length) return null;
+          let i = s[0].s,
+            a = Math.max(...s.map((e) => e.s.g)),
+            l = 0.01 * i.mid,
+            r = 1 / 0,
+            n = -1 / 0,
+            o = s.map((e) => {
+              let t = e === s[0] ? 0 : i.mid - e.s.mid;
+              return (Math.abs(t) > l && (t = 0), t);
+            });
+          s.forEach((e, t) => {
+            let s = e.s;
+            ((r = Math.min(r, s.k0 * s.g + o[t])),
+              (n = Math.max(n, (s.k0 + s.q.length) * s.g + o[t])));
+          });
+          let h = Math.floor(r / a + 1e-9),
+            d = new Float32Array(Math.max(1, Math.ceil(n / a - 1e-9) - h));
+          return (
+            s.forEach((e, t) => {
+              let s = e.s;
+              for (let e = 0; e < s.q.length; e++) {
+                let i = s.q[e];
+                if (!(i > 0)) continue;
+                let l = Math.floor(((s.k0 + e) * s.g + o[t]) / a + 1e-9) - h;
+                l >= 0 && l < d.length && (d[l] += i);
+              }
+            }),
+            Object.assign(
+              {
+                t: i.t,
+                g: a,
+                k0: h,
+                q: d,
+                bb: i.bb,
+                ba: i.ba,
+                mid: i.mid,
+                src: i.src,
+                dur: i.dur,
+                shifts: Object.fromEntries(s.map((e, t) => [e.venue, o[t]])),
+              },
+              t,
+            )
+          );
+        }
+        function ew(e, t) {
+          let s = 0,
+            i = e.length - 1,
+            a = -1;
+          for (; s <= i;) {
+            let l = (s + i) >> 1;
+            e[l].t <= t ? ((a = l), (s = l + 1)) : (i = l - 1);
+          }
+          return a;
+        }
+        function e_(e, t) {
+          let s = 0,
+            i = e.length;
+          for (; s < i;) {
+            let a = (s + i) >> 1;
+            e[a].t < t ? (s = a + 1) : (i = a);
+          }
+          return s;
+        }
+        function ek(e, t, s, i, a) {
+          (a.fill(0, 0, i),
+            e &&
+              e.q &&
+              (function (e, t, s, i, a, l, r, n = -1 / 0, o = 1 / 0) {
+                if (s <= 1.0000001 * i) {
+                  let h = i / s,
+                    d = Math.max(t, n, Math.floor(a * h + 1e-9)),
+                    c = Math.min(
+                      t + e.length - 1,
+                      o,
+                      Math.ceil((a + l) * h) - 1,
+                    );
+                  for (let s = d; s <= c; s++) {
+                    let i = e[s - t];
+                    if (i > 0) {
+                      let e = Math.floor(s / h + 1e-9) - a;
+                      e >= 0 && e < l && (r[e] += i);
+                    }
+                  }
+                } else {
+                  let h = i / s;
+                  for (let s = 0; s < l; s++) {
+                    let i = Math.floor((a + s) * h + 1e-9);
+                    if (i < n || i > o) continue;
+                    let l = i - t;
+                    l >= 0 && l < e.length && (r[s] += e[l] * h);
+                  }
+                }
+              })(e.q, e.k0, e.g, t, s, i, a));
+        }
+        function eT(e, t) {
+          return e > 0
+            ? (t
+                ? [1, 2, 3, 4, 5, 10, 20, 50, 100, 200, 500, 1e3, 2e3, 5e3]
+                : [1, 2, 3, 4, 5]
+              ).map((t) => +(e * t).toPrecision(8))
+            : [1];
+        }
+        let ej = (e) => String(e).padStart(2, "0"),
+          eS = (e, t, s) => (e < t ? t : e > s ? s : e),
+          eC = {
+            zh: ["万", "亿"],
+            "zh-TW": ["萬", "億"],
+            ja: ["万", "億"],
+            ko: ["만", "억"],
+          },
+          eM = (e) => {
+            let t = String(+(+e).toPrecision(10)),
+              s = t.indexOf(".");
+            return s < 0 ? 0 : t.length - s - 1;
+          },
+          eN = [
+            1e3, 2e3, 5e3, 1e4, 15e3, 3e4, 6e4, 12e4, 3e5, 6e5, 9e5, 18e5, 36e5,
+            72e5, 144e5, 216e5, 432e5, 864e5, 1728e5, 6048e5, 12096e5, 2592e6,
+          ],
+          eA = (e) => eN.find((t) => t >= e) || eN[eN.length - 1],
+          eB = (e, t) => {
+            let s = new Date(e),
+              i = ej(s.getHours()) + ":" + ej(s.getMinutes());
+            return t
+              ? ej(s.getMonth() + 1) + "-" + ej(s.getDate()) + " " + i
+              : i;
+          },
+          eL = (e) => {
+            let t = new Date(e);
+            return (
+              ej(t.getHours()) +
+              ":" +
+              ej(t.getMinutes()) +
+              ":" +
+              ej(t.getSeconds())
+            );
+          },
+          eD = (e, t = 2) =>
+            Number.isFinite(e)
+              ? (e > 0 ? "+" : e < 0 ? "−" : "") +
+                Math.abs(100 * e).toFixed(t) +
+                "%"
+              : "—",
+          eR = (e) => (e > 0 ? "pos" : e < 0 ? "neg" : "");
+        function eE(e, t) {
+          let s = eC[e],
+            i = { lang: e, dp: 1 };
+          return (
+            (i.u = (e, t) => {
+              let i;
+              if (null == e || !Number.isFinite(e)) return "—";
+              let a = Math.abs(e);
+              return (
+                (i = s
+                  ? a >= 1e8
+                    ? (a / 1e8).toFixed(a >= 1e10 ? 1 : 2) + s[1]
+                    : a >= 1e4
+                      ? (a / 1e4).toFixed(a >= 1e6 ? 0 : 1) + s[0]
+                      : a.toFixed(0)
+                  : a >= 1e9
+                    ? (a / 1e9).toFixed(a >= 1e11 ? 1 : 2) + "B"
+                    : a >= 1e6
+                      ? (a / 1e6).toFixed(a >= 1e8 ? 1 : 2) + "M"
+                      : a >= 1e3
+                        ? (a / 1e3).toFixed(a >= 1e5 ? 0 : 1) + "K"
+                        : a.toFixed(0)),
+                (e < 0 && "0" !== i ? "−" : t && e > 0 ? "+" : "") + i
+              );
+            }),
+            (i.q = (e, t) => {
+              if (null == e || !Number.isFinite(e)) return "—";
+              let s = Math.abs(e);
+              return s
+                ? (e < 0 ? "−" : t && e > 0 ? "+" : "") +
+                    (s >= 1e6
+                      ? (s / 1e6).toFixed(s >= 1e7 ? 0 : 1) + "M"
+                      : s >= 1e4
+                        ? (s / 1e3).toFixed(0) + "K"
+                        : s >= 1e3
+                          ? (s / 1e3).toFixed(1) + "K"
+                          : s >= 100
+                            ? s.toFixed(0)
+                            : s >= 10
+                              ? s.toFixed(1)
+                              : s >= 0.01
+                                ? s.toFixed(2)
+                                : "<.01")
+                : "0";
+            }),
+            (i.p = (e, t = i.dp) =>
+              null != e && Number.isFinite(e)
+                ? e.toLocaleString("en-US", {
+                    minimumFractionDigits: t,
+                    maximumFractionDigits: t,
+                  })
+                : "—"),
+            (i.dur = (e) => {
+              let s = e / 1e3;
+              if (!(s >= 0)) return "—";
+              if (s < 60)
+                return t("liquidity_heatmap.dur.s", {
+                  n: Math.max(1, Math.round(s)),
+                  defaultValue: "{{n}}s",
+                });
+              if (s < 3600)
+                return t("liquidity_heatmap.dur.m", {
+                  n: Math.round(s / 60),
+                  defaultValue: "{{n}}m",
+                });
+              if (s < 86400) {
+                let e = s / 3600;
+                return t("liquidity_heatmap.dur.h", {
+                  n: e < 10 ? e.toFixed(1).replace(/\.0$/, "") : Math.round(e),
+                  defaultValue: "{{n}}h",
+                });
+              }
+              let i = s / 86400;
+              return t("liquidity_heatmap.dur.d", {
+                n: i < 10 ? i.toFixed(1).replace(/\.0$/, "") : Math.round(i),
+                defaultValue: "{{n}}d",
+              });
+            }),
+            (i.ago = (e) => {
+              let s = Math.floor(e / 864e5),
+                i = Math.floor((e % 864e5) / 36e5),
+                a = Math.floor((e % 36e5) / 6e4),
+                l = Math.floor((e % 6e4) / 1e3),
+                r = (e) =>
+                  t("liquidity_heatmap.dur.h", {
+                    n: e,
+                    defaultValue: "{{n}}h",
+                  }),
+                n = (e) =>
+                  t("liquidity_heatmap.dur.m", {
+                    n: e,
+                    defaultValue: "{{n}}m",
+                  }),
+                o = (e) =>
+                  t("liquidity_heatmap.dur.s", {
+                    n: e,
+                    defaultValue: "{{n}}s",
+                  });
+              return s
+                ? t("liquidity_heatmap.dur.d", {
+                    n: s,
+                    defaultValue: "{{n}}d",
+                  }) +
+                    " " +
+                    r(i)
+                : i
+                  ? r(i) + " " + n(a)
+                  : a
+                    ? n(a) + " " + o(l)
+                    : o(l);
+            }),
+            i
+          );
+        }
+        let eP = new Float64Array(3e4);
+        class eH {
+          constructor() {
+            ((this.st = new Map()), (this.ev = []), (this.seq = 0));
+          }
+          reset() {
+            (this.st.clear(), (this.ev = []), this.seq++);
+          }
+          push(e) {
+            (this.ev.push(e),
+              this.ev.length > 500 && this.ev.splice(0, 100),
+              this.seq++);
+          }
+          current() {
+            return [...this.st.values()]
+              .filter((e) => e.shown)
+              .sort((e, t) => t.usd - e.usd);
+          }
+          scan(e, t, s, i, a, l) {
+            if (!s || !e) return;
+            let r = e.mid,
+              n = Math.floor((0.97 * r) / s),
+              o = Math.ceil((1.03 * r) / s) - n + 1;
+            if (o > eP.length || o < 3) return;
+            ek(e, s, n, o, eP);
+            let h = [],
+              d = [0, 0, 0, 0];
+            for (let e = 0; e < o; e++) {
+              let t = eP[e];
+              if (!(t > 0)) continue;
+              let i = (n + e + 0.5) * s,
+                a = t * i;
+              if ((0.01 >= Math.abs(i / r - 1) && h.push(a), a > d[3])) {
+                let e = 3;
+                for (; e > 0 && a > d[e - 1];) ((d[e] = d[e - 1]), e--);
+                d[e] = a;
+              }
+            }
+            let c = Math.max(2.5, 6 / Math.sqrt(s / (i || s)));
+            h.sort((e, t) => e - t);
+            let u = h.length ? h[h.length >> 1] : 1 / 0,
+              p = Math.max(a, Math.min(u * c, Math.max(d[3], 1.5 * u))),
+              f = t ? 3 : 2,
+              m = new Set(),
+              [g, b] = l,
+              x = (e) => ("b" === e.side ? g < e.p + e.G : b >= e.p);
+            for (let t = 0; t < o; t++) {
+              let i = eP[t];
+              if (!i) continue;
+              let a = (n + t) * s,
+                l = a + s / 2,
+                o = i * l,
+                h = l < r ? "b" : "a",
+                d = h + (n + t),
+                c = this.st.get(d);
+              (!(o < p) || (c && o >= 0.6 * p)) &&
+                (m.add(d),
+                c ||
+                  ((c = {
+                    key: d,
+                    side: h,
+                    k: n + t,
+                    p: a,
+                    G: s,
+                    first: e.t,
+                    cf: 0,
+                    miss: 0,
+                    peak: 0,
+                    usd: 0,
+                    q: 0,
+                    shown: !1,
+                    touch: !1,
+                  }),
+                  this.st.set(d, c)),
+                (c.last = e.t),
+                c.cf++,
+                (c.miss = 0),
+                (c.usd = o),
+                (c.q = i),
+                o > c.peak && ((c.peak = o), (c.peakQ = i)),
+                (c.touch = x(c)),
+                !c.shown &&
+                  c.cf >= f &&
+                  ((c.shown = !0),
+                  this.push({
+                    t: c.first,
+                    type: "add",
+                    side: h,
+                    p: a,
+                    G: s,
+                    usd: o,
+                    q: i,
+                  })));
+            }
+            for (let [t, s] of this.st)
+              if (!m.has(t)) {
+                if (s.p < 0.97 * r || s.p > 1.03 * r) {
+                  this.st.delete(t);
+                  continue;
+                }
+                (x(s) && (s.touch = !0),
+                  ++s.miss >= f &&
+                    (this.st.delete(t),
+                    s.shown &&
+                      this.push({
+                        t: e.t,
+                        type: s.touch ? "fill" : "pull",
+                        side: s.side,
+                        p: s.p,
+                        G: s.G,
+                        usd: s.peak,
+                        q: s.peakQ || s.q,
+                        dur: e.t - s.first,
+                      })));
+              }
+          }
+        }
+        let eF = "#HD#heatmapV5",
+          eO = new Float64Array(3e4),
+          eW = (e) => (Array.isArray(e && e.data) ? e.data : []),
+          eV = (e) =>
+            e &&
+            ("20001" === String(e.code) ||
+              ("40001" === String(e.code) &&
+                !/time/i.test(e.message || "") &&
+                !en(e))),
+          eq = (e) =>
+            e && "40001" === String(e.code) && /time/i.test(e.message || ""),
+          eI = () => ({
+            sym: "",
+            mkt: "",
+            itv: "",
+            step: 6e4,
+            g: 0,
+            H: [],
+            L: [],
+            PX: new Map(),
+            VOL: new Map(),
+            byV: {},
+            lastH: {},
+            missing: [],
+            done: !1,
+            loading: !1,
+            retryAt: 0,
+            backoff: 1e3,
+            err: "",
+            histAt: 0,
+            ver: 0,
+            max: 0,
+          });
+        class eU {
+          constructor(e) {
+            ((this.init = e || {}),
+              (this.p = {
+                ...em,
+                sym: this.init.sym || "BTC",
+                mkt: this.init.mkt || "binance-perp",
+              }),
+              (this.D = eI()),
+              (this.walls = new eH()),
+              (this.gen = 0),
+              (this.status = "idle"),
+              (this.swapping = !1),
+              (this.coins = null),
+              (this.prec = {}),
+              (this.oiTop = []),
+              (this.live = {
+                gen: 0,
+                books: {},
+                bookAt: 0,
+                tradeAt: 0,
+                open: !1,
+                shifts: {},
+              }),
+              (this.chart = null),
+              (this.t = (e, t) => (t && t.defaultValue) || e),
+              (this.fmt = eE("en", this.t)),
+              (this.version = 0),
+              (this.listeners = new Set()),
+              (this.subscribe = (e) => (
+                this.listeners.add(e),
+                () => this.listeners.delete(e)
+              )),
+              (this.getVersion = () => this.version),
+              (this.notifyT = 0));
+          }
+          notify() {
+            for (let e of (clearTimeout(this.notifyT),
+            (this.notifyT = 0),
+            this.version++,
+            this.listeners))
+              e();
+          }
+          notifySoon(e = 120) {
+            this.notifyT || (this.notifyT = setTimeout(() => this.notify(), e));
+          }
+          setLang(e, t) {
+            this.t = t;
+            let s = this.fmt.dp;
+            ((this.fmt = eE(e, t)), (this.fmt.dp = s));
+          }
+          start() {
+            this.started ||
+              ((this.started = !0),
+              (this.p = (function (e) {
+                let t = {};
+                try {
+                  t = JSON.parse(localStorage.getItem(ec) || "{}") || {};
+                } catch (e) {
+                  t = {};
+                }
+                try {
+                  for (let e of eu) localStorage.removeItem(e);
+                } catch {}
+                let s = { ...em, ...t },
+                  i = (e, i) => {
+                    let a = t[e] && "object" == typeof t[e] ? t[e] : {};
+                    for (let t of ((s[e] = {}), i))
+                      s[e][t] = t in a ? !!a[t] : em[e][t];
+                  };
+                (i("flags", L), i("subs", D));
+                let a = t.subH && "object" == typeof t.subH ? t.subH : {};
+                for (let e of ((s.subH = {}), D))
+                  s.subH[e] = ep(Math.round(+a[e] || em.subH[e]), 40, 600);
+                let l = t.aggV && "object" == typeof t.aggV ? t.aggV : {};
+                for (let e of ((s.aggV = {}), T))
+                  if (e.agg) {
+                    let t = Array.isArray(l[e.kind])
+                      ? e.venues.filter((t) => l[e.kind].includes(t))
+                      : [];
+                    s.aggV[e.kind] = t.length ? t : e.venues.slice();
+                  }
+                (e &&
+                  p(e.sym) &&
+                  ((s.sym = e.sym), e.mkt && j[e.mkt] && (s.mkt = e.mkt)),
+                  p(s.sym) || (s.sym = em.sym),
+                  (j[s.mkt] && eb(j[s.mkt], s.sym)) || (s.mkt = em.mkt),
+                  f[s.itv] || (s.itv = em.itv),
+                  "auto" === s.tick || +s.tick > 0 || (s.tick = "auto"),
+                  (s.band = v.includes(+s.band) ? +s.band : 1),
+                  ["qty", "usd"].includes(s.unit) || (s.unit = "usd"),
+                  ["heat", "split"].includes(s.color) || (s.color = "heat"),
+                  ["walls", "ev", "ladder"].includes(s.tab) ||
+                    (s.tab = "ladder"),
+                  ["all", "add", "fill", "pull"].includes(s.evf) ||
+                    (s.evf = "all"));
+                let r = t.pal && "object" == typeof t.pal ? t.pal : {},
+                  n = r.c && "object" == typeof r.c ? r.c : {},
+                  o = r.k && "object" == typeof r.k ? r.k : {};
+                for (let e of ((s.pal = {
+                  p: N.some((e) => e.id === r.p) ? r.p : "default",
+                  heat: r.rv >= 6 && C[r.heat] ? r.heat : "auto",
+                  inten:
+                    r.rv >= 5 ? ep(+r.inten || eg.inten, 0.01, 1e3) : eg.inten,
+                  cut:
+                    r.rv >= 5
+                      ? ep(null == r.cut ? eg.cut : +r.cut || 0, 0, 0.95)
+                      : eg.cut,
+                  rv: 6,
+                  c: {},
+                  k: {
+                    p: r.rv >= 5 && A.some((e) => e.id === o.p) ? o.p : A[0].id,
+                    up: "",
+                    dn: "",
+                  },
+                }),
+                ["bid", "ask"]))
+                  ef.test(n[e] || "") && (s.pal.c[e] = n[e].toLowerCase());
+                if (r.rv >= 5)
+                  for (let e of ["up", "dn"])
+                    ef.test(o[e] || "") && (s.pal.k[e] = o[e].toLowerCase());
+                return (
+                  r.rv >= 6 || ((s.tab = "ladder"), (s.flags.cob = !1)),
+                  s
+                );
+              })(this.init)),
+              (this.sock = new J.Ay(
+                "wss://wss.coinglass.com/v2/ws",
+                (e) =>
+                  e && e.params
+                    ? "order" === e.channel
+                      ? "o:" + e.params.symbol
+                      : "heatmapV5" === e.channel
+                        ? "h:" + String(e.params.symbol || "").replace(eF, "")
+                        : null
+                    : null,
+                (e) => {
+                  ((this.live.open = e), this.notifySoon(200));
+                },
+              )),
+              (this.pollT = setInterval(() => {
+                document.hidden || this.pollTail();
+              }, 6e4)),
+              (this.compactT = setInterval(() => this.compactLive(), 6e4)),
+              (this.liveT = setInterval(() => {
+                this.liveDirty &&
+                  !document.hidden &&
+                  ((this.liveDirty = !1),
+                  this.chart && this.chart.dataChanged("live"),
+                  this.notifySoon(900));
+              }, 250)),
+              (this.onVis = () => {
+                document.hidden || "ready" !== this.status || this.pollTail();
+              }),
+              document.addEventListener("visibilitychange", this.onVis),
+              this.loadCoins(),
+              this.load(!0));
+          }
+          dispose() {
+            (this.gen++,
+              (this.disposed = !0),
+              clearInterval(this.pollT),
+              clearInterval(this.compactT),
+              clearInterval(this.liveT),
+              clearTimeout(this.notifyT),
+              this.onVis &&
+                document.removeEventListener("visibilitychange", this.onVis),
+              this.sock && this.sock.close(),
+              this.listeners.clear());
+          }
+          save() {
+            var e;
+            ((e = this.p),
+              clearTimeout(ex),
+              (ex = setTimeout(() => {
+                try {
+                  localStorage.setItem(ec, JSON.stringify(e));
+                } catch (e) {}
+              }, 200)));
+          }
+          async loadCoins() {
+            let e = T.filter((e) => e.tk),
+              t = await Promise.allSettled(
+                e.map((e) =>
+                  ed({
+                    type: "perp" === e.kind ? "Futures" : "SPOT",
+                    exName: e.ex,
+                  }),
+                ),
+              ),
+              s = {};
+            (e.forEach((e, i) => {
+              let a = (
+                "fulfilled" === t[i].status ? eW(t[i].value) : []
+              ).filter(
+                (t) =>
+                  t &&
+                  t.instrument &&
+                  t.instrument.type === ("perp" === e.kind ? 1 : 10) &&
+                  t.instrument.quoteAsset === e.tk &&
+                  p(t.instrument.baseAsset),
+              );
+              if (
+                a.length &&
+                ((s[e.id] = a.map((e) => e.instrument.baseAsset)),
+                "binance-perp" === e.id)
+              ) {
+                for (let e of a)
+                  null != e.instrument.pricePrecision &&
+                    (this.prec[e.instrument.baseAsset] =
+                      +e.instrument.pricePrecision);
+                this.oiTop = a
+                  .slice()
+                  .sort(
+                    (e, t) => (+t.openInterest || 0) - (+e.openInterest || 0),
+                  )
+                  .map((e) => e.instrument.baseAsset);
+              }
+            }),
+              Object.keys(s).length &&
+                ((this.coins = s),
+                this.notify(),
+                (0, ee.k1)()
+                  .then(() => this.notifySoon(200))
+                  .catch(() => {})));
+          }
+          async searchCoins(e) {
+            let t = String(e || "")
+              .trim()
+              .toUpperCase();
+            if (!t || !this.coins) return;
+            let s = T.filter((e) => e.tk && this.coins[e.id]),
+              i = await Promise.allSettled(
+                s.map((e) =>
+                  ed({
+                    type: "perp" === e.kind ? "Futures" : "SPOT",
+                    exName: e.ex,
+                    keyword: t,
+                  }),
+                ),
+              ),
+              a = !1;
+            (s.forEach((e, t) => {
+              let s = this.coins[e.id],
+                l = [];
+              for (let a of "fulfilled" === i[t].status ? eW(i[t].value) : []) {
+                let t = a && a.instrument;
+                !t ||
+                  t.type !== ("perp" === e.kind ? 1 : 10) ||
+                  t.quoteAsset !== e.tk ||
+                  !p(t.baseAsset) ||
+                  s.includes(t.baseAsset) ||
+                  l.includes(t.baseAsset) ||
+                  (l.push(t.baseAsset),
+                  "binance-perp" === e.id &&
+                    null != t.pricePrecision &&
+                    (this.prec[t.baseAsset] = +t.pricePrecision));
+              }
+              l.length &&
+                ((this.coins = { ...this.coins, [e.id]: [...s, ...l] }),
+                (a = !0));
+            }),
+              a && this.notify());
+          }
+          logo(e) {
+            return (0, ee.ev)(e) || (0, ee.ev)(e.replace(/^1000+/, ""));
+          }
+          symsOf(e) {
+            if (e.syms) return e.syms;
+            let t = (this.coins && this.coins[e.id]) || e.fb || k;
+            return t.includes(this.p.sym) || e.id !== this.p.mkt
+              ? t
+              : [this.p.sym, ...t];
+          }
+          pairsAll() {
+            let e = [];
+            for (let t of T)
+              for (let s of this.symsOf(t)) eb(t, s) && e.push({ s, m: t });
+            return e;
+          }
+          aggOf(e) {
+            return e.agg ? this.p.aggV[e.kind] : [e.id];
+          }
+          venues(e = j[this.D.mkt || this.p.mkt]) {
+            return e.agg ? this.aggOf(e) : [e.id];
+          }
+          set(e, t) {
+            this.p[e] !== t &&
+              ((this.p[e] = t),
+              this.save(),
+              this.chart && this.chart.prefsChanged(e),
+              this.notify());
+          }
+          setPal(e) {
+            ((this.p.pal = { ...this.p.pal, ...e }),
+              this.save(),
+              this.chart && this.chart.prefsChanged("pal"),
+              this.notify());
+          }
+          setPair(e, t) {
+            let s = this.p;
+            (e !== s.sym || t !== s.mkt) &&
+              (e !== s.sym && (s.tick = "auto"),
+              (s.sym = e),
+              (s.mkt = t),
+              (this.swapping = this.hasData()),
+              this.save(),
+              this.notify(),
+              setTimeout(() => this.load(!0), 30));
+          }
+          setItv(e) {
+            f[e] &&
+              e !== this.p.itv &&
+              ((this.p.itv = e), this.save(), this.load(!1));
+          }
+          setAggV(e, t) {
+            t.length &&
+              ((this.p.aggV = { ...this.p.aggV, [e]: t }),
+              (this.swapping = this.hasData()),
+              this.save(),
+              this.notify(),
+              clearTimeout(this.aggT),
+              (this.aggT = setTimeout(() => this.load(!0), 450)));
+          }
+          async load(e) {
+            let t = ++this.gen,
+              s = this.p,
+              i = this.D,
+              a = e || i.sym !== s.sym || i.mkt !== s.mkt;
+            ((this.swapping = this.hasData()),
+              this.chart && this.chart.swapStart(a));
+            let l = eI();
+            (Object.assign(l, {
+              sym: s.sym,
+              mkt: s.mkt,
+              itv: s.itv,
+              step: f[s.itv],
+              ver: i.ver + 1,
+            }),
+              a || (l.L = i.L),
+              (this.D = l),
+              this.walls.reset(),
+              (this.status = "loading"),
+              a && this.openLive(),
+              this.notify());
+            let r = this.venues(j[s.mkt]),
+              n = !1,
+              o = 0;
+            ((l.streaming = !0), this.aggReq(r) && this.venueBooks(t, r));
+            let h = (e, s) => {
+              if (
+                t === this.gen &&
+                (this.ingest(
+                  [{ data: e, size: s.size }],
+                  r,
+                  n ? "merge" : "replace",
+                ),
+                this.takeMax([{ size: s.size, max: s.max }]),
+                l.H.length)
+              ) {
+                if (!n) {
+                  ((n = !0), this.ready(t));
+                  return;
+                }
+                o ||
+                  (o = requestAnimationFrame(() => {
+                    ((o = 0),
+                      t === this.gen &&
+                        this.chart &&
+                        this.chart.dataChanged("more"));
+                  }));
+              }
+            };
+            try {
+              let e,
+                i = (e) => {
+                  t === this.gen &&
+                    (this.ingestSeries(e, null),
+                    n && this.chart && this.chart.dataChanged("more"));
+                },
+                {
+                  books: a,
+                  kl: o,
+                  flow: d,
+                } = await this.fetchPage(
+                  r,
+                  0,
+                  ((e = s.itv),
+                  Math.min(300, Math.ceil((x[e] / f[e]) * 1.1) + 2)),
+                  h,
+                  i,
+                );
+              if (t !== this.gen) return;
+              if (
+                (n || this.ingest(a, r, "replace"),
+                this.takeMax(a),
+                this.ingestSeries(o, d),
+                !l.H.length)
+              ) {
+                let e = a.map((e) => e && e.err).find(Boolean);
+                throw Object.assign(
+                  Error(eV(e) ? "unsupported" : (e && e.message) || "empty"),
+                  { kind: eV(e) ? "unsupported" : e ? "error" : "empty" },
+                );
+              }
+              l.histAt = Date.now();
+            } catch (e) {
+              if (t !== this.gen) return;
+              if (((l.streaming = !1), n)) {
+                this.chart && this.chart.edge("failed");
+                return;
+              }
+              ((l.err = e.kind || "error"),
+                (l.errMsg = e.message || String(e)),
+                (this.status = "error"),
+                (this.swapping = !1),
+                this.chart &&
+                  (this.chart.swapEnd(), this.chart.dataChanged("error")),
+                this.notify());
+              return;
+            }
+            (cancelAnimationFrame(o),
+              (l.streaming = !1),
+              n
+                ? (this.wallsRecompute(),
+                  this.chart && this.chart.dataChanged("more"),
+                  this.notify())
+                : this.ready(t));
+            let d = Math.ceil((300 * (b[s.itv] || 1) - l.H.length) / 300);
+            d > 0 && this.fetchOlder(t, d, !0);
+          }
+          takeMax(e) {
+            let t = this.D;
+            if (t.max > 0) return;
+            let s = e.filter((e) => e && !e.err && +e.max > 0);
+            s.length &&
+              !(s.length < e.length) &&
+              (t.max = s.reduce((e, t) => e + +t.max, 0));
+          }
+          ready(e) {
+            let t,
+              s = this.D,
+              i = this.p,
+              a = s.H[s.H.length - 1];
+            if (e !== this.gen) return;
+            let l = this.prec[i.sym];
+            ((this.fmt.dp =
+              null != l && "binance-perp" === i.mkt
+                ? Math.min(8, l)
+                : (t = a.mid) >= 1e3
+                  ? 1
+                  : t >= 100
+                    ? 2
+                    : t >= 10
+                      ? 3
+                      : t >= 1
+                        ? 4
+                        : t >= 0.01
+                          ? 5
+                          : 7),
+              (this.status = "ready"),
+              this.wallsRecompute(),
+              this.chart && this.chart.loaded(),
+              (this.swapping = !1),
+              this.chart && this.chart.swapEnd(),
+              this.notify());
+          }
+          fetchPage(e, t, s = 300, i, a) {
+            return Promise.all([
+              this.fetchBooks(e, t, s, i),
+              this.fetchSeries(e, t, s, a),
+            ]).then(([e, [t, s]]) => ({ books: e, kl: t, flow: s }));
+          }
+          fetchBooks(e, t, s = 300, i) {
+            let a = this.p,
+              l = m[this.D.itv],
+              r = this.aggReq(e);
+            return r
+              ? er({
+                  ...r,
+                  interval: l,
+                  limit: s,
+                  endTime: t || void 0,
+                  onRows: i,
+                }).then(
+                  (e) => [e.data],
+                  (e) => [{ err: e }],
+                )
+              : Promise.all(
+                  e.map((e) =>
+                    ea({
+                      key: j[e].key(a.sym),
+                      interval: l,
+                      limit: s,
+                      endTime: t || void 0,
+                      onRows: i,
+                    }).then(
+                      (e) => e.data,
+                      (e) => ({ err: e }),
+                    ),
+                  ),
+                );
+          }
+          aggReq(e) {
+            let t = j[this.D.mkt || this.p.mkt];
+            return t && t.agg && e.length > 1
+              ? {
+                  coin: this.p.sym,
+                  exchanges: e.map((e) => j[e].ex),
+                  market: "perp" === t.kind ? "futures" : "spot",
+                }
+              : null;
+          }
+          venueBooks(e, t) {
+            let s = this.p,
+              i = m[this.D.itv];
+            return Promise.all(
+              t.map((t) =>
+                ea({ key: j[t].key(s.sym), interval: i, limit: 1 }).then(
+                  (s) => {
+                    let i = this.D,
+                      a = s.data,
+                      l = +(a && a.size);
+                    if (e !== this.gen || !(l > 0)) return;
+                    i.byV[t] = l;
+                    let r = eW(a)
+                      .map((e) => ev(e, l, i.step))
+                      .filter(Boolean)
+                      .sort((e, t) => t.t - e.t)[0];
+                    r &&
+                      (!i.lastH[t] || r.t >= i.lastH[t].t) &&
+                      (i.lastH[t] = r);
+                  },
+                  () => null,
+                ),
+              ),
+            );
+          }
+          fetchSeries(e, t, s = 300, i) {
+            let a = this.p,
+              l = m[this.D.itv],
+              r = t || void 0;
+            return Promise.all([
+              eh({
+                key: j[e[0]].key(a.sym),
+                ch: "kline",
+                interval: l,
+                limit: s + 2,
+                endTime: r && r + 1,
+              })
+                .then((e) => (i && i(e), e))
+                .catch(() => null),
+              Promise.all(
+                e.map((e) =>
+                  eh({
+                    key: j[e].key(a.sym),
+                    ch: "bs_usd",
+                    interval: l,
+                    limit: s + 2,
+                    endTime: r && r + 1,
+                  }).catch(() => null),
+                ),
+              ),
+            ]);
+          }
+          async fetchOlder(e, t, s) {
+            let i = this.D,
+              a = this.venues();
+            if (!i.H.length || i.loading || i.done) return;
+            let l = i.step / 1e3,
+              r = Math.floor(i.H[0].t / 1e3) - 1,
+              n = Array.from({ length: t }, (e, t) => r - 300 * t * l),
+              o = { n: 0, all: t },
+              h = (e) => this.chart && this.chart.edge(e, o);
+            ((i.loading = !0),
+              h("progress"),
+              this.fetchSeries(a, r, Math.min(3600, 300 * t)).then(([t, s]) => {
+                e === this.gen &&
+                  (this.ingestSeries(t, s),
+                  this.chart && this.chart.dataChanged("more"));
+              }));
+            let d = 0,
+              c = !1,
+              u = !1,
+              p = async () => {
+                for (; d < n.length && !i.done && e === this.gen;) {
+                  let t,
+                    s = n[d++];
+                  try {
+                    t = await this.fetchBooks(a, s);
+                  } catch {
+                    c = !0;
+                    continue;
+                  }
+                  if (e !== this.gen) return;
+                  let l = t.map((e) => e && e.err).filter(Boolean);
+                  if (l.length === t.length) {
+                    l.some(eq) || l.some(eV) ? (i.done = !0) : (c = !0);
+                    continue;
+                  }
+                  let r = i.H.length;
+                  if ((this.ingest(t, a, "merge"), i.H.length === r)) {
+                    i.done = !0;
+                    continue;
+                  }
+                  ((u = !0),
+                    o.n++,
+                    this.wallsRecompute(),
+                    this.chart && this.chart.dataChanged("more"),
+                    h("progress"),
+                    this.notifySoon(200));
+                }
+              },
+              f = Math.max(
+                1,
+                Math.min(
+                  n.length,
+                  this.aggReq(a) ? 2 : Math.floor(4 / a.length),
+                ),
+              );
+            try {
+              await Promise.all(Array.from({ length: f }, p));
+            } finally {
+              e === this.gen && (i.loading = !1);
+            }
+            e === this.gen &&
+              (c && !u
+                ? ((i.backoff = Math.min(3e4, 2 * i.backoff)),
+                  (i.retryAt = Date.now() + i.backoff),
+                  h("failed"))
+                : i.done && !s
+                  ? h("done")
+                  : ((i.backoff = 1e3), h("")),
+              c || i.done || !this.chart || this.chart.fillLeft());
+          }
+          ingest(e, t, s) {
+            let i,
+              a = this.D,
+              l = a.step,
+              r = [],
+              n = t.length > 1 && 1 === e.length,
+              o = (n ? ["agg"] : t).map((t, s) => {
+                let i = e[s];
+                if (!i || i.err || !i.data) return (n || r.push(j[t].ex), []);
+                let o = +i.size || a.byV[t] || 0;
+                if (!(o > 0)) return [];
+                a.byV[t] = o;
+                let h = (Array.isArray(i.data) ? i.data : [])
+                    .map((e) => ev(e, o, l))
+                    .filter(Boolean)
+                    .sort((e, t) => e.t - t.t),
+                  d = h[h.length - 1];
+                return (
+                  d && (!a.lastH[t] || d.t >= a.lastH[t].t) && (a.lastH[t] = d),
+                  h
+                );
+              });
+            if (
+              (n
+                ? ((i = o[0]), "replace" === s && (a.missing = []))
+                : 1 === t.length
+                  ? (i = o[0])
+                  : ((i = [...new Set(o.flat().map((e) => e.t))]
+                      .sort((e, t) => e - t)
+                      .map((e) =>
+                        ey(
+                          o.map((s, i) => {
+                            let a = ew(s, e),
+                              r = a >= 0 ? s[a] : null;
+                            return r && e - r.t <= 1.5 * l
+                              ? { s: r, venue: t[i] }
+                              : null;
+                          }),
+                          { src: "h", dur: l },
+                        ),
+                      )
+                      .filter(Boolean)
+                      .map((e, t, s) => (t && e.t === s[t - 1].t ? null : e))
+                      .filter(Boolean)),
+                    "replace" === s && (a.missing = r)),
+              !i.length)
+            )
+              return 0;
+            if (
+              ((a.g && "replace" !== s) || (a.g = i[i.length - 1].g),
+              "replace" === s)
+            )
+              a.H = i;
+            else if ("merge" === s) {
+              let e = new Set(a.H.map((e) => e.t)),
+                t = i.filter((t) => !e.has(t.t));
+              t.length && (a.H = a.H.concat(t).sort((e, t) => e.t - t.t));
+            } else
+              for (let e of i) {
+                let t = a.H.length;
+                if (!t || e.t > a.H[t - 1].t) a.H.push(e);
+                else {
+                  let t = ew(a.H, e.t);
+                  t >= 0 && a.H[t].t === e.t && (a.H[t] = e);
+                }
+              }
+            return (a.ver++, i.length);
+          }
+          ingestSeries(e, t) {
+            let s = this.D;
+            for (let t of eW(e)) {
+              let e = t.slice(1, 5).map(Number);
+              e.every(Number.isFinite) && s.PX.set(1e3 * t[0], e);
+            }
+            let i = new Map();
+            for (let e of t || [])
+              for (let t of eW(e)) {
+                let e = +t[1],
+                  s = +t[2];
+                if (!Number.isFinite(e) && !Number.isFinite(s)) continue;
+                let a = i.get(t[0]) || [0, 0];
+                ((a[0] += e || 0), (a[1] += s || 0), i.set(t[0], a));
+              }
+            for (let [e, [t, a]] of i) {
+              let i = 1e3 * e,
+                l = s.PX.get(i),
+                r = l ? (l[1] + l[2] + l[3]) / 3 : 0 / 0;
+              r > 0 && s.VOL.set(i, [t / r, a / r, r, r]);
+            }
+            s.ver++;
+          }
+          loadOlder(e) {
+            let t = this.D;
+            if (
+              !t.H.length ||
+              t.loading ||
+              t.streaming ||
+              t.done ||
+              Date.now() < t.retryAt ||
+              "ready" !== this.status
+            )
+              return;
+            let s = Math.ceil((t.H[0].t - e) / (300 * t.step));
+            this.fetchOlder(this.gen, Math.min(12, Math.max(1, s || 1)), !1);
+          }
+          async pollTail() {
+            let e = this.D,
+              t = this.p;
+            if ("ready" !== this.status || !e.g) return;
+            let s = this.gen,
+              i = this.venues(),
+              a = m[e.itv];
+            try {
+              this.aggReq(i) && this.venueBooks(s, i);
+              let [l, r, n] = await Promise.all([
+                this.fetchBooks(i, 0, 2),
+                eh({
+                  key: j[i[0]].key(t.sym),
+                  ch: "kline",
+                  interval: a,
+                  limit: 3,
+                }).catch(() => null),
+                Promise.all(
+                  i.map((e) =>
+                    eh({
+                      key: j[e].key(t.sym),
+                      ch: "bs_usd",
+                      interval: a,
+                      limit: 3,
+                    }).catch(() => null),
+                  ),
+                ),
+              ]);
+              if (s !== this.gen) return;
+              (this.ingest(l, i, "tail"),
+                this.ingestSeries(r, n),
+                (e.histAt = Date.now()),
+                (e.histErr = !1),
+                (this.liveDirty = !0));
+            } catch (t) {
+              s === this.gen && (e.histErr = !0);
+            }
+          }
+          openLive() {
+            let e = this.live,
+              t = this.sock;
+            if (!t) return;
+            (t.clear(),
+              e.gen++,
+              (e.books = {}),
+              (e.bookAt = 0),
+              (e.tradeAt = 0),
+              (e.shifts = {}));
+            let s = e.gen,
+              i = this.p;
+            for (let a of this.venues(j[i.mkt])) {
+              let l = j[a].key(i.sym);
+              (t.subscribe(
+                "h:" + l,
+                {
+                  symbol: l + eF,
+                  interval: "m1",
+                  channel: "heatmapV5",
+                  listenerGuid: l + "#obh",
+                },
+                (t) => {
+                  s === e.gen && this.onBook(a, t.data);
+                },
+              ),
+                t.subscribe("o:" + l, { symbol: l, channel: "order" }, (t) => {
+                  if (s === e.gen && Array.isArray(t.data))
+                    for (let e of t.data) this.onTrade(a, e);
+                }));
+            }
+          }
+          onBook(e, t) {
+            let s,
+              i = this.D,
+              a = i.byV[e];
+            if (!a || "ready" !== this.status) return;
+            let l = ev(t, a, 2e3);
+            if (!l) return;
+            let r = this.live,
+              n = Date.now();
+            ((r.books[e] = { s: l, at: n }), (r.bookAt = n));
+            let o = this.venues(),
+              h = (e) => r.books[e] && n - r.books[e].at < 15e3;
+            if (o.find(h) !== e) return;
+            if (1 === o.length) s = Object.assign({}, l);
+            else {
+              if (
+                !(s = ey(
+                  o.map((e) => {
+                    let t = h(e) ? r.books[e].s : i.lastH[e];
+                    return t ? { s: t, venue: e } : null;
+                  }),
+                  {},
+                ))
+              )
+                return;
+              r.shifts = s.shifts;
+            }
+            let d = i.L.length,
+              c = d ? i.L[d - 1] : null;
+            (c && l.t <= c.t) ||
+              (c && (c.dur = Math.min(l.t - c.t, 1e4)),
+              Object.assign(s, {
+                t: l.t,
+                src: "l",
+                dur: 2e3,
+                vb: 0,
+                vs: 0,
+                vbn: 0,
+                vsn: 0,
+                lp: 0 / 0,
+                lpT: 0,
+                hi: -1 / 0,
+                lo: 1 / 0,
+              }),
+              i.L.push(s),
+              this.walls.scan(s, !0, i.g, i.g, w(i.sym), this.rangeOf(s)),
+              (this.liveDirty = !0));
+          }
+          onTrade(e, t) {
+            let s = +t.createTime,
+              i = +t.volUsd,
+              a = +t.price;
+            if (!(i > 0) || !Number.isFinite(s) || !(a > 0)) return;
+            ((this.live.tradeAt = Date.now()), (a += this.live.shifts[e] || 0));
+            let l = this.D.L,
+              r = i / a,
+              n = 2 === Number(t.side) ? 1 : -1,
+              o = null;
+            for (let e = l.length - 1; e >= 0 && e >= l.length - 8; e--)
+              if (l[e].t <= s) {
+                o = l[e];
+                break;
+              }
+            o &&
+              (n > 0
+                ? ((o.vb += r), (o.vbn += i))
+                : ((o.vs += r), (o.vsn += i)),
+              s >= o.lpT && ((o.lp = a), (o.lpT = s)),
+              a > o.hi && (o.hi = a),
+              a < o.lo && (o.lo = a),
+              (this.liveDirty = !0));
+          }
+          compactLive() {
+            let e = this.D,
+              t = Date.now(),
+              s = [],
+              i = null;
+            for (let a of e.L) {
+              let e = t - a.t;
+              if (e > 432e5) continue;
+              let l = e > 108e5 ? 6e4 : 1e4 * (e > 18e5);
+              if (i && l && Math.floor(a.t / l) === Math.floor(i.t / l)) {
+                ((i.vb += a.vb),
+                  (i.vs += a.vs),
+                  (i.vbn += a.vbn),
+                  (i.vsn += a.vsn),
+                  a.hi > i.hi && (i.hi = a.hi),
+                  a.lo < i.lo && (i.lo = a.lo),
+                  a.lpT > i.lpT && ((i.lp = a.lp), (i.lpT = a.lpT)),
+                  (i.dur = a.t + a.dur - i.t));
+                continue;
+              }
+              (s.push(a), (i = a));
+            }
+            s.length !== e.L.length && ((e.L = s), e.ver++);
+          }
+          liveState() {
+            return "loading" === this.status
+              ? "loading"
+              : "error" === this.status
+                ? "error"
+                : this.live.bookAt && Date.now() - this.live.bookAt < 15e3
+                  ? "live"
+                  : "conn";
+          }
+          NOW() {
+            let e = this.D;
+            return e.L.length || this.live.bookAt || e.streaming
+              ? Date.now()
+              : (e.H.length ? e.H[e.H.length - 1].t + e.step : 0) || Date.now();
+          }
+          hasData() {
+            return !!(this.D.H.length || this.D.L.length);
+          }
+          liveStart() {
+            return this.D.L.length ? this.D.L[0].t : 1 / 0;
+          }
+          dataT0() {
+            let e = this.D;
+            return Math.min(
+              e.H.length ? e.H[0].t : 1 / 0,
+              e.L.length ? e.L[0].t : 1 / 0,
+              this.NOW(),
+            );
+          }
+          latestSnap() {
+            let e = this.D;
+            return e.L.length
+              ? e.L[e.L.length - 1]
+              : e.H.length
+                ? e.H[e.H.length - 1]
+                : null;
+          }
+          histEnd(e) {
+            return this.D.streaming
+              ? e.t + this.D.step
+              : Math.max(
+                  e.t + this.D.step,
+                  Math.min(this.liveStart(), this.NOW()),
+                );
+          }
+          snapAt(e) {
+            let t = this.D,
+              s = t.L,
+              i = this.NOW();
+            if (s.length && e >= s[0].t) {
+              let t = ew(s, e),
+                a = s[t];
+              if (
+                e <
+                Math.min(
+                  t + 1 < s.length ? s[t + 1].t : i + 1e3,
+                  a.t + 2.5 * a.dur,
+                )
+              )
+                return a;
+            }
+            let a = t.H,
+              l = ew(a, e);
+            if (l < 0) return null;
+            let r = a[l];
+            return e <
+              (l + 1 < a.length
+                ? Math.min(a[l + 1].t, r.t + 1.5 * t.step)
+                : this.histEnd(r))
+              ? r
+              : null;
+          }
+          lastPrice() {
+            let e = this.D,
+              t = e.L;
+            for (let e = t.length - 1; e >= 0 && e >= t.length - 30; e--)
+              if (Number.isFinite(t[e].lp)) return t[e].lp;
+            if (e.H.length) {
+              let t = e.PX.get(e.H[e.H.length - 1].t);
+              if (t) return t[3];
+            }
+            let s = this.latestSnap();
+            return s ? s.mid : 0 / 0;
+          }
+          rangeOf(e) {
+            if ("l" === e.src)
+              return [Math.min(e.bb, e.lo), Math.max(e.ba, e.hi)];
+            let t = this.D.PX.get(e.t);
+            return t
+              ? [Math.min(e.bb, t[2]), Math.max(e.ba, t[1])]
+              : [e.bb, e.ba];
+          }
+          depthIn(e, t) {
+            let s = this.D.g;
+            if (!e || !s) return null;
+            let i = e.mid,
+              a = Math.floor((i * (1 - t)) / s),
+              l = Math.ceil((i * (1 + t)) / s) - a + 1;
+            if (l > eO.length || l < 1) return null;
+            ek(e, s, a, l, eO);
+            let r = 0,
+              n = 0,
+              o = 0,
+              h = 0,
+              d = i * (1 - t),
+              c = i * (1 + t);
+            for (let e = 0; e < l; e++) {
+              let t = eO[e];
+              if (!t) continue;
+              let l = (a + e + 0.5) * s;
+              l < d ||
+                l > c ||
+                (l < i ? ((r += t), (o += t * l)) : ((n += t), (h += t * l)));
+            }
+            return { B: r, A: n, Bu: o, Au: h };
+          }
+          imbOf(e) {
+            let t = this.p.band;
+            if (e._ik === t && void 0 !== e._iv) return e._iv;
+            let s = this.depthIn(e, t / 100),
+              i = s && s.Bu + s.Au > 0 ? (s.Bu - s.Au) / (s.Bu + s.Au) : null;
+            return ((e._ik = t), (e._iv = i), i);
+          }
+          curWalls() {
+            return this.walls.current();
+          }
+          wallMin() {
+            return w(this.D.sym || this.p.sym);
+          }
+          wallsRecompute() {
+            let e = this.D,
+              t = this.liveStart(),
+              s = w(e.sym),
+              i = this.gen,
+              a = new eH(),
+              l = e.H.filter((e) => e.t < t),
+              r = e.L.slice(),
+              n = {},
+              o = 0;
+            this.wallJob = n;
+            let h = () => {
+              if (this.wallJob !== n || i !== this.gen || e !== this.D) return;
+              let t = performance.now() + 6;
+              for (; o < l.length + r.length && performance.now() < t;) {
+                let t = o >= l.length,
+                  i = t ? r[o - l.length] : l[o];
+                (a.scan(i, t, e.g, e.g, s, this.rangeOf(i)), o++);
+              }
+              if (o < l.length + r.length) return void setTimeout(h, 0);
+              let d = r.length ? r[r.length - 1].t : -1 / 0;
+              for (let t of e.L)
+                t.t > d && a.scan(t, !0, e.g, e.g, s, this.rangeOf(t));
+              ((a.seq += this.walls.seq + 1),
+                (this.walls = a),
+                (this.wallJob = null),
+                this.chart && this.chart.markBase(),
+                this.notifySoon(60));
+            };
+            setTimeout(h, 0);
+          }
+        }
+        var eG = s(25636),
+          eX = s(3226),
+          ez = s(35850),
+          eY = s(14995),
+          eK = s.n(eY);
+        let e$ = (e, ...t) => F(...t, "compact" === e && eK().compact),
+          eQ = (e, t) => e.find((e) => String(e.value) === String(t));
+        function eZ({ as: e = "div", children: t }) {
+          let { chart: s } = H();
+          return (0, i.jsx)(e, {
+            className: eK().scope,
+            style: s ? s.cssVars : void 0,
+            children: t,
+          });
+        }
+        function eJ({
+          size: e = "compact",
+          variant: t,
+          selected: s,
+          icon: a,
+          className: l,
+          children: r,
+          ...n
+        }) {
+          return (0, i.jsx)(eG.$n, {
+            className: e$(
+              e,
+              eK().button,
+              a && eK().icon,
+              "primary" === t && eK().primary,
+              "toggle" === t && s && eK().selected,
+              l,
+            ),
+            "aria-pressed": "toggle" === t ? !!s : void 0,
+            onlyIcon: a,
+            iconComp: a ? r : void 0,
+            ...n,
+            children: a ? null : r,
+          });
+        }
+        function e0({
+          options: e,
+          value: t,
+          onChange: s,
+          size: a = "compact",
+          className: l,
+          label: r,
+        }) {
+          return (0, i.jsx)(eG.tU, {
+            variant: "segmented",
+            className: e$(a, eK().tabs, l),
+            selectedIndex: String(t),
+            "aria-label": r,
+            onChange: (i) => {
+              let a = eQ(e, i);
+              a && !a.disabled && a.value !== t && s(a.value);
+            },
+            children: e.map((e) =>
+              (0, i.jsx)(
+                eG.oz,
+                {
+                  value: String(e.value),
+                  label: e.label,
+                  title: e.title,
+                  disabled: e.disabled,
+                  "data-on": String(e.value) === String(t) ? "" : void 0,
+                },
+                String(e.value),
+              ),
+            ),
+          });
+        }
+        function e1({
+          options: e,
+          value: t,
+          onChange: s,
+          size: a = "compact",
+          label: r,
+          title: n,
+          disabled: o,
+          align: h = "start",
+          className: d,
+          ariaLabel: c,
+        }) {
+          let u = eQ(e, t),
+            p = (0, l.useRef)(null),
+            f = "obh-sel-" + (0, l.useId)().replace(/[^a-zA-Z0-9_-]/g, "");
+          return (0, i.jsx)("span", {
+            ref: p,
+            className: F(eK().selBox, d),
+            title: n,
+            "aria-label": c,
+            children: (0, i.jsx)(eG.l6, {
+              size: "sm",
+              disabled: o,
+              options: e.map((e) => ({
+                value: String(e.value),
+                label: e.label,
+              })),
+              value: [String(t)],
+              onChange: (i) => {
+                let a = eQ(e, i[0]);
+                a && a.value !== t && s(a.value);
+              },
+              allowClear: !1,
+              allowedPlacements: [
+                `bottom-${h}`,
+                `top-${h}`,
+                `bottom-${"start" === h ? "end" : "start"}`,
+                `top-${"start" === h ? "end" : "start"}`,
+              ],
+              triggerClassName: e$(a, eK().select),
+              contentClassName: F(eK().menu, f),
+              onOpenChange: (e) => {
+                e &&
+                  requestAnimationFrame(() =>
+                    document.querySelectorAll("." + f).forEach((e) => {
+                      p.current &&
+                        e.style.setProperty(
+                          "--glass-menu-min",
+                          p.current.getBoundingClientRect().width + "px",
+                        );
+                    }),
+                  );
+              },
+              dropdownProps: { keepMounted: !1, mobileResponsive: !1 },
+              selectedDisplayRenderFn: () =>
+                (0, i.jsxs)("span", {
+                  className: eK().selVal,
+                  children: [
+                    r
+                      ? (0, i.jsx)("span", {
+                          className: eK().caption,
+                          children: r,
+                        })
+                      : null,
+                    u ? u.label : "",
+                  ],
+                }),
+            }),
+          });
+        }
+        function e2({
+          trigger: e,
+          size: t = "compact",
+          align: s = "start",
+          width: a = 330,
+          label: r,
+          title: n,
+          triggerClassName: o,
+          onOpen: h,
+          disabled: d,
+          children: c,
+        }) {
+          let [u, p] = (0, l.useState)(!1),
+            f = (e) => {
+              (p(e), e && h && h());
+            };
+          return (0, i.jsx)(eG.AM, {
+            arrow: !1,
+            triggerType: "click",
+            open: u,
+            onChange: f,
+            allowedPlacements: [`bottom-${s}`, `top-${s}`],
+            shift: !0,
+            contentClassName: F(eK().menu, eK().popMenu),
+            mobileResponsive: !1,
+            content: (0, i.jsx)(eZ, {
+              children: (0, i.jsx)("div", {
+                className: eK().popBody,
+                role: "dialog",
+                "aria-label": r,
+                style: { width: `min(${a}px, calc(100vw - 32px))` },
+                children:
+                  "function" == typeof c ? c({ close: () => f(!1) }) : c,
+              }),
+            }),
+            children: (0, i.jsx)(eG.$n, {
+              className: e$(t, eK().button, u && eK().open, o),
+              "aria-expanded": u,
+              "aria-haspopup": "dialog",
+              "aria-label": r,
+              title: n,
+              disabled: d,
+              children: e,
+            }),
+          });
+        }
+        function e5({
+          checked: e,
+          disabled: t,
+          onChange: s,
+          name: a,
+          hint: r,
+        }) {
+          let n = (0, l.useId)();
+          return (0, i.jsxs)("label", {
+            className: F(eK().row, e && eK().rowOn, t && eK().rowDis),
+            htmlFor: n,
+            children: [
+              (0, i.jsxs)("span", {
+                className: eK().rowText,
+                children: [a, r ? (0, i.jsx)("small", { children: r }) : null],
+              }),
+              (0, i.jsx)(eG.Sc, {
+                id: n,
+                checked: !!e,
+                disabled: t,
+                onChange: (e) => s(e.target.checked),
+                rootProps: { className: eK().checkbox },
+              }),
+            ],
+          });
+        }
+        let e3 = ({ children: e }) =>
+            (0, i.jsx)("div", { className: eK().sec, children: e }),
+          e4 = () =>
+            (0, i.jsx)(eX.D3D, { className: eK().chev, "aria-hidden": "true" });
+        var e6 = s(12384),
+          e8 = s.n(e6);
+        let e9 = () =>
+          (0, i.jsxs)("svg", {
+            className: e8().ico,
+            viewBox: "0 0 16 16",
+            fill: "none",
+            stroke: "currentColor",
+            strokeWidth: "1.3",
+            "aria-hidden": "true",
+            children: [
+              (0, i.jsx)("path", {
+                d: "M8 1.8a6.2 6.2 0 1 0 0 12.4c.9 0 1.4-.7 1.1-1.4l-.2-.5c-.3-.9.3-1.8 1.3-1.8h1.4a2.6 2.6 0 0 0 2.6-2.6C14.2 4.5 11.4 1.8 8 1.8z",
+              }),
+              (0, i.jsx)("circle", { cx: "4.9", cy: "7.4", r: ".8" }),
+              (0, i.jsx)("circle", { cx: "7.3", cy: "4.8", r: ".8" }),
+              (0, i.jsx)("circle", { cx: "10.4", cy: "5.3", r: ".8" }),
+            ],
+          });
+        function e7() {
+          let { t: e, term: t, chart: s, light: a } = H(),
+            r = t.p.pal,
+            n = s ? s.CL : null,
+            o = +!!a,
+            h = M(r.heat, a),
+            d = !!(r.k.up || r.k.dn),
+            c = A.find((e) => e.id === r.k.p) || A[0],
+            u = (e) => r.k[e] || (c[e] || [])[o] || "";
+          return (0, i.jsx)(e2, {
+            size: "standard",
+            align: "end",
+            width: 340,
+            label: O(e, "pal.label", "Colours"),
+            title: O(e, "pal.label", "Colours"),
+            trigger: (0, i.jsxs)(i.Fragment, {
+              children: [
+                (0, i.jsx)(e9, {}),
+                (0, i.jsx)("span", {
+                  className: e8().ha,
+                  children: O(e, "pal.label", "Colours"),
+                }),
+              ],
+            }),
+            children: (0, i.jsxs)("div", {
+              className: e8().pal,
+              children: [
+                (0, i.jsxs)("div", {
+                  className: e8().ph,
+                  children: [
+                    (0, i.jsx)("b", { children: O(e, "pal.label", "Colours") }),
+                    (0, i.jsx)("span", {
+                      children: O(e, "pal.saved", "Saved in this browser"),
+                    }),
+                  ],
+                }),
+                (0, i.jsx)("div", {
+                  className: e8().sec,
+                  children: O(e, "pal.heat", "Heat scale"),
+                }),
+                (0, i.jsx)("div", {
+                  className: e8().hpre,
+                  children: Object.entries(C).map(([s, a]) =>
+                    (0, i.jsxs)(
+                      "button",
+                      {
+                        type: "button",
+                        className: F(e8().chip, h === s && e8().on),
+                        "aria-pressed": h === s,
+                        onClick: () => t.setPal({ heat: s }),
+                        children: [
+                          (0, i.jsx)("i", {
+                            style: {
+                              background: `linear-gradient(90deg,${a.stops.map((e, t) => (a.at ? e + " " + a.at[t] + "%" : e)).join(",")})`,
+                            },
+                          }),
+                          O(e, "pal.h." + s, a.en),
+                        ],
+                      },
+                      s,
+                    ),
+                  ),
+                }),
+                (0, i.jsx)("div", {
+                  className: e8().sec,
+                  children: O(e, "pal.side", "Bid / ask colours"),
+                }),
+                (0, i.jsx)("div", {
+                  className: e8().pre,
+                  children: N.map((s) => {
+                    let a = r.p === s.id,
+                      l =
+                        s.bid ||
+                        (n && "default" === r.p ? n.bid : "var(--obh-bid)"),
+                      o =
+                        s.ask ||
+                        (n && "default" === r.p ? n.ask : "var(--obh-ask)");
+                    return (0, i.jsxs)(
+                      "button",
+                      {
+                        type: "button",
+                        className: F(e8().chip, e8().dots, a && e8().on),
+                        "aria-pressed": a,
+                        onClick: () => t.setPal({ p: s.id, c: {} }),
+                        children: [
+                          (0, i.jsx)("i", { style: { background: l } }),
+                          (0, i.jsx)("i", { style: { background: o } }),
+                          O(e, "pal.p." + s.id, s.en),
+                        ],
+                      },
+                      s.id,
+                    );
+                  }),
+                }),
+                (0, i.jsx)("div", {
+                  className: e8().sec,
+                  children: O(e, "pal.k", "Candle colours"),
+                }),
+                (0, i.jsx)("div", {
+                  className: e8().pre,
+                  children: A.map((s) => {
+                    let a = !d && r.k.p === s.id;
+                    return (0, i.jsxs)(
+                      "button",
+                      {
+                        type: "button",
+                        className: F(e8().chip, e8().dots, a && e8().on),
+                        "aria-pressed": a,
+                        onClick: () =>
+                          t.setPal({ k: { p: s.id, up: "", dn: "" } }),
+                        children: [
+                          (0, i.jsx)("i", {
+                            style: {
+                              background: s.up ? s.up[o] : "var(--obh-bid)",
+                            },
+                          }),
+                          (0, i.jsx)("i", {
+                            style: {
+                              background: s.dn ? s.dn[o] : "var(--obh-ask)",
+                            },
+                          }),
+                          O(e, "pal.kp." + s.id, s.en),
+                        ],
+                      },
+                      s.id,
+                    );
+                  }),
+                }),
+                (0, i.jsx)("div", {
+                  className: e8().ksw,
+                  children: [
+                    ["up", O(e, "pal.up", "Up")],
+                    ["dn", O(e, "pal.dn", "Down")],
+                  ].map(([e, s]) =>
+                    (0, i.jsxs)(
+                      l.Fragment,
+                      {
+                        children: [
+                          (0, i.jsx)("span", { children: s }),
+                          (0, i.jsx)("div", {
+                            className: e8().sw,
+                            role: "group",
+                            "aria-label": s,
+                            children: B.map((a) =>
+                              (0, i.jsx)(
+                                "button",
+                                {
+                                  type: "button",
+                                  className: F(
+                                    u(e).toLowerCase() === a && e8().swOn,
+                                  ),
+                                  style: { "--c": a },
+                                  "aria-label": s + " " + a,
+                                  "aria-pressed": u(e).toLowerCase() === a,
+                                  onClick: () =>
+                                    t.setPal({ k: { ...r.k, [e]: a } }),
+                                },
+                                a,
+                              ),
+                            ),
+                          }),
+                        ],
+                      },
+                      e,
+                    ),
+                  ),
+                }),
+                (0, i.jsxs)("div", {
+                  className: e8().ft,
+                  children: [
+                    (0, i.jsx)("span", {
+                      children: O(
+                        e,
+                        "pal.note",
+                        "The colour level is set from all loaded data and does not move when zooming; adjust it with the slider in the toolbar",
+                      ),
+                    }),
+                    (0, i.jsx)(eJ, {
+                      variant: "primary",
+                      onClick: () =>
+                        t.setPal({
+                          p: "default",
+                          heat: "auto",
+                          c: {},
+                          k: { p: "classic", up: "", dn: "" },
+                          ...eg,
+                        }),
+                      children: O(e, "pal.reset", "Reset"),
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          });
+        }
+        var te = s(29673),
+          tt = s.n(te);
+        let ts =
+            "data:image/svg+xml," +
+            encodeURIComponent(
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#2b3240"/><g fill="none" stroke="#e6e9ef" stroke-width="2.4"><circle cx="13" cy="15" r="6"/><circle cx="23" cy="15" r="6"/><circle cx="18" cy="23" r="6"/></g></svg>',
+            ),
+          ti = (e) => e.toLowerCase().replace(/[\s\-_/]/g, "");
+        function ta({ sym: e, className: t }) {
+          let { term: s } = H(),
+            a = s.logo(e);
+          return a
+            ? (0, i.jsx)("img", { className: F(tt().lg, t), src: a, alt: "" })
+            : (0, i.jsx)("span", {
+                className: F(tt().lg, tt().lgTxt, t),
+                "aria-hidden": "true",
+                children: e.replace(/^1000+/, "").slice(0, 1),
+              });
+        }
+        let tl = (e) =>
+            (0, ez.EO)(
+              String(e)
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, ""),
+            ),
+          tr = ({ m: e }) =>
+            (0, i.jsx)("img", {
+              className: tt().exLg,
+              src: e.agg ? ts : tl(e.ex),
+              alt: "",
+            });
+        function tn({ s: e, m: t, list: s }) {
+          let { t: a, term: l } = H();
+          return (0, i.jsxs)(i.Fragment, {
+            children: [
+              s ? (0, i.jsx)(ta, { sym: e }) : null,
+              (0, i.jsx)("b", { className: tt().ps, children: X(e, t) }),
+              (0, i.jsx)("i", {
+                className: F(
+                  tt().tag,
+                  "perp" === t.kind ? tt().kPerp : tt().kSpot,
+                ),
+                children: I(a, t.kind),
+              }),
+              (0, i.jsxs)("span", {
+                className: tt().pex,
+                title: s ? G(l, t) : void 0,
+                children: [
+                  s ? (0, i.jsx)(tr, { m: t }) : null,
+                  t.agg ? U(a, l, t) : t.ex,
+                ],
+              }),
+            ],
+          });
+        }
+        function to({ close: e }) {
+          let { t, term: s } = H(),
+            a = s.p,
+            [r, n] = (0, l.useState)(""),
+            [o, h] = (0, l.useState)("all"),
+            [d, c] = (0, l.useState)(-1),
+            u = (0, l.useRef)(null),
+            p = (0, l.useRef)(null);
+          ((0, l.useEffect)(() => {
+            let e = setTimeout(
+              () => p.current && p.current.focus({ preventScroll: !0 }),
+              30,
+            );
+            return () => clearTimeout(e);
+          }, []),
+            (0, l.useEffect)(() => {
+              let e = setTimeout(() => s.searchCoins(r).catch(() => {}), 350);
+              return () => clearTimeout(e);
+            }, [r]));
+          let f = r.trim().toLowerCase().split(/\s+/).filter(Boolean).map(ti),
+            m = (0, l.useMemo)(() => {
+              let e = s.pairsAll().filter(({ s: e, m: i }) => {
+                  if ("all" !== o && i.kind !== o) return !1;
+                  if (!f.length) return !0;
+                  let a = ti(
+                    [
+                      e,
+                      X(e, i),
+                      i.agg
+                        ? "agg aggregate 聚合 " +
+                          U(t, s, i) +
+                          " " +
+                          i.venues.map((e) => j[e].ex).join(" ")
+                        : i.ex,
+                      I(t, i.kind),
+                      "perp" === i.kind
+                        ? "perp swap futures 合约 永续"
+                        : "spot 现货",
+                    ].join(" "),
+                  );
+                  return f.every((e) => a.includes(e));
+                }),
+                i = new Map();
+              if (s.coins)
+                for (let e of [
+                  "binance-perp",
+                  "binance-spot",
+                  "hyperliquid-perp",
+                  "tradexyz-perp",
+                ])
+                  for (let t of s.coins[e] || []) i.has(t) || i.set(t, i.size);
+              let l = (e) =>
+                  i.has(e)
+                    ? i.get(e)
+                    : "BTC" === e
+                      ? -2
+                      : "ETH" === e
+                        ? -1
+                        : 9999,
+                r = new Map(
+                  f.length
+                    ? e.map((e) => {
+                        var t, s;
+                        let i, a;
+                        return [
+                          e,
+                          ((t = e.s),
+                          (s = X(e.s, e.m)),
+                          (i = ti(t)),
+                          (a = ti(s)),
+                          Math.min(
+                            3,
+                            ...f.map((e) =>
+                              i === e
+                                ? 0
+                                : i.startsWith(e) || a.startsWith(e)
+                                  ? 1
+                                  : i.includes(e) || a.includes(e)
+                                    ? 2
+                                    : 3,
+                            ),
+                          )),
+                        ];
+                      })
+                    : [],
+                );
+              if (
+                (e.sort(
+                  (e, t) =>
+                    (r.get(e) || 0) - (r.get(t) || 0) ||
+                    l(e.s) - l(t.s) ||
+                    T.indexOf(e.m) - T.indexOf(t.m),
+                ),
+                f.length || "all" !== o)
+              )
+                return [{ title: null, list: e }];
+              let n = j[a.mkt].kind;
+              return [n, "perp" === n ? "spot" : "perp"].map((s) => ({
+                title:
+                  "perp" === s
+                    ? O(t, "kind.perpGroup", "Futures")
+                    : O(t, "kind.spotGroup", "Spot"),
+                list: e.filter((e) => e.m.kind === s),
+              }));
+            }, [r, o, s.coins, s.version]),
+            g = m.flatMap((e) => e.list),
+            b = g.findIndex((e) => e.s === a.sym && e.m.id === a.mkt),
+            x = d >= 0 ? d : f.length ? 0 : b,
+            v = (t) => {
+              (e(), t && s.setPair(t.s, t.m.id));
+            },
+            y = 0;
+          return (0, i.jsxs)("div", {
+            className: tt().pairPop,
+            onKeyDown: (e) => {
+              if ("ArrowDown" === e.key || "ArrowUp" === e.key) {
+                let t;
+                if ((e.preventDefault(), !g.length)) return;
+                let s =
+                  (Math.max(0, x) +
+                    ("ArrowDown" === e.key ? 1 : -1) +
+                    g.length) %
+                  g.length;
+                (c(s),
+                  (t =
+                    u.current && u.current.querySelector(`[data-i="${s}"]`)) &&
+                    t.scrollIntoView({ block: "nearest" }));
+              } else "Enter" === e.key && (e.preventDefault(), v(g[x]));
+            },
+            children: [
+              (0, i.jsxs)("div", {
+                className: tt().phead,
+                children: [
+                  (0, i.jsx)(eG.pd, {
+                    size: "sm",
+                    className: tt().search,
+                    value: r,
+                    onChange: (e) => {
+                      (n(e || ""), c(-1));
+                    },
+                    iconComp: (0, i.jsx)(eX.WIv, {}),
+                    placeholder: O(
+                      t,
+                      "pair.search",
+                      "Search pairs: BTC, ETHUSDT, OKX",
+                    ),
+                    nativeInputRef: p,
+                    nativeInputProps: {
+                      autoComplete: "off",
+                      spellCheck: !1,
+                      "aria-label": O(
+                        t,
+                        "pair.search",
+                        "Search pairs: BTC, ETHUSDT, OKX",
+                      ),
+                    },
+                  }),
+                  (0, i.jsx)(e0, {
+                    value: o,
+                    onChange: (e) => {
+                      (h(e), c(-1));
+                    },
+                    label: O(t, "pair.kind", "Futures / spot"),
+                    options: [
+                      { value: "all", label: O(t, "all", "All") },
+                      {
+                        value: "perp",
+                        label: O(t, "kind.perpGroup", "Futures"),
+                      },
+                      { value: "spot", label: O(t, "kind.spotGroup", "Spot") },
+                    ],
+                  }),
+                ],
+              }),
+              (0, i.jsx)("div", {
+                className: tt().plist,
+                ref: u,
+                role: "listbox",
+                "aria-label": O(t, "pair.label", "Pair"),
+                children: g.length
+                  ? m.map((e) =>
+                      (0, i.jsxs)(
+                        l.Fragment,
+                        {
+                          children: [
+                            e.title && e.list.length
+                              ? (0, i.jsx)("div", {
+                                  className: tt().pgh,
+                                  children: e.title,
+                                })
+                              : null,
+                            e.list.map((e) => {
+                              let t = y++,
+                                s = e.s === a.sym && e.m.id === a.mkt;
+                              return (0, i.jsx)(
+                                "div",
+                                {
+                                  "data-i": t,
+                                  role: "option",
+                                  "aria-selected": s,
+                                  className: F(
+                                    tt().prow,
+                                    s && tt().on,
+                                    t === x && tt().kb,
+                                  ),
+                                  onPointerDown: (e) => e.preventDefault(),
+                                  onPointerMove: () => t !== d && c(t),
+                                  onClick: () => v(e),
+                                  children: (0, i.jsx)(tn, {
+                                    s: e.s,
+                                    m: e.m,
+                                    list: !0,
+                                  }),
+                                },
+                                e.m.id + e.s,
+                              );
+                            }),
+                          ],
+                        },
+                        e.title || "all",
+                      ),
+                    )
+                  : (0, i.jsx)("div", {
+                      className: tt().empty,
+                      children: O(t, "pair.none", "No matching pairs"),
+                    }),
+              }),
+            ],
+          });
+        }
+        function th() {
+          let { t: e, term: t } = H(),
+            s = j[t.p.mkt],
+            a = t.aggOf(s);
+          return (0, i.jsxs)(i.Fragment, {
+            children: [
+              (0, i.jsx)(e3, {
+                children: O(
+                  e,
+                  "agg.pick",
+                  "{{name}}: tick the exchanges to sum",
+                  { name: U(e, { aggOf: () => s.venues }, s) },
+                ),
+              }),
+              s.venues.map((l) => {
+                let r = j[l],
+                  n = a.includes(l);
+                return (0, i.jsx)(
+                  e5,
+                  {
+                    checked: n,
+                    disabled: n && 1 === a.length,
+                    onChange: () => {
+                      let e;
+                      return (
+                        (e = a.includes(l)
+                          ? a.filter((e) => e !== l)
+                          : s.venues.filter((e) => a.includes(e) || e === l)),
+                        void t.setAggV(s.kind, e)
+                      );
+                    },
+                    name: (0, i.jsxs)("span", {
+                      className: tt().vx,
+                      children: [
+                        (0, i.jsx)("img", { src: tl(r.ex), alt: "" }),
+                        r.ex,
+                      ],
+                    }),
+                    hint:
+                      r.pair(t.p.sym) +
+                      " " +
+                      I(e, r.kind) +
+                      (r.usd
+                        ? " \xb7 " +
+                          O(
+                            e,
+                            "agg.usd",
+                            "USD-quoted, aligned by the price gap",
+                          )
+                        : ""),
+                  },
+                  l,
+                );
+              }),
+              (0, i.jsxs)("div", {
+                className: tt().aggFt,
+                children: [
+                  (0, i.jsx)(eJ, {
+                    disabled: a.length === s.venues.length,
+                    onClick: () => t.setAggV(s.kind, s.venues.slice()),
+                    children: O(e, "agg.all", "Select all"),
+                  }),
+                  (0, i.jsx)("span", {
+                    children: O(
+                      e,
+                      "agg.note",
+                      "At least one. Best bid / ask come from the first ticked exchange; the others are shifted by their mid-price gap and added.",
+                    ),
+                  }),
+                ],
+              }),
+            ],
+          });
+        }
+        function td({ size: e }) {
+          let { t, term: s } = H(),
+            a = s.p,
+            l = j[a.mkt];
+          return (0, i.jsx)(e2, {
+            size: e,
+            width: 420,
+            label: O(t, "pair.pick", "Choose a pair"),
+            title: a.sym + " \xb7 " + U(t, s, l) + " \xb7 " + G(s, l),
+            triggerClassName: tt().pairBtn,
+            trigger: (0, i.jsxs)("span", {
+              className: tt().pairLab,
+              children: [
+                (0, i.jsx)(ta, { sym: a.sym }),
+                (0, i.jsx)(tn, { s: a.sym, m: l }),
+                (0, i.jsx)(e4, {}),
+              ],
+            }),
+            children: ({ close: e }) => (0, i.jsx)(to, { close: e }),
+          });
+        }
+        function tc({ size: e }) {
+          let { t, term: s } = H(),
+            a = j[s.p.mkt],
+            l = s.aggOf(a);
+          return a.agg
+            ? (0, i.jsx)(e2, {
+                size: e,
+                width: 340,
+                label: O(t, "agg.label", "Exchanges in the aggregate"),
+                title: O(
+                  t,
+                  "agg.title",
+                  "Aggregated exchanges: {{list}} (click to change)",
+                  { list: G(s, a) },
+                ),
+                trigger: (0, i.jsxs)("span", {
+                  className: tt().aggLab,
+                  children: [
+                    (0, i.jsx)("span", {
+                      className: tt().lgs,
+                      children: l.map((e) =>
+                        (0, i.jsx)(
+                          "img",
+                          { className: tt().lg, src: tl(j[e].ex), alt: "" },
+                          e,
+                        ),
+                      ),
+                    }),
+                    O(t, "agg.n", "{{n}}/{{all}}", {
+                      n: l.length,
+                      all: a.venues.length,
+                    }),
+                    (0, i.jsx)(e4, {}),
+                  ],
+                }),
+                children: (0, i.jsx)(th, {}),
+              })
+            : null;
+        }
+        function tu() {
+          let { t: e, term: t } = H(),
+            s = t.liveState(),
+            a =
+              "live" === s
+                ? O(e, "st.live", "Live")
+                : "loading" === s
+                  ? O(e, "loading", "Loading…")
+                  : "error" === s
+                    ? O(e, "st.error", "Data unavailable")
+                    : O(e, "st.conn", "Connecting");
+          return (0, i.jsxs)("span", {
+            className: F(tt().live, tt()["st_" + s]),
+            title: O(e, "st.title", "Data status"),
+            children: [(0, i.jsx)("i", {}), a],
+          });
+        }
+        let tp = () => {
+          let e = document.getElementById("obh-faq");
+          e &&
+            e.scrollIntoView({
+              behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+                .matches
+                ? "auto"
+                : "smooth",
+              block: "start",
+            });
+        };
+        function tf() {
+          let { t: e, term: t } = H(),
+            s = t.p,
+            a = (0, l.useSyncExternalStore)(
+              $,
+              () => K().matches,
+              () => !1,
+            ),
+            r = (0, l.useRef)(null),
+            [n, o] = (0, l.useState)(!1);
+          (0, l.useEffect)(() => {
+            let e = r.current;
+            if (!e || "u" < typeof IntersectionObserver) return;
+            let t = new IntersectionObserver(
+              ([e]) => o(!e.isIntersecting && e.boundingClientRect.top < 0),
+              { rootMargin: "-45px 0px 0px 0px" },
+            );
+            return (t.observe(e), () => t.disconnect());
+          }, []);
+          let h = s.sym + " " + O(e, "title", "Orderbook Heatmap"),
+            d = (a) =>
+              (0, i.jsx)(e1, {
+                size: a,
+                ariaLabel: O(e, "itv", "Period"),
+                value: s.itv,
+                onChange: (e) => t.setItv(e),
+                options: Object.keys(f).map((e) => ({ value: e, label: g[e] })),
+              }),
+            c = (0, i.jsxs)(eJ, {
+              size: "standard",
+              onClick: tp,
+              title: O(e, "faqBtn", "FAQ"),
+              "aria-label": O(e, "faqBtn", "FAQ"),
+              children: [
+                (0, i.jsx)(eX.mo0, { className: tt().uico }),
+                (0, i.jsx)("span", {
+                  className: tt().ha,
+                  children: O(e, "faqBtn", "FAQ"),
+                }),
+              ],
+            });
+          return (0, i.jsxs)(i.Fragment, {
+            children: [
+              (0, i.jsx)("div", {
+                className: tt().slot,
+                children: (0, i.jsxs)("header", {
+                  ref: r,
+                  className: tt().top,
+                  children: [
+                    (0, i.jsx)("h1", { className: tt().title, children: h }),
+                    (0, i.jsx)(td, { size: "standard" }),
+                    (0, i.jsx)(tc, { size: "standard" }),
+                    d("standard"),
+                    (0, i.jsx)("div", { className: tt().grow }),
+                    (0, i.jsx)(tu, {}),
+                    (0, i.jsx)(e7, {}),
+                    c,
+                  ],
+                }),
+              }),
+              a && n
+                ? (0, i.jsxs)("div", {
+                    className: F(tt().top, tt().compact),
+                    children: [
+                      (0, i.jsx)("span", {
+                        className: tt().title,
+                        children: h,
+                      }),
+                      (0, i.jsx)(td, { size: "compact" }),
+                      d("compact"),
+                      (0, i.jsx)("span", { className: tt().grow }),
+                      (0, i.jsx)(e2, {
+                        size: "compact",
+                        align: "end",
+                        width: 300,
+                        label: O(e, "mset.label", "Settings"),
+                        title: O(e, "mset.label", "Settings"),
+                        triggerClassName: tt().foldBtn,
+                        trigger: (0, i.jsxs)("svg", {
+                          className: tt().ico,
+                          viewBox: "0 0 16 16",
+                          "aria-hidden": "true",
+                          children: [
+                            (0, i.jsx)("path", {
+                              d: "M2.5 4.5h7M12.5 4.5h1M2.5 11.5h2M7.5 11.5h6",
+                            }),
+                            (0, i.jsx)("circle", {
+                              cx: "11",
+                              cy: "4.5",
+                              r: "1.6",
+                            }),
+                            (0, i.jsx)("circle", {
+                              cx: "6",
+                              cy: "11.5",
+                              r: "1.6",
+                            }),
+                          ],
+                        }),
+                        children: (0, i.jsxs)("div", {
+                          className: tt().sheet,
+                          children: [
+                            (0, i.jsx)(tc, { size: "standard" }),
+                            (0, i.jsxs)("div", {
+                              className: tt().sheetRow,
+                              children: [
+                                (0, i.jsx)(tu, {}),
+                                (0, i.jsx)(e7, {}),
+                                c,
+                              ],
+                            }),
+                          ],
+                        }),
+                      }),
+                    ],
+                  })
+                : null,
+            ],
+          });
+        }
+        var tm = s(55223),
+          tg = s.n(tm);
+        function tb() {
+          let { t: e, term: t } = H(),
+            s = t.D,
+            [a, r] = (0, l.useState)(""),
+            n = "",
+            o = !1,
+            h = !1;
+          "error" === t.status
+            ? ((o = !0),
+              "unsupported" === s.err
+                ? (n = O(
+                    e,
+                    "err.unsupported",
+                    "There is no orderbook data for this pair yet. Pick another pair or exchange.",
+                  ))
+                : "empty" === s.err
+                  ? (n = O(
+                      e,
+                      "err.empty",
+                      "No orderbook data was returned for this pair.",
+                    ))
+                  : ((n = O(
+                      e,
+                      "err.load",
+                      "Could not load the orderbook history ({{msg}}).",
+                      { msg: s.errMsg || "" },
+                    )),
+                    (h = !0)))
+            : s.missing &&
+              s.missing.length &&
+              (n = O(
+                e,
+                "err.missing",
+                "{{list}} sent no data this time; the aggregate sums the other exchanges for now.",
+                { list: s.missing.join(", ") },
+              ));
+          let d = t.status + "|" + s.sym + s.mkt + s.itv + "|" + n;
+          return n && a !== d
+            ? (0, i.jsxs)("div", {
+                className: F(tg().banner, o && tg().bad),
+                role: "status",
+                children: [
+                  (0, i.jsx)("span", { className: tg().grow, children: n }),
+                  h
+                    ? (0, i.jsx)(eJ, {
+                        onClick: () => t.load(!0),
+                        children: O(e, "retry", "Retry"),
+                      })
+                    : null,
+                  (0, i.jsx)(eJ, {
+                    onClick: () => r(d),
+                    children: O(e, "close", "Close"),
+                  }),
+                ],
+              })
+            : null;
+        }
+        var tx = s(82538),
+          tv = s(20297),
+          ty = s.n(tv);
+        function tw({ label: e, value: t, sub: s, tone: a, title: r }) {
+          let { version: n } = H(),
+            o = (0, l.useRef)(null);
+          return (
+            (0, tx.i)(o, n, 32, 20, ty().tight),
+            (0, i.jsxs)("div", {
+              className: ty().kpi,
+              title: r,
+              children: [
+                (0, i.jsx)("div", { className: ty().l, children: e }),
+                (0, i.jsx)("div", {
+                  ref: o,
+                  className: F(ty().v, a && ty()[a]),
+                  children: t,
+                }),
+                (0, i.jsx)("div", { className: ty().d, children: s }),
+              ],
+            })
+          );
+        }
+        function t_() {
+          let { t: e, term: t, chart: s } = H(),
+            a = Z(t),
+            l = t.fmt,
+            r = t.p,
+            n = r.band,
+            o = t.latestSnap(),
+            h = j[r.mkt],
+            d = (e, t) => ("usd" === r.unit ? l.u(t) : l.q(e)),
+            c = [
+              {
+                label: O(e, "kpi.px", "Last price \xb7 {{m}}", {
+                  m: U(e, t, h),
+                }),
+              },
+              {
+                label: O(e, "kpi.bid", "Bid depth \xb7 {{b}}% below", { b: n }),
+              },
+              {
+                label: O(e, "kpi.ask", "Ask depth \xb7 {{b}}% above", { b: n }),
+              },
+              { label: O(e, "kpi.imb", "Imbalance \xb7 \xb1{{b}}%", { b: n }) },
+              { label: O(e, "kpi.wb", "Largest bid wall") },
+              { label: O(e, "kpi.wa", "Largest ask wall") },
+            ];
+          if (o && t.D.sym === r.sym) {
+            ((c[0].value = (0, i.jsxs)(i.Fragment, {
+              children: [
+                (0, i.jsx)(ta, { sym: t.D.sym, className: ty().coin }),
+                l.p(t.lastPrice()),
+              ],
+            })),
+              (c[0].sub = O(e, "kpi.bbba", "Bid {{b}} \xb7 Ask {{a}}", {
+                b: l.p(o.bb),
+                a: l.p(o.ba),
+              })));
+            let s = t.depthIn(o, n / 100);
+            if (s) {
+              ((c[1].value = l.u(s.Bu)),
+                (c[1].tone = "pos"),
+                (c[1].sub = O(e, "kpi.coins", "{{n}} {{sym}}", {
+                  n: l.q(s.B),
+                  sym: t.D.sym,
+                })),
+                (c[2].value = l.u(s.Au)),
+                (c[2].tone = "neg"),
+                (c[2].sub = O(e, "kpi.coins", "{{n}} {{sym}}", {
+                  n: l.q(s.A),
+                  sym: t.D.sym,
+                })));
+              let a = s.Bu + s.Au > 0 ? (s.Bu - s.Au) / (s.Bu + s.Au) : 0;
+              ((c[3].value = (0, i.jsxs)(i.Fragment, {
+                children: [
+                  eD(a, 1),
+                  (0, i.jsx)("small", {
+                    children:
+                      a >= 0
+                        ? O(e, "kpi.bidHeavy", "bids heavier")
+                        : O(e, "kpi.askHeavy", "asks heavier"),
+                  }),
+                ],
+              })),
+                (c[3].tone = a > 0 ? "pos" : a < 0 ? "neg" : ""));
+              let r = t.snapAt(t.NOW() - 3e5),
+                n = r ? t.imbOf(r) : null;
+              c[3].sub =
+                null == n
+                  ? O(e, "kpi.imbHint", "Bids minus asks, share of both")
+                  : O(e, "kpi.imb5", "5 min ago {{v}}", { v: eD(n, 1) });
+            }
+            let a = t.curWalls(),
+              r = t.NOW();
+            for (let [s, n] of [
+              ["b", 4],
+              ["a", 5],
+            ]) {
+              let h = a.find((e) => e.side === s);
+              h
+                ? ((c[n].value = (0, i.jsxs)(i.Fragment, {
+                    children: [
+                      l.p(h.p, eM(h.G)),
+                      (0, i.jsx)("small", { children: d(h.q, h.usd) }),
+                    ],
+                  })),
+                  (c[n].tone = "b" === s ? "pos" : "neg"),
+                  (c[n].sub = O(
+                    e,
+                    "kpi.wallSub",
+                    "{{d}} from price \xb7 up {{age}}",
+                    {
+                      d: eD((h.p + h.G / 2) / o.mid - 1),
+                      age: l.dur(r - h.first),
+                    },
+                  )),
+                  (c[n].title = O(e, "kpi.locate", "Show it on the chart")),
+                  (c[n].wall = h))
+                : ((c[n].value = O(e, "none", "None")),
+                  (c[n].sub = O(e, "kpi.min", "Threshold {{v}}", {
+                    v: l.u(t.wallMin()),
+                  })));
+            }
+          }
+          return a(
+            (0, i.jsx)("section", {
+              className: ty().kpis,
+              children: c.map((e, t) =>
+                e.wall && s
+                  ? (0, i.jsx)(
+                      "button",
+                      {
+                        type: "button",
+                        className: ty().btn,
+                        onClick: () => {
+                          s.locate(e.wall);
+                          let t = s.plot;
+                          t &&
+                            t.scrollIntoView({
+                              behavior: "smooth",
+                              block: "nearest",
+                            });
+                        },
+                        children: (0, i.jsx)(tw, { ...e, value: e.value }),
+                      },
+                      t,
+                    )
+                  : (0, i.jsx)(
+                      tw,
+                      {
+                        label: e.label,
+                        value: e.value || "—",
+                        sub: e.sub || "—",
+                        tone: e.tone,
+                      },
+                      t,
+                    ),
+              ),
+            }),
+          );
+        }
+        let tk = (e) => {
+            if ("#" === (e = String(e || "").trim())[0]) {
+              let t = e.slice(1);
+              (3 === t.length || 4 === t.length) &&
+                (t = t
+                  .slice(0, 3)
+                  .split("")
+                  .map((e) => e + e)
+                  .join(""));
+              let s = parseInt(t.slice(0, 6), 16);
+              return [(s >> 16) & 255, (s >> 8) & 255, 255 & s];
+            }
+            let t = e.match(/rgba?\(([^)]+)\)/);
+            return t
+              ? t[1]
+                  .split(/[ ,/]+/)
+                  .slice(0, 3)
+                  .map(Number)
+              : null;
+          },
+          tT = (e) => tk(e) || [128, 128, 128],
+          tj = (e) =>
+            "#" +
+            e
+              .map((e) =>
+                Math.round(eS(e, 0, 255))
+                  .toString(16)
+                  .padStart(2, "0"),
+              )
+              .join(""),
+          tS = (e) => {
+            let t = (e) =>
+              (e /= 255) <= 0.03928
+                ? e / 12.92
+                : Math.pow((e + 0.055) / 1.055, 2.4);
+            return 0.2126 * t(e[0]) + 0.7152 * t(e[1]) + 0.0722 * t(e[2]);
+          },
+          tC = (e, t) => {
+            let s = tS(e),
+              i = tS(t);
+            return (Math.max(s, i) + 0.05) / (Math.min(s, i) + 0.05);
+          };
+        function tM(e, t, s) {
+          let i = tT(e),
+            a = tT(t),
+            l = 255 * (0.2 > tS(a));
+          for (let e = 0; e < 24 && tC(i, a) < s; e++)
+            i = i.map((e) => e + (l - e) * 0.1);
+          return tj(i);
+        }
+        let tN = (e, t, s) => {
+          let i = tT(e),
+            a = tT(t);
+          return tj(i.map((e, t) => e + (a[t] - e) * s));
+        };
+        function tA(e, t) {
+          let [s, i, a] = tT(e);
+          return `rgba(${s},${i},${a},${t})`;
+        }
+        let tB = (e) =>
+            tC(tT(e), [255, 255, 255]) >= tC(tT(e), [11, 13, 17])
+              ? "#ffffff"
+              : "#0b0d11",
+          tL = (e) => (e < 0 ? 0 : e > 1 ? 1 : e);
+        function tD(e, t, s) {
+          let i = s ? t.map(tT) : [tT(e), ...t.map(tT)],
+            a = s || i.map((e, t) => (t / (i.length - 1)) * 100),
+            l = new Uint32Array(256);
+          for (let e = 0, t = 0; e < 256; e++) {
+            let s = (e / 255) * 100;
+            for (; t < i.length - 2 && s > a[t + 1];) t++;
+            let r = tL((s - a[t]) / (a[t + 1] - a[t] || 1)),
+              n = i[t],
+              o = i[t + 1];
+            l[e] =
+              (-0x1000000 |
+                (Math.round(n[2] + (o[2] - n[2]) * r) << 16) |
+                (Math.round(n[1] + (o[1] - n[1]) * r) << 8) |
+                Math.round(n[0] + (o[0] - n[0]) * r)) >>>
+              0;
+          }
+          return l;
+        }
+        let tR = new Float64Array(131072),
+          tE = `#version 300 es
+precision highp float;
+precision highp int;
+layout(location = 0) in vec4 aCell; // display row, size (negative for a bid), first and last slot of the run
+uniform highp sampler2D uCols;      // per slot: columns [x0, x1) its time meets, [x0, x1) whose start is in its time
+uniform vec3 uWin;                  // the columns [from, to) this draw covers; 1: the sampled ones
+uniform float uRef, uCut;
+uniform int uB, uTop, uNb, uW, uFine;
+flat out float vEnc;
+void main() {
+    int sa = int(aCell.z), sb = int(aCell.w);
+    vec4 ra = texelFetch(uCols, ivec2(sa % 128, sa / 128), 0), rb = texelFetch(uCols, ivec2(sb % 128, sb / 128), 0);
+    vec2 xr = uWin.z > 0.5 ? vec2(ra.z, rb.w) : vec2(ra.x, rb.y);
+    float x0 = max(xr.x, uWin.x), x1 = min(xr.y, uWin.y);
+    int j = uTop - int(aCell.x) / uB;
+    if (x1 <= x0 || j < 0 || j >= uNb) { gl_Position = vec4(2.0, 2.0, 2.0, 1.0); vEnc = 0.0; return; }
+    // heatIdx; with float32 targets also the size within the colour step (1/16384 of it; in the top step by octaves,
+    // 2^-18 of one, 16 octaves), so equal steps keep the larger cell as the CPU path does. Integers below 2^24, exact.
+    float x = abs(aCell.y) / uRef, u = clamp((x - uCut) / (1.0 - uCut), 0.0, 1.0);
+    int idx = min(255, int(floor(u * 256.0))), side = aCell.y < 0.0 ? 1 : 0;
+    if (uFine == 1) {
+        float top = uCut + (1.0 - uCut) * 255.0 / 256.0;
+        int fine = idx < 255 ? min(16383, int(floor(fract(u * 256.0) * 16384.0)))
+            : 4177920 + int(clamp(floor(log2(max(x / top, 1.0)) * 262144.0), 0.0, 4194303.0));
+        vEnc = float((idx < 255 ? idx * 16384 : 0) * 2 + fine * 2 + side + 1);
+    } else vEnc = float(idx * 2 + side + 1);
+    float cx = (gl_VertexID & 1) == 1 ? x1 : x0, cy = float(j + (gl_VertexID >> 1));
+    gl_Position = vec4(cx / float(uW) * 2.0 - 1.0, cy / float(uNb) * 2.0 - 1.0, 0.0, 1.0);
+}`,
+          tP = `#version 300 es
+precision highp float;
+flat in float vEnc;
+out vec4 o;
+void main() { o = vec4(vEnc, 0.0, 0.0, 1.0); }`,
+          tH = `#version 300 es
+void main() { vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2); gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0); }`,
+          tF = `#version 300 es
+precision highp float;
+precision highp int;
+uniform highp sampler2D uEnc;
+uniform highp sampler2D uLut; // row 0: asks (or every cell), row 1: bids
+uniform int uCap, uFine, uNb;
+uniform float uY0, uH, uT; // group 0's top and the groups' spacing (device px from the plot's top), their height
+out vec4 o;
+void main() {
+    ivec2 p = ivec2(gl_FragCoord.xy);
+    // every group is uT whole pixels tall from its rounded top, so a band keeps its thickness while it moves; where
+    // two meet the brighter wins. Values are whole numbers, exact: no rounding (above 2^23 + 0.5 would round to the
+    // even neighbour)
+    float y = float(uCap - 1 - p.y);
+    int jHi = int(floor((y - uY0) / uH)) + 1, jLo = int(floor((y - uY0 - uT) / uH)) - 1;
+    float best = 0.0;
+    for (int k = 0; k < 16; k++) {
+        int j = jLo + k;
+        if (j > jHi) break;
+        if (j < 0 || j >= uNb) continue;
+        float top = floor(uY0 + float(j) * uH + 0.5);
+        if (y >= top && y < top + uT) best = max(best, texelFetch(uEnc, ivec2(p.x, j), 0).r);
+    }
+    int e = int(best);
+    if (e < 1) { o = vec4(0.0); return; }
+    e -= 1;
+    int idx = uFine == 1 ? (e >= 8355840 ? 255 : e >> 15) : e >> 1;
+    vec4 c = texelFetch(uLut, ivec2(idx, e & 1), 0);
+    o = vec4(c.rgb * c.a, c.a);
+}`;
+        function tO(e, t, s) {
+          let i = e.createProgram();
+          for (let [a, l] of [
+            [e.VERTEX_SHADER, t],
+            [e.FRAGMENT_SHADER, s],
+          ]) {
+            let t = e.createShader(a);
+            if (
+              (e.shaderSource(t, l),
+              e.compileShader(t),
+              !e.getShaderParameter(t, e.COMPILE_STATUS))
+            )
+              throw Error(e.getShaderInfoLog(t));
+            e.attachShader(i, t);
+          }
+          if ((e.linkProgram(i), !e.getProgramParameter(i, e.LINK_STATUS)))
+            throw Error(e.getProgramInfoLog(i));
+          let a = {},
+            l = e.getProgramParameter(i, e.ACTIVE_UNIFORMS);
+          for (let t = 0; t < l; t++) {
+            let s = e.getActiveUniform(i, t).name;
+            a[s] = e.getUniformLocation(i, s);
+          }
+          return { p: i, u: a };
+        }
+        function tW(e, t, s, i) {
+          let a = e.createTexture();
+          for (let l of (e.bindTexture(e.TEXTURE_2D, a),
+          e.texStorage2D(e.TEXTURE_2D, 1, i, t, s),
+          [e.TEXTURE_MIN_FILTER, e.TEXTURE_MAG_FILTER]))
+            e.texParameteri(e.TEXTURE_2D, l, e.NEAREST);
+          for (let t of [e.TEXTURE_WRAP_S, e.TEXTURE_WRAP_T])
+            e.texParameteri(e.TEXTURE_2D, t, e.CLAMP_TO_EDGE);
+          return a;
+        }
+        function tV(e, t, s, i) {
+          if (!(s > -1 / 0)) return -i;
+          if (!(s < 1 / 0)) return i;
+          let a = Math.ceil((s - e) / t);
+          for (; e + (a - 1) * t >= s;) a--;
+          for (; e + a * t < s;) a++;
+          return Math.max(-i, Math.min(i, a));
+        }
+        let tq = new WeakMap(),
+          tI = 0,
+          tU = (e) => {
+            let t = tq.get(e);
+            return (void 0 === t && ((t = ++tI), tq.set(e, t)), t);
+          };
+        class tG {
+          constructor() {
+            this.ok = !1;
+            try {
+              let e = document.createElement("canvas"),
+                t = e.getContext("webgl2", {
+                  alpha: !0,
+                  premultipliedAlpha: !0,
+                  antialias: !1,
+                  depth: !1,
+                  stencil: !1,
+                });
+              if (!t || !t.getExtension("EXT_color_buffer_float")) return;
+              ((this.fine = !!t.getExtension("EXT_float_blend")),
+                (this.cv = e),
+                (this.gl = t),
+                e.addEventListener("webglcontextlost", (e) => {
+                  (e.preventDefault(), (this.ok = !1));
+                }),
+                (this.p1 = tO(t, tE, tP)),
+                (this.p2 = tO(t, tH, tF)),
+                (this.colTex = tW(t, 128, 1024, t.RGBA32F)),
+                (this.lutTex = tW(t, 256, 2, t.RGBA8)),
+                (this.vao = t.createVertexArray()),
+                (this.fbo = t.createFramebuffer()),
+                (this.enc = null),
+                (this.encW = 0),
+                (this.encH = 0),
+                (this.chunks = new Map()),
+                (this.free = Array.from({ length: 1024 }, (e, t) => 1023 - t)),
+                (this.total = 0),
+                (this.frame = 0),
+                (this.D = null),
+                (this.Gd = 0),
+                (this.lutKey = ""),
+                (this.cols = new Float32Array(524288)),
+                (this.scratch = new Float32Array(65536)),
+                (this.ok = !0));
+            } catch (e) {
+              this.ok = !1;
+            }
+          }
+          dispose() {
+            clearTimeout(this.warmT);
+            let e = this.gl && this.gl.getExtension("WEBGL_lose_context");
+            (e && e.loseContext(), (this.ok = !1), (this.chunks = new Map()));
+          }
+          draw(e) {
+            let t = this.gl;
+            if (!this.ok || t.isContextLost()) return ((this.ok = !1), null);
+            this.frame++;
+            let { W: s, cap: i, nb: a, T: l } = e;
+            if (
+              ((this.cv.width !== s || this.cv.height !== i) &&
+                ((this.cv.width = s), (this.cv.height = i)),
+              (this.encW !== s || this.encH !== i) &&
+                (this.enc && t.deleteTexture(this.enc),
+                (this.enc = tW(t, s, i, this.fine ? t.R32F : t.R16F)),
+                (this.encW = s),
+                (this.encH = i),
+                t.bindFramebuffer(t.FRAMEBUFFER, this.fbo),
+                t.framebufferTexture2D(
+                  t.FRAMEBUFFER,
+                  t.COLOR_ATTACHMENT0,
+                  t.TEXTURE_2D,
+                  this.enc,
+                  0,
+                ),
+                t.checkFramebufferStatus(t.FRAMEBUFFER) !==
+                  t.FRAMEBUFFER_COMPLETE))
+            )
+              return ((this.ok = !1), null);
+            if (this.lutKey !== e.lutKey) {
+              this.lutKey = e.lutKey;
+              let s = new Uint8Array(2048);
+              (s.set(new Uint8Array(e.LA.buffer, e.LA.byteOffset, 1024), 0),
+                s.set(new Uint8Array(e.LB.buffer, e.LB.byteOffset, 1024), 1024),
+                t.bindTexture(t.TEXTURE_2D, this.lutTex),
+                t.texSubImage2D(
+                  t.TEXTURE_2D,
+                  0,
+                  0,
+                  0,
+                  256,
+                  2,
+                  t.RGBA,
+                  t.UNSIGNED_BYTE,
+                  s,
+                ));
+            }
+            (this.D !== l.D || this.Gd !== e.Gd) &&
+              (this.clear(), (this.D = l.D), (this.Gd = e.Gd));
+            let r = this.inView(e);
+            (t.bindFramebuffer(t.FRAMEBUFFER, this.fbo),
+              t.viewport(0, 0, s, a),
+              t.clearColor(0, 0, 0, 0),
+              t.clear(t.COLOR_BUFFER_BIT),
+              t.enable(t.BLEND),
+              t.blendEquation(t.MAX),
+              t.blendFunc(t.ONE, t.ONE));
+            let n = this.p1.u;
+            (t.useProgram(this.p1.p),
+              t.activeTexture(t.TEXTURE0),
+              t.bindTexture(t.TEXTURE_2D, this.colTex),
+              t.uniform1i(n.uCols, 0),
+              t.uniform1f(n.uRef, e.ref),
+              t.uniform1f(n.uCut, e.cut),
+              t.uniform1i(n.uB, e.B),
+              t.uniform1i(n.uTop, e.gTop),
+              t.uniform1i(n.uNb, a),
+              t.uniform1i(n.uW, s),
+              t.uniform1i(n.uFine, +!!this.fine),
+              t.bindVertexArray(this.vao),
+              t.enableVertexAttribArray(0),
+              t.vertexAttribDivisor(0, 1));
+            let o = (e.gTop - a + 1) * e.B,
+              h = (e.gTop + 1) * e.B;
+            for (let [s, i, a, l] of this.windows(e))
+              if (!(i <= s))
+                for (let e of (t.uniform3f(n.uWin, s, i, a), r)) {
+                  if (e.kind !== l || e.x1 <= s || e.x0 >= i) continue;
+                  let a = e.off.length - 1,
+                    r = e.off[Math.max(0, Math.min(a, o - e.lo))],
+                    n = e.off[Math.max(0, Math.min(a, h - e.lo))];
+                  n <= r ||
+                    (t.bindBuffer(t.ARRAY_BUFFER, e.buf),
+                    t.vertexAttribPointer(0, 4, t.FLOAT, !1, 16, 16 * r),
+                    t.drawArraysInstanced(t.TRIANGLE_STRIP, 0, 4, n - r));
+                }
+            (t.bindVertexArray(null), t.disable(t.BLEND));
+            let d = Math.min(i, e.Hd);
+            (t.bindFramebuffer(t.FRAMEBUFFER, null),
+              t.viewport(0, 0, s, i),
+              t.clear(t.COLOR_BUFFER_BIT),
+              t.viewport(0, i - d, s, d));
+            let c = this.p2.u;
+            return (
+              t.useProgram(this.p2.p),
+              t.activeTexture(t.TEXTURE0),
+              t.bindTexture(t.TEXTURE_2D, this.enc),
+              t.uniform1i(c.uEnc, 0),
+              t.activeTexture(t.TEXTURE1),
+              t.bindTexture(t.TEXTURE_2D, this.lutTex),
+              t.uniform1i(c.uLut, 1),
+              t.uniform1i(c.uCap, i),
+              t.uniform1i(c.uFine, +!!this.fine),
+              t.uniform1i(c.uNb, a),
+              t.uniform1f(c.uY0, e.y0),
+              t.uniform1f(c.uH, e.h),
+              t.uniform1f(c.uT, Math.ceil(e.h - 1e-6)),
+              t.drawArrays(t.TRIANGLES, 0, 3),
+              this.evict(),
+              this.cv
+            );
+          }
+          windows(e) {
+            let t = e.T,
+              s = t.D.L,
+              i = e.W + 4;
+            if (!s.length) return [[-i, i, 0, "h"]];
+            let a = (t) => tV(e.t0, e.ms, t, i),
+              l = t.NOW(),
+              r = [
+                [-i, a(s[0].t), 0, "h"],
+                [-i, i, 0, "l"],
+              ];
+            for (let t = 0; t < s.length; t++) {
+              let i = s[t],
+                n = t + 1 < s.length ? s[t + 1].t : 1 / 0,
+                o = Math.min(t + 1 < s.length ? n : l + 1e3, i.t + 2.5 * i.dur);
+              o < n &&
+                o < e.tR + e.ms &&
+                n > e.t0 &&
+                r.push([a(o), a(n), 1, "h"]);
+            }
+            return r;
+          }
+          inView(e) {
+            let t = e.T.D,
+              s = t.step,
+              i = [],
+              a = 1 / 0,
+              l = -1;
+            for (let r of ["h", "l"]) {
+              let n = "h" === r ? t.H : t.L,
+                o = n.length;
+              if (!o) continue;
+              let h = "h" === r ? 64 * s : 64e3,
+                d = "h" === r ? 2 * s : 3e4,
+                c = Math.floor(n[0].t / h),
+                u = Math.floor(n[o - 1].t / h),
+                p = Math.max(c, Math.floor((e.t0 - d) / h)),
+                f = Math.min(u, Math.floor(e.tR / h)),
+                m = (t) => {
+                  let s = this.ensure(e, r, n, t, h);
+                  s &&
+                    ((s.used = this.frame),
+                    this.columns(e, r, n, s.i0, s.cnt, s),
+                    i.push(s),
+                    (a = Math.min(a, s.row)),
+                    (l = Math.max(l, s.row)));
+                };
+              for (let e = p; e <= f; e++) m(e);
+              u < p && m(u);
+            }
+            if (l >= 0) {
+              let e = this.gl;
+              (e.bindTexture(e.TEXTURE_2D, this.colTex),
+                e.texSubImage2D(
+                  e.TEXTURE_2D,
+                  0,
+                  0,
+                  a,
+                  128,
+                  l - a + 1,
+                  e.RGBA,
+                  e.FLOAT,
+                  this.cols,
+                  128 * a * 4,
+                ));
+            }
+            return (this.warmSoon(e), i);
+          }
+          ensure(e, t, s, i, a) {
+            let l = i * a,
+              r = l + a,
+              n = e_(s, l),
+              o = n,
+              h = 0;
+            for (; o < s.length && s[o].t < r && o - n < 128; o++)
+              h = (Math.imul(h, 31) + tU(s[o])) | 0;
+            let d = o - n;
+            if (!d) return null;
+            let c = t + i,
+              u = h + "|" + d,
+              p = this.chunks.get(c);
+            if (!p || p.sig !== u) {
+              if ((p && this.drop(c, p), !(p = this.build(e, t, s, n, d))))
+                return null;
+              ((p.sig = u), (p.kind = t), this.chunks.set(c, p));
+            }
+            return ((p.i0 = n), (p.cnt = d), p);
+          }
+          warmSoon(e) {
+            ((this.warmO = e),
+              this.warmT ||
+                (this.warmT = setTimeout(() => {
+                  ((this.warmT = 0), this.warm());
+                }, 60)));
+          }
+          warm() {
+            let e = this.warmO,
+              t = e && e.T.D;
+            if (
+              !this.ok ||
+              !t ||
+              t !== this.D ||
+              e.Gd !== this.Gd ||
+              this.total > 48e5
+            )
+              return;
+            let s = performance.now() + 6;
+            for (let i of ["h", "l"]) {
+              let a = "h" === i ? t.H : t.L;
+              if (!a.length) continue;
+              let l = "h" === i ? 64 * t.step : 64e3,
+                r = Math.floor(a[0].t / l);
+              for (let t = Math.floor(a[a.length - 1].t / l); t >= r; t--)
+                if ((this.ensure(e, i, a, t, l), performance.now() > s))
+                  return void this.warmSoon(e);
+            }
+          }
+          columns(e, t, s, i, a, l) {
+            let r = e.T,
+              n = r.D.step,
+              o = r.NOW(),
+              h = r.liveStart(),
+              d = this.cols,
+              c = e.W + 4,
+              u = 128 * l.row * 4,
+              p = c,
+              f = -c;
+            for (let l = 0; l < a; l++, u += 4) {
+              let a = i + l,
+                m = s[a],
+                g =
+                  "l" === t
+                    ? Math.min(
+                        a + 1 < s.length ? s[a + 1].t : o + 1e3,
+                        m.t + 2.5 * m.dur,
+                      )
+                    : a + 1 < s.length
+                      ? Math.min(s[a + 1].t, m.t + 1.5 * n)
+                      : r.histEnd(m),
+                b = tV(e.t0, e.ms, g, c),
+                x = (function (e, t, s, i) {
+                  let a = Math.floor((s - e) / t);
+                  for (; e + a * t > s;) a--;
+                  for (; !(e + (a + 1) * t > s);) a++;
+                  return Math.max(-i, Math.min(i, a));
+                })(e.t0, e.ms, m.t, c),
+                v = b;
+              "h" === t && m.t >= h && ((x = c), (v = l ? d[u - 3] : -c));
+              let y = tV(e.t0, e.ms, m.t, c);
+              ((d[u] = x),
+                (d[u + 1] = v),
+                (d[u + 2] = y),
+                (d[u + 3] = b),
+                v > x && ((p = Math.min(p, x)), (f = Math.max(f, v))),
+                b > y && ((p = Math.min(p, y)), (f = Math.max(f, b))));
+            }
+            ((l.x0 = p), (l.x1 = f));
+          }
+          build(e, t, s, i, a) {
+            let l = this.free.pop();
+            if (
+              (void 0 === l && (this.evict(!0), (l = this.free.pop())),
+              void 0 === l)
+            )
+              return null;
+            let r = e.Gd,
+              n = e.T.D.step,
+              o = 128 * l,
+              h = 1 / 0,
+              d = -1 / 0;
+            for (let e = 0; e < a; e++) {
+              let t = s[i + e];
+              if (!t.q || !t.q.length) continue;
+              let a = Math.floor((t.k0 * t.g) / r) - 1,
+                l = Math.ceil(((t.k0 + t.q.length) * t.g) / r) + 1;
+              (a < h && (h = a), l > d && (d = l));
+            }
+            let c = d > h ? d - h + 1 : 0;
+            (!this.runV || this.runV.length < c) &&
+              ((this.runV = new Float64Array(c)),
+              (this.runA = new Int32Array(c)),
+              (this.runB = new Int32Array(c)),
+              (this.act = new Int32Array(c)),
+              (this.act2 = new Int32Array(c)));
+            let u = this.runV,
+              p = this.runA,
+              f = this.runB;
+            f.fill(-2, 0, c);
+            let m = this.scratch,
+              g = 0,
+              b = this.act,
+              x = 0,
+              v = this.act2,
+              y = 0,
+              w = !1,
+              _ = 0,
+              k = null,
+              T = (e) => {
+                if (g + 4 > m.length) {
+                  let e = new Float32Array(2 * m.length);
+                  (e.set(m), (m = this.scratch = e));
+                }
+                let t = e - h;
+                ((m[g++] = e),
+                  (m[g++] = u[t]),
+                  (m[g++] = o + p[t]),
+                  (m[g++] = o + f[t]));
+              },
+              j = (e, t) => {
+                let s = (e + 0.5) * r < k.mid ? -t : t,
+                  i = e - h;
+                if (f[i] === _ - 1) {
+                  if (w && u[i] === s) {
+                    ((f[i] = _), (v[y++] = e));
+                    return;
+                  }
+                  T(e);
+                }
+                ((p[i] = _), (f[i] = _), (u[i] = s), (v[y++] = e));
+              };
+            for (; _ < a; _++) {
+              let e = k;
+              ((k = s[i + _]),
+                (w =
+                  _ > 0 &&
+                  ("h" === t
+                    ? k.t - e.t <= 1.5 * n
+                    : k.t - e.t <= 2.5 * e.dur)));
+              let a = k.q;
+              if (((y = 0), a && k.g <= 1.0000001 * r)) {
+                let e = r / k.g,
+                  t = 0 / 0,
+                  s = 0;
+                for (let i = 0; i < a.length; i++) {
+                  let l = a[i];
+                  if (!(l > 0)) continue;
+                  let r = Math.floor((k.k0 + i) / e + 1e-9);
+                  (r !== t && (s > 0 && j(t, s), (t = r), (s = 0)), (s += l));
+                }
+                s > 0 && j(t, s);
+              } else if (a) {
+                let e = Math.floor((k.k0 * k.g) / r),
+                  t = Math.min(
+                    tR.length,
+                    Math.ceil(((k.k0 + a.length) * k.g) / r) - e + 1,
+                  );
+                ek(k, r, e, t, tR);
+                for (let s = 0; s < t; s++) tR[s] > 0 && j(e + s, tR[s]);
+              }
+              for (let e = 0; e < x; e++) {
+                let t = b[e];
+                f[t - h] === _ - 1 && T(t);
+              }
+              let l = b;
+              ((b = v), (v = l), (x = y));
+            }
+            for (let e = 0; e < x; e++) T(b[e]);
+            ((this.act = b), (this.act2 = v));
+            let S = g / 4,
+              C = 1 / 0,
+              M = -1 / 0;
+            for (let e = 0; e < g; e += 4)
+              (m[e] < C && (C = m[e]), m[e] > M && (M = m[e]));
+            S || (C = M = 0);
+            let N = new Uint32Array(M - C + 2),
+              A = new Float32Array(g);
+            for (let e = 0; e < g; e += 4) N[m[e] - C + 1]++;
+            for (let e = 1; e < N.length; e++) N[e] += N[e - 1];
+            let B = N.slice(0, -1);
+            for (let e = 0; e < g; e += 4) {
+              let t = 4 * B[m[e] - C]++;
+              ((A[t] = m[e]),
+                (A[t + 1] = m[e + 1]),
+                (A[t + 2] = m[e + 2]),
+                (A[t + 3] = m[e + 3]));
+            }
+            let L = this.gl,
+              D = L.createBuffer();
+            return (
+              L.bindBuffer(L.ARRAY_BUFFER, D),
+              L.bufferData(L.ARRAY_BUFFER, A, L.STATIC_DRAW),
+              (this.total += S),
+              {
+                buf: D,
+                n: S,
+                lo: C,
+                off: N,
+                row: l,
+                used: this.frame,
+                sig: "",
+                kind: "",
+                x0: 0,
+                x1: 0,
+              }
+            );
+          }
+          drop(e, t) {
+            (this.gl.deleteBuffer(t.buf),
+              (this.total -= t.n),
+              this.free.push(t.row),
+              this.chunks.delete(e));
+          }
+          clear() {
+            for (let [e, t] of this.chunks) this.drop(e, t);
+          }
+          evict(e) {
+            if (e || !(this.total <= 6e6)) {
+              for (let [t, s] of [...this.chunks]
+                .filter(([, e]) => e.used < this.frame)
+                .sort((e, t) => e[1].used - t[1].used))
+                if ((!e && this.total <= 48e5) || (this.drop(t, s), e)) break;
+            }
+          }
+        }
+        let tX = new Float64Array(3e4),
+          tz = new Float64Array(1),
+          tY = new Float64Array(3e4),
+          tK = new Uint8Array(3e4),
+          t$ = new Float64Array(3e4),
+          tQ = new WeakMap(),
+          tZ = (e) => {
+            let t = tQ.get(e);
+            if (t) return t;
+            let s = e.q,
+              i = 0;
+            for (let e = 0; e < s.length; e++) s[e] > 0 && i++;
+            t = { k: new Int32Array(i), v: new Float64Array(i) };
+            for (let i = 0, a = 0; i < s.length; i++)
+              s[i] > 0 && ((t.k[a] = e.k0 + i), (t.v[a++] = s[i]));
+            return (tQ.set(e, t), t);
+          },
+          tJ = new WeakMap(),
+          t0 = 0,
+          t1 = (e) => {
+            let t = tJ.get(e);
+            return (void 0 === t && ((t = ++t0), tJ.set(e, t)), t);
+          },
+          t2 = Array.from({ length: 5 }, () => new Float64Array(7)),
+          t5 = (e, t) => Math.round(e * t) / t,
+          t3 = (e, t, s, i, a, l) => {
+            (e.beginPath(),
+              e.roundRect ? e.roundRect(t, s, i, a, l) : e.rect(t, s, i, a));
+          },
+          t4 = (e, t) =>
+            Math.min(255, Math.floor(256 * eS((e - t) / (1 - t), 0, 1))),
+          t6 = () =>
+            window.matchMedia &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        class t8 {
+          constructor(e, t, s) {
+            ((this.T = e),
+              (this.plot = t.plot),
+              (this.cvB = t.base),
+              (this.cvO = t.over),
+              (this.hooks = s || {}),
+              (this.cb = this.cvB.getContext("2d")),
+              (this.co = this.cvO.getContext("2d")),
+              (this.V = {
+                tR: 0,
+                span: x["1m"],
+                follow: !0,
+                fo: 0.05,
+                yAuto: !0,
+                pLo: 0,
+                pHi: 1,
+                refit: !0,
+                yT: null,
+              }),
+              (this.G = {
+                W: 0,
+                H: 0,
+                dpr: 1,
+                plotW: 0,
+                pvW: 0,
+                pvX: 0,
+                axX: 0,
+                top: 8,
+                bot: 0,
+                statsY: 0,
+                timeY: 0,
+                subY: [],
+                subH: [],
+                k: 1,
+                dg: 0,
+                y: null,
+                p: null,
+              }),
+              (this.AX = 76),
+              (this.PIN = null),
+              (this.SELW = null),
+              (this.hover = null),
+              (this.drag = null),
+              (this.ptrs = new Map()),
+              (this.pinch = null),
+              (this.touchy = !1),
+              (this.dirty = { base: !0, over: !0 }),
+              (this.raf = 0),
+              (this.rafT = 0),
+              (this.HS = null),
+              (this.HREF = {
+                key: "",
+                v: 1,
+                cur: 0,
+                at: 0,
+                ver: 0,
+                cnt: 0,
+                moving: !1,
+              }),
+              (this.RG = { v: 1, M: 1, n: 0, ver: 0 }),
+              (this.rgDrag = !1),
+              (this.font = "Arial, sans-serif"),
+              (this.swap = { on: !1 }),
+              (this.light = !1),
+              this.applyColors(),
+              (e.chart = this),
+              this.bind(),
+              (this.ro = new ResizeObserver(() => this.resize())),
+              this.ro.observe(this.plot),
+              this.resize());
+          }
+          dispose() {
+            for (let [e, t, s] of (this.ro.disconnect(),
+            cancelAnimationFrame(this.raf),
+            this.HG && this.HG.dispose(),
+            clearTimeout(this.rafT),
+            clearTimeout(this.settleT),
+            this.handlers))
+              ("blur" === e
+                ? window
+                : "docdown" === e
+                  ? document
+                  : this.plot
+              ).removeEventListener("docdown" === e ? "pointerdown" : e, t, s);
+            (clearTimeout(this.pressT),
+              this.noSelect(!1),
+              this.T.chart === this && (this.T.chart = null));
+          }
+          get p() {
+            return this.T.p;
+          }
+          get D() {
+            return this.T.D;
+          }
+          tr(e, t, s) {
+            return this.T.t("liquidity_heatmap." + e, {
+              ...s,
+              defaultValue: t,
+            });
+          }
+          setTheme(e, t) {
+            ((this.light = e),
+              t && (this.font = t),
+              this.applyColors(),
+              this.markBase(),
+              clearTimeout(this.themeT),
+              (this.themeT = setTimeout(() => {
+                (this.applyColors(), this.markBase(), this.markOver());
+              }, 60)));
+          }
+          applyColors() {
+            let e = (function (e, t, s, i) {
+              let a = getComputedStyle(e),
+                l = (e, t) => {
+                  let s = a.getPropertyValue(e).trim();
+                  return tk(s) ? tj(tk(s)) : t;
+                },
+                r = {
+                  light: i,
+                  bg: l("--glass-bg", i ? "#fafbfc" : "#0b0d11"),
+                  surface: l("--glass-surface", i ? "#ffffff" : "#12151b"),
+                  s2: l("--glass-surface-2", i ? "#f4f5f7" : "#181c24"),
+                  s3: l("--glass-surface-3", i ? "#eceef2" : "#21262f"),
+                  line: l("--glass-line", i ? "#e6e8ec" : "#222833"),
+                  line2: l("--glass-line-2", i ? "#d2d6dd" : "#313947"),
+                  fg: l("--glass-fg", i ? "#0f1522" : "#f4f6f9"),
+                  fg2: l("--glass-fg-2", i ? "#4a5568" : "#b7bfcc"),
+                  fg3: l("--glass-fg-3", i ? "#687386" : "#8b94a3"),
+                  accent: l("--obh-accent", i ? "#b7791f" : "#f5c242"),
+                  bid: l("--obh-bid", i ? "#00a804" : "#00c805"),
+                  ask: l("--obh-ask", "#fa5000"),
+                },
+                n = (e) => a.getPropertyValue(e).trim();
+              ((r.grid = n("--glass-chart-grid") || tA(r.fg, i ? 0.07 : 0.06)),
+                (r.cross = n("--glass-chart-cross") || r.fg3),
+                (r.priceBg = r.fg),
+                (r.priceFg = r.surface));
+              let o = N.find((e) => e.id === t.p) || N[0],
+                h = {};
+              for (let e of ["bid", "ask"]) {
+                let s = t.c[e] || o[e];
+                s &&
+                  ((r[e] = tM(s, r.bg, 3)),
+                  (h["--obh-" + e] = r[e]),
+                  (h["--obh-" + e + "-soft"] = tA(r[e], i ? 0.1 : 0.14)));
+              }
+              ((r.up = r.bid), (r.down = r.ask));
+              let d = A.find((e) => e.id === t.k.p) || A[0],
+                c = +!!i;
+              ((r.kUp = tM(t.k.up || (d.up ? d.up[c] : r.up), r.bg, 3)),
+                (r.kDn = tM(t.k.dn || (d.dn ? d.dn[c] : r.down), r.bg, 3)));
+              let u = M(t.heat, i),
+                p = C[u],
+                f = tD(r.surface, p.stops, p.at),
+                m = (e) =>
+                  i
+                    ? [tN("#ffffff", e, 0.28), e, tN(e, "#000000", 0.45)]
+                    : [tN(r.surface, e, 0.35), e, tN(e, "#ffffff", 0.55)],
+                g = tD(r.surface, m(r.bid)),
+                b = tD(r.surface, m(r.ask)),
+                x = [u, s, i, r.bid, r.ask, r.surface].join("|");
+              return { CL: r, LUT: f, LUTB: g, LUTA: b, key: x, cssVars: h };
+            })(document.documentElement, this.p.pal, this.p.color, this.light);
+            ((this.CL = e.CL),
+              (this.LUT = e.LUT),
+              (this.LUTB = e.LUTB),
+              (this.LUTA = e.LUTA),
+              (this.PALKEY = e.key),
+              (this.cssVars = e.cssVars));
+            let t = this.font;
+            ((this.CL.ff = t),
+              (this.F = {
+                n: "500 12px " + t,
+                b: "700 12px " + t,
+                l: "12.5px " + t,
+                lb: "600 12.5px " + t,
+                s: "600 11.5px " + t,
+              }),
+              this.RG.ver++,
+              (this.CV = (this.CV || 0) + 1),
+              this.hooks.onRange && this.hooks.onRange());
+          }
+          prefsChanged(e) {
+            (("pal" === e || "color" === e) && this.applyColors(),
+              ("flags" === e || "subs" === e || "subH" === e) && this.layout(),
+              "pal" === e &&
+                (this.RG.ver++, this.hooks.onRange && this.hooks.onRange()),
+              this.markBase(),
+              this.markOver());
+          }
+          tL() {
+            return this.V.tR - this.V.span;
+          }
+          xOfT(e) {
+            return ((e - this.V.tR + this.V.span) / this.V.span) * this.G.plotW;
+          }
+          tOfX(e) {
+            return this.V.tR - this.V.span + (e / this.G.plotW) * this.V.span;
+          }
+          subRows() {
+            return ["vol", "imb"].filter((e) => this.p.subs[e]);
+          }
+          minSpan() {
+            return this.T.live.bookAt ? 3e4 : 8 * this.D.step;
+          }
+          maxSpan() {
+            let e = this.D,
+              t = Math.max(
+                2 * this.minSpan(),
+                Math.min(
+                  (this.T.NOW() - this.T.dataT0()) * 1.5 + 4 * e.step,
+                  3e3 * e.step,
+                ),
+              );
+            return e.streaming ? Math.max(t, x[e.itv] || 0) : t;
+          }
+          clampView() {
+            let e = this.V,
+              t = this.T.NOW(),
+              s = this.T.dataT0();
+            e.span = eS(e.span, this.minSpan(), this.maxSpan());
+            let i = t + 0.9 * e.span,
+              a = s + 0.1 * e.span;
+            e.tR = eS(e.tR, Math.min(a, i), i);
+          }
+          chkFollow() {
+            let e = this.V,
+              t = this.T.NOW();
+            ((e.follow = e.tR >= t && e.tR - e.span < t),
+              e.follow && (e.fo = (e.tR - t) / e.span));
+          }
+          axW() {
+            let e = this.cb;
+            e.font = this.F.s;
+            let t = 0;
+            for (let s of ["vol", "imb"])
+              t = Math.max(t, e.measureText(this.subName(s)).width);
+            return eS(Math.ceil(t + 16), 76, 132);
+          }
+          subName(e) {
+            return "vol" === e
+              ? this.tr("sub.vol", "Volume")
+              : this.tr("sub.imb", "Imbalance");
+          }
+          layout() {
+            let e = this.G;
+            this.AX = this.axW();
+            let t =
+              this.p.flags.cob && e.W > 560
+                ? eS(Math.round(0.12 * e.W), 96, 170)
+                : 0;
+            ((e.pvW = t),
+              (e.plotW = Math.max(10, e.W - this.AX - t)),
+              (e.pvX = e.plotW),
+              (e.axX = e.plotW + t),
+              (e.timeY = e.H - 26));
+            let s = this.subRows().map((e) => this.p.subH[e]),
+              i = s.reduce((e, t) => e + t, 0),
+              a = Math.floor(0.65 * e.timeY);
+            if (i > a) {
+              let e = a / i;
+              for (let t = 0; t < s.length; t++)
+                s[t] = Math.max(36, Math.floor(s[t] * e));
+              i = s.reduce((e, t) => e + t, 0);
+            }
+            ((e.subH = s), (e.subY = []), (e.statsY = e.timeY - i));
+            let l = e.statsY;
+            for (let t of s) (e.subY.push(l), (l += t));
+            ((e.bot = e.statsY - 6),
+              this.plot.style.setProperty("--wm-b", e.bot + "px"),
+              this.plot.style.setProperty("--wm-r", e.W - e.plotW + "px"));
+          }
+          resize() {
+            let e = this.plot.getBoundingClientRect();
+            if (!e.width || !e.height) return;
+            let t = Math.min(2, window.devicePixelRatio || 1),
+              s = this.G;
+            for (let i of ((s.W = e.width),
+            (s.H = e.height),
+            (s.dpr = t),
+            [this.cvB, this.cvO]))
+              ((i.width = Math.max(1, Math.round(e.width * t))),
+                (i.height = Math.max(1, Math.round(e.height * t))));
+            (this.layout(),
+              this.clampView(),
+              (this.dirty.base = this.dirty.over = !0),
+              this.frame());
+          }
+          resetView() {
+            let e = this.V;
+            ((e.span = x[this.D.itv] || 36e5),
+              (e.yAuto = !0),
+              (e.refit = !0),
+              (e.yJump = !0),
+              (this.PIN = null),
+              this.clampView(),
+              (e.fo = 0.05),
+              (e.tR = this.T.NOW() + e.fo * e.span),
+              (e.follow = !0),
+              this.viewChanged());
+          }
+          dispGrid(e) {
+            let t = eT(this.D.g, !0),
+              s = Math.max(1, this.G.bot - this.G.top),
+              i =
+                "auto" !== this.p.tick && eT(this.D.g).includes(+this.p.tick)
+                  ? +this.p.tick
+                  : t[0];
+            for (let a of t)
+              if (a >= i && s / (a * e) < tX.length - 2) return a;
+            return t[t.length - 1];
+          }
+          fitTarget() {
+            let e = this.T,
+              t = this.D,
+              s = this.V,
+              i = this.tL(),
+              a = s.tR,
+              l = e.liveStart(),
+              r = 1 / 0,
+              n = -1 / 0,
+              o = (t, s, i) => {
+                for (
+                  let a = Math.max(0, e_(t, s) - 1);
+                  a < t.length && t[a].t <= i;
+                  a++
+                ) {
+                  let i = t[a];
+                  if (i.t + i.dur < s) continue;
+                  let [l, o] = e.rangeOf(i);
+                  (l < r && (r = l), o > n && (n = o));
+                }
+              };
+            if (
+              (o(t.H, i, Math.min(a, l)),
+              l < a && o(t.L, Math.max(i, l), a),
+              Number.isFinite(r))
+            )
+              for (let [e, s] of t.PX)
+                e + t.step > i &&
+                  e <= a &&
+                  (s[2] < r && (r = s[2]), s[1] > n && (n = s[1]));
+            if (!Number.isFinite(r) || !Number.isFinite(n)) return null;
+            let h = (r + n) / 2,
+              d = Math.max((n - r) * 0.45, 0.0025 * h);
+            return { lo: r - d, hi: n + d };
+          }
+          autoY() {
+            let e = this.V,
+              t = this.fitTarget();
+            if (!t) return;
+            let s = e.pHi - e.pLo,
+              i = t.hi - t.lo;
+            (!(s > 0) || e.yJump
+              ? ((e.pLo = t.lo), (e.pHi = t.hi), (e.yT = null), (e.yJump = !1))
+              : (e.refit || t.lo < e.pLo || t.hi > e.pHi || s > 1.7 * i) &&
+                (e.yT = t),
+              (e.refit = !1));
+          }
+          easeY() {
+            let e = this.V,
+              t = e.yT;
+            if (!t) return !1;
+            let s = t6() ? 1 : 0.35;
+            return (
+              (e.pLo += (t.lo - e.pLo) * s),
+              (e.pHi += (t.hi - e.pHi) * s),
+              !(
+                Math.abs(t.lo - e.pLo) + Math.abs(t.hi - e.pHi) <
+                (e.pHi - e.pLo) * 0.002
+              ) || ((e.pLo = t.lo), (e.pHi = t.hi), (e.yT = null), !1)
+            );
+          }
+          viewChanged(e) {
+            let t = this.V;
+            ((t.refit =
+              t.refit ||
+              (t.yAuto &&
+                !(
+                  this.drag &&
+                  ("pan" === this.drag.type || "tz" === this.drag.type)
+                ))),
+              this.markBase(),
+              e || this.fillLeft(),
+              clearTimeout(this.settleT),
+              (this.settleT = setTimeout(() => {
+                (e && this.fillLeft(), this.drag || this.T.notify());
+              }, 140)));
+          }
+          fillLeft() {
+            let e = this.D,
+              t = this.V;
+            if (!(!e.H.length || this.tL() > e.H[0].t + 0.15 * t.span)) {
+              if (this.tL() < e.H[0].t && e.done) {
+                this.edgeShown || ((this.edgeShown = !0), this.edge("done"));
+                return;
+              }
+              this.T.loadOlder(this.tL() - 0.5 * t.span);
+            }
+          }
+          edge(e, t) {
+            let s =
+              "progress" === e
+                ? this.tr("edge.progress", "Loading history {{n}}/{{all}}", t)
+                : "loading" === e
+                  ? this.tr("edge.loading", "Loading earlier data…")
+                  : "done" === e
+                    ? this.tr("edge.done", "This is the earliest data")
+                    : "failed" === e
+                      ? this.tr(
+                          "edge.failed",
+                          "Could not load earlier data; retrying shortly",
+                        )
+                      : "";
+            this.hooks.onEdge &&
+              this.hooks.onEdge(
+                s,
+                2600 * ("progress" !== e && "loading" !== e),
+              );
+          }
+          dataChanged(e) {
+            ("more" === e && this.RG.ver++,
+              this.markBase(),
+              this.hover && this.tipSoon());
+          }
+          loaded() {
+            let e = this.V;
+            ((e.pLo = e.pHi = 0),
+              (e.yT = null),
+              (this.edgeShown = !1),
+              this.layout(),
+              this.resetView());
+          }
+          clearSel() {
+            ((this.PIN = null), (this.SELW = null));
+          }
+          swapStart(e) {
+            e && this.clearSel();
+            let t = this.D;
+            (this.hideTip(),
+              !this.swap.on &&
+                (t.H.length || t.L.length) &&
+                this.cvB.width &&
+                (this.swap.on = !0),
+              this.markBase());
+          }
+          swapEnd() {
+            this.swap.on &&
+              ((this.swap.on = !1), this.markBase(), this.frame());
+          }
+          markBase() {
+            ((this.dirty.base = !0), this.kick());
+          }
+          markOver() {
+            ((this.dirty.over = !0), this.kick());
+          }
+          kick() {
+            this.raf ||
+              ((this.raf = requestAnimationFrame(() => this.frame())),
+              clearTimeout(this.rafT),
+              (this.rafT = setTimeout(() => {
+                this.raf && (cancelAnimationFrame(this.raf), this.frame());
+              }, 120)));
+          }
+          frame() {
+            ((this.raf = 0),
+              clearTimeout(this.rafT),
+              !this.swap.on &&
+                (this.dirty.base &&
+                  ((this.dirty.base = !1),
+                  this.drawBase(),
+                  (this.dirty.over = !0)),
+                this.dirty.over && ((this.dirty.over = !1), this.drawOver())));
+          }
+          heatRef(e) {
+            let t = this.T,
+              s = this.D,
+              i = this.HREF,
+              a = this.RG,
+              l = [e, s.sym, s.mkt, s.itv, s.max].join("|");
+            if (!(
+              i.key !== l ||
+              (i.ver !== s.ver &&
+                !this.rgDrag &&
+                (i.cnt < 48 || Date.now() - i.at > 15e3))
+            ))
+              return (this.easeRef(), i.cur / this.p.pal.inten);
+            let r = t.latestSnap(),
+              n = s.H.length ? s.H[0].t : s.L.length ? s.L[0].t : 0,
+              o = t.NOW(),
+              h = [],
+              d = new Set(),
+              c =
+                r && r.mid > 0
+                  ? eS(Math.round(6e4 / ((2 * r.mid * 0.05) / e)), 24, 96)
+                  : 96;
+            if (n && !(s.max > 0))
+              for (let s = 0; s < c; s++) {
+                let i = t.snapAt(n + ((s + 0.5) / c) * (o - n));
+                if (!i || d.has(i) || !(i.mid > 0)) continue;
+                d.add(i);
+                let a = Math.floor((0.95 * i.mid) / e),
+                  l = Math.min(tX.length, Math.ceil((1.05 * i.mid) / e) - a);
+                ek(i, e, a, l, tX);
+                for (let e = 0; e < l; e++) tX[e] > 0 && h.push(tX[e]);
+              }
+            let u = 1;
+            return (
+              h.length &&
+                (h.sort((e, t) => e - t),
+                (u =
+                  h[Math.min(h.length - 1, Math.floor(0.995 * h.length))] ||
+                  h[h.length - 1])),
+              s.max > 0
+                ? (u = s.max)
+                : i.key === l &&
+                  i.v > 0 &&
+                  i.cnt >= 48 &&
+                  0.05 > Math.abs(u / i.v - 1) &&
+                  (u = i.v),
+              (a.v = u),
+              (a.M = +u),
+              (a.n = s.max > 0 ? 1 : h.length),
+              a.ver++,
+              (i.key === l && i.cur > 0) || (i.cur = u),
+              Object.assign(i, {
+                key: l,
+                v: u,
+                at: Date.now(),
+                ver: s.ver,
+                cnt: d.size,
+              }),
+              this.easeRef(),
+              this.hooks.onRange && this.hooks.onRange(),
+              i.cur / this.p.pal.inten
+            );
+          }
+          easeRef() {
+            let e = this.HREF,
+              t = e.v;
+            if (!(e.cur > 0) || t6() || 0.01 > Math.abs(e.cur / t - 1)) {
+              ((e.cur = t), (e.moving = !1));
+              return;
+            }
+            ((e.cur += (t - e.cur) * 0.35), (e.moving = !0));
+          }
+          snapsIn(e, t, s) {
+            let i = this.T,
+              a = this.D,
+              l = a.L,
+              r = a.H,
+              n = l.length ? l[0].t : 1 / 0;
+            s.length = 0;
+            let o = i.snapAt(e);
+            if ((o && s.push(o), e < n))
+              for (
+                let i = e_(r, e + 1e-6);
+                i < r.length && r[i].t < t && r[i].t < n;
+                i++
+              )
+                r[i] !== o && s.push(r[i]);
+            if (t > n)
+              for (
+                let i = e_(l, Math.max(e + 1e-6, n));
+                i < l.length && l[i].t < t;
+                i++
+              )
+                l[i] !== o && s.push(l[i]);
+            return s;
+          }
+          drawHeat(e) {
+            let t = this.G,
+              s = this.V,
+              i = t.dpr || 1,
+              a = Math.max(1, Math.round(t.plotW * i)),
+              l = Math.max(1, (t.bot - t.top) * i),
+              r = t.dg,
+              n = Math.max(
+                1,
+                Math.ceil(1 / ((l / (s.pHi - s.pLo)) * r) - 1e-9),
+              ),
+              o = Math.floor(Math.floor(s.pLo / r) / n),
+              h = Math.floor(Math.floor(s.pHi / r) / n),
+              d = h - o + 1;
+            if (d * n > t$.length || d < 1) return;
+            let c = s.span / a,
+              u = this.tL(),
+              p = Math.round(u / c),
+              f = Math.ceil(l) + 4,
+              m = this.heatRef(r),
+              g = this.p.pal.cut,
+              b = "split" === this.p.color,
+              x = m + "|" + g + "|" + b + "|" + this.PALKEY + "|" + this.CV,
+              v = t.y((h + 1) * n * r),
+              y = t.y(o * n * r);
+            this.HG || this.noGL || (this.HG = new tG());
+            let w = b ? this.LUTA : this.LUT,
+              _ = b ? this.LUTB : this.LUT,
+              k = Math.round(l),
+              T = (v - t.top) * i,
+              j = ((y - v) * i) / d,
+              S =
+                this.HG && this.HG.ok && !this.noGL
+                  ? this.HG.draw({
+                      T: this.T,
+                      W: a,
+                      cap: f,
+                      nb: d,
+                      B: n,
+                      Gd: r,
+                      gTop: h,
+                      t0: u,
+                      ms: c,
+                      tR: s.tR,
+                      ref: m,
+                      cut: g,
+                      LA: w,
+                      LB: _,
+                      lutKey: b + "|" + this.PALKEY + "|" + this.CV,
+                      Hd: k,
+                      y0: T,
+                      h: j,
+                    })
+                  : null;
+            if (S) {
+              ((this.HS = null),
+                e.save(),
+                e.beginPath(),
+                e.rect(0, t.top, t.plotW, t.bot - t.top),
+                e.clip(),
+                (e.imageSmoothingEnabled = !1),
+                e.drawImage(S, 0, 0, a, k, 0, t.top, t.plotW, k / i),
+                e.restore());
+              return;
+            }
+            let C = this.HS;
+            ((!C || C.W !== a || C.cap !== f || d > f) &&
+              (C = this.heatReset(a, f)),
+              C.B !== n || C.Gd !== r || C.ms !== c
+                ? ((C.B = n),
+                  (C.Gd = r),
+                  (C.ms = c),
+                  (C.c0 = p),
+                  (C.gTop = h),
+                  (C.rA = C.rB = 0))
+                : (C.c0 !== p || C.gTop !== h) &&
+                  this.heatShift(C, p - C.c0, C.gTop - h));
+            let M = C.ckey !== x;
+            M &&
+              ((C.ckey = x), (C.ref = m), (C.cut = g), (C.LA = w), (C.LB = _));
+            let N = Math.min(C.rA, d),
+              A = Math.min(C.rB, d),
+              B = N >= A,
+              L = C.sig,
+              D = [],
+              R = C.dirty,
+              E = 0;
+            for (let e = 0; e < a; e++) {
+              let t = this.snapsIn(u + e * c, u + (e + 1) * c, D),
+                s = t.length;
+              for (let e of t) s = (Math.imul(s, 31) + t1(e)) | 0;
+              ((R[e] = 0),
+                B || s !== L[e]
+                  ? ((L[e] = s), this.heatCol(C, e, t, 0, d), (R[e] = 1), E++)
+                  : (N > 0 && this.heatCol(C, e, t, 0, N),
+                    A < d && this.heatCol(C, e, t, A, d)));
+            }
+            if (((C.rA = 0), (C.rB = d), (C.last = null), M || E === a))
+              this.heatPaint(C, 0, a, 0, d);
+            else {
+              if (E)
+                for (let e = 0; e < a; e++) {
+                  if (!R[e]) continue;
+                  let t = e + 1;
+                  for (; t < a && R[t];) t++;
+                  (this.heatPaint(C, e, t, 0, d), (e = t));
+                }
+              (!B && N > 0 && this.heatPaint(C, 0, a, 0, N),
+                !B && A < d && this.heatPaint(C, 0, a, A, d));
+            }
+            (e.save(),
+              e.beginPath(),
+              e.rect(0, t.top, t.plotW, t.bot - t.top),
+              e.clip(),
+              (e.imageSmoothingEnabled = !1),
+              e.drawImage(C.cv, 0, 0, a, d, 0, v, t.plotW, y - v),
+              e.restore());
+          }
+          heatReset(e, t) {
+            let s = this.HS,
+              i = {
+                W: e,
+                cap: t,
+                B: 0,
+                Gd: 0,
+                ms: 0,
+                c0: 0,
+                gTop: 0,
+                rA: 0,
+                rB: 0,
+                ckey: "",
+                last: null,
+              };
+            for (let a of ((i.Q = new Float32Array(e * t)),
+            (i.Q2 = new Float32Array(e * t)),
+            (i.sig = new Int32Array(e)),
+            (i.sig2 = new Int32Array(e)),
+            (i.dirty = new Uint8Array(e)),
+            (i.cv = s ? s.cv : document.createElement("canvas")),
+            (i.cv2 = s ? s.cv2 : document.createElement("canvas")),
+            [i.cv, i.cv2]))
+              ((a.width = e), (a.height = t));
+            return (
+              (i.cx = i.cv.getContext("2d")),
+              (i.cx2 = i.cv2.getContext("2d")),
+              (i.img = i.cx.createImageData(e, t)),
+              (i.d32 = new Uint32Array(i.img.data.buffer)),
+              (this.HS = i),
+              i
+            );
+          }
+          heatShift(e, t, s) {
+            let i = e.W,
+              a = e.cap,
+              l = e.Q,
+              r = e.Q2,
+              n = Math.max(0, t),
+              o = Math.min(i, i + t),
+              h = Math.max(0, e.rA - s),
+              d = Math.min(a, e.rB - s);
+            if (((e.c0 += t), (e.gTop -= s), n >= o || h >= d)) {
+              e.rA = e.rB = 0;
+              return;
+            }
+            for (let e = h; e < d; e++) {
+              let a = (e + s) * i;
+              r.set(l.subarray(a + n, a + o), e * i + n - t);
+            }
+            ((e.Q = r), (e.Q2 = l));
+            let c = e.sig2;
+            for (let s = 0; s < i; s++) {
+              let a = s + t;
+              c[s] = a >= 0 && a < i ? e.sig[a] : 0x7fffffff;
+            }
+            ((e.sig2 = e.sig),
+              (e.sig = c),
+              (e.rA = h),
+              (e.rB = d),
+              e.cx2.clearRect(0, 0, i, a),
+              e.cx2.drawImage(e.cv, -t, -s));
+            let u = e.cv,
+              p = e.cx;
+            ((e.cv = e.cv2), (e.cx = e.cx2), (e.cv2 = u), (e.cx2 = p));
+          }
+          heatCol(e, t, s, i, a) {
+            let l = e.W,
+              r = e.B,
+              n = e.Gd,
+              o = e.Q,
+              h = e.gTop,
+              d = (h - a + 1) * r,
+              c = (a - i) * r,
+              u = e.last;
+            if (
+              1 === s.length &&
+              u &&
+              u.s === s[0] &&
+              u.x === t - 1 &&
+              u.ja === i &&
+              u.jb === a
+            ) {
+              for (let e = i, s = i * l + t; e < a; e++, s += l)
+                o[s] = o[s - 1];
+              u.x = t;
+              return;
+            }
+            (tY.fill(0, i, a), tK.fill(0, i, a));
+            let p = (e, t, s) => {
+              let i = h - Math.floor(t / r);
+              s > tY[i] && ((tY[i] = s), (tK[i] = +((t + 0.5) * n < e.mid)));
+            };
+            for (let e of s)
+              if (e && e.q)
+                if (e.g <= 1.0000001 * n) {
+                  let t = tZ(e),
+                    s = t.k,
+                    i = t.v,
+                    a = n / e.g,
+                    l = Math.floor(d * a + 1e-9),
+                    r = Math.ceil((d + c) * a) - 1,
+                    o = 0,
+                    h = s.length;
+                  for (; o < h;) {
+                    let e = (o + h) >> 1;
+                    s[e] < l ? (o = e + 1) : (h = e);
+                  }
+                  let u = 0 / 0,
+                    f = 0;
+                  for (let t = o; t < s.length && s[t] <= r; t++) {
+                    let l = Math.floor(s[t] / a + 1e-9);
+                    (l !== u &&
+                      (f > 0 && u >= d && u < d + c && p(e, u, f),
+                      (u = l),
+                      (f = 0)),
+                      (f += i[t]));
+                  }
+                  f > 0 && u >= d && u < d + c && p(e, u, f);
+                } else {
+                  ek(e, n, d, c, t$);
+                  for (let t = 0; t < c; t++) {
+                    let s = t$[t];
+                    s > 0 && p(e, d + t, s);
+                  }
+                }
+            for (let e = i, s = i * l + t; e < a; e++, s += l)
+              o[s] = tK[e] ? -tY[e] : tY[e];
+            e.last = 1 === s.length ? { s: s[0], x: t, ja: i, jb: a } : null;
+          }
+          heatPaint(e, t, s, i, a) {
+            let l = e.W,
+              r = e.Q,
+              n = e.d32,
+              o = e.LA,
+              h = e.LB,
+              d = e.ref,
+              c = e.cut;
+            for (let e = i; e < a; e++)
+              for (let i = t, a = e * l + t; i < s; i++, a++) {
+                let e = r[a];
+                if (0 === e) {
+                  n[a] = 0;
+                  continue;
+                }
+                let t = t4(Math.abs(e) / d, c);
+                n[a] = e < 0 ? h[t] : o[t];
+              }
+            e.cx.putImageData(e.img, 0, 0, t, i, s - t, a - i);
+          }
+          liveCandles() {
+            let e = this.D.step,
+              t = new Map(),
+              s = null;
+            for (let i of this.D.L) {
+              if (!Number.isFinite(i.lp)) continue;
+              let a = Math.floor(i.t / e) * e,
+                l = t.get(a);
+              (l ||
+                ((l = {
+                  o: null != s ? s : i.lp,
+                  h: -1 / 0,
+                  l: 1 / 0,
+                  c: i.lp,
+                }),
+                t.set(a, l)),
+                i.hi > l.h && (l.h = i.hi),
+                i.lo < l.l && (l.l = i.lo),
+                i.lp > l.h && (l.h = i.lp),
+                i.lp < l.l && (l.l = i.lp),
+                (l.c = i.lp),
+                (s = i.lp));
+            }
+            return t;
+          }
+          drawCandles(e) {
+            let t = this.G,
+              s = this.CL,
+              i = this.D,
+              a = i.step,
+              l = (a / this.V.span) * t.plotW,
+              r = this.tL() - a,
+              n = this.V.tR,
+              o = this.liveCandles(),
+              h = t.dpr,
+              d = l >= 4 ? Math.max(1, Math.min(0.72 * l, l - 2, 22)) : 0,
+              c = d >= 9 ? 2 : 1,
+              u = [],
+              p = (e, s, i, o, h) => {
+                if (e < r || e > n || !(i >= o)) return;
+                let d = this.xOfT(e + a / 2);
+                d < -l ||
+                  d > t.plotW + l ||
+                  u.push([d, t.y(s), t.y(h), t.y(i), t.y(o), h >= s]);
+              };
+            for (let [e, t] of i.PX) o.has(e) || p(e, t[0], t[1], t[2], t[3]);
+            for (let [e, t] of o) {
+              let s = i.PX.get(e);
+              s
+                ? p(e, s[0], Math.max(s[1], t.h), Math.min(s[2], t.l), t.c)
+                : p(e, t.o, t.h, t.l, t.c);
+            }
+            for (let [t, i, a, l, r, n] of u) {
+              let o = t5(t, h);
+              ((e.fillStyle = n ? s.kUp : s.kDn),
+                e.fillRect(o - c / 2, l, c, Math.max(1, r - l)),
+                d &&
+                  e.fillRect(
+                    t5(o - d / 2, h),
+                    Math.min(i, a),
+                    Math.max(1, t5(d, h)),
+                    Math.max(1, Math.abs(a - i)),
+                  ));
+            }
+          }
+          aggCells(e) {
+            let t = this.D,
+              s = this.V,
+              i = Math.max(1e3, eA(e / (this.G.plotW / s.span))),
+              a = this.tL(),
+              l = s.tR,
+              r = this.T.liveStart(),
+              n = new Map(),
+              o = [],
+              h = t.step,
+              d = (e, t, s, i, a, l) => {
+                let r = n.get(e);
+                (r ||
+                  ((r = { t0: e, t1: t, vb: 0, vs: 0, vbn: 0, vsn: 0 }),
+                  n.set(e, r),
+                  o.push(r)),
+                  (r.vb += s),
+                  (r.vs += i),
+                  (r.vbn += a),
+                  (r.vsn += l),
+                  t > r.t1 && (r.t1 = t));
+              };
+            for (let [e, s] of t.VOL) {
+              if (e < a - h || e > l || e >= r) continue;
+              let t = h >= i ? e : Math.floor(e / i) * i;
+              d(
+                t,
+                h >= i ? e + h : t + i,
+                s[0],
+                s[1],
+                s[0] * s[2],
+                s[1] * s[3],
+              );
+            }
+            let c = t.L;
+            for (
+              let e = Math.max(0, ew(c, a - i));
+              e < c.length && c[e].t <= l;
+              e++
+            ) {
+              let t = c[e];
+              if (!(t.vb || t.vs)) continue;
+              let s = Math.floor(t.t / i) * i;
+              d(s, s + Math.max(i, t.dur), t.vb, t.vs, t.vbn, t.vsn);
+            }
+            return o;
+          }
+          drawBubbles(e) {
+            let t = this.G,
+              s = this.CL,
+              i = this.aggCells(18),
+              a = [],
+              l = 0;
+            for (let e of i) {
+              let s = (this.xOfT(e.t0) + this.xOfT(e.t1)) / 2,
+                i = e.vbn + e.vsn,
+                r = e.vb + e.vs;
+              !(s < -20) &&
+                !(s > t.plotW + 20) &&
+                r > 0 &&
+                (a.push([s, i / r, i, (e.vbn - e.vsn) / i]), i > l && (l = i));
+            }
+            if (l)
+              for (let [i, r, n, o] of (a.sort((e, t) => e[2] - t[2]), a)) {
+                let a = 2 + 15 * Math.sqrt(n / l);
+                if (a < 2.6) continue;
+                let h = t.y(r);
+                if (h < t.top - 20 || h > t.bot + 20) continue;
+                let d = o >= 0.15 ? s.bid : o <= -0.15 ? s.ask : s.fg2;
+                (e.beginPath(),
+                  e.arc(i, h, a, 0, 7),
+                  (e.fillStyle = tA(d, 0.32)),
+                  e.fill(),
+                  (e.lineWidth = 1.6),
+                  (e.strokeStyle = d),
+                  e.stroke(),
+                  a >= 5 &&
+                    (e.beginPath(),
+                    e.arc(i, h, a + 1.3, 0, 7),
+                    (e.lineWidth = 1),
+                    (e.strokeStyle = tA(s.surface, 0.6)),
+                    e.stroke()));
+              }
+          }
+          isSelW(e) {
+            return (
+              !!this.SELW && this.SELW.p === e.p && this.SELW.side === e.side
+            );
+          }
+          drawWallTags(e) {
+            let t = this.G,
+              s = this.CL,
+              i = [];
+            ((t.wallTags = []),
+              (e.font = this.F.s),
+              (e.textBaseline = "middle"),
+              (e.textAlign = "right"));
+            let a = 0;
+            for (let l of this.T.curWalls()) {
+              if (a >= 7 && !this.isSelW(l)) continue;
+              let r = t.y(l.p + l.G / 2);
+              if (
+                r < t.top + 8 ||
+                r > t.bot - 8 ||
+                (i.some((e) => 17 > Math.abs(e - r)) && !this.isSelW(l))
+              )
+                continue;
+              (i.push(r), a++);
+              let n =
+                  ("b" === l.side
+                    ? this.tr("wall.bid", "Bid wall")
+                    : this.tr("wall.ask", "Ask wall")) +
+                  " " +
+                  this.fmtV(l.q, l.usd),
+                o = e.measureText(n).width + 12,
+                h = t.plotW - 6,
+                d = this.isSelW(l),
+                c = "b" === l.side ? s.bid : s.ask;
+              ((e.globalAlpha = 0.9),
+                (e.fillStyle = s.surface),
+                t3(e, h - o, r - 9, o, 18, 4),
+                e.fill(),
+                (e.globalAlpha = 1),
+                d &&
+                  ((e.fillStyle = tA(s.accent, 0.18)),
+                  t3(e, h - o, r - 9, o, 18, 4),
+                  e.fill()),
+                (e.lineWidth = d ? 1.6 : 1),
+                (e.strokeStyle = d ? s.accent : c),
+                t3(e, h - o + 0.5, r - 8.5, o - 1, 17, 4),
+                e.stroke(),
+                (e.fillStyle = c),
+                e.fillText(n, h - 6, r + 0.5),
+                t.wallTags.push({
+                  x0: h - o,
+                  x1: h,
+                  y0: r - 10,
+                  y1: r + 10,
+                  w: l,
+                }));
+            }
+          }
+          fmtV(e, t, s) {
+            let i = this.T.fmt;
+            return "usd" === this.p.unit ? i.u(t, s) : i.q(e, s);
+          }
+          wallTagAt(e) {
+            let t = 8 * !!this.touchy;
+            for (let s of this.G.wallTags || [])
+              if (
+                e.x >= s.x0 - t &&
+                e.x <= s.x1 + t &&
+                e.y >= s.y0 - t &&
+                e.y <= s.y1 + t
+              )
+                return s.w;
+            return null;
+          }
+          wallAt(e) {
+            let t = this.wallTagAt(e);
+            if (t) return t;
+            if (!this.p.flags.wall || !this.G.y) return null;
+            let s = this.tOfX(e.x),
+              i = this.touchy ? 10 : 4;
+            for (let t of this.T.curWalls()) {
+              if (s < t.first) continue;
+              let a = this.G.y(t.p + t.G),
+                l = this.G.y(t.p);
+              if (e.y >= Math.min(a, l) - i && e.y <= Math.max(a, l) + i)
+                return t;
+            }
+            return null;
+          }
+          selectWall(e) {
+            ((this.SELW = this.isSelW(e)
+              ? null
+              : { p: e.p, G: e.G, side: e.side, key: e.key }),
+              this.SELW && "walls" !== this.p.tab && this.T.set("tab", "walls"),
+              this.markBase(),
+              this.markOver(),
+              this.T.notify(),
+              this.hooks.onSelect && this.hooks.onSelect(this.SELW));
+          }
+          locate(e, t) {
+            let s = this.V;
+            ((this.SELW = { p: e.p, G: e.G, side: e.side, key: e.key }),
+              null != t &&
+                ((s.span = Math.min(s.span, Math.max(x[this.D.itv] / 2, 6e5))),
+                (s.tR = Math.min(
+                  this.T.NOW() + 0.05 * s.span,
+                  t + 0.4 * s.span,
+                )),
+                this.clampView(),
+                this.chkFollow()));
+            let i = e.p + e.G / 2;
+            if (i < s.pLo || i > s.pHi) {
+              let e = (s.pHi - s.pLo) / 2;
+              ((s.yAuto = !1), (s.pLo = i - e), (s.pHi = i + e));
+            }
+            (this.viewChanged(), this.T.notify());
+          }
+          cobSnap() {
+            return null != this.PIN
+              ? this.T.snapAt(this.PIN)
+              : this.T.latestSnap();
+          }
+          drawCOB(e) {
+            let t = this.G,
+              s = this.CL,
+              i = this.V,
+              a = t.pvX,
+              l = t.pvW,
+              r = this.cobSnap();
+            if (
+              ((e.font = this.F.s),
+              (e.textAlign = "left"),
+              (e.textBaseline = "middle"),
+              (e.fillStyle = s.fg3),
+              e.fillText(
+                null != this.PIN
+                  ? this.tr("cob.pinned", "Pinned {{t}}", {
+                      t: r ? ("l" === r.src ? eL(r.t) : eB(r.t, !0)) : "—",
+                    })
+                  : this.tr("cob.title", "Current book"),
+                a + 8,
+                t.top + 8,
+              ),
+              !r)
+            )
+              return;
+            let n = t.dg,
+              o = Math.floor(i.pLo / n),
+              h = Math.ceil(i.pHi / n) - o + 1;
+            if (h > tX.length) return;
+            ek(r, n, o, h, tX);
+            let d = 0;
+            for (let e = 0; e < h; e++) tX[e] > d && (d = tX[e]);
+            if (!d) return;
+            t.cob = { s: r, Gd: n, r0: o, n: h, mx: d };
+            let c = n * t.k,
+              u = +(c >= 4),
+              p = l - 12,
+              f = (t) => {
+                let s = e.createLinearGradient(a + 4, 0, a + 4 + p, 0);
+                return (
+                  s.addColorStop(0, tA(t, 0.1)),
+                  s.addColorStop(0.55, tA(t, 0.55)),
+                  s.addColorStop(1, tA(t, 1)),
+                  s
+                );
+              },
+              m = f(s.bid),
+              g = f(s.ask);
+            (e.save(),
+              e.beginPath(),
+              e.rect(a, t.top + 18, l, t.bot - t.top - 18),
+              e.clip());
+            for (let i = 0; i < h; i++) {
+              let l = tX[i];
+              if (!l) continue;
+              let h = (o + i) * n,
+                f = t.y(h + n),
+                b = Math.max(1, (l / d) * p),
+                x = Math.max(1, c - u),
+                v = h + n / 2 < r.mid;
+              ((e.fillStyle = v ? m : g),
+                e.fillRect(a + 4, f, b, x),
+                b > 4 &&
+                  ((e.fillStyle = v ? s.bid : s.ask),
+                  e.fillRect(a + 4 + b - 2, f, 2, x)));
+            }
+            e.restore();
+          }
+          axisTag(e, t, s, i, a) {
+            let l = this.G,
+              r = eS(t - 10, 0, l.statsY - 20);
+            ((e.font = this.F.lb),
+              (e.fillStyle = i),
+              t3(e, l.axX + 2, r, this.AX - 4, 20, 4),
+              e.fill(),
+              (e.fillStyle = a),
+              (e.textAlign = "left"),
+              (e.textBaseline = "middle"),
+              e.fillText(s, l.axX + 8, r + 10 + 0.5));
+          }
+          timeTicks() {
+            let e = this.V,
+              t = eA(100 / (this.G.plotW / e.span)),
+              s = 6e4 * new Date().getTimezoneOffset(),
+              i = [],
+              a = this.tL(),
+              l = Math.ceil((a - s) / t) * t + s;
+            if (t >= 864e5) {
+              let s = new Date(a);
+              for (s.setHours(0, 0, 0, 0), l = s.getTime(); l < a;) l += 864e5;
+              let r = Math.round(t / 864e5);
+              for (; l <= e.tR; l += 864e5) {
+                let e = new Date(l);
+                (r > 1 &&
+                  Math.round(
+                    (l - new Date(e.getFullYear(), 0, 1).getTime()) / 864e5,
+                  ) % r) ||
+                  i.push([
+                    l,
+                    ej(e.getMonth() + 1) + "-" + ej(e.getDate()),
+                    1 === e.getDate(),
+                  ]);
+              }
+              return i;
+            }
+            for (; l <= e.tR; l += t) {
+              let e = new Date(l),
+                s =
+                  0 === e.getHours() &&
+                  0 === e.getMinutes() &&
+                  0 === e.getSeconds();
+              i.push([
+                l,
+                s
+                  ? ej(e.getMonth() + 1) + "-" + ej(e.getDate())
+                  : t < 6e4
+                    ? eL(l)
+                    : eB(l),
+                s,
+              ]);
+            }
+            return i;
+          }
+          drawBase() {
+            let e = this.cb,
+              t = this.G,
+              s = this.V,
+              i = this.T,
+              a = this.D,
+              l = this.CL,
+              r = this.F;
+            if (
+              !t.W ||
+              !t.H ||
+              (e.setTransform(t.dpr, 0, 0, t.dpr, 0, 0),
+              e.clearRect(0, 0, t.W, t.H),
+              t.statsY < t.top + 40)
+            )
+              return;
+            if (!a.H.length && !a.L.length) {
+              this.swap.on ||
+                "loading" === i.status ||
+                ((e.fillStyle = l.fg3),
+                (e.font = r.l),
+                (e.textAlign = "center"),
+                (e.textBaseline = "middle"),
+                e.fillText(
+                  "error" === i.status ? "" : this.tr("loading", "Loading…"),
+                  t.W / 2,
+                  t.H / 2,
+                ));
+              return;
+            }
+            s.follow && (s.tR = i.NOW() + s.fo * s.span);
+            {
+              let e = s.span / Math.max(1, t.plotW);
+              s.tR = Math.round(s.tR / e) * e;
+            }
+            s.yAuto && this.autoY();
+            let n = s.yAuto && this.easeY();
+            if (!(s.pHi > s.pLo)) return;
+            let o = t.top,
+              h = t.bot,
+              d = (h - o) / (s.pHi - s.pLo),
+              c = 1 / t.dpr,
+              u = t.dpr;
+            ((t.k = d),
+              (t.y = (e) => o + (s.pHi - e) * d),
+              (t.p = (e) => s.pHi - (e - o) / d),
+              (t.dg = this.dispGrid(d)));
+            let p = (function (e) {
+                if (!(e > 0)) return 1;
+                let t = Math.pow(10, Math.floor(Math.log10(e))),
+                  s = e / t;
+                return (
+                  (s <= 1 ? 1 : s <= 2 ? 2 : s <= 2.5 ? 2.5 : s <= 5 ? 5 : 10) *
+                  t
+                );
+              })((s.pHi - s.pLo) / Math.max(2, Math.floor((h - o) / 56))),
+              f = [];
+            e.fillStyle = l.grid;
+            for (let i = Math.ceil(s.pLo / p) * p; i <= s.pHi; i += p) {
+              let s = t.y(i);
+              s < o - 1 ||
+                s > h + 1 ||
+                (e.fillRect(0, t5(s, u), t.plotW, c), f.push([s, i]));
+            }
+            let m = this.timeTicks();
+            for (let [s] of m) {
+              let i = this.xOfT(s);
+              i >= 0 && i <= t.plotW && e.fillRect(t5(i, u), 0, c, t.timeY);
+            }
+            if (
+              (e.save(),
+              e.beginPath(),
+              e.rect(0, o, t.plotW, h - o),
+              e.clip(),
+              this.drawHeat(e),
+              this.p.flags.kline && this.drawCandles(e),
+              this.p.flags.bub && this.drawBubbles(e),
+              this.SELW)
+            ) {
+              let s = t.y(this.SELW.p + this.SELW.G / 2);
+              ((e.strokeStyle = tA(l.accent, 0.9)),
+                (e.lineWidth = 1),
+                e.setLineDash([5, 4]),
+                e.beginPath(),
+                e.moveTo(0, t5(s, u) + c / 2),
+                e.lineTo(t.plotW, t5(s, u) + c / 2),
+                e.stroke(),
+                e.setLineDash([]));
+              let a = i.curWalls().find((e) => this.isSelW(e));
+              if (a) {
+                let s = Math.max(0, this.xOfT(a.first)),
+                  i = t.y(a.p + a.G),
+                  r = t.y(a.p),
+                  n = Math.max(6, r - i),
+                  o = (i + r) / 2 - n / 2;
+                s < t.plotW &&
+                  ((e.fillStyle = tA(l.accent, 0.12)),
+                  e.fillRect(s, o, t.plotW - s, n),
+                  (e.strokeStyle = l.accent),
+                  (e.lineWidth = 1.6),
+                  e.strokeRect(
+                    t5(s, u) + 0.5,
+                    t5(o, u) - 0.5,
+                    t.plotW - s - 1,
+                    n + 1,
+                  ));
+              }
+            }
+            if (null != this.PIN) {
+              let s = this.xOfT(this.PIN);
+              s >= 0 &&
+                s <= t.plotW &&
+                ((e.strokeStyle = tA(l.accent, 0.9)),
+                (e.lineWidth = 1),
+                e.setLineDash([5, 4]),
+                e.beginPath(),
+                e.moveTo(t5(s, u) + c / 2, o),
+                e.lineTo(t5(s, u) + c / 2, h),
+                e.stroke(),
+                e.setLineDash([]));
+            }
+            (e.restore(),
+              this.p.flags.wall ? this.drawWallTags(e) : (t.wallTags = []));
+            let g = i.lastPrice(),
+              b = t.y(g);
+            (b >= o &&
+              b <= h &&
+              ((e.strokeStyle = tA(l.fg2, 0.6)),
+              (e.lineWidth = 1),
+              e.setLineDash([4, 4]),
+              e.beginPath(),
+              e.moveTo(0, t5(b, u) + c / 2),
+              e.lineTo(t.axX, t5(b, u) + c / 2),
+              e.stroke(),
+              e.setLineDash([])),
+              (t.cob = null),
+              t.pvW && this.drawCOB(e),
+              this.drawSubs(e),
+              (e.fillStyle = l.line),
+              e.fillRect(0, t5(t.timeY, u), t.W, c),
+              e.fillRect(t5(t.axX, u), 0, c, t.timeY),
+              t.pvW && e.fillRect(t5(t.pvX, u), 0, c, t.timeY),
+              (e.font = r.n),
+              (e.textAlign = "left"),
+              (e.textBaseline = "middle"),
+              (e.fillStyle = l.fg3));
+            let x = Math.max(0, Math.min(8, Math.ceil(-Math.log10(p) - 1e-9)));
+            for (let [s, a] of f)
+              15 > Math.abs(s - b) || e.fillText(i.fmt.p(a, x), t.axX + 8, s);
+            if (
+              (b >= o &&
+                b <= h &&
+                this.axisTag(e, b, i.fmt.p(g), l.priceBg, l.priceFg),
+              this.SELW)
+            ) {
+              let s = t.y(this.SELW.p + this.SELW.G / 2);
+              s >= o &&
+                s <= h &&
+                this.axisTag(
+                  e,
+                  s,
+                  i.fmt.p(this.SELW.p, eM(this.SELW.G)),
+                  l.accent,
+                  "#202630",
+                );
+            }
+            for (let [s, i, a] of ((e.textAlign = "center"), m)) {
+              let n = this.xOfT(s);
+              n < 20 ||
+                n > t.plotW - 20 ||
+                ((e.font = a ? r.b : r.n),
+                (e.fillStyle = a ? l.fg2 : l.fg3),
+                e.fillText(i, n, t.timeY + 13 + 1));
+            }
+            (n || this.HREF.moving) && this.markBase();
+          }
+          drawSubs(e) {
+            let t = this.G,
+              s = this.CL,
+              i = this.subRows(),
+              a = 1 / t.dpr;
+            i.length &&
+              i.forEach((i, l) => {
+                let r = t.subY[l],
+                  n = t.subH[l];
+                ((e.fillStyle = s.line),
+                  e.fillRect(0, t5(r, t.dpr), t.axX, a),
+                  (e.fillStyle = tA(s.fg3, 0.55)));
+                let o = Math.round(t.plotW / 2) - 12;
+                (e.fillRect(o, t5(r, t.dpr) - 2, 24, 1),
+                  e.fillRect(o, t5(r, t.dpr) + 2, 24, 1),
+                  this.fitText(
+                    e,
+                    this.subName(i),
+                    t.axX + 8,
+                    r + 14,
+                    s.fg2,
+                    11.5,
+                  ),
+                  e.save(),
+                  e.beginPath(),
+                  e.rect(0, r + 1, t.plotW, n - 1),
+                  e.clip(),
+                  "vol" === i ? this.drawVol(e, r, n) : this.drawImb(e, r, n),
+                  e.restore());
+              });
+          }
+          drawVol(e, t, s) {
+            let i = this.G,
+              a = this.CL,
+              l = this.aggCells(4),
+              r = "usd" === this.p.unit,
+              n = 0;
+            for (let e of l) {
+              let t = r ? e.vbn : e.vb,
+                s = r ? e.vsn : e.vs;
+              (t > n && (n = t), s > n && (n = s));
+            }
+            if (!n) return;
+            let o = t + s / 2,
+              h = s / 2 - 5;
+            for (let t of ((e.fillStyle = a.grid),
+            e.fillRect(0, t5(o, i.dpr), i.plotW, 1 / i.dpr),
+            l)) {
+              let s = this.xOfT(t.t0),
+                l = this.xOfT(t.t1);
+              if (l < 0 || s > i.plotW) continue;
+              let d = Math.max(1, l - s - (l - s > 3)),
+                c = r ? t.vbn : t.vb,
+                u = r ? t.vsn : t.vs;
+              if (c) {
+                e.fillStyle = a.bid;
+                let t = Math.max(1, (c / n) * h);
+                e.fillRect(s, o - t, d, t);
+              }
+              if (u) {
+                e.fillStyle = a.ask;
+                let t = Math.max(1, (u / n) * h);
+                e.fillRect(s, o, d, t);
+              }
+            }
+          }
+          drawImb(e, t, s) {
+            let i = this.G,
+              a = this.CL,
+              l = this.T,
+              r = this.D,
+              n = Math.round(t + s / 2),
+              o = s / 2 - 8,
+              h = this.tL(),
+              d = this.V.tR,
+              c = (this.V.span / Math.max(1, i.plotW)) * 2,
+              u = l.liveStart(),
+              p = [],
+              f = 0 / 0,
+              m = 0,
+              g = 0,
+              b = 0,
+              x = -1 / 0,
+              v = 0,
+              y = () => {
+                if (m) {
+                  let e = g / m;
+                  (p.push([this.xOfT(b / m), e]),
+                    Math.abs(e) > v && (v = Math.abs(e)));
+                }
+                m = g = b = 0;
+              },
+              w = (e, t, s, i) => {
+                for (let a = Math.max(0, e_(e, t) - 1); a < e.length; a++) {
+                  let t = e[a];
+                  if (t.t > s && (!i || t.t > d)) break;
+                  (t.t > x && (y(), p.length && p.push(null)),
+                    (x = i
+                      ? t.t + 2.5 * t.dur
+                      : a + 1 < e.length
+                        ? t.t + 1.5 * r.step
+                        : l.histEnd(t)));
+                  let n = l.imbOf(t);
+                  if (null == n) continue;
+                  let o = Math.floor(t.t / c);
+                  if (
+                    (o !== f && (y(), (f = o)),
+                    m++,
+                    (g += n),
+                    (b += t.t + (t.dur || r.step) / 2),
+                    t.t > d)
+                  )
+                    break;
+                }
+              };
+            (w(r.H, h - c, Math.min(d + r.step, u - 1), !1),
+              u <= d && w(r.L, Math.max(h - c, u), d, !0),
+              y());
+            let _ = [0.05, 0.1, 0.2, 0.25, 0.5, 1],
+              k = _.find((e) => e >= 1.1 * v) || 1,
+              T = this.imbSc,
+              j =
+                T && k <= T && 1.1 * v > 0.8 * (_[_.indexOf(T) - 1] || 0)
+                  ? T
+                  : k;
+            this.imbSc = j;
+            let S = p.map((e) =>
+              e ? [e[0], n - eS(e[1] / j, -1, 1) * o] : null,
+            );
+            for (let t of ((e.fillStyle = a.grid), [-1, -0.5, 0, 0.5, 1]))
+              e.fillRect(0, t5(n - t * o, i.dpr), i.plotW, 1 / i.dpr);
+            for (let [t, s] of ((e.font = this.F.s),
+            (e.fillStyle = a.fg3),
+            (e.textAlign = "right"),
+            (e.textBaseline = "top"),
+            e.fillText(eD(j, 0), i.plotW - 6, n - o + 2),
+            (e.textBaseline = "bottom"),
+            e.fillText(eD(-j, 0), i.plotW - 6, n + o - 2),
+            [
+              [1, a.bid],
+              [-1, a.ask],
+            ])) {
+              ((e.fillStyle = tA(s, 0.34)), e.beginPath());
+              let i = !1,
+                a = 0;
+              for (let s of S) {
+                if (!s) {
+                  i && (e.lineTo(a, n), e.closePath(), (i = !1));
+                  continue;
+                }
+                let l = t > 0 ? Math.min(s[1], n) : Math.max(s[1], n);
+                (i || (e.moveTo(s[0], n), (i = !0)),
+                  e.lineTo(s[0], l),
+                  (a = s[0]));
+              }
+              (i && (e.lineTo(a, n), e.closePath()), e.fill());
+            }
+            ((e.strokeStyle = a.fg2),
+              (e.lineWidth = 1.4),
+              (e.lineJoin = "round"),
+              e.beginPath());
+            let C = !1;
+            for (let t of S) {
+              if (!t) {
+                C = !1;
+                continue;
+              }
+              C ? e.lineTo(t[0], t[1]) : (e.moveTo(t[0], t[1]), (C = !0));
+            }
+            e.stroke();
+          }
+          splitAt(e) {
+            let t = this.G;
+            if (e.x >= t.axX) return -1;
+            for (let s = 0; s < t.subY.length; s++)
+              if (5 >= Math.abs(e.y - t.subY[s])) return s;
+            return -1;
+          }
+          hit() {
+            let e = this.G,
+              t = this.hover,
+              s = this.T;
+            if (!t || !e.y || t.y >= e.timeY) return null;
+            if (t.x < e.plotW && t.y < e.statsY) {
+              if (t.y < e.top || t.y > e.bot) return null;
+              let i = this.tOfX(t.x),
+                a = s.snapAt(i),
+                l = e.dg;
+              return {
+                kind: "heat",
+                t: i,
+                s: a,
+                r: Math.floor(e.p(t.y) / l),
+                Gd: l,
+              };
+            }
+            if (
+              e.pvW &&
+              t.x >= e.pvX &&
+              t.x < e.axX &&
+              t.y < e.statsY &&
+              e.cob
+            ) {
+              let s = Math.floor(e.p(t.y) / e.cob.Gd);
+              return { kind: "cob", s: e.cob.s, r: s, Gd: e.cob.Gd };
+            }
+            if (t.x < e.plotW && t.y >= e.statsY) {
+              let i = e.subY.length - 1;
+              for (; i > 0 && t.y < e.subY[i];) i--;
+              let a = this.subRows()[i];
+              if (!a) return null;
+              let l = this.tOfX(t.x);
+              return { kind: "sub", sub: a, t: l, s: s.snapAt(l) };
+            }
+            return null;
+          }
+          rowVal(e, t, s) {
+            return (ek(e, s, t, 1, tz), tz[0]);
+          }
+          volAt(e) {
+            let t = this.aggCells(4);
+            if (null == e) {
+              let e = null;
+              for (let s of t) (!e || s.t0 > e.t0) && (e = s);
+              return e;
+            }
+            return t.find((t) => e >= t.t0 && e < t.t1) || null;
+          }
+          drawOver() {
+            let e = this.co,
+              t = this.G,
+              s = this.CL,
+              i = this.T,
+              a = this.D,
+              l = this.F,
+              r = 1 / t.dpr,
+              n = t.dpr;
+            if (
+              !t.W ||
+              !t.H ||
+              (e.setTransform(n, 0, 0, n, 0, 0),
+              e.clearRect(0, 0, t.W, t.H),
+              !t.y || (!a.H.length && !a.L.length))
+            )
+              return;
+            let o =
+              this.drag && "split" === this.drag.type
+                ? this.drag.i
+                : !this.drag && this.hover
+                  ? this.splitAt(this.hover)
+                  : -1;
+            if (o >= 0 && null != t.subY[o]) {
+              let i = t5(t.subY[o], n);
+              ((e.fillStyle = s.fg3),
+                e.fillRect(0, i - 1, t.axX, 2),
+                (e.fillStyle = s.fg));
+              let a = Math.round(t.plotW / 2) - 14;
+              (e.fillRect(a, i - 3, 28, 1.5), e.fillRect(a, i + 2, 28, 1.5));
+            }
+            let h = this.drag && !this.drag.inspect,
+              d = h ? null : this.hit(),
+              c = this.hover;
+            if (c && !h && c.y < t.timeY && c.x < t.axX) {
+              if (
+                ((e.strokeStyle = s.cross),
+                (e.lineWidth = r),
+                e.setLineDash([3, 3]),
+                e.beginPath(),
+                c.x < t.plotW)
+              ) {
+                let s = t5(c.x, n) + r / 2;
+                (e.moveTo(s, 0), e.lineTo(s, t.timeY));
+              }
+              if (c.y < t.statsY) {
+                let s = t5(c.y, n) + r / 2;
+                (e.moveTo(0, s), e.lineTo(t.axX, s));
+              }
+              if (
+                (e.stroke(),
+                e.setLineDash([]),
+                d && ("heat" === d.kind || "cob" === d.kind) && d.s)
+              ) {
+                let a = t.y((d.r + 1) * d.Gd),
+                  l = t.y(d.r * d.Gd);
+                ((e.strokeStyle = s.fg), (e.lineWidth = 1.2));
+                let r =
+                    "cob" === d.kind
+                      ? t.pvX + 2
+                      : Math.max(0, this.xOfT(d.s.t)),
+                  o =
+                    "cob" === d.kind
+                      ? t.axX - 2
+                      : Math.min(
+                          t.plotW,
+                          Math.max(
+                            r + 3,
+                            this.xOfT(Math.min(d.s.t + d.s.dur, i.NOW())),
+                          ),
+                        );
+                e.strokeRect(
+                  t5(r, n) + 0.5,
+                  t5(a, n) + 0.5,
+                  Math.max(2, o - r - 1),
+                  Math.max(1, l - a - 1),
+                );
+              }
+              if (c.x < t.plotW) {
+                let i = this.tOfX(c.x),
+                  a =
+                    this.V.span < 6e5 ||
+                    (d && d.s && "l" === d.s.src && this.V.span < 36e5)
+                      ? eB(i, !0) + ":" + ej(new Date(i).getSeconds())
+                      : eB(i, !0);
+                e.font = l.n;
+                let r = e.measureText(a).width + 14,
+                  n = eS(c.x - r / 2, 0, t.plotW - r);
+                ((e.fillStyle = s.s3),
+                  e.fillRect(n, t.timeY + 3, r, 20),
+                  (e.fillStyle = s.fg),
+                  (e.textAlign = "center"),
+                  (e.textBaseline = "middle"),
+                  e.fillText(a, n + r / 2, t.timeY + 13 + 1));
+              }
+              if (c.y < t.statsY && c.y >= t.top && c.y <= t.bot) {
+                let a = i.fmt.p(t.p(c.y));
+                ((e.fillStyle = s.s3),
+                  e.fillRect(t.axX + 1, c.y - 10, this.AX - 2, 20),
+                  (e.fillStyle = s.fg),
+                  (e.textAlign = "left"),
+                  (e.textBaseline = "middle"),
+                  (e.font = l.n),
+                  e.fillText(a, t.axX + 8, c.y + 0.5));
+              }
+            }
+            let u = this.subRows(),
+              p = d && d.s ? d.s : i.latestSnap();
+            u.length &&
+              p &&
+              u.forEach((a, l) => {
+                let r = t.subY[l] + 34;
+                if ("imb" === a) {
+                  let a = i.imbOf(p);
+                  this.fitText(
+                    e,
+                    null == a ? "—" : eD(a, 1),
+                    t.axX + 8,
+                    r,
+                    null == a ? s.fg3 : a >= 0 ? s.up : s.down,
+                  );
+                  return;
+                }
+                let n = this.volAt(d && null != d.t ? d.t : null);
+                n
+                  ? (this.fitText(
+                      e,
+                      this.fmtV(n.vb, n.vbn),
+                      t.axX + 8,
+                      r,
+                      s.up,
+                    ),
+                    t.subH[l] >= 64 &&
+                      this.fitText(
+                        e,
+                        this.fmtV(n.vs, n.vsn),
+                        t.axX + 8,
+                        r + 18,
+                        s.down,
+                      ))
+                  : this.fitText(e, "—", t.axX + 8, r, s.fg3);
+              });
+            let f = d && d.s ? d.s : i.latestSnap();
+            if (!f) return;
+            let m = [
+                [
+                  this.hooks.pairLabel ? this.hooks.pairLabel() : a.sym,
+                  s.fg,
+                  l.lb,
+                ],
+                ["l" === f.src ? eL(f.t) : eB(f.t, !0), s.fg3],
+                [this.tr("bb", "Bid"), s.fg3],
+                [i.fmt.p(f.bb), s.up],
+                [this.tr("ba", "Ask"), s.fg3],
+                [i.fmt.p(f.ba), s.down],
+                [
+                  this.tr("grid", "Grid {{g}}", { g: i.fmt.p(t.dg, eM(t.dg)) }),
+                  s.fg3,
+                ],
+              ],
+              g = t.W < 640 ? m.slice(2, 6) : m,
+              b = 0;
+            for (let [t, , s] of g)
+              ((e.font = s || this.F.l),
+                (b += e.measureText(t).width + 7 * !!t));
+            ((e.fillStyle = tA(s.surface, 0.72)),
+              t3(e, 4, 3, Math.min(t.plotW - 8, b - 7 + 12), 22, 5),
+              e.fill(),
+              this.legendRow(e, 10, 14, g));
+          }
+          fitText(e, t, s, i, a, l = 12.5) {
+            let r = this.AX - 12;
+            e.font = "600 " + l + "px " + this.font;
+            let n = e.measureText(t).width;
+            (n > r &&
+              (e.font =
+                "600 " +
+                Math.max(9, Math.floor(((l * r) / n) * 10) / 10) +
+                "px " +
+                this.font),
+              (e.fillStyle = a),
+              (e.textAlign = "left"),
+              (e.textBaseline = "middle"),
+              e.fillText(t, s, i));
+          }
+          legendRow(e, t, s, i) {
+            for (let [a, l, r] of ((e.textBaseline = "middle"),
+            (e.textAlign = "left"),
+            i))
+              ((e.font = r || this.F.l),
+                (e.fillStyle = l),
+                e.fillText(a, t, s),
+                (t += e.measureText(a).width + 7 * !!a));
+            return t;
+          }
+          tipSoon() {
+            this.tipRaf ||
+              (this.tipRaf = requestAnimationFrame(() => {
+                ((this.tipRaf = 0), this.renderTip());
+              }));
+          }
+          hideTip() {
+            this.hooks.onTip && this.hooks.onTip(null);
+          }
+          nbCols(e) {
+            let t = this.T,
+              s = (this.V.span / this.G.plotW) * 6,
+              i = (e) => Math.max(1, s - e.dur),
+              a = (e) => {
+                let s = t.snapAt(e.t - i(e));
+                return s && s !== e ? s : null;
+              },
+              l = (e) => {
+                let s = e.t + e.dur - 1 + i(e);
+                if (s > t.NOW()) return null;
+                let a = t.snapAt(s);
+                return a && a !== e ? a : null;
+              },
+              r = [],
+              n = [];
+            for (let t = e; r.length < 4 && (t = a(t));) r.push(t);
+            for (let t = e; n.length < 4 && (t = l(t));) n.push(t);
+            let o = Math.min(n.length, Math.max(2, 4 - r.length)),
+              h = Math.min(r.length, 4 - o),
+              d = [...r.slice(0, h).reverse(), e, ...n.slice(0, o)];
+            for (; d.length < 5;) d.push(null);
+            return d;
+          }
+          nbGrid(e, t, s) {
+            let i = this.nbCols(e),
+              a = i.indexOf(e),
+              l = this.HREF.v / this.p.pal.inten,
+              r = this.p.pal.cut,
+              n = "split" === this.p.color,
+              o = eM(s),
+              h = this.D,
+              d = this.T;
+            i.forEach((e, i) => {
+              e && ek(e, s, t - 3, 7, t2[i]);
+            });
+            let c = 0,
+              u = 0,
+              p = 0,
+              f = 0,
+              m = i.map((e, t) => ({
+                label: e
+                  ? "l" === e.src
+                    ? eL(e.t)
+                    : "1d" === h.itv
+                      ? eB(e.t, !0).slice(0, 5)
+                      : eB(e.t)
+                  : "",
+                on: t === a,
+              })),
+              g = [];
+            for (let h = 6; h >= 0; h--) {
+              let m = (t - 3 + h) * s,
+                b = m + s / 2,
+                x = [];
+              for (let t = 0; t < 5; t++) {
+                let s = i[t],
+                  o = s ? t2[t][h] : 0,
+                  d = null,
+                  m = null;
+                if (
+                  (t === a &&
+                    o > 0 &&
+                    (b < e.mid
+                      ? ((c += o), (p += o * b))
+                      : ((u += o), (f += o * b))),
+                  o > 0)
+                ) {
+                  let e = (n ? (b < s.mid ? this.LUTB : this.LUTA) : this.LUT)[
+                      t4(o / l, r)
+                    ],
+                    t = 255 & e,
+                    i = (e >> 8) & 255,
+                    a = (e >> 16) & 255;
+                  ((d = `rgb(${t},${i},${a})`),
+                    (m =
+                      (0.2126 * t + 0.7152 * i + 0.0722 * a) / 255 > 0.55
+                        ? "#15131f"
+                        : "#fff"));
+                }
+                x.push({
+                  text: s ? (o > 0 ? this.fmtV(o, o * b) : "\xb7") : "",
+                  bg: d,
+                  fg: m,
+                  on: t === a && 3 === h,
+                });
+              }
+              g.push({
+                price: d.fmt.p(m, o),
+                bid: b < e.mid,
+                cur: 3 === h,
+                cells: x,
+              });
+            }
+            return {
+              head: m,
+              lines: g,
+              sum: { b: this.fmtV(c, p), a: this.fmtV(u, f) },
+            };
+          }
+          closeOf(e) {
+            let t = this.T,
+              s = this.D,
+              i = (e, t) => {
+                let s = t ? e / t - 1 : null;
+                return { c: e, ch: null != s && 5e-5 > Math.abs(s) ? 0 : s };
+              };
+            if ("l" !== e.src) {
+              let t = s.PX.get(e.t);
+              return t ? i(t[3], t[0]) : null;
+            }
+            let a = Number.isFinite(e.lp) ? e.lp : e.mid,
+              l = t.snapAt(e.t - s.step);
+            if (!l || l === e) return { c: a, ch: null };
+            let r = "l" !== l.src && s.PX.get(l.t);
+            return i(
+              a,
+              "l" === l.src
+                ? Number.isFinite(l.lp)
+                  ? l.lp
+                  : l.mid
+                : r
+                  ? r[3]
+                  : l.mid,
+            );
+          }
+          renderTip() {
+            let e = this.hit(),
+              t = this.T,
+              s = this.D,
+              i = t.fmt;
+            if (
+              !e ||
+              (this.drag && !this.drag.inspect) ||
+              !e.s ||
+              !this.hooks.onTip
+            )
+              return void this.hideTip();
+            let a = e.s,
+              l = {
+                x: this.hover.x,
+                y: this.hover.y,
+                W: this.G.W,
+                H: this.G.H,
+                touch: this.touchy,
+              },
+              r = this.G.W < 640;
+            if ("heat" === e.kind || "cob" === e.kind) {
+              let n = e.Gd,
+                o = e.r * n,
+                h = this.rowVal(a, e.r, n),
+                d = o + n / 2,
+                c = d < a.mid,
+                u = t.latestSnap(),
+                p = u ? u.t - a.t : 0,
+                f =
+                  "l" === a.src
+                    ? a.dur > 2500
+                      ? this.tr("tip.liveEvery", "Live \xb7 one every {{d}}", {
+                          d: i.dur(a.dur),
+                        })
+                      : this.tr("tip.live", "Live \xb7 one every 2s")
+                    : this.tr("tip.hist", "History \xb7 one every {{p}}", {
+                        p: this.hooks.itvLabel ? this.hooks.itvLabel() : s.itv,
+                      }),
+                m = t
+                  .curWalls()
+                  .find((e) => d >= e.p && d < e.p + e.G && u === a),
+                g = "heat" === e.kind ? this.volAt(e.t) : null;
+              this.hooks.onTip({
+                kind: "heat",
+                at: l,
+                compact: r,
+                time:
+                  "l" === a.src
+                    ? eB(a.t, !0) + ":" + ej(new Date(a.t).getSeconds())
+                    : eB(a.t, !0),
+                close: this.closeOf(a),
+                sub:
+                  (p >= 1e3
+                    ? this.tr("tip.ago", "{{d}} before the latest", {
+                        d: i.ago(p),
+                      })
+                    : this.tr("tip.latest", "Latest")) +
+                  " \xb7 " +
+                  f,
+                grid: this.tr("grid", "Grid {{g}}", { g: i.p(n, eM(n)) }),
+                nb: this.nbGrid(a, e.r, n),
+                side: c ? "b" : "a",
+                value:
+                  h > 0 ? i.q(h) + " " + s.sym + " \xb7 " + i.u(h * d) : "—",
+                dist: eD(d / a.mid - 1),
+                wall: m ? { side: m.side, dur: i.dur(a.t - m.first) } : null,
+                vol:
+                  g && (g.vb || g.vs)
+                    ? { b: this.fmtV(g.vb, g.vbn), a: this.fmtV(g.vs, g.vsn) }
+                    : null,
+                unitSym: "usd" === this.p.unit ? "" : s.sym,
+              });
+            } else if ("imb" === e.sub) {
+              let e = t.imbOf(a),
+                s = t.depthIn(a, this.p.band / 100);
+              this.hooks.onTip({
+                kind: "imb",
+                at: l,
+                band: this.p.band,
+                v: e,
+                b: s ? this.fmtV(s.B, s.Bu) : null,
+                a: s ? this.fmtV(s.A, s.Au) : null,
+              });
+            } else {
+              let t = this.volAt(e.t);
+              if (!t) return void this.hideTip();
+              this.hooks.onTip({
+                kind: "vol",
+                at: l,
+                time: eB(t.t0, !0),
+                b: this.fmtV(t.vb, t.vbn),
+                a: this.fmtV(t.vs, t.vsn),
+                net: this.fmtV(t.vb - t.vs, t.vbn - t.vsn, !0),
+                sign: Math.sign(t.vb - t.vs),
+              });
+            }
+          }
+          noSelect(e) {
+            if (e === !!this.selOff) return;
+            this.selOff = e;
+            let t = document.documentElement.style;
+            if (((t.webkitUserSelect = t.userSelect = e ? "none" : ""), e)) {
+              let e = window.getSelection && window.getSelection();
+              e && e.rangeCount && e.removeAllRanges();
+            }
+          }
+          bind() {
+            let e = this.plot,
+              t = (t) => {
+                let s = e.getBoundingClientRect();
+                return { x: t.clientX - s.left, y: t.clientY - s.top };
+              },
+              s = () => this.D.H.length || this.D.L.length,
+              i = (i) => {
+                if (0 !== i.button || !s()) return;
+                let a = t(i),
+                  l = this.G,
+                  r = this.V,
+                  n = "touch" === i.pointerType;
+                if (((this.touchy = n), n)) {
+                  if (
+                    (this.noSelect(!0),
+                    this.ptrs.set(i.pointerId, a),
+                    2 === this.ptrs.size)
+                  ) {
+                    clearTimeout(this.pressT);
+                    let [t, s] = [...this.ptrs.values()],
+                      a = eS((t.x + s.x) / 2, 0, l.plotW);
+                    ((this.pinch = {
+                      d: Math.max(24, Math.hypot(t.x - s.x, t.y - s.y)),
+                      span0: r.span,
+                      cx: a,
+                      ta: this.tOfX(a),
+                    }),
+                      (this.drag = null),
+                      (this.hover = null),
+                      this.hideTip(),
+                      this.markOver());
+                    try {
+                      e.setPointerCapture(i.pointerId);
+                    } catch (e) {}
+                    i.preventDefault();
+                    return;
+                  }
+                  if (this.ptrs.size > 2) return;
+                }
+                if (this.splitAt(a) >= 0)
+                  this.drag = {
+                    type: "split",
+                    i: this.splitAt(a),
+                    x0: a.x,
+                    y0: a.y,
+                    h0: l.subH.slice(),
+                    keys: this.subRows(),
+                    moved: 0,
+                  };
+                else if (a.x >= l.axX && a.y < l.statsY)
+                  this.drag = {
+                    type: "py",
+                    x0: a.x,
+                    y0: a.y,
+                    lo: r.pLo,
+                    hi: r.pHi,
+                    moved: 0,
+                  };
+                else if (a.y >= l.timeY)
+                  this.drag = {
+                    type: "tz",
+                    x0: a.x,
+                    y0: a.y,
+                    span0: r.span,
+                    right: r.tR,
+                    fol: r.follow,
+                    moved: 0,
+                  };
+                else if (a.x < l.plotW)
+                  this.drag = {
+                    type: "pan",
+                    x0: a.x,
+                    y0: a.y,
+                    t0: r.tR,
+                    lo: r.pLo,
+                    hi: r.pHi,
+                    moved: 0,
+                  };
+                else {
+                  if (!n || !l.pvW || !(a.x < l.axX) || !(a.y < l.statsY))
+                    return;
+                  this.drag = {
+                    type: "cob",
+                    inspect: !0,
+                    x0: a.x,
+                    y0: a.y,
+                    moved: 0,
+                  };
+                }
+                let o = this.drag;
+                o.touch = n;
+                try {
+                  e.setPointerCapture(i.pointerId);
+                } catch (e) {}
+                (n || this.hideTip(),
+                  "cob" === o.type &&
+                    ((this.hover = a), this.markOver(), this.tipSoon()),
+                  n &&
+                    "pan" === o.type &&
+                    (clearTimeout(this.pressT),
+                    (this.pressT = setTimeout(() => {
+                      this.drag === o &&
+                        o.moved < 8 &&
+                        ((o.inspect = !0),
+                        (this.hover = { x: o.x0, y: o.y0 }),
+                        this.markOver(),
+                        this.tipSoon());
+                    }, 400))),
+                  e.focus({ preventScroll: !0 }),
+                  i.preventDefault());
+              },
+              a = (s) => {
+                let i = t(s),
+                  a = this.G,
+                  r = this.V,
+                  n = this.drag;
+                if (
+                  ("touch" === s.pointerType &&
+                    this.ptrs.has(s.pointerId) &&
+                    this.ptrs.set(s.pointerId, i),
+                  this.pinch)
+                ) {
+                  if (2 !== this.ptrs.size) return;
+                  let [e, t] = [...this.ptrs.values()],
+                    s = Math.max(24, Math.hypot(e.x - t.x, e.y - t.y)),
+                    i = this.pinch;
+                  ((r.span = (i.span0 * i.d) / s),
+                    this.clampView(),
+                    (r.tR = i.ta + ((a.plotW - i.cx) / a.plotW) * r.span),
+                    this.clampView(),
+                    this.chkFollow(),
+                    this.viewChanged(!0));
+                  return;
+                }
+                if (n) {
+                  if (0 === s.buttons && "mouse" === s.pointerType)
+                    return void l();
+                  if (
+                    ((n.moved = Math.max(
+                      n.moved,
+                      Math.abs(i.x - n.x0) + Math.abs(i.y - n.y0),
+                    )),
+                    n.inspect)
+                  ) {
+                    ((this.hover =
+                      "cob" === n.type
+                        ? {
+                            x: eS(i.x, a.pvX + 1, a.axX - 1),
+                            y: eS(i.y, a.top, a.statsY - 1),
+                          }
+                        : i),
+                      this.markOver(),
+                      this.tipSoon());
+                    return;
+                  }
+                  if ("pan" === n.type) {
+                    if (n.moved < (n.touch ? 8 : 3)) return;
+                    if (
+                      (n.touch &&
+                        !n.panning &&
+                        ((n.panning = !0),
+                        clearTimeout(this.pressT),
+                        (this.hover = null),
+                        this.hideTip(),
+                        this.markOver()),
+                      (r.tR = n.t0 - ((i.x - n.x0) / a.plotW) * r.span),
+                      this.clampView(),
+                      this.chkFollow(),
+                      r.yAuto &&
+                        Math.abs(i.y - n.y0) >= 8 &&
+                        ((r.yAuto = !1),
+                        (r.yT = null),
+                        (n.lo = r.pLo),
+                        (n.hi = r.pHi),
+                        (n.y0 = i.y)),
+                      !r.yAuto)
+                    ) {
+                      let e = (i.y - n.y0) / ((a.bot - a.top) / (n.hi - n.lo));
+                      ((r.pLo = n.lo + e), (r.pHi = n.hi + e));
+                    }
+                    this.viewChanged();
+                  } else if ("tz" === n.type)
+                    ((r.span = n.span0 * Math.exp(-(0.006 * (i.x - n.x0)))),
+                      this.clampView(),
+                      n.fol || ((r.tR = n.right), this.clampView()),
+                      this.viewChanged(!0));
+                  else if ("split" === n.type) {
+                    let e = i.y - n.y0,
+                      t = n.i,
+                      s = n.keys,
+                      l = n.h0,
+                      r = Math.floor(0.65 * a.timeY),
+                      o = { ...this.p.subH };
+                    if (0 === t) {
+                      let t = l.reduce((e, t) => e + t, 0) - l[0];
+                      o[s[0]] = Math.round(
+                        eS(l[0] - e, 40, Math.max(40, r - t)),
+                      );
+                    } else {
+                      let i = eS(l[t - 1] + e, 40, l[t - 1] + l[t] - 40);
+                      ((o[s[t - 1]] = Math.round(i)),
+                        (o[s[t]] = Math.round(l[t - 1] + l[t] - i)));
+                    }
+                    ((this.p.subH = o),
+                      this.T.save(),
+                      this.layout(),
+                      this.markBase());
+                  } else {
+                    let e = Math.exp((i.y - n.y0) * 0.006),
+                      t = (n.lo + n.hi) / 2,
+                      s = ((n.hi - n.lo) / 2) * e;
+                    ((r.yAuto = !1),
+                      (r.pLo = t - s),
+                      (r.pHi = t + s),
+                      this.markBase());
+                  }
+                  return;
+                }
+                "touch" !== s.pointerType &&
+                  ((this.hover = i),
+                  (e.style.cursor =
+                    this.splitAt(i) >= 0
+                      ? "row-resize"
+                      : i.x >= a.axX && i.y < a.statsY
+                        ? "ns-resize"
+                        : i.y >= a.timeY
+                          ? "ew-resize"
+                          : i.x >= a.plotW
+                            ? "default"
+                            : this.wallTagAt(i)
+                              ? "pointer"
+                              : "crosshair"),
+                  this.markOver(),
+                  this.tipSoon());
+              },
+              l = (e) => {
+                if (
+                  e &&
+                  "touch" === e.pointerType &&
+                  (this.ptrs.delete(e.pointerId),
+                  this.ptrs.size || this.noSelect(!1),
+                  this.pinch)
+                ) {
+                  this.ptrs.size < 2 &&
+                    ((this.pinch = null),
+                    (this.drag = null),
+                    this.V.yAuto && (this.V.refit = !0),
+                    this.markBase(),
+                    this.T.notifySoon(140));
+                  return;
+                }
+                clearTimeout(this.pressT);
+                let s = this.drag;
+                if (!s) return;
+                this.drag = null;
+                let i = this.G;
+                if (s.inspect) {
+                  (this.markOver(), this.tipSoon());
+                  return;
+                }
+                ("pan" === s.type || "tz" === s.type) &&
+                  s.moved >= 3 &&
+                  (this.V.yAuto && (this.V.refit = !0), this.markBase());
+                let a = e && null != e.clientX ? t(e) : this.hover;
+                if (
+                  "pan" === s.type &&
+                  s.moved < (s.touch ? 8 : 4) &&
+                  a &&
+                  a.x < i.plotW &&
+                  a.y < i.statsY
+                ) {
+                  s.touch && ((this.hover = null), this.hideTip());
+                  let e = this.wallAt(a);
+                  if (e) this.selectWall(e);
+                  else {
+                    let e = this.tOfX(a.x);
+                    ((this.PIN =
+                      null != this.PIN &&
+                      5 > Math.abs(this.xOfT(this.PIN) - a.x)
+                        ? null
+                        : this.T.snapAt(e)
+                          ? e
+                          : null),
+                      this.markBase(),
+                      this.T.notify());
+                  }
+                }
+                (this.markOver(),
+                  clearTimeout(this.settleT),
+                  (this.settleT = setTimeout(() => this.T.notify(), 140)));
+              },
+              r = (e) => {
+                this.drag ||
+                  (e && "touch" === e.pointerType) ||
+                  ((this.hover = null), this.hideTip(), this.markOver());
+              },
+              n = () => {
+                ((this.drag = null),
+                  (this.pinch = null),
+                  this.ptrs.clear(),
+                  this.noSelect(!1),
+                  (this.hover = null),
+                  this.hideTip(),
+                  this.markOver());
+              },
+              o = (t) => {
+                "touch" === t.pointerType &&
+                  this.hover &&
+                  !e.contains(t.target) &&
+                  ((this.hover = null), this.hideTip(), this.markOver());
+              },
+              h = (e) => {
+                if (!s()) return;
+                e.preventDefault();
+                let i = t(e),
+                  a = this.G,
+                  l = this.V,
+                  r = 1 === e.deltaMode ? 16 : 2 === e.deltaMode ? a.H : 1;
+                if (i.x >= a.axX && i.y < a.statsY) {
+                  let t = Math.exp(e.deltaY * r * 0.0015),
+                    s = (l.pLo + l.pHi) / 2,
+                    i = ((l.pHi - l.pLo) / 2) * t;
+                  ((l.yAuto = !1),
+                    (l.pLo = s - i),
+                    (l.pHi = s + i),
+                    this.markBase());
+                  return;
+                }
+                if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                  ((l.tR +=
+                    (((e.shiftKey ? e.deltaY : e.deltaX) * r) / a.plotW) *
+                    l.span),
+                    this.clampView(),
+                    this.chkFollow(),
+                    this.viewChanged());
+                  return;
+                }
+                if (
+                  !e.deltaY ||
+                  (e.deltaY > 0 && l.span >= 0.999 * this.maxSpan()) ||
+                  (e.deltaY < 0 && l.span <= 1.001 * this.minSpan())
+                )
+                  return;
+                let n = Math.min(i.x, a.plotW),
+                  o = this.tOfX(n),
+                  h = l.span;
+                ((l.span *= Math.exp(e.deltaY * r * 0.0015)),
+                  this.clampView(),
+                  l.follow
+                    ? (l.tR = this.T.NOW() + l.fo * l.span)
+                    : ((l.tR = o + ((a.plotW - n) / a.plotW) * l.span),
+                      this.clampView(),
+                      this.chkFollow()));
+                let d = l.span / h;
+                if (i.y >= a.top && i.y <= a.bot && a.p && 1 !== d) {
+                  let e = a.p(i.y);
+                  ((l.yAuto = !1),
+                    (l.yT = null),
+                    (l.pLo = e - (e - l.pLo) * d),
+                    (l.pHi = e + (l.pHi - e) * d));
+                }
+                (this.viewChanged(!0),
+                  this.hover && ((this.hover = i), this.tipSoon()));
+              },
+              d = (e) => {
+                let s = t(e),
+                  i = this.G;
+                if (this.splitAt(s) >= 0) {
+                  ((this.p.subH = { vol: 96, imb: 96 }),
+                    this.T.save(),
+                    this.layout(),
+                    this.markBase());
+                  return;
+                }
+                if (s.x >= i.axX && s.y < i.statsY) {
+                  ((this.V.yAuto = !0),
+                    (this.V.refit = !0),
+                    (this.V.yJump = !0),
+                    this.markBase());
+                  return;
+                }
+                this.resetView();
+              },
+              c = (e) => {
+                let t = e.key,
+                  s = this.V;
+                if ("ArrowLeft" === t || "ArrowRight" === t)
+                  ((s.tR += ("ArrowLeft" === t ? -1 : 1) * s.span * 0.15),
+                    this.clampView(),
+                    this.chkFollow(),
+                    this.viewChanged(),
+                    e.preventDefault());
+                else if ("+" === t || "=" === t || "-" === t || "_" === t) {
+                  let i = s.tR;
+                  ((s.span *= "-" === t || "_" === t ? 1.25 : 0.8),
+                    this.clampView(),
+                    (s.tR = s.follow ? this.T.NOW() + s.fo * s.span : i),
+                    this.clampView(),
+                    this.viewChanged(!0),
+                    e.preventDefault());
+                } else
+                  "Home" === t
+                    ? (this.resetView(), e.preventDefault())
+                    : "Escape" === t &&
+                      ((this.PIN = null),
+                      (this.SELW = null),
+                      this.markBase(),
+                      this.T.notify());
+              };
+            for (let [e, t, s] of ((this.handlers = [
+              ["pointerdown", i],
+              ["pointermove", a],
+              ["pointerup", l],
+              ["pointercancel", l],
+              ["lostpointercapture", () => l()],
+              ["pointerleave", r],
+              ["wheel", h, { passive: !1 }],
+              ["dblclick", d],
+              ["keydown", c],
+              ["blur", n],
+              ["docdown", o],
+            ]),
+            this.handlers))
+              ("blur" === e
+                ? window
+                : "docdown" === e
+                  ? document
+                  : this.plot
+              ).addEventListener("docdown" === e ? "pointerdown" : e, t, s);
+          }
+          renderHi(e) {
+            let t = this.G,
+              s = t.dpr,
+              i = this.hover,
+              a = this.V.follow;
+            for (let s of ((this.hover = null),
+            (t.dpr = e),
+            (this.V.follow = !1),
+            [this.cvB, this.cvO]))
+              ((s.width = Math.round(t.W * e)),
+                (s.height = Math.round(t.H * e)));
+            (this.drawBase(), this.drawOver());
+            let l = document.createElement("canvas");
+            ((l.width = this.cvB.width), (l.height = this.cvB.height));
+            let r = l.getContext("2d");
+            for (let e of (r.drawImage(this.cvB, 0, 0),
+            r.drawImage(this.cvO, 0, 0),
+            (t.dpr = s),
+            (this.hover = i),
+            (this.V.follow = a),
+            [this.cvB, this.cvO]))
+              ((e.width = Math.round(t.W * s)),
+                (e.height = Math.round(t.H * s)));
+            return ((this.dirty.base = this.dirty.over = !0), this.frame(), l);
+          }
+        }
+        var t9 = s(1877),
+          t7 = s.n(t9);
+        function se() {
+          let { t: e, term: t, chart: s } = H(),
+            a = (0, l.useRef)(null),
+            r = (0, l.useRef)(null),
+            n = (0, l.useRef)(null),
+            o = (0, l.useRef)(null),
+            h = (0, l.useRef)(null),
+            d = (0, l.useRef)(null),
+            c = (0, l.useRef)(null),
+            u = (0, l.useRef)(null),
+            p = (0, l.useRef)(0),
+            f = s ? s.RG : null,
+            m = (e) => (e > 0 ? eS(e / f.M, 0, 1) : 0),
+            g = (e) => (e <= 0.002 ? 0 : e * f.M),
+            b = (e) => {
+              let t = f.v / e.inten;
+              return { lo: e.cut > 0 ? m(e.cut * t) : 0, hi: m(t) };
+            },
+            x = () => {
+              let e = f.v / t.p.pal.inten;
+              return { lq: t.p.pal.cut * e, hq: e };
+            },
+            v = (e, s) =>
+              t.setPal({
+                inten: eS(f.v / s, 0.01, 1e3),
+                cut: eS(e / s, 0, 0.95),
+              }),
+            y = (e, t) => {
+              ((t = eS(t, 0.005, 1)), v(g((e = eS(e, 0, t - 0.005))), t * f.M));
+            },
+            w = (e, t) => {
+              ((e = eS(e, 0.005, 1)),
+                t > 0 && m(t) > e - 0.005 && (t = g(e - 0.005)),
+                v(t, e * f.M));
+            },
+            _ = (e, t) => v(g(eS(e, 0, m(t) - 0.005)), t);
+          (0, l.useEffect)(() => {
+            let e = a.current,
+              i = r.current;
+            if (!e || !i || !s || !f) return;
+            let l = e.clientWidth,
+              u = e.clientHeight;
+            if (!l || !u) return;
+            let p = b(t.p.pal),
+              m = l - 10,
+              g = 5 + p.lo * m,
+              v = 5 + p.hi * m;
+            ((n.current.style.left = g + "px"),
+              (o.current.style.left = v + "px"),
+              (h.current.style.left = g + "px"),
+              (h.current.style.width = Math.max(0, v - g) + "px"),
+              (d.current.style.left = "5px"),
+              (d.current.style.width = Math.max(0, g - 5) + "px"));
+            let y = t.latestSnap(),
+              w = y ? y.mid : 0,
+              _ = t.fmt,
+              k = "usd" === t.p.unit,
+              T = (e) => (k ? (w ? "$" + _.u(e * w) : "—") : _.q(e)),
+              { lq: j, hq: S } = x(),
+              C = j > 0 ? T(j) : "0",
+              M = T(S),
+              N = k ? "" : " " + t.D.sym;
+            (c.current &&
+              (c.current.textContent = f.n ? C + " – " + M + N : "—"),
+              n.current.setAttribute("aria-valuetext", "≥ " + C + N),
+              o.current.setAttribute("aria-valuetext", "≥ " + M + N),
+              n.current.setAttribute("aria-valuenow", (100 * p.lo).toFixed(0)),
+              o.current.setAttribute("aria-valuenow", (100 * p.hi).toFixed(0)));
+            let A = Math.min(2, window.devicePixelRatio || 1),
+              B = i.clientHeight || 6,
+              L = Math.round(m * A),
+              D = Math.round(B * A);
+            (i.width !== L || i.height !== D) &&
+              ((i.width = L), (i.height = D));
+            let R = i.getContext("2d");
+            (R.setTransform(A, 0, 0, A, 0, 0), R.clearRect(0, 0, m, B));
+            let E = "split" === t.p.color,
+              P = (e) => `rgb(${255 & e},${(e >> 8) & 255},${(e >> 16) & 255})`,
+              H = E ? s.LUTB : s.LUT;
+            ((n.current.style.background = P(H[0])),
+              (o.current.style.background = P(H[255])));
+            for (let e = 0; e < m; e++) {
+              let t = Math.min(255, Math.floor(((e + 0.5) / m) * 256));
+              E
+                ? ((R.fillStyle = P(s.LUTB[t])),
+                  R.fillRect(e, 0, 1, B / 2),
+                  (R.fillStyle = P(s.LUTA[t])),
+                  R.fillRect(e, 0 + B / 2, 1, B / 2))
+                : ((R.fillStyle = P(s.LUT[t])), R.fillRect(e, 0, 1, B));
+            }
+          });
+          let k = () => {
+              p.current && (cancelAnimationFrame(p.current), (p.current = 0));
+            },
+            T = (e, s) => {
+              k();
+              let i = b(t.p.pal),
+                a = x(),
+                l = Math.abs(e.lo - i.lo) > 1e-6,
+                r = Math.abs(e.hi - i.hi) > 1e-6,
+                n = (e, t) => (l && r ? y(e, t) : r ? w(t, a.lq) : _(e, a.hq)),
+                o = () => {
+                  (k(), s ? t.setPal({ ...s }) : (l || r) && n(e.lo, e.hi));
+                };
+              if (
+                (!l && !r) ||
+                window.matchMedia("(prefers-reduced-motion: reduce)").matches
+              )
+                return o();
+              let h = { lo: i.lo, hi: i.hi, vlo: 0, vhi: 0 },
+                d = performance.now(),
+                c = d,
+                u = (t) => {
+                  let s = Math.min(0.032, (t - d) / 1e3);
+                  d = t;
+                  let i = !0;
+                  for (let t of ["lo", "hi"]) {
+                    let a = 380 * (e[t] - h[t]) - 24 * h["v" + t];
+                    ((h["v" + t] += a * s),
+                      (h[t] += h["v" + t] * s),
+                      (Math.abs(e[t] - h[t]) > 0.002 ||
+                        Math.abs(h["v" + t]) > 0.02) &&
+                        (i = !1));
+                  }
+                  if (i || t - c > 900) return o();
+                  (n(h.lo, h.hi), (p.current = requestAnimationFrame(u)));
+                };
+              p.current = requestAnimationFrame(u);
+            },
+            j = (e) => {
+              let t = u.current;
+              t &&
+                e.pointerId === t.id &&
+                ((u.current = null), (s.rgDrag = !1), s.markBase());
+            },
+            S = (e) => (s) => {
+              let i = b(t.p.pal),
+                a = {
+                  ArrowLeft: -1,
+                  ArrowDown: -1,
+                  ArrowRight: 1,
+                  ArrowUp: 1,
+                  PageDown: -10,
+                  PageUp: 10,
+                }[s.key],
+                l = i[e];
+              if (null != a) l += a * (s.shiftKey ? 0.05 : 0.01);
+              else if ("Home" === s.key) l = 0;
+              else {
+                if ("End" !== s.key) return;
+                l = 1;
+              }
+              (s.preventDefault(), k());
+              let r = x();
+              "lo" === e ? _(l, r.hq) : w(l, r.lq);
+            },
+            C = O(
+              e,
+              "range.tip",
+              "Resting size per price cell. Left handle: smaller cells get the darkest colour; right handle: larger ones are all brightest. Drag the middle to move both; double-click to reset",
+            );
+          return (0, i.jsxs)("div", {
+            className: t7().crange,
+            children: [
+              (0, i.jsx)("span", {
+                className: t7().lbl,
+                children: O(e, "range.label", "Colour range"),
+              }),
+              (0, i.jsxs)("div", {
+                ref: a,
+                className: t7().dual,
+                title: C,
+                onPointerDown: (e) => {
+                  let i;
+                  if (0 !== e.button || !f || !f.n) return;
+                  e.preventDefault();
+                  let { p: l, r } =
+                      ((i = a.current.getBoundingClientRect()),
+                      {
+                        p: eS((e.clientX - i.left - 5) / (i.width - 10), 0, 1),
+                        r: i,
+                      }),
+                    d = b(t.p.pal),
+                    c =
+                      e.target === n.current
+                        ? "lo"
+                        : e.target === o.current
+                          ? "hi"
+                          : e.target === h.current
+                            ? "mid"
+                            : null,
+                    p = 0,
+                    m = !1;
+                  (("lo" === c || "hi" === c) &&
+                    d.hi - d.lo < 0.06 &&
+                    (c = "pick"),
+                    "lo" === c
+                      ? (p = l - d.lo)
+                      : "hi" === c
+                        ? (p = l - d.hi)
+                        : c ||
+                          ((c =
+                            Math.abs(l - d.lo) < Math.abs(l - d.hi) || l < d.lo
+                              ? "lo"
+                              : "hi"),
+                          (m = !0),
+                          T(
+                            "lo" === c
+                              ? { lo: l, hi: d.hi }
+                              : { lo: d.lo, hi: l },
+                          )),
+                    (u.current = {
+                      mode: c,
+                      off: p,
+                      jump: m,
+                      x0: e.clientX,
+                      p0: l,
+                      lo: d.lo,
+                      hi: d.hi,
+                      ...x(),
+                      id: e.pointerId,
+                      left: r.left,
+                      w: r.width - 10,
+                    }),
+                    (s.rgDrag = !0));
+                  try {
+                    a.current.setPointerCapture(e.pointerId);
+                  } catch (e) {}
+                },
+                onPointerMove: (e) => {
+                  let t = u.current;
+                  if (
+                    !t ||
+                    e.pointerId !== t.id ||
+                    ((t.jump || "pick" === t.mode) &&
+                      3 > Math.abs(e.clientX - t.x0))
+                  )
+                    return;
+                  ("pick" === t.mode &&
+                    ((t.mode = e.clientX > t.x0 ? "hi" : "lo"),
+                    (t.off = t.p0 - t[t.mode])),
+                    (t.jump = !1),
+                    k());
+                  let s = eS((e.clientX - t.left - 5) / t.w, 0, 1) - t.off;
+                  if ("lo" === t.mode) _(s, t.hq);
+                  else if ("hi" === t.mode) w(s, t.lq);
+                  else {
+                    let e = t.hi - t.lo,
+                      i = eS(t.lo + s - t.p0, 0, 1 - e);
+                    y(i, i + e);
+                  }
+                },
+                onPointerUp: j,
+                onPointerCancel: j,
+                onDoubleClick: () => f && T(b({ ...t.p.pal, ...eg }), eg),
+                children: [
+                  (0, i.jsx)("canvas", { ref: r }),
+                  (0, i.jsx)("span", { ref: d, className: t7().dualMask }),
+                  (0, i.jsx)("span", { ref: h, className: t7().dualFill }),
+                  (0, i.jsx)("button", {
+                    ref: n,
+                    type: "button",
+                    className: t7().dualH,
+                    role: "slider",
+                    "aria-valuemin": 0,
+                    "aria-valuemax": 100,
+                    "aria-valuenow": 0,
+                    "aria-label": O(e, "range.lo", "Colour range low"),
+                    onKeyDown: S("lo"),
+                  }),
+                  (0, i.jsx)("button", {
+                    ref: o,
+                    type: "button",
+                    className: t7().dualH,
+                    role: "slider",
+                    "aria-valuemin": 0,
+                    "aria-valuemax": 100,
+                    "aria-valuenow": 100,
+                    "aria-label": O(e, "range.hi", "Colour range high"),
+                    onKeyDown: S("hi"),
+                  }),
+                ],
+              }),
+              (0, i.jsx)("span", { ref: c, className: t7().cv, children: "—" }),
+            ],
+          });
+        }
+        let st = ({ l: e, children: t, c: s }) =>
+          (0, i.jsxs)("div", {
+            className: t7().r,
+            children: [
+              (0, i.jsx)("b", { children: e }),
+              (0, i.jsx)("span", {
+                className: F(t7().num, s && t7()[s]),
+                children: t,
+              }),
+            ],
+          });
+        function ss({ m: e }) {
+          let t,
+            { t: s, term: a } = H(),
+            r = (0, l.useRef)(null);
+          if (
+            ((0, l.useLayoutEffect)(() => {
+              let t = r.current;
+              if (!t) return;
+              let { x: s, y: i, W: a, H: l, touch: n } = e.at,
+                o = t.offsetWidth,
+                h = t.offsetHeight,
+                d = s + 16,
+                c = i + 16;
+              (n
+                ? ((d = Math.min(a - o - 4, Math.max(4, s - o / 2))),
+                  (c =
+                    i - h - 28 >= 4 ? i - h - 28 : Math.min(l - h - 4, i + 28)))
+                : (d + o > a - 4 && (d = s - o - 16),
+                  c + h > l - 4 && (c = Math.max(4, i - h - 16))),
+                (t.style.left = Math.max(4, d) + "px"),
+                (t.style.top = c + "px"));
+            }),
+            "heat" === e.kind)
+          ) {
+            var n;
+            let r,
+              o,
+              h = e.compact
+                ? ((r = Math.min(
+                    Math.max(
+                      0,
+                      Math.max(
+                        0,
+                        (n = e.nb).head.findIndex((e) => e.on),
+                      ) - 1,
+                    ),
+                    n.head.length - 3,
+                  )),
+                  (o = (e) => e.slice(r, r + 3)),
+                  {
+                    ...n,
+                    head: o(n.head),
+                    lines: n.lines.map((e) => ({ ...e, cells: o(e.cells) })),
+                  })
+                : e.nb;
+            t = (0, i.jsxs)(i.Fragment, {
+              children: [
+                (0, i.jsxs)("div", {
+                  className: t7().th,
+                  children: [
+                    (0, i.jsx)("span", { children: e.time }),
+                    e.close
+                      ? (0, i.jsxs)("span", {
+                          className: F(
+                            t7().cl,
+                            null != e.close.ch && t7()[eR(e.close.ch)],
+                          ),
+                          children: [
+                            O(s, "tip.close", "Close {{p}}", {
+                              p: a.fmt.p(e.close.c),
+                            }),
+                            null == e.close.ch
+                              ? null
+                              : (0, i.jsx)("i", { children: eD(e.close.ch) }),
+                          ],
+                        })
+                      : null,
+                  ],
+                }),
+                e.compact
+                  ? null
+                  : (0, i.jsxs)("div", {
+                      className: t7().th2,
+                      children: [
+                        (0, i.jsx)("span", { children: e.sub }),
+                        (0, i.jsx)("span", { children: e.grid }),
+                      ],
+                    }),
+                (0, i.jsxs)("div", {
+                  className: F(t7().ng, e.compact && t7().ng3),
+                  children: [
+                    h.head.map((e, t) =>
+                      (0, i.jsx)(
+                        "span",
+                        {
+                          className: F(t7().ngh, e.on && t7().on),
+                          children: e.label,
+                        },
+                        "h" + t,
+                      ),
+                    ),
+                    (0, i.jsx)("span", { className: t7().ngh }),
+                    h.lines.map((e, t) =>
+                      (0, i.jsxs)(
+                        l.Fragment,
+                        {
+                          children: [
+                            e.cells.map((t, s) =>
+                              (0, i.jsx)(
+                                "span",
+                                {
+                                  className: F(
+                                    t7().c,
+                                    e.cur && t7().hr,
+                                    t.on && t7().cOn,
+                                  ),
+                                  style: t.bg
+                                    ? { background: t.bg, color: t.fg }
+                                    : void 0,
+                                  children: t.text,
+                                },
+                                s,
+                              ),
+                            ),
+                            (0, i.jsx)("span", {
+                              className: F(
+                                t7().pp,
+                                e.bid ? t7().ppb : t7().ppa,
+                                e.cur && t7().ppOn,
+                              ),
+                              children: e.price,
+                            }),
+                          ],
+                        },
+                        t,
+                      ),
+                    ),
+                  ],
+                }),
+                (0, i.jsxs)(st, {
+                  l: O(s, "tip.sum", "\xb13 cells \xb7 bid \xb7 ask"),
+                  children: [
+                    (0, i.jsx)("span", {
+                      className: t7().pos,
+                      children: h.sum.b,
+                    }),
+                    " \xb7 ",
+                    (0, i.jsx)("span", {
+                      className: t7().neg,
+                      children: h.sum.a,
+                    }),
+                    e.unitSym ? " " + e.unitSym : "",
+                  ],
+                }),
+                (0, i.jsx)(st, {
+                  l:
+                    "b" === e.side
+                      ? O(s, "tip.bidHere", "Bids here")
+                      : O(s, "tip.askHere", "Asks here"),
+                  c: "b" === e.side ? "pos" : "neg",
+                  children: e.value,
+                }),
+                (0, i.jsx)(st, {
+                  l: O(s, "tip.dist", "From the mid"),
+                  children: e.dist,
+                }),
+                e.wall
+                  ? (0, i.jsx)("div", {
+                      children: (0, i.jsx)("span", {
+                        className: F(
+                          t7().tg,
+                          "b" === e.wall.side ? t7().tgB : t7().tgS,
+                        ),
+                        children: O(s, "tip.wall", "Wall \xb7 up {{d}}", {
+                          d: e.wall.dur,
+                        }),
+                      }),
+                    })
+                  : null,
+                e.vol && !e.compact
+                  ? (0, i.jsxs)(i.Fragment, {
+                      children: [
+                        (0, i.jsx)("hr", {}),
+                        (0, i.jsxs)(st, {
+                          l: O(
+                            s,
+                            "tip.trades",
+                            "Trades here \xb7 buy \xb7 sell",
+                          ),
+                          children: [
+                            (0, i.jsx)("span", {
+                              className: t7().pos,
+                              children: e.vol.b,
+                            }),
+                            " \xb7 ",
+                            (0, i.jsx)("span", {
+                              className: t7().neg,
+                              children: e.vol.a,
+                            }),
+                          ],
+                        }),
+                      ],
+                    })
+                  : null,
+              ],
+            });
+          } else
+            t =
+              "imb" === e.kind
+                ? (0, i.jsxs)(i.Fragment, {
+                    children: [
+                      (0, i.jsx)("div", {
+                        className: t7().th,
+                        children: (0, i.jsx)("span", {
+                          children: O(s, "sub.imb", "Imbalance"),
+                        }),
+                      }),
+                      (0, i.jsx)(st, {
+                        l: O(s, "tip.band", "Within \xb1{{b}}%", { b: e.band }),
+                        c: eR(e.v || 0),
+                        children: null == e.v ? "—" : eD(e.v, 1),
+                      }),
+                      e.b
+                        ? (0, i.jsxs)(st, {
+                            l: O(s, "tip.bidAsk", "Bids \xb7 asks"),
+                            children: [
+                              (0, i.jsx)("span", {
+                                className: t7().pos,
+                                children: e.b,
+                              }),
+                              " \xb7 ",
+                              (0, i.jsx)("span", {
+                                className: t7().neg,
+                                children: e.a,
+                              }),
+                            ],
+                          })
+                        : null,
+                    ],
+                  })
+                : (0, i.jsxs)(i.Fragment, {
+                    children: [
+                      (0, i.jsxs)("div", {
+                        className: t7().th,
+                        children: [
+                          (0, i.jsx)("span", {
+                            children: O(s, "sub.vol", "Volume"),
+                          }),
+                          (0, i.jsx)("span", {
+                            className: t7().thm,
+                            children: e.time,
+                          }),
+                        ],
+                      }),
+                      (0, i.jsx)(st, {
+                        l: O(s, "takerBuy", "Taker buy"),
+                        c: "pos",
+                        children: e.b,
+                      }),
+                      (0, i.jsx)(st, {
+                        l: O(s, "takerSell", "Taker sell"),
+                        c: "neg",
+                        children: e.a,
+                      }),
+                      (0, i.jsx)(st, {
+                        l: O(s, "tip.net", "Net"),
+                        c: e.sign > 0 ? "pos" : e.sign < 0 ? "neg" : "",
+                        children: e.net,
+                      }),
+                    ],
+                  });
+          return (0, i.jsx)("div", {
+            ref: r,
+            className: t7().tip,
+            children: t,
+          });
+        }
+        let si = (e, t) =>
+          "ask" === t
+            ? e.ask
+            : "bid" === t
+              ? e.bid
+              : "acc" === t
+                ? e.accent
+                : e.fg;
+        function sa(e, t, s, i) {
+          let a = si(t, i.col);
+          if (
+            (e.save(),
+            (e.strokeStyle = a),
+            (e.fillStyle = a),
+            (e.lineWidth = 6),
+            (e.lineCap = "round"),
+            (e.lineJoin = "round"),
+            (e.shadowColor = "rgba(0,0,0,.28)"),
+            (e.shadowBlur = 8),
+            "rect" === i.t || "ellipse" === i.t)
+          ) {
+            let t = Math.min(i.x0, i.x1),
+              s = Math.min(i.y0, i.y1),
+              a = Math.abs(i.x1 - i.x0),
+              l = Math.abs(i.y1 - i.y0);
+            (e.beginPath(),
+              "ellipse" === i.t
+                ? e.ellipse(t + a / 2, s + l / 2, a / 2, l / 2, 0, 0, 7)
+                : e.roundRect
+                  ? e.roundRect(t, s, a, l, 10)
+                  : e.rect(t, s, a, l),
+              e.stroke());
+          } else if ("arrow" === i.t) {
+            let t = i.x1 - i.x0,
+              s = i.y1 - i.y0,
+              a = Math.hypot(t, s);
+            if (a >= 2) {
+              let l = t / a,
+                r = s / a,
+                n = Math.min(40, 0.5 * a),
+                o = i.x1 - l * n * 0.8,
+                h = i.y1 - r * n * 0.8;
+              (e.beginPath(),
+                e.moveTo(i.x0, i.y0),
+                e.lineTo(o, h),
+                e.stroke(),
+                e.beginPath(),
+                e.moveTo(i.x1, i.y1),
+                e.lineTo(
+                  i.x1 - l * n - r * n * 0.5,
+                  i.y1 - r * n + l * n * 0.5,
+                ),
+                e.lineTo(
+                  i.x1 - l * n + r * n * 0.5,
+                  i.y1 - r * n - l * n * 0.5,
+                ),
+                e.closePath(),
+                e.fill());
+            }
+          } else if ("pen" === i.t)
+            (e.beginPath(),
+              i.pts.forEach(([t, s], i) =>
+                i ? e.lineTo(t, s) : e.moveTo(t, s),
+              ),
+              e.stroke());
+          else if ("text" === i.t) {
+            e.font = "600 34px " + s;
+            let t = e.measureText(i.text).width + 40;
+            (e.beginPath(),
+              e.roundRect
+                ? e.roundRect(i.x, i.y - 32, t, 64, 16)
+                : e.rect(i.x, i.y - 32, t, 64),
+              e.fill(),
+              (e.shadowColor = "transparent"),
+              (e.fillStyle = tB(a)),
+              (e.textAlign = "left"),
+              (e.textBaseline = "middle"),
+              e.fillText(i.text, i.x + 20, i.y + 2));
+          }
+          e.restore();
+        }
+        var sl = s(45004),
+          sr = s.n(sl);
+        let sn = [
+            ["arrow", "Arrow"],
+            ["rect", "Box"],
+            ["ellipse", "Circle"],
+            ["text", "Text"],
+            ["pen", "Pen"],
+          ],
+          so = [
+            ["ask", "Orange-red"],
+            ["bid", "Green"],
+            ["acc", "Yellow"],
+            ["fg", "Black / white"],
+          ],
+          sh = {
+            arrow: [
+              "shot.hintArrow",
+              "Drag on the image to draw an arrow; Ctrl+Z to undo",
+            ],
+            rect: [
+              "shot.hintRect",
+              "Drag on the image to draw a box; Ctrl+Z to undo",
+            ],
+            ellipse: [
+              "shot.hintEllipse",
+              "Drag on the image to draw a circle; Ctrl+Z to undo",
+            ],
+            text: [
+              "shot.hintText",
+              "Click on the image to add text; Ctrl+Z to undo",
+            ],
+            pen: [
+              "shot.hintPen",
+              "Drag on the image to draw freehand; Ctrl+Z to undo",
+            ],
+          };
+        function sd({ onClose: e }) {
+          let { t, term: s, chart: a, font: r } = H(),
+            n = a.CL,
+            o = (0, l.useRef)(null),
+            h = (0, l.useRef)(null),
+            d = (0, l.useRef)(null),
+            c = (0, l.useRef)(null),
+            [u, p] = (0, l.useState)("arrow"),
+            [f, m] = (0, l.useState)("ask"),
+            [g, b] = (0, l.useState)(
+              O(t, "shot.rendering", "Rendering…", void 0),
+            ),
+            [x, v] = (0, l.useState)(null),
+            y = (0, l.useRef)({ shapes: [], cur: null }),
+            w = () => {
+              let e = h.current;
+              if (!e) return;
+              let t = e.getContext("2d");
+              for (let s of (t.clearRect(0, 0, e.width, e.height),
+              y.current.shapes))
+                sa(t, n, r, s);
+              y.current.cur && sa(t, n, r, y.current.cur);
+            },
+            [_, k] = (0, l.useState)(null),
+            [T, S] = (0, l.useState)(null),
+            [C, M] = (0, l.useState)(null);
+          ((0, l.useEffect)(() => {
+            let e = !0,
+              i = j[s.D.mkt];
+            return (
+              Promise.resolve()
+                .then(() =>
+                  (function (e, t, s, i) {
+                    let a,
+                      l = t.G,
+                      r = t.CL,
+                      n = r.ff,
+                      o = e.D,
+                      h = (t, s, i) =>
+                        e.t("liquidity_heatmap." + t, {
+                          ...i,
+                          defaultValue: s,
+                        }),
+                      d = Math.round(l.W),
+                      c = Math.round(l.H),
+                      u = t.renderHi(2),
+                      p = document.createElement("canvas");
+                    ((p.width = (d + 40) * 2), (p.height = (70 + c + 44) * 2));
+                    let f = p.getContext("2d");
+                    (f.scale(2, 2),
+                      (f.fillStyle = r.surface),
+                      f.fillRect(0, 0, d + 40, 70 + c + 44));
+                    let m = 20;
+                    ((f.fillStyle = r.s3),
+                      f.beginPath(),
+                      f.arc(m + 15, 35, 15, 0, 7),
+                      f.fill(),
+                      (f.fillStyle = r.fg),
+                      (f.font = "700 14px " + n),
+                      (f.textAlign = "center"),
+                      (f.textBaseline = "middle"),
+                      f.fillText(
+                        o.sym.replace(/^1000+/, "").slice(0, 1),
+                        m + 15,
+                        35.5,
+                      ),
+                      (m += 42),
+                      (f.textAlign = "left"),
+                      (f.font = "600 21px " + n),
+                      (f.fillStyle = r.fg),
+                      f.fillText(s, m, 25),
+                      (f.font = "500 13px " + n),
+                      (f.fillStyle = r.fg3),
+                      f.fillText(
+                        h("shot.sub", "Orderbook Heatmap \xb7 {{ex}}", {
+                          ex: i,
+                        }),
+                        m,
+                        49,
+                      ));
+                    let g = new Date(),
+                      b =
+                        g.getFullYear() +
+                        "-" +
+                        ej(g.getMonth() + 1) +
+                        "-" +
+                        ej(g.getDate()) +
+                        " " +
+                        ej(g.getHours()) +
+                        ":" +
+                        ej(g.getMinutes()) +
+                        " " +
+                        ("UTC" +
+                          ((a = -new Date().getTimezoneOffset() / 60) >= 0
+                            ? "+"
+                            : "−")) +
+                        Math.abs(a);
+                    ((f.textAlign = "right"),
+                      (f.font = "700 22px " + n),
+                      (f.fillStyle = r.fg),
+                      f.fillText(e.fmt.p(e.lastPrice()), d + 20, 25),
+                      (f.font = "500 13px " + n),
+                      (f.fillStyle = r.fg3),
+                      f.fillText(b, d + 20, 49),
+                      (f.fillStyle = r.line),
+                      f.fillRect(0, 69, d + 40, 1),
+                      f.drawImage(u, 0, 0, u.width, u.height, 20, 70, d, c));
+                    let x = 70 + c + 22;
+                    for (let [e, t] of ((f.fillStyle = r.line),
+                    f.fillRect(0, 70 + c, d + 40, 1),
+                    (f.fillStyle = r.accent),
+                    [
+                      [0, 0.45],
+                      [4, 1],
+                      [8, 0.7],
+                    ]))
+                      ((f.globalAlpha = t), f.fillRect(20, x - 6 + e, 12, 2.6));
+                    ((f.globalAlpha = 1),
+                      (f.textAlign = "left"),
+                      (f.font = "600 13px " + n),
+                      (f.fillStyle = r.fg2),
+                      f.fillText(
+                        "CoinGlass \xb7 " + h("title", "Orderbook Heatmap"),
+                        40,
+                        x,
+                      ));
+                    let v = [
+                      [h("bb", "Bid"), r.bid],
+                      [h("ba", "Ask"), r.ask],
+                      [h("takerBuy", "Taker buy"), r.bid],
+                      [h("takerSell", "Taker sell"), r.ask],
+                    ];
+                    ((f.textAlign = "right"), (f.font = "500 12.5px " + n));
+                    let y = d + 20,
+                      w = h("shot.data", "Data: {{ex}}", { ex: i });
+                    ((f.fillStyle = r.fg3),
+                      f.fillText(w, y, x),
+                      (y -= f.measureText(w).width + 18));
+                    for (let e = v.length - 1; e >= 0; e--) {
+                      let [t, s] = v[e],
+                        i = f.measureText(t).width;
+                      ((f.fillStyle = r.fg2),
+                        f.fillText(t, y, x),
+                        (f.fillStyle = s),
+                        e < 2
+                          ? f.fillRect(y - i - 14, x - 1, 10, 2.4)
+                          : (f.beginPath(),
+                            f.arc(y - i - 9, x, 3.5, 0, 7),
+                            f.fill()),
+                        (y -= i + 26));
+                    }
+                    return p;
+                  })(s, a, z(t, s), G(s, i)),
+                )
+                .then((t) => {
+                  e && k(t);
+                })
+                .catch((s) => {
+                  e &&
+                    b(
+                      O(
+                        t,
+                        "shot.failed",
+                        "Could not render the chart ({{msg}})",
+                        { msg: (s && s.message) || String(s) },
+                      ),
+                    );
+                }),
+              () => {
+                e = !1;
+              }
+            );
+          }, []),
+            (0, l.useEffect)(() => {
+              _ &&
+                T &&
+                C &&
+                ((T.width = C.width = _.width),
+                (T.height = C.height = _.height),
+                T.getContext("2d").drawImage(_, 0, 0),
+                w(),
+                b(((e, s, i) => O(t, e, s, i))(...sh[u])));
+            }, [_, T, C]),
+            (0, l.useEffect)(() => {
+              let e = (e) => {
+                (e.ctrlKey || e.metaKey) &&
+                  "z" === e.key.toLowerCase() &&
+                  !x &&
+                  (e.preventDefault(), y.current.shapes.pop(), w());
+              };
+              return (
+                document.addEventListener("keydown", e),
+                () => document.removeEventListener("keydown", e)
+              );
+            }));
+          let N = () => {
+              if (!x) return;
+              let e = (c.current && c.current.value.trim()) || "";
+              (e &&
+                (y.current.shapes.push({
+                  t: "text",
+                  col: f,
+                  x: x.x,
+                  y: x.y,
+                  text: e,
+                }),
+                w()),
+                v(null));
+            },
+            A = (e) => {
+              let t = h.current,
+                s = t.getBoundingClientRect();
+              return [
+                ((e.clientX - s.left) * t.width) / s.width,
+                ((e.clientY - s.top) * t.height) / s.height,
+              ];
+            },
+            B = () => {
+              let e = y.current.cur;
+              e &&
+                ((y.current.cur = null),
+                ("pen" === e.t
+                  ? e.pts.length > 2
+                  : Math.hypot(e.x1 - e.x0, e.y1 - e.y0) > 16) &&
+                  y.current.shapes.push(e),
+                w());
+            },
+            L = () => {
+              if (!_) return Promise.resolve(null);
+              let e = document.createElement("canvas");
+              ((e.width = o.current.width), (e.height = o.current.height));
+              let t = e.getContext("2d");
+              return (
+                t.drawImage(o.current, 0, 0),
+                t.drawImage(h.current, 0, 0),
+                new Promise((t) => e.toBlob(t, "image/png"))
+              );
+            },
+            D = async () => {
+              N();
+              try {
+                if (!_) return;
+                if (!navigator.clipboard || !window.ClipboardItem)
+                  throw Error("no clipboard");
+                (await navigator.clipboard.write([
+                  new window.ClipboardItem({ "image/png": L() }),
+                ]),
+                  b(
+                    O(
+                      t,
+                      "shot.copied",
+                      "Copied. Paste it straight into X, Telegram, Discord and more",
+                      void 0,
+                    ),
+                  ));
+              } catch (e) {
+                b(
+                  O(
+                    t,
+                    "shot.noCopy",
+                    'Can\'t copy the image here. Use "Download PNG" instead',
+                    void 0,
+                  ),
+                );
+              }
+            },
+            R = async () => {
+              let e, i;
+              N();
+              let a = await L();
+              if (!a) return;
+              let l =
+                  ((e = new Date()),
+                  (i = s.D),
+                  `orderbook-heatmap_${i.sym}_${i.mkt}_${i.itv}_${e.getFullYear()}${ej(e.getMonth() + 1)}${ej(e.getDate())}-${ej(e.getHours())}${ej(e.getMinutes())}.png`),
+                r = document.createElement("a");
+              ((r.href = URL.createObjectURL(a)),
+                (r.download = l),
+                document.body.appendChild(r),
+                r.click(),
+                r.remove(),
+                setTimeout(() => URL.revokeObjectURL(r.href), 5e3),
+                b(O(t, "shot.saved", "Downloaded {{name}}", { name: l })));
+            },
+            E = si(n, f);
+          return (0, i.jsx)(eG.aF, {
+            isOpen: !0,
+            onClose: e,
+            title: O(t, "shot.title", "Screenshot", void 0),
+            className: sr().modal,
+            contentClassName: sr().content,
+            closeOnOverlayClick: !0,
+            closeOnEsc: !x,
+            children: (0, i.jsxs)("div", {
+              className: sr().box,
+              children: [
+                (0, i.jsx)("p", {
+                  className: sr().sub,
+                  children: O(
+                    t,
+                    "shot.intro",
+                    "Walls and trade bubbles on the chart are included. Add arrows, boxes, circles and text, then copy or download",
+                    void 0,
+                  ),
+                }),
+                (0, i.jsxs)("div", {
+                  className: sr().tools,
+                  children: [
+                    (0, i.jsx)(e0, {
+                      value: u,
+                      onChange: (e) => {
+                        (N(), p(e), b(((e, s, i) => O(t, e, s, i))(...sh[e])));
+                      },
+                      label: O(t, "shot.tools", "Annotation tools", void 0),
+                      options: sn.map(([e, s]) => ({
+                        value: e,
+                        label: O(t, "shot.t." + e, s, void 0),
+                      })),
+                    }),
+                    (0, i.jsx)("div", {
+                      className: sr().sws,
+                      role: "group",
+                      "aria-label": O(
+                        t,
+                        "shot.colors",
+                        "Annotation colour",
+                        void 0,
+                      ),
+                      children: so.map(([e, s]) =>
+                        (0, i.jsx)(
+                          "button",
+                          {
+                            type: "button",
+                            className: F(sr().sw, f === e && sr().on),
+                            style: { "--c": si(n, e) },
+                            "aria-pressed": f === e,
+                            "aria-label": O(t, "shot.c." + e, s, void 0),
+                            onClick: () => m(e),
+                          },
+                          e,
+                        ),
+                      ),
+                    }),
+                    (0, i.jsx)(eJ, {
+                      onClick: () => {
+                        (N(), y.current.shapes.pop(), w());
+                      },
+                      title: O(t, "shot.undoHint", "Undo (Ctrl+Z)", void 0),
+                      children: O(t, "shot.undo", "Undo", void 0),
+                    }),
+                    (0, i.jsx)(eJ, {
+                      onClick: () => {
+                        (v(null), (y.current.shapes = []), w());
+                      },
+                      children: O(t, "shot.clear", "Clear", void 0),
+                    }),
+                    (0, i.jsx)("div", { className: sr().grow }),
+                    (0, i.jsxs)(eJ, {
+                      onClick: D,
+                      children: [
+                        (0, i.jsx)(eX.TdU, {}),
+                        O(t, "shot.copy", "Copy image", void 0),
+                      ],
+                    }),
+                    (0, i.jsxs)(eJ, {
+                      variant: "primary",
+                      onClick: R,
+                      children: [
+                        (0, i.jsx)(eX.s3U, {}),
+                        O(t, "shot.download", "Download PNG", void 0),
+                      ],
+                    }),
+                  ],
+                }),
+                (0, i.jsxs)("div", {
+                  className: sr().stage,
+                  ref: d,
+                  children: [
+                    (0, i.jsx)("canvas", {
+                      ref: (e) => {
+                        ((o.current = e), S(e));
+                      },
+                    }),
+                    (0, i.jsx)("canvas", {
+                      ref: (e) => {
+                        ((h.current = e), M(e));
+                      },
+                      className: sr().ann,
+                      style: { cursor: "text" === u ? "text" : "crosshair" },
+                      onPointerDown: (e) => {
+                        if (0 !== e.button || !_) return;
+                        e.preventDefault();
+                        let t = !!x;
+                        N();
+                        let [s, i] = A(e);
+                        if ("text" === u) {
+                          if (t) return;
+                          let a = d.current.getBoundingClientRect(),
+                            l =
+                              h.current.getBoundingClientRect().width /
+                              (h.current.width / 2);
+                          v({
+                            left: e.clientX - a.left,
+                            top: e.clientY - a.top - 16 * l,
+                            x: s,
+                            y: i,
+                            k: l,
+                          });
+                          return;
+                        }
+                        (h.current.setPointerCapture(e.pointerId),
+                          (y.current.cur =
+                            "pen" === u
+                              ? { t: "pen", col: f, pts: [[s, i]] }
+                              : { t: u, col: f, x0: s, y0: i, x1: s, y1: i }),
+                          w());
+                      },
+                      onPointerMove: (e) => {
+                        let t = y.current.cur;
+                        if (!t) return;
+                        let [s, i] = A(e);
+                        ("pen" === t.t
+                          ? t.pts.push([s, i])
+                          : ((t.x1 = s), (t.y1 = i)),
+                          w());
+                      },
+                      onPointerUp: B,
+                      onPointerCancel: B,
+                      "aria-label": O(
+                        t,
+                        "shot.canvas",
+                        "Annotation canvas",
+                        void 0,
+                      ),
+                    }),
+                    x
+                      ? (0, i.jsx)("input", {
+                          ref: c,
+                          className: sr().txt,
+                          autoFocus: !0,
+                          maxLength: 60,
+                          placeholder: O(
+                            t,
+                            "shot.txtPh",
+                            "Type text, press Enter to finish",
+                            void 0,
+                          ),
+                          style: {
+                            left: x.left,
+                            top: x.top,
+                            height: 32 * x.k,
+                            font: `600 ${17 * x.k}px ${r}`,
+                            "--c": E,
+                            "--ct": tB(E),
+                          },
+                          onKeyDown: (e) => {
+                            "Enter" === e.key
+                              ? (e.preventDefault(), N())
+                              : "Escape" === e.key &&
+                                (e.preventDefault(),
+                                e.stopPropagation(),
+                                v(null));
+                          },
+                          onBlur: () => setTimeout(N, 0),
+                        })
+                      : null,
+                  ],
+                }),
+                (0, i.jsx)("div", { className: sr().note, children: g }),
+              ],
+            }),
+          });
+        }
+        var sc = s(69892);
+        let su = l.useLayoutEffect,
+          sp = {
+            kline: [
+              "Candles",
+              "Candles of the current period over the heatmap; colours under Colours. After the page opens they are built from live trades",
+            ],
+            bub: [
+              "Trade bubbles",
+              "Taker trades at their average price, larger for more; green when buys dominate, orange-red for sells",
+            ],
+            wall: [
+              "Walls",
+              "Label the current walls and their size on the chart",
+            ],
+            cob: [
+              "Current book",
+              "The whole book of one moment at the right of the chart (latest by default; click the chart to pin a moment)",
+            ],
+          },
+          sf = {
+            vol: [
+              "Volume",
+              "Taker buys (green, up) and taker sells (orange-red, down) per time cell",
+            ],
+            imb: [
+              "Imbalance",
+              "Bids minus asks within the depth band, as a share of both",
+            ],
+          };
+        function sm(e, t, s) {
+          su(() => {
+            let s = e.current;
+            if (!s) return;
+            let i = () => {
+              for (let e = 0; e <= t; e++) {
+                for (let i = 1; i <= t; i++)
+                  s.classList.toggle(t7()["f" + i], i <= e);
+                if (s.scrollWidth <= s.clientWidth + 1) return;
+              }
+            };
+            i();
+            let a = new ResizeObserver(i);
+            return (a.observe(s), () => a.disconnect());
+          }, s);
+        }
+        function sg() {
+          let { t: e, term: t, chart: s, setChart: a, version: r } = H(),
+            n = t.p,
+            o = (0, l.useRef)(null),
+            h = (0, l.useRef)(null),
+            d = (0, l.useRef)(null),
+            c = (0, l.useRef)(null),
+            u = (0, l.useRef)(null),
+            [p, f] = (0, l.useState)(null),
+            [m, b] = (0, l.useState)(""),
+            [x, y] = (0, l.useState)(""),
+            [, w] = (0, l.useState)(0),
+            [_, k] = (0, l.useState)(!1),
+            [T, j] = (0, l.useState)(!1),
+            S = (0, l.useRef)(0),
+            C = (0, l.useRef)(0),
+            M = (0, l.useRef)({});
+          ((M.current.pairLabel = () => z(e, t)),
+            (M.current.itvLabel = () => g[t.D.itv]),
+            (0, l.useEffect)(() => {
+              let e = new t8(
+                t,
+                { plot: o.current, base: h.current, over: d.current },
+                {
+                  onTip: (e) => f(e),
+                  onEdge: (e, t) => {
+                    (clearTimeout(S.current),
+                      b(e),
+                      t && e && (S.current = setTimeout(() => b(""), t)));
+                  },
+                  onRange: () => w((e) => e + 1),
+                  pairLabel: () => M.current.pairLabel(),
+                  itvLabel: () => M.current.itvLabel(),
+                },
+              );
+              return (
+                a(e),
+                () => {
+                  (e.dispose(),
+                    a(null),
+                    clearTimeout(S.current),
+                    clearTimeout(C.current));
+                }
+              );
+            }, []));
+          let N = "loading" === t.status;
+          ((0, l.useEffect)(() => {
+            if (!N) return void j(!1);
+            let e = setTimeout(() => j(!0), 200);
+            return () => clearTimeout(e);
+          }, [N]),
+            sm(c, 6, [r, e]),
+            sm(u, 5, [r, e]));
+          let A = (function () {
+              let [e, t] = (0, l.useState)(!1);
+              return (
+                (0, l.useEffect)(() => {
+                  let e = () => {
+                    document.fullscreenElement || t(!1);
+                  };
+                  return (
+                    document.addEventListener("fullscreenchange", e),
+                    () => document.removeEventListener("fullscreenchange", e)
+                  );
+                }, []),
+                (0, l.useEffect)(() => {
+                  if (!e) return;
+                  let s = document.body,
+                    i = s.style.overflow;
+                  s.style.overflow = "hidden";
+                  let a = (e) => {
+                    "Escape" !== e.key ||
+                      document.fullscreenElement ||
+                      document.querySelector(
+                        '[role="dialog"][aria-modal="true"]',
+                      ) ||
+                      t(!1);
+                  };
+                  return (
+                    window.addEventListener("keydown", a),
+                    () => {
+                      ((s.style.overflow = i),
+                        window.removeEventListener("keydown", a));
+                    }
+                  );
+                }, [e]),
+                {
+                  on: e,
+                  toggle: () => {
+                    let s = document,
+                      i = s.documentElement;
+                    e
+                      ? (s.fullscreenElement &&
+                          s.exitFullscreen &&
+                          s.exitFullscreen().catch(() => {}),
+                        t(!1))
+                      : (i.requestFullscreen &&
+                          !s.fullscreenElement &&
+                          i.requestFullscreen().catch(() => {}),
+                        t(!0));
+                  },
+                }
+              );
+            })(),
+            B = eT(t.D.g),
+            R = B.map((e) => ({ value: e, label: t.fmt.p(e, eM(e)) })),
+            E = "auto" !== n.tick && B.includes(+n.tick) ? +n.tick : B[0],
+            P = L.filter((e) => n.flags[e]).length,
+            W = D.filter((e) => n.subs[e]).length,
+            V = (s) => {
+              var i;
+              (t.set("flags", { ...n.flags, [s]: !n.flags[s] }),
+                "wall" === s &&
+                  n.flags.wall &&
+                  !t.curWalls().length &&
+                  ((i = O(
+                    e,
+                    "wall.noneNear",
+                    "No walls within \xb13% of the price right now (threshold {{v}})",
+                    { v: t.fmt.u(t.wallMin()) },
+                  )),
+                  clearTimeout(C.current),
+                  y(i),
+                  (C.current = setTimeout(() => y(""), 2600))));
+            };
+          return (0, i.jsxs)("div", {
+            className: F(t7().card, A.on && t7().full),
+            children: [
+              (0, i.jsxs)("div", {
+                ref: c,
+                className: t7().toolbar,
+                children: [
+                  (0, i.jsxs)("h2", {
+                    className: t7().h,
+                    children: [
+                      (0, i.jsx)("span", {
+                        children: O(e, "title", "Orderbook Heatmap"),
+                      }),
+                      (0, i.jsx)("span", {
+                        className: t7().eyebrow,
+                        children: z(e, t),
+                      }),
+                    ],
+                  }),
+                  (0, i.jsx)("span", { className: t7().vsep }),
+                  (0, i.jsx)("span", {
+                    className: t7().lbl,
+                    children: O(e, "color.label", "Colouring"),
+                  }),
+                  (0, i.jsx)(e1, {
+                    ariaLabel: O(e, "color.label", "Colouring"),
+                    value: n.color,
+                    onChange: (e) => t.set("color", e),
+                    options: [
+                      { value: "heat", label: O(e, "color.heat", "Heat") },
+                      {
+                        value: "split",
+                        label: O(e, "color.split", "Bid / ask"),
+                      },
+                    ],
+                  }),
+                  (0, i.jsx)("span", {
+                    className: t7().lbl,
+                    children: O(e, "unit.label", "Unit"),
+                  }),
+                  (0, i.jsx)(e1, {
+                    className: t7().dk,
+                    ariaLabel: O(e, "unit.label", "Unit"),
+                    value: n.unit,
+                    onChange: (e) => t.set("unit", e),
+                    options: [
+                      { value: "qty", label: O(e, "unit.qty", "Coins") },
+                      { value: "usd", label: O(e, "unit.usd", "Value") },
+                    ],
+                  }),
+                  (0, i.jsx)(se, {}),
+                  (0, i.jsx)("span", {
+                    className: t7().mb,
+                    children: (0, i.jsxs)(e2, {
+                      width: 340,
+                      label: O(e, "mset.label", "Settings"),
+                      trigger: (0, i.jsxs)(i.Fragment, {
+                        children: [
+                          O(e, "mset.label", "Settings"),
+                          (0, i.jsx)(e4, {}),
+                        ],
+                      }),
+                      children: [
+                        (0, i.jsx)(e3, {
+                          children: O(e, "unit.label", "Unit"),
+                        }),
+                        (0, i.jsx)("div", {
+                          className: t7().mrow,
+                          children: (0, i.jsx)(e0, {
+                            value: n.unit,
+                            onChange: (e) => t.set("unit", e),
+                            label: O(e, "unit.label", "Unit"),
+                            options: [
+                              {
+                                value: "qty",
+                                label: O(e, "unit.qty", "Coins"),
+                              },
+                              {
+                                value: "usd",
+                                label: O(e, "unit.usd", "Value"),
+                              },
+                            ],
+                          }),
+                        }),
+                        (0, i.jsx)(e3, {
+                          children: O(e, "tick.label", "Price grid"),
+                        }),
+                        (0, i.jsx)("div", {
+                          className: t7().mrow,
+                          children: (0, i.jsx)(e1, {
+                            ariaLabel: O(e, "tick.label", "Price grid"),
+                            value: E,
+                            onChange: (e) => t.set("tick", e),
+                            options: R,
+                          }),
+                        }),
+                        (0, i.jsx)(e3, {
+                          children: O(e, "band.label", "Depth band"),
+                        }),
+                        (0, i.jsx)("div", {
+                          className: t7().mrow,
+                          children: (0, i.jsx)(e0, {
+                            value: n.band,
+                            onChange: (e) => t.set("band", +e),
+                            label: O(e, "band.label", "Depth band"),
+                            options: v.map((e) => ({
+                              value: e,
+                              label: "\xb1" + e + "%",
+                            })),
+                          }),
+                        }),
+                        (0, i.jsx)(e3, {
+                          children: O(e, "sub.label", "Sub panes"),
+                        }),
+                        D.map((s) =>
+                          (0, i.jsx)(
+                            e5,
+                            {
+                              checked: n.subs[s],
+                              onChange: () =>
+                                t.set("subs", { ...n.subs, [s]: !n.subs[s] }),
+                              name: O(e, "sub." + s, sf[s][0]),
+                            },
+                            s,
+                          ),
+                        ),
+                        (0, i.jsx)(e3, {
+                          children: O(e, "lay.label", "Layers"),
+                        }),
+                        L.map((t) =>
+                          (0, i.jsx)(
+                            e5,
+                            {
+                              checked: n.flags[t],
+                              onChange: () => V(t),
+                              name: O(e, "lay." + t, sp[t][0]),
+                            },
+                            t,
+                          ),
+                        ),
+                      ],
+                    }),
+                  }),
+                  (0, i.jsx)("div", { className: t7().sp }),
+                  (0, i.jsxs)(eJ, {
+                    className: t7().ib,
+                    onClick: () => k(!0),
+                    disabled: !t.D.H.length,
+                    title: O(
+                      e,
+                      "shot.btnTip",
+                      "Capture the chart as an image; add arrows, boxes and text, then copy or download",
+                    ),
+                    children: [
+                      (0, i.jsx)(eX.xpe, {}),
+                      (0, i.jsx)("span", {
+                        className: t7().tx,
+                        children: O(e, "shot.btn", "Screenshot"),
+                      }),
+                    ],
+                  }),
+                  (0, i.jsxs)(eJ, {
+                    className: t7().ib,
+                    onClick: () => s && s.resetView(),
+                    title: O(
+                      e,
+                      "reset.tip",
+                      "Back to the latest at the default zoom (double-click the chart does the same)",
+                    ),
+                    "aria-label": O(e, "reset.label", "Reset view"),
+                    children: [
+                      (0, i.jsx)(eX.fNY, {}),
+                      (0, i.jsx)("span", {
+                        className: t7().tx,
+                        children: O(e, "reset.label", "Reset view"),
+                      }),
+                    ],
+                  }),
+                  (0, i.jsx)(eJ, {
+                    icon: !0,
+                    className: t7().ib,
+                    onClick: A.toggle,
+                    title: A.on
+                      ? O(e, "full.exit", "Exit full screen")
+                      : O(e, "full.enter", "Full screen"),
+                    "aria-label": A.on
+                      ? O(e, "full.exit", "Exit full screen")
+                      : O(e, "full.enter", "Full screen"),
+                    "aria-pressed": A.on,
+                    children: A.on
+                      ? (0, i.jsx)(eX.z7w, {})
+                      : (0, i.jsx)(eX.P7m, {}),
+                  }),
+                ],
+              }),
+              (0, i.jsxs)("div", {
+                ref: u,
+                className: t7().subbar,
+                children: [
+                  (0, i.jsx)("span", {
+                    className: F(t7().lbl, t7().opt),
+                    title: O(
+                      e,
+                      "tick.tip",
+                      "The price range of each row; the finest by default",
+                    ),
+                    children: O(e, "tick.label", "Price grid"),
+                  }),
+                  (0, i.jsx)(e1, {
+                    ariaLabel: O(e, "tick.label", "Price grid"),
+                    value: E,
+                    onChange: (e) => {
+                      t.set("tick", e);
+                    },
+                    options: R,
+                  }),
+                  (0, i.jsx)("span", {
+                    className: F(t7().lbl, t7().opt),
+                    title: O(
+                      e,
+                      "band.tip",
+                      "How far above and below the price the depth and imbalance are counted",
+                    ),
+                    children: O(e, "band.label", "Depth band"),
+                  }),
+                  (0, i.jsx)(e1, {
+                    ariaLabel: O(e, "band.label", "Depth band"),
+                    value: n.band,
+                    onChange: (e) => t.set("band", +e),
+                    options: v.map((e) => ({
+                      value: e,
+                      label: "\xb1" + e + "%",
+                    })),
+                  }),
+                  (0, i.jsx)("span", { className: t7().vsep }),
+                  (0, i.jsxs)(e2, {
+                    width: 330,
+                    label: O(e, "sub.label", "Sub panes"),
+                    trigger: (0, i.jsxs)(i.Fragment, {
+                      children: [
+                        O(e, "sub.label", "Sub panes"),
+                        (0, i.jsx)("b", { className: t7().n, children: W }),
+                        (0, i.jsx)(e4, {}),
+                      ],
+                    }),
+                    children: [
+                      (0, i.jsx)(e3, {
+                        children: O(
+                          e,
+                          "sub.hint",
+                          "Sub panes (drag the dividers up or down)",
+                        ),
+                      }),
+                      D.map((s) =>
+                        (0, i.jsx)(
+                          e5,
+                          {
+                            checked: n.subs[s],
+                            onChange: () =>
+                              t.set("subs", { ...n.subs, [s]: !n.subs[s] }),
+                            name: O(e, "sub." + s, sf[s][0]),
+                            hint: O(e, "sub." + s + "Hint", sf[s][1]),
+                          },
+                          s,
+                        ),
+                      ),
+                    ],
+                  }),
+                  (0, i.jsxs)(e2, {
+                    width: 340,
+                    label: O(e, "lay.label", "Layers"),
+                    trigger: (0, i.jsxs)(i.Fragment, {
+                      children: [
+                        O(e, "lay.label", "Layers"),
+                        (0, i.jsx)("b", { className: t7().n, children: P }),
+                        (0, i.jsx)(e4, {}),
+                      ],
+                    }),
+                    children: [
+                      (0, i.jsx)(e3, { children: O(e, "lay.label", "Layers") }),
+                      L.map((t) =>
+                        (0, i.jsx)(
+                          e5,
+                          {
+                            checked: n.flags[t],
+                            onChange: () => V(t),
+                            name: O(e, "lay." + t, sp[t][0]),
+                            hint: O(e, "lay." + t + "Hint", sp[t][1]),
+                          },
+                          t,
+                        ),
+                      ),
+                    ],
+                  }),
+                ],
+              }),
+              (0, i.jsxs)("div", {
+                ref: o,
+                className: t7().plot,
+                tabIndex: 0,
+                "aria-label": O(
+                  e,
+                  "plot.aria",
+                  "Orderbook heatmap: drag to pan, wheel to zoom, drag the price axis to scale, double-click to reset, click to pin the book",
+                ),
+                children: [
+                  (0, i.jsx)("canvas", { ref: h }),
+                  N
+                    ? null
+                    : (0, i.jsx)("span", {
+                        className: t7().wm,
+                        "aria-hidden": "true",
+                        children: (0, i.jsx)(sc.A, {}),
+                      }),
+                  (0, i.jsx)("canvas", { ref: d }),
+                  (0, i.jsxs)("div", {
+                    className: F(t7().ploading, T && N && t7().on),
+                    role: "status",
+                    hidden: !N || t.swapping,
+                    children: [
+                      (0, i.jsx)("i", {}),
+                      O(e, "loading", "Loading…"),
+                    ],
+                  }),
+                  m
+                    ? (0, i.jsx)("div", { className: t7().edge, children: m })
+                    : null,
+                  x
+                    ? (0, i.jsx)("div", {
+                        className: t7().pnote,
+                        role: "status",
+                        children: x,
+                      })
+                    : null,
+                  p ? (0, i.jsx)(ss, { m: p }) : null,
+                ],
+              }),
+              _ && s ? (0, i.jsx)(sd, { onClose: () => k(!1) }) : null,
+            ],
+          });
+        }
+        var sb = s(41514),
+          sx = s.n(sb);
+        let sv = new Float64Array(64),
+          sy = {
+            add: { b: "Bid wall placed", a: "Ask wall placed" },
+            fill: { b: "Bid wall filled", a: "Ask wall filled" },
+            pull: { b: "Bid wall pulled", a: "Ask wall pulled" },
+          },
+          sw = ({ side: e }) => {
+            let { t } = H();
+            return "b" === e
+              ? (0, i.jsx)("span", {
+                  className: F(sx().tag, sx().buy),
+                  children: O(t, "wall.bid", "Bid wall"),
+                })
+              : (0, i.jsx)("span", {
+                  className: F(sx().tag, sx().sell),
+                  children: O(t, "wall.ask", "Ask wall"),
+                });
+          },
+          s_ = (e, t) => !!e && e.p === t.p && e.side === t.side;
+        function sk() {
+          let { t: e, term: t, chart: s } = H(),
+            a = Z(t),
+            l = t.fmt,
+            r = t.latestSnap(),
+            n = s && s.SELW,
+            o = t.NOW();
+          if (!r)
+            return a(
+              (0, i.jsx)("div", {
+                className: sx().sum,
+                children:
+                  "error" === t.status ? "—" : O(e, "loading", "Loading…"),
+              }),
+            );
+          let h = t.curWalls().slice(0, 40),
+            d = h.filter((e) => "b" === e.side).length,
+            c = l.u(t.wallMin());
+          return a(
+            (0, i.jsxs)(i.Fragment, {
+              children: [
+                (0, i.jsx)("div", {
+                  className: sx().sum,
+                  children: h.length
+                    ? O(
+                        e,
+                        "walls.sum",
+                        "{{n}} walls within \xb13% of the price: {{b}} bid, {{a}} ask. Threshold {{min}}",
+                        { n: h.length, b: d, a: h.length - d, min: c },
+                      )
+                    : O(
+                        e,
+                        "walls.none",
+                        "No walls within \xb13% of the price right now (threshold {{min}})",
+                        { min: c },
+                      ),
+                }),
+                (0, i.jsxs)("div", {
+                  className: F(sx().lrow, sx().lhead, sx().wl),
+                  children: [
+                    (0, i.jsx)("span", {
+                      children: O(e, "col.price", "Price"),
+                    }),
+                    (0, i.jsx)("span", { children: O(e, "col.side", "Side") }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: O(e, "col.size", "Size"),
+                    }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: O(e, "col.dist", "From price"),
+                    }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: O(e, "col.age", "Up for"),
+                    }),
+                  ],
+                }),
+                (0, i.jsx)("div", {
+                  className: sx().list,
+                  children: h.map((e) => {
+                    let a, h;
+                    return (0, i.jsxs)(
+                      "div",
+                      {
+                        role: "button",
+                        tabIndex: 0,
+                        className: F(sx().lrow, sx().wl, s_(n, e) && sx().sel),
+                        onClick: () => s && s.locate(e),
+                        onKeyDown: (t) => {
+                          "Enter" === t.key && s && s.locate(e);
+                        },
+                        children: [
+                          (0, i.jsx)("span", { children: l.p(e.p, eM(e.G)) }),
+                          (0, i.jsx)("span", {
+                            children: (0, i.jsx)(sw, { side: e.side }),
+                          }),
+                          (0, i.jsx)("span", {
+                            className: sx().rt,
+                            children:
+                              ((a = e.q),
+                              (h = e.usd),
+                              "usd" === t.p.unit ? l.u(h) : l.q(a)),
+                          }),
+                          (0, i.jsx)("span", {
+                            className: sx().rt,
+                            children: eD((e.p + e.G / 2) / r.mid - 1),
+                          }),
+                          (0, i.jsx)("span", {
+                            className: sx().rt,
+                            children: l.dur(o - e.first),
+                          }),
+                        ],
+                      },
+                      e.key,
+                    );
+                  }),
+                }),
+              ],
+            }),
+          );
+        }
+        function sT() {
+          let { t: e, term: t, chart: s } = H(),
+            a = Z(t),
+            r = t.fmt,
+            n = t.p,
+            o = s && s.SELW,
+            h = t.walls.ev,
+            d = { add: 0, fill: 0, pull: 0 };
+          for (let e of h) d[e.type]++;
+          let c = h
+              .filter((e) => "all" === n.evf || e.type === n.evf)
+              .slice()
+              .sort((e, t) => t.t - e.t)
+              .slice(0, 200),
+            u = (0, l.useRef)(null),
+            p = (0, E.z)(c.length, 44, u),
+            f = h.length
+              ? O(
+                  e,
+                  "ev.sum",
+                  "In the loaded time: {{a}} placed, {{f}} filled, {{p}} pulled.",
+                  { a: d.add, f: d.fill, p: d.pull },
+                ) +
+                (d.pull >= 5 && d.pull >= 2 * d.fill
+                  ? " " +
+                    O(
+                      e,
+                      "ev.spoof",
+                      "Far more pulled than filled: the large orders mostly do not want to trade.",
+                    )
+                  : "")
+              : t.D.H.length
+                ? O(
+                    e,
+                    "ev.none",
+                    "No wall has appeared or gone in the loaded time yet",
+                  )
+                : O(e, "loading", "Loading…");
+          return a(
+            (0, i.jsxs)(i.Fragment, {
+              children: [
+                (0, i.jsx)("div", {
+                  className: sx().sigf,
+                  children: (0, i.jsx)(e0, {
+                    value: n.evf,
+                    onChange: (e) => {
+                      (t.set("evf", e), p.box && (p.box.scrollTop = 0));
+                    },
+                    label: O(e, "ev.filter", "Filter events"),
+                    options: [
+                      ["all", "All"],
+                      ["fill", "Filled"],
+                      ["pull", "Pulled"],
+                      ["add", "Placed"],
+                    ].map(([t, s]) => ({
+                      value: t,
+                      label: O(e, "ev.f." + t, s),
+                    })),
+                  }),
+                }),
+                (0, i.jsx)("div", { className: sx().sum, children: f }),
+                (0, i.jsxs)("div", {
+                  ref: u,
+                  className: F(sx().lrow, sx().lhead, sx().ev),
+                  children: [
+                    (0, i.jsx)("span", { children: O(e, "col.time", "Time") }),
+                    (0, i.jsx)("span", {
+                      children: O(e, "col.event", "Event"),
+                    }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: O(e, "col.price", "Price"),
+                    }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: O(e, "col.size", "Size"),
+                    }),
+                  ],
+                }),
+                (0, i.jsxs)("div", {
+                  className: sx().list,
+                  ref: p.ref,
+                  children: [
+                    p.padTop
+                      ? (0, i.jsx)("div", {
+                          style: { height: p.padTop },
+                          "aria-hidden": "true",
+                        })
+                      : null,
+                    c.slice(p.start, p.end).map((t, a) => {
+                      let l, h;
+                      return (0, i.jsxs)(
+                        "div",
+                        {
+                          ref: 0 === a ? p.measure : void 0,
+                          role: "button",
+                          tabIndex: 0,
+                          className: F(
+                            sx().lrow,
+                            sx().ev,
+                            s_(o, t) && sx().sel,
+                          ),
+                          onClick: () => s && s.locate(t, t.t),
+                          onKeyDown: (e) => {
+                            "Enter" === e.key && s && s.locate(t, t.t);
+                          },
+                          children: [
+                            (0, i.jsxs)("span", {
+                              className: sx().tm,
+                              children: [
+                                (0, i.jsx)("b", { children: eB(t.t, !0) }),
+                                (0, i.jsx)("small", {
+                                  children:
+                                    "add" === t.type
+                                      ? ""
+                                      : O(e, "ev.up", "up {{d}}", {
+                                          d: r.dur(t.dur),
+                                        }),
+                                }),
+                              ],
+                            }),
+                            (0, i.jsx)("span", {
+                              children: (0, i.jsx)("span", {
+                                className: F(
+                                  sx().tag,
+                                  "pull" === t.type
+                                    ? sx().mute
+                                    : "b" === t.side
+                                      ? sx().buy
+                                      : sx().sell,
+                                ),
+                                children: O(
+                                  e,
+                                  "ev." + t.type + "." + t.side,
+                                  sy[t.type][t.side],
+                                ),
+                              }),
+                            }),
+                            (0, i.jsx)("span", {
+                              className: sx().rt,
+                              children: r.p(t.p, eM(t.G)),
+                            }),
+                            (0, i.jsx)("span", {
+                              className: sx().rt,
+                              children:
+                                ((l = t.q),
+                                (h = t.usd),
+                                "usd" === n.unit ? r.u(h) : r.q(l)),
+                            }),
+                          ],
+                        },
+                        t.type + t.side + t.t + "|" + t.p,
+                      );
+                    }),
+                    p.padBottom
+                      ? (0, i.jsx)("div", {
+                          style: { height: p.padBottom },
+                          "aria-hidden": "true",
+                        })
+                      : null,
+                  ],
+                }),
+              ],
+            }),
+          );
+        }
+        function sj() {
+          let { t: e, term: t, chart: s } = H(),
+            a = Z(t),
+            r = (0, l.useRef)(null),
+            n = (0, l.useRef)(null),
+            o = (0, l.useRef)(""),
+            h = t.fmt,
+            d = s ? s.cobSnap() : t.latestSnap(),
+            c = d
+              ? [
+                  t.p.sym,
+                  t.p.mkt,
+                  t.D.itv,
+                  (s && s.G.dg) || t.D.g,
+                  s && s.PIN,
+                ].join("|")
+              : "";
+          if (
+            ((0, l.useLayoutEffect)(() => {
+              let e = r.current,
+                s = n.current;
+              c &&
+                c !== o.current &&
+                e &&
+                s &&
+                !t.swapping &&
+                ((o.current = c),
+                (e.scrollTop =
+                  s.offsetTop -
+                  e.offsetTop -
+                  (e.clientHeight - s.offsetHeight) / 2));
+            }),
+            !d)
+          )
+            return a(
+              (0, i.jsx)("div", {
+                className: sx().bhead,
+                children: (0, i.jsx)("div", {
+                  className: sx().o,
+                  children:
+                    "error" === t.status ? "—" : O(e, "loading", "Loading…"),
+                }),
+              }),
+            );
+          let u = (s && s.G.dg) || t.D.g || 1,
+            p = eM(u),
+            f = Math.floor(d.mid / u) - 24;
+          ek(d, u, f, 49, sv);
+          let m = 0;
+          for (let e = 0; e < 49; e++) m = Math.max(m, sv[e]);
+          let b = [],
+            x = [],
+            v = 0,
+            y = 0;
+          for (let e = 24; e < 49; e++) {
+            let t = (f + e) * u,
+              s = sv[e];
+            t + u / 2 < d.mid ||
+              ((v += s * (t + u / 2)),
+              b.push({ p: t, v: s, cum: v, side: "a" }));
+          }
+          for (let e = 24; e >= 0; e--) {
+            let t = (f + e) * u,
+              s = sv[e];
+            t + u / 2 >= d.mid ||
+              ((y += s * (t + u / 2)),
+              x.push({ p: t, v: s, cum: y, side: "b" }));
+          }
+          let w = b.slice(0, 24),
+            _ = x.slice(0, 24),
+            k = Math.max(
+              w.length ? w[w.length - 1].cum : 0,
+              _.length ? _[_.length - 1].cum : 0,
+            ),
+            T = t.curWalls(),
+            j = s && null != s.PIN,
+            S =
+              "l" === d.src
+                ? eB(d.t, !0) + ":" + eL(d.t).slice(6)
+                : eB(d.t, !0),
+            C = (t) => {
+              let s = T.some(
+                (e) =>
+                  t.p + u / 2 >= e.p &&
+                  t.p + u / 2 < e.p + e.G &&
+                  e.side === t.side,
+              );
+              return (0, i.jsxs)(
+                "div",
+                {
+                  className: F(
+                    sx().lrow,
+                    sx().ld,
+                    "b" === t.side ? sx().ldB : sx().ldA,
+                  ),
+                  style: {
+                    "--w": (m ? (t.v / m) * 100 : 0).toFixed(1) + "%",
+                    "--cw": (k ? (t.cum / k) * 100 : 0).toFixed(1) + "%",
+                  },
+                  children: [
+                    (0, i.jsxs)("span", {
+                      className: F(
+                        sx().px,
+                        "b" === t.side ? sx().pos : sx().neg,
+                      ),
+                      children: [
+                        h.p(t.p, p),
+                        s
+                          ? (0, i.jsx)("i", {
+                              className: sx().wtag,
+                              children: O(e, "ladder.wall", "Wall"),
+                            })
+                          : null,
+                      ],
+                    }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: t.v ? h.q(t.v) : "",
+                    }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: t.v ? h.u(t.v * (t.p + u / 2)) : "",
+                    }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: h.u(t.cum),
+                    }),
+                  ],
+                },
+                t.side + t.p,
+              );
+            };
+          return a(
+            (0, i.jsxs)(i.Fragment, {
+              children: [
+                (0, i.jsxs)("div", {
+                  className: sx().bhead,
+                  children: [
+                    (0, i.jsxs)("div", {
+                      className: sx().t,
+                      children: [
+                        (0, i.jsx)("span", {
+                          children: j
+                            ? O(e, "cob.pinned", "Pinned {{t}}", { t: S })
+                            : O(e, "ladder.latest", "Latest book"),
+                        }),
+                        (0, i.jsx)("small", {
+                          children: j
+                            ? O(e, "ladder.esc", "Esc for the latest")
+                            : "l" === d.src
+                              ? O(e, "ladder.live", "Live")
+                              : O(
+                                  e,
+                                  "tip.hist",
+                                  "History \xb7 one every {{p}}",
+                                  { p: g[t.D.itv] },
+                                ),
+                        }),
+                      ],
+                    }),
+                    (0, i.jsx)("div", {
+                      className: sx().o,
+                      children: O(
+                        e,
+                        "ladder.info",
+                        "Grid {{g}} \xb7 Bid {{b}} \xb7 Ask {{a}} \xb7 Spread {{s}}",
+                        {
+                          g: h.p(u, p),
+                          b: h.p(d.bb),
+                          a: h.p(d.ba),
+                          s: h.p(d.ba - d.bb),
+                        },
+                      ),
+                    }),
+                  ],
+                }),
+                (0, i.jsxs)("div", {
+                  className: F(sx().lrow, sx().lhead, sx().ld),
+                  children: [
+                    (0, i.jsx)("span", {
+                      children: O(e, "col.price", "Price"),
+                    }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: O(e, "col.size", "Size"),
+                    }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: O(e, "col.value", "Value"),
+                    }),
+                    (0, i.jsx)("span", {
+                      className: sx().rt,
+                      children: O(e, "col.cum", "Cumulative"),
+                    }),
+                  ],
+                }),
+                (0, i.jsxs)("div", {
+                  ref: r,
+                  className: sx().list,
+                  children: [
+                    w.slice().reverse().map(C),
+                    (0, i.jsxs)("div", {
+                      ref: n,
+                      className: F(sx().lrow, sx().ld, sx().mid),
+                      children: [
+                        (0, i.jsx)("span", {
+                          className: sx().mp,
+                          children: h.p(d.mid),
+                        }),
+                        (0, i.jsx)("span", {
+                          className: sx().sp2,
+                          children: O(e, "ladder.spread", "Spread {{s}}", {
+                            s: h.p(d.ba - d.bb),
+                          }),
+                        }),
+                      ],
+                    }),
+                    _.map(C),
+                  ],
+                }),
+              ],
+            }),
+          );
+        }
+        function sS() {
+          let { t: e, term: t } = H(),
+            s = t.p.tab;
+          return (0, i.jsxs)("aside", {
+            className: sx().side,
+            children: [
+              (0, i.jsx)(eG.tU, {
+                className: sx().tabs,
+                selectedIndex: s,
+                "aria-label": O(e, "side.label", "Side panel"),
+                onChange: (e) => e !== s && t.set("tab", String(e)),
+                children: [
+                  ["ladder", "side.ladder", "Book"],
+                  ["walls", "side.walls", "Walls"],
+                  ["ev", "side.ev", "Wall events"],
+                ].map(([t, a, l]) =>
+                  (0, i.jsx)(
+                    eG.oz,
+                    {
+                      value: t,
+                      label: O(e, a, l),
+                      "data-on": t === s ? "" : void 0,
+                    },
+                    t,
+                  ),
+                ),
+              }),
+              (0, i.jsx)("div", {
+                className: sx().view,
+                role: "tabpanel",
+                children:
+                  "walls" === s
+                    ? (0, i.jsx)(sk, {})
+                    : "ev" === s
+                      ? (0, i.jsx)(sT, {})
+                      : (0, i.jsx)(sj, {}),
+              }),
+            ],
+          });
+        }
+        var sC = s(82203),
+          sM = s.n(sC),
+          sN = s(20658),
+          sA = s.n(sN);
+        let sB = [
+            "BTC",
+            "ETH",
+            "SOL",
+            "XRP",
+            "DOGE",
+            "BNB",
+            "HYPE",
+            "SUI",
+            "ADA",
+            "LINK",
+            "AVAX",
+            "LTC",
+            "ZEC",
+            "ENA",
+            "UNI",
+            "WLD",
+            "TAO",
+            "BCH",
+            "NEAR",
+            "TRX",
+          ],
+          sL = {
+            largeOrders: [
+              "Large Orders",
+              "Bid and ask walls, large trades and pulled orders.",
+            ],
+            aggBook: [
+              "Aggregated Orderbook",
+              "Orderbook depth combined across exchanges.",
+            ],
+            depth: [
+              "Depth Delta",
+              "How the gap between bid and ask depth changes.",
+            ],
+            footprint: [
+              "Footprint Chart",
+              "Taker buy and sell volume at each price within every bar.",
+            ],
+            cvd: [
+              "CVD",
+              "Cumulative taker buys minus sells: who is pushing the price.",
+            ],
+            liqHeatmap: [
+              "Liquidation Heatmap",
+              "Estimated liquidation intensity at each price, showing where liquidations are stacked.",
+            ],
+          };
+        function sD() {
+          let { t: e, term: t, fmt: s } = H(),
+            a = t.p,
+            l = (t.oiTop.length ? t.oiTop : sB)
+              .filter((e) => e !== a.sym)
+              .slice(0, 20),
+            r = (e) => (eb(j[a.mkt], e) ? a.mkt : "binance-perp"),
+            n = "en" === s.lang,
+            o = O(e, "title", "Orderbook Heatmap");
+          return (0, i.jsxs)("section", {
+            className: sA().rel,
+            "aria-labelledby": "obh-rel-h",
+            children: [
+              (0, i.jsxs)("div", {
+                className: sA().fh,
+                children: [
+                  (0, i.jsx)("h2", {
+                    id: "obh-rel-h",
+                    children: O(e, "rel.title", "Related tools"),
+                  }),
+                  (0, i.jsx)("p", {
+                    children: O(
+                      e,
+                      "rel.sub",
+                      "The heatmap shows resting limit orders; the tools below add large-order details, book depth, taker trades and liquidations.",
+                    ),
+                  }),
+                ],
+              }),
+              (0, i.jsx)("nav", {
+                className: sA().grid,
+                "aria-label": O(e, "rel.title", "Related tools"),
+                children: R.map((t) =>
+                  (0, i.jsxs)(
+                    sM(),
+                    {
+                      href: t.path,
+                      className: sA().relcard,
+                      children: [
+                        (0, i.jsx)("span", {
+                          className: sA().rico,
+                          children: (0, i.jsx)("svg", {
+                            viewBox: "0 0 17 17",
+                            "aria-hidden": "true",
+                            dangerouslySetInnerHTML: { __html: t.icon },
+                          }),
+                        }),
+                        (0, i.jsxs)("span", {
+                          className: sA().rtext,
+                          children: [
+                            (0, i.jsxs)("b", {
+                              children: [
+                                O(e, "rel." + t.id + ".name", sL[t.id][0]),
+                                n
+                                  ? null
+                                  : (0, i.jsx)("span", {
+                                      children: sL[t.id][0],
+                                    }),
+                              ],
+                            }),
+                            (0, i.jsx)("p", {
+                              children: O(
+                                e,
+                                "rel." + t.id + ".desc",
+                                sL[t.id][1],
+                              ),
+                            }),
+                          ],
+                        }),
+                      ],
+                    },
+                    t.id,
+                  ),
+                ),
+              }),
+              (0, i.jsxs)("div", {
+                className: sA().coins,
+                children: [
+                  (0, i.jsx)("h3", {
+                    children: O(
+                      e,
+                      "rel.coins",
+                      "Orderbook heatmaps of other coins",
+                    ),
+                  }),
+                  (0, i.jsx)("nav", {
+                    className: sA().chips,
+                    "aria-label": O(
+                      e,
+                      "rel.coins",
+                      "Orderbook heatmaps of other coins",
+                    ),
+                    children: l.map((s) => {
+                      let a = q(e, s);
+                      return (0, i.jsxs)(
+                        "a",
+                        {
+                          className: sA().chip,
+                          href: (0, d.Au)(s, Q(r(s))),
+                          onClick: (e) =>
+                            ((e, s) => {
+                              if (
+                                e.metaKey ||
+                                e.ctrlKey ||
+                                e.shiftKey ||
+                                e.button
+                              )
+                                return;
+                              (e.preventDefault(), t.setPair(s, r(s)));
+                              let i =
+                                window.matchMedia &&
+                                window.matchMedia(
+                                  "(prefers-reduced-motion: reduce)",
+                                ).matches;
+                              window.scrollTo({
+                                top: 0,
+                                behavior: i ? "auto" : "smooth",
+                              });
+                            })(e, s),
+                          children: [
+                            (0, i.jsx)(ta, { sym: s }),
+                            (0, i.jsx)("span", {
+                              className: sA().nm,
+                              children:
+                                a.toUpperCase() === s
+                                  ? s
+                                  : O(e, "rel.coinLink", "{{name}} ({{sym}})", {
+                                      name: a,
+                                      sym: s,
+                                    }),
+                            }),
+                            (0, i.jsx)("span", {
+                              className: sA().sfx,
+                              children: o,
+                            }),
+                          ],
+                        },
+                        s,
+                      );
+                    }),
+                  }),
+                ],
+              }),
+            ],
+          });
+        }
+        let sR = {
+          title: "FAQ",
+          sub: "How to read the orderbook heatmap, whether a wall was filled or pulled, and where the data comes from.",
+          "what.q": "What is an orderbook heatmap?",
+          "what.a1":
+            "The orderbook holds limit orders waiting to trade: bids below the price, asks above it. An exchange shows only how much rests at each price right now, and a few seconds later it has changed, so you cannot tell which orders stayed and which were placed and pulled at once.",
+          "what.a2":
+            "An orderbook heatmap (also called a liquidity heatmap) draws the whole book of each moment as one column: time runs across, price up the side, and brighter means more resting orders. Column after column, large orders become bright horizontal bands, showing how long they stayed and when they were traded away or pulled. It is the view order-flow traders know from Bookmap.",
+          "what.a3":
+            "Candles and trade bubbles sit on top. When the price reaches a bright band, it either trades through it, turns back from it, or the band disappears first: the three cases are easy to tell apart.",
+          "what.a4":
+            "An example: BTC has a bright band at 81,500, about $20M of bids, resting for 3 hours, and the price bounces twice from 81,550. Before the third drop the band fades, with no trade bubbles near it: the bids were pulled, and the price then breaks 81,500. A pulled wall is often more dangerous than a filled one.",
+          "fig.time": "Time →",
+          "fig.pulled": "Pulled",
+          "fig.pulledT": ": the ask wall goes before the price arrives",
+          "fig.filled": "Filled",
+          "fig.filledT": ": bubbles trade through it",
+          "fig.held": "Bid wall holds",
+          "fig.heldT": ": two drops bounce here",
+          "fig.key":
+            "Grey line = price \xb7 green circles = taker buys \xb7 orange-red circles = taker sells",
+          "fig.cap":
+            "Time across, price up the side, brighter = more resting orders. Above: two ask walls, one pulled before the price arrived, one traded away; below, a bid wall holds the price up.",
+          "fig.aria": "Orderbook heatmap example",
+          "h.read": "Reading the chart",
+          "h.data": "Data and controls",
+          "h.wall": "Walls",
+          "h.tool": "Tools",
+          "color.q": "How do I read the heatmap colours?",
+          "color.a1":
+            "A colour shows how much rests at that price at that moment: brighter means more. The scale comes from the largest cell size the data source reports for the pair and period when the page loads, and stays fixed while older data loads, so the same size always has the same colour. By default everything at or above 50% of that size is brightest. Adjust it with the Colour range slider in the toolbar.",
+          "color.a2":
+            "To compare sizes, look at the bars of the current book on the right, or hover a cell: the tooltip lists the 3 price levels above and below and 2 columns either side, coloured as on the chart, with the cell under the pointer framed and the bid and ask totals of its column's 7 cells below. Next to the time are that column's close and its change over one period; the line below says how long before the latest data it is, and the current price grid.",
+          "range.q": "How does the colour range slider work?",
+          "range.a1":
+            "Colour range in the toolbar is a slider with two handles that decides which colour each cell gets, on a straight scale from 0 to the largest cell size. Drag the left handle right and smaller orders all get the darkest colour, for a cleaner chart; drag the right handle left and everything above it is brightest, so thinner orders light up too. The whole colour scale lies between the two handles; by default they sit at 0 and 50%.",
+          "range.a2":
+            "Drag the part between the handles to move both at the same width; click the empty track and the nearer handle springs there; double-click the slider to reset it. The band inside shows the colour scale from darkest to brightest; the numbers after it are the sizes at the two handles, in coins or value as the Unit says.",
+          "range.a3":
+            "The handles move only when you drag them; panning and zooming the chart leave them alone. They stay at the same place on a new pair or period, while the numbers change to its largest cell size. A coarser price grid adds several cells into one, so more of the chart turns bright.",
+          "kline.q": "What are the candles on the chart?",
+          "kline.a1":
+            "Layers → Candles lays candles of the same period over the heatmap, green up and orange-red down by default. Colours → Candle colours switches to green up / red down, red up / green down, teal / red, black and white, colour-blind friendly or the bid / ask colours, or picks the up and down colours one by one. History uses the candles of the period; after the page opens, the current candle follows live trades. The best bid and ask are at the top left of the chart and in the book on the right, for the moment under the pointer; the gap between them is the spread.",
+          "bub.q": "What are the trade bubbles?",
+          "bub.a1":
+            "Each bubble is all taker trades of a short span, larger for more value: green when taker buys dominate, orange-red when taker sells do, grey when they are about even. Zoomed out, neighbouring spans merge into one bubble; hover the volume pane to see the buys and sells. After the page opens a bubble sits at the average price of its trades; in the history, where only each period's taker volume is recorded, it sits at that candle's typical price, (high + low + close) / 3.",
+          "bub.a2":
+            "Where the bubbles meet a bright band tells whether the orders were traded away or pulled.",
+          "cob.q": "How do I read the current book on the right?",
+          "cob.a1":
+            "This column shows the whole book of one moment as bars: green bids, orange-red asks, on the same price grid as the heatmap; longer bars mean more. It shows the latest book by default; click the chart to pin it to that moment, click again or press Esc to return to the latest. The Book tab of the side panel lists the same moment line by line.",
+          "subs.q": "How do I read the volume and imbalance panes?",
+          "subs.a1":
+            "In the volume pane, green bars up are taker buys and orange-red bars down are taker sells. Orderbook imbalance is bids minus asks within the depth band around the price, divided by both together: +30% means bids are much thicker than asks, −30% the opposite.",
+          "subs.a2":
+            "Imbalance only counts resting orders, and those can be pulled at any time, so read it with the trades: thick bids while the price falls often means bids keep stepping back.",
+          "source.q":
+            "Where does the data come from, and how often does it update?",
+          "source.a1":
+            "Orderbooks and trades are collected by CoinGlass from the exchanges. Once the page is open, the whole book arrives about every 2 seconds and taker trades as they happen, so the chart adds a column every 2 seconds and the walls and wall events follow. Earlier history is one whole book per period: about 2 days back at 1 minute, about 10 days at 5 minutes, about 3 months from 15 minutes to 4 hours, and over 2 years for daily books. Drag the chart to the left to load earlier data.",
+          "source.a2":
+            "Very small resting orders are left out of the recorded books, so prices far from the market look sparser than prices near it.",
+          "ex.q": "Which exchanges and pairs are covered?",
+          "ex.a1":
+            "Futures: Binance USDT perpetuals of the most traded coins, every Hyperliquid perpetual, the tradeXYZ perpetuals (stocks and indices), and BTC and ETH on OKX, Gate and Bitget. Spot: Binance USDT pairs of the most traded coins, and BTC and ETH on Coinbase, OKX, Bitget, Gate, Kraken and Bitfinex. Hyperliquid, tradeXYZ, Coinbase, Kraken and Bitfinex are USD pairs. Coin-margined and dated futures are not available, nor is Bybit.",
+          "ex.a2":
+            "BTC and ETH also have a futures aggregate and a spot aggregate that sum several exchanges' books. Click the pair button at the top to search by coin, exchange, futures or spot.",
+          "ops.q": "How do I use the chart?",
+          "ops.a1v2":
+            "Drag to pan; dragging up or down moves the prices too (the price axis turns manual). You can drag empty space in on the right and pan before the earliest data on the left. The wheel zooms time and prices together around the pointer (the price axis turns manual); drag up and down on the price axis at the right (or use the wheel there) to scale prices only, and double-click the price axis to make it automatic again; double-click the chart to return to the latest. Click the chart to pin the current book; click a wall label or band to select that wall, Esc to clear. The dividers between the chart and the panes can be dragged up and down; double-click a divider for the default heights. The imbalance pane scales to the largest swing on screen, with full scale labelled at the right.",
+          "ops.a2":
+            "While showing the latest, the chart moves on by itself; drag left to stop it and click Reset view to return. Colours, period, toggles and other settings are kept in this browser.",
+          "wall.q": "What is a bid wall / ask wall?",
+          "wall.a1":
+            "Traders call a price with far more resting orders than its neighbours a wall: below the price a bid wall (support), above it an ask wall (resistance). Here a wall is a cell worth at least 6 times the median of the cells within 1% of the price, and at least a minimum amount ($1.5M for BTC); it must show in 2 history books in a row, or for about 5 seconds live, so a flash does not count. Aggregates and 1-hour books are smooth and often no cell reaches 6 times; then the bar drops to the 4th largest cell within 3% of the price, but at least 1.5 times the median, so the most prominent bands are always marked.",
+          "wall.a2":
+            "The chart labels the walls with their size at the right, and the Walls tab lists their price, distance from the price and how long they have been up. Click a label, a band or a row in the side panel to frame that wall in gold from when it appeared until now.",
+          "fill.q": "Was a wall filled or pulled — how is that decided?",
+          "fill.a1":
+            "By whether the price reached it before it went. If the best bid / ask or a trade reached that cell, it counts as filled; if the wall went before the price got there, as pulled. The Wall events tab lists every wall placed, filled and pulled, by time.",
+          "fill.a2":
+            "History has one book per period: a wall that was touched and then pulled within that minute counts as filled, so the 1-minute period and the live part after the page opens are the most accurate.",
+          "spoof.q": "How do I spot fake walls (spoofing)?",
+          "spoof.a1":
+            "A typical fake wall rests while the price is far away and is pulled as soon as the price comes near: a bright band that breaks off before the price arrives, with no trade bubbles at its end. Another kind is placed and pulled again and again at about the same price: several pulls in a row near one price in Wall events. Such walls fake support or resistance; do not take them at face value.",
+          "size.q": "Is a bigger wall more reliable?",
+          "size.a1":
+            "Not necessarily. A resting order is not a trade, and the biggest walls are the easiest bait. More credible are walls that stay long, are still there after the price touches them once or twice, and meet heavy trading when they are filled. A wall pulled at the first touch was never meant to trade.",
+          "trade.q": "Can I trade straight from the heatmap?",
+          "trade.a1":
+            "Better not. The page only draws the book; the wall threshold and filled / pulled follow fixed rules that know nothing of the trend or the news, and iceberg orders, which show only part of their size, cannot be seen. Use it as one input together with key levels and higher timeframes.",
+          "itv.q":
+            "What is the difference between the 1-minute and 1-hour periods?",
+          "itv.a1":
+            "The period sets how often a history column is recorded: one per minute reaches back about 2 days, one per hour about 3 months. After the page opens, a column arrives about every 2 seconds whatever the period. Use 1 minute for intraday walls and 1 hour or more for larger support and resistance.",
+          "tick.q": "What are the price grid and the depth band?",
+          "tick.a1":
+            "The price grid is the price range of each row: with BTC at $10 a row, the orders within those $10 are summed into one cell. By default it is the finest the books were recorded at; a coarser grid sums more prices into each row.",
+          "tick.a2":
+            "The depth band is how far above and below the price the bid / ask depth and the imbalance are counted, \xb11% by default; the cards at the top and the imbalance pane use it.",
+          "pal.q": "How do the colour settings and bid / ask colouring work?",
+          "pal.a1":
+            "Colours has several heat scales; they change colours only, never the data. With Bid / ask colouring in the toolbar, bids below the price are green and asks above it orange-red; Heat ignores the side and shows only the size. Bid / ask colours can switch to blue / red, blue / orange or soft, and Candle colours sets the candles on their own. Reset also resets the colour range.",
+          "agg.q":
+            "How is an aggregate summed? Can I pick only some exchanges?",
+          "agg.a1":
+            "The futures aggregate sums the Binance, OKX, Gate, Bitget and Hyperliquid perpetuals; the spot aggregate sums Binance, Coinbase, OKX, Bitget, Gate, Kraken and Bitfinex spot; BTC and ETH only. Books of the same moment are added by price: exchanges quote slightly different prices, and the USD pairs (Hyperliquid, Coinbase, Kraken, Bitfinex) sit a little off the USDT pairs, so each book is first shifted by its mid-price gap; the best bid and ask are the first exchange's.",
+          "agg.a2":
+            "With an aggregate picked, the exchanges button next to the pair lets you sum only some of them, for example Binance and OKX.",
+          "shot.q": "How do I share a screenshot?",
+          "shot.a1":
+            "Click Screenshot in the toolbar: the current view is captured at twice the resolution, with the pair, period, price and time. Draw arrows, boxes, circles and text, then copy the image or download a PNG.",
+        };
+        var sE = s(71155),
+          sP = s.n(sE);
+        let sH = {
+            read: ["color", "range", "kline", "bub", "cob", "subs"],
+            data: ["source", "ex", "ops"],
+          },
+          sF = {
+            wall: ["wall", "fill", "spoof", "size", "trade"],
+            tool: ["itv", "tick", "pal", "agg", "shot"],
+          };
+        function sO({ id: e, open: t }) {
+          let { t: s } = H(),
+            a = (e) => s("liquidity_heatmap.faq." + e, { defaultValue: sR[e] });
+          return (0, i.jsxs)("details", {
+            open: t,
+            children: [
+              (0, i.jsx)("summary", { children: a(e + ".q") }),
+              (0, i.jsx)("div", {
+                className: sP().a,
+                children: Object.keys(sR)
+                  .filter((t) => t.startsWith(e + ".a"))
+                  .map((e) => (0, i.jsx)("p", { children: a(e) }, e)),
+              }),
+            ],
+          });
+        }
+        function sW() {
+          let { t: e } = H(),
+            t = (t) => e("liquidity_heatmap.faq." + t, { defaultValue: sR[t] }),
+            s = (e) =>
+              Object.entries(e).map(([e, s]) =>
+                (0, i.jsxs)(
+                  l.Fragment,
+                  {
+                    children: [
+                      (0, i.jsx)("h4", { children: t("h." + e) }),
+                      s.map((e) =>
+                        (0, i.jsx)(sO, { id: e, open: "color" === e }, e),
+                      ),
+                    ],
+                  },
+                  e,
+                ),
+              );
+          return (0, i.jsxs)("section", {
+            id: "obh-faq",
+            className: sP().faq,
+            "aria-labelledby": "obh-faq-h",
+            children: [
+              (0, i.jsxs)("div", {
+                className: sP().fh,
+                children: [
+                  (0, i.jsx)("h2", { id: "obh-faq-h", children: t("title") }),
+                  (0, i.jsx)("p", { children: t("sub") }),
+                ],
+              }),
+              (0, i.jsxs)("article", {
+                className: sP().what,
+                children: [
+                  (0, i.jsxs)("div", {
+                    children: [
+                      (0, i.jsx)("h3", { children: t("what.q") }),
+                      (0, i.jsx)("p", { children: t("what.a1") }),
+                      (0, i.jsx)("p", { children: t("what.a2") }),
+                      (0, i.jsx)("p", { children: t("what.a3") }),
+                      (0, i.jsx)("p", { children: t("what.a4") }),
+                    ],
+                  }),
+                  (0, i.jsxs)("figure", {
+                    className: sP().fig,
+                    children: [
+                      (0, i.jsxs)("svg", {
+                        viewBox: "0 0 520 262",
+                        role: "img",
+                        "aria-label": t("fig.aria"),
+                        children: [
+                          (0, i.jsxs)("g", {
+                            className: sP().ax,
+                            textAnchor: "end",
+                            children: [
+                              (0, i.jsx)("text", {
+                                x: "46",
+                                y: "60",
+                                children: "81,700",
+                              }),
+                              (0, i.jsx)("text", {
+                                x: "46",
+                                y: "102",
+                                children: "81,650",
+                              }),
+                              (0, i.jsx)("text", {
+                                x: "46",
+                                y: "146",
+                                children: "81,600",
+                              }),
+                              (0, i.jsx)("text", {
+                                x: "46",
+                                y: "196",
+                                children: "81,550",
+                              }),
+                              (0, i.jsx)("line", {
+                                x1: "52",
+                                y1: "236",
+                                x2: "500",
+                                y2: "236",
+                              }),
+                              (0, i.jsx)("text", {
+                                x: "500",
+                                y: "252",
+                                children: t("fig.time"),
+                              }),
+                            ],
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h1,
+                            x: "52",
+                            y: "74",
+                            width: "448",
+                            height: "5",
+                            rx: "1",
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h1,
+                            x: "52",
+                            y: "120",
+                            width: "448",
+                            height: "5",
+                            rx: "1",
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h1,
+                            x: "52",
+                            y: "164",
+                            width: "448",
+                            height: "5",
+                            rx: "1",
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h1,
+                            x: "52",
+                            y: "214",
+                            width: "448",
+                            height: "5",
+                            rx: "1",
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h2,
+                            x: "52",
+                            y: "52",
+                            width: "216",
+                            height: "8",
+                            rx: "1.5",
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h3,
+                            x: "110",
+                            y: "52",
+                            width: "158",
+                            height: "8",
+                            rx: "1.5",
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h2,
+                            x: "52",
+                            y: "94",
+                            width: "332",
+                            height: "8",
+                            rx: "1.5",
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h3,
+                            x: "96",
+                            y: "94",
+                            width: "230",
+                            height: "8",
+                            rx: "1.5",
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h2,
+                            x: "326",
+                            y: "94",
+                            width: "58",
+                            height: "8",
+                            rx: "1.5",
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h3,
+                            x: "52",
+                            y: "188",
+                            width: "448",
+                            height: "9",
+                            rx: "1.5",
+                          }),
+                          (0, i.jsx)("rect", {
+                            className: sP().h4,
+                            x: "88",
+                            y: "188",
+                            width: "412",
+                            height: "9",
+                            rx: "1.5",
+                          }),
+                          (0, i.jsx)("polyline", {
+                            className: sP().px,
+                            points:
+                              "52,154 80,146 100,164 120,186 132,180 150,154 170,144 190,169 210,187 222,178 240,154 262,150 290,144 310,132 330,116 350,108 370,106 384,100 400,90 430,78 460,70 500,66",
+                          }),
+                          (0, i.jsx)("circle", {
+                            className: sP().us,
+                            cx: "121",
+                            cy: "186",
+                            r: "6",
+                          }),
+                          (0, i.jsx)("circle", {
+                            className: sP().us,
+                            cx: "211",
+                            cy: "187",
+                            r: "7",
+                          }),
+                          (0, i.jsx)("circle", {
+                            className: sP().ub,
+                            cx: "342",
+                            cy: "103",
+                            r: "5",
+                          }),
+                          (0, i.jsx)("circle", {
+                            className: sP().ub,
+                            cx: "358",
+                            cy: "101",
+                            r: "7",
+                          }),
+                          (0, i.jsx)("circle", {
+                            className: sP().ub,
+                            cx: "373",
+                            cy: "99",
+                            r: "9",
+                          }),
+                          (0, i.jsx)("circle", {
+                            className: sP().ub,
+                            cx: "386",
+                            cy: "95",
+                            r: "6",
+                          }),
+                          (0, i.jsx)("line", {
+                            className: sP().l,
+                            x1: "268",
+                            y1: "56",
+                            x2: "282",
+                            y2: "40",
+                          }),
+                          (0, i.jsxs)("text", {
+                            className: sP().t,
+                            x: "286",
+                            y: "38",
+                            children: [
+                              (0, i.jsx)("tspan", {
+                                className: sP().k,
+                                children: t("fig.pulled"),
+                              }),
+                              t("fig.pulledT"),
+                            ],
+                          }),
+                          (0, i.jsx)("line", {
+                            className: sP().l,
+                            x1: "384",
+                            y1: "102",
+                            x2: "396",
+                            y2: "124",
+                          }),
+                          (0, i.jsxs)("text", {
+                            className: sP().t,
+                            x: "400",
+                            y: "132",
+                            children: [
+                              (0, i.jsx)("tspan", {
+                                className: sP().k,
+                                children: t("fig.filled"),
+                              }),
+                              t("fig.filledT"),
+                            ],
+                          }),
+                          (0, i.jsx)("line", {
+                            className: sP().l,
+                            x1: "166",
+                            y1: "197",
+                            x2: "176",
+                            y2: "214",
+                          }),
+                          (0, i.jsxs)("text", {
+                            className: sP().t,
+                            x: "180",
+                            y: "228",
+                            children: [
+                              (0, i.jsx)("tspan", {
+                                className: sP().k,
+                                children: t("fig.held"),
+                              }),
+                              t("fig.heldT"),
+                            ],
+                          }),
+                          (0, i.jsx)("text", {
+                            className: sP().t,
+                            x: "60",
+                            y: "252",
+                            children: t("fig.key"),
+                          }),
+                        ],
+                      }),
+                      (0, i.jsx)("figcaption", { children: t("fig.cap") }),
+                    ],
+                  }),
+                ],
+              }),
+              (0, i.jsxs)("div", {
+                className: sP().cols,
+                children: [
+                  (0, i.jsx)("div", { className: sP().col, children: s(sH) }),
+                  (0, i.jsx)("div", { className: sP().col, children: s(sF) }),
+                ],
+              }),
+            ],
+          });
+        }
+        function sV({ init: e }) {
+          let { t, i18n: s } = (0, n.Bd)(),
+            a = (0, r.useRouter)(),
+            c = (0, l.useMemo)(() => new eU(e), []),
+            p = (0, l.useSyncExternalStore)(
+              c.subscribe,
+              c.getVersion,
+              c.getVersion,
+            ),
+            [f, m] = (0, l.useState)(null),
+            g = (0, l.useMemo)(() => {
+              let e = new Map();
+              return (s, i) => {
+                if (i && Object.keys(i).some((e) => "defaultValue" !== e))
+                  return t(s, i);
+                let a = e.get(s);
+                return (void 0 === a && ((a = t(s, i)), e.set(s, a)), a);
+              };
+            }, [t, s.language]);
+          ((0, l.useMemo)(() => c.setLang(s.language, g), [g]),
+            (0, l.useEffect)(() => (c.start(), () => c.dispose()), []));
+          let { mode: b, systemMode: x } = (0, o.Ut)(),
+            v = ("system" === b ? x : b) === "light",
+            y = (0, l.useRef)(null),
+            [w, _] = (0, l.useState)("Arial, sans-serif");
+          ((0, l.useEffect)(() => {
+            let e = () =>
+              y.current &&
+              _(getComputedStyle(y.current).fontFamily || "Arial, sans-serif");
+            (e(),
+              document.fonts &&
+                document.fonts.ready &&
+                document.fonts.ready.then(e));
+          }, []),
+            (0, l.useEffect)(() => {
+              f && f.setTheme(v, w);
+            }, [f, v, w]),
+            (0, l.useEffect)(() => {
+              f && (f.applyColors(), f.markBase(), f.markOver());
+            }, [f, s.language]));
+          let k = c.p,
+            T = (0, l.useRef)("");
+          (0, l.useEffect)(() => {
+            if (!c.started) return;
+            let { symbol: e, exName: t, type: s, ...i } = a.query,
+              l = (0, d.Au)(k.sym, Q(k.mkt));
+            if (l === (0, d.Au)(String(e), { exName: t, type: s })) {
+              T.current = "";
+              return;
+            }
+            T.current !== l &&
+              ((T.current = l),
+              a.replace((0, d.Au)(k.sym, Q(k.mkt), i), void 0, {
+                shallow: !0,
+                scroll: !1,
+              }));
+          }, [k.sym, k.mkt, p]);
+          let S = j[k.mkt],
+            C = S.pair ? S.ex + " " + S.pair(k.sym) : k.sym,
+            M = {
+              coin: q(g, k.sym),
+              defaultValue:
+                "{{coin}} Liquidity & Orderbook Heatmap | CoinGlass",
+            },
+            N = (0, l.useMemo)(
+              () => ({
+                term: c,
+                chart: f,
+                setChart: m,
+                version: p,
+                t: g,
+                fmt: c.fmt,
+                light: v,
+                font: w,
+              }),
+              [c, f, p, g, v, w],
+            );
+          return (0, i.jsx)(P.Provider, {
+            value: N,
+            children: (0, i.jsxs)("div", {
+              ref: y,
+              className: u().root,
+              style: f ? f.cssVars : void 0,
+              children: [
+                (0, i.jsx)(h.A, {
+                  title: "liquidity_heatmap.seo.t",
+                  d: "liquidity_heatmap.d",
+                  tObj: M,
+                  dObj: { symbol: C.trim() },
+                }),
+                (0, i.jsx)(tf, {}),
+                (0, i.jsx)(tb, {}),
+                (0, i.jsx)(t_, {}),
+                (0, i.jsxs)("div", {
+                  className: u().main,
+                  children: [(0, i.jsx)(sg, {}), (0, i.jsx)(sS, {})],
+                }),
+                (0, i.jsx)(sD, {}),
+                (0, i.jsx)(sW, {}),
+              ],
+            }),
+          });
+        }
+        var sq = !0;
+        function sI({ init: e }) {
+          return (0, i.jsx)(sV, { init: e });
+        }
+        sI.getLayout = function (e) {
+          return (0, i.jsx)(a.A, { children: e });
+        };
+      },
+    },
+    (e) => {
+      (e.O(
+        0,
+        [
+          47532, 4958, 15789, 45474, 36501, 34790, 88185, 38370, 16301, 69897,
+          84023, 12985, 62256, 55394, 25727, 89831, 28906, 73305, 90507, 66728,
+          90636, 46593, 38792,
+        ],
+        () => e((e.s = 81589)),
+      ),
+        (_N_E = e.O()));
+    },
+  ]));

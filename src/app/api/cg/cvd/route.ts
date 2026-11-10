@@ -133,7 +133,7 @@ export async function GET(req: NextRequest) {
   const key = `${sym}|${itvKey}|${limit}`;
   let built: { inst: CvdInstrument[]; priceKey: string; series: CvdSeries; loaded: { key: string; ok: boolean }[]; itv: { api: string; ms: number } };
   const hit = cache.get(key);
-  if (hit && Date.now() - hit.at < 45_000 && hit.body && typeof hit.body === "object" && "built" in (hit.body as object)) {
+  if (hit && Date.now() - hit.at < 15_000 && hit.body && typeof hit.body === "object" && "built" in (hit.body as object)) {
     built = (hit.body as { built: typeof built }).built;
   } else {
     try {

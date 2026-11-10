@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePolling } from "./use-cg-data";
 import CvdCanvas from "./charts/cvd-canvas";
 import { assetOf } from "@/lib/cg/assets";
+import { useLiveForming } from "@/lib/live/forming";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -96,7 +97,7 @@ export default function CvdTool({ sym = "BTC" }: { sym?: string }) {
 
   const q = usePolling<CvdResponse>(
     `/api/cg/cvd?sym=${sym}&itv=${itv}&limit=1500&mode=${mode === "total" ? "total" : mode}&anchor=${anchor}`,
-    60_000
+    15_000
   );
   // defense-in-depth: never render data that belongs to another symbol
   const d = q.data && q.data.sym === sym ? q.data : undefined;
@@ -105,6 +106,15 @@ export default function CvdTool({ sym = "BTC" }: { sym?: string }) {
   const decs = assetOf(sym)?.priceDecs ?? 2;
   const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
   const quad = k ? QUADRANTS[k.quadrant] ?? QUADRANTS.partial : null;
+
+  // REAL-TIME tape: the forming bar's taker delta off the Binance perp WS —
+  // the same sub-100ms stream the footprint overlay uses (Binance share,
+  // labeled as such; the multi-venue CVD resyncs every 15 s)
+  const forming = useLiveForming(sym, itv);
+  const liveDeltaUsd =
+    forming && forming.lastPrice != null && forming.barTs > 0
+      ? (forming.buyQty - forming.sellQty) * forming.lastPrice
+      : null;
 
   return (
     <div className="flex flex-col gap-3">
@@ -187,7 +197,17 @@ export default function CvdTool({ sym = "BTC" }: { sym?: string }) {
       ) : (
         <>
           {/* KPI cards — the exact header set of the /cvd page */}
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
+            <Kpi
+              label={`Live delta · ${ITVS.find((i) => i.v === itv)?.l ?? itv} tape`}
+              value={liveDeltaUsd != null ? `${liveDeltaUsd >= 0 ? "+" : "−"}$${fmtM(Math.abs(liveDeltaUsd))}` : "—"}
+              sub={
+                forming && forming.lastPrice != null
+                  ? `Binance ws · ${fmtM(forming.buyQty)} buy vs ${fmtM(forming.sellQty)} sell ${sym}`
+                  : "waiting for tape…"
+              }
+              tone={liveDeltaUsd != null ? (liveDeltaUsd >= 0 ? "up" : "down") : undefined}
+            />
             <Kpi
               label={`Futures CVD · ${anchor}`}
               value={`${k.perpCvd >= 0 ? "+" : ""}${fmtM(k.perpCvd)}`}

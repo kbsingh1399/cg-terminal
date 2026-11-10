@@ -1,0 +1,7316 @@
+! function() {
+  try {
+    var e = "u" > typeof window ? window : "u" > typeof global ? global : "u" > typeof globalThis ? globalThis : "u" > typeof self ? self : {},
+      t = (new e.Error).stack;
+    t && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[t] = "cdb2f2e8-4a00-4d95-8e47-93c03a0d7468", e._sentryDebugIdIdentifier = "sentry-dbid-cdb2f2e8-4a00-4d95-8e47-93c03a0d7468")
+  } catch (e) {}
+}(), (self.webpackChunk_N_E = self.webpackChunk_N_E || []).push([
+  [42612], {
+    17849: e => {
+      e.exports = {
+        pal: "PalettePanel_pal__RudvP",
+        ph: "PalettePanel_ph__WnYEe",
+        sec: "PalettePanel_sec__Sk57Q",
+        pre: "PalettePanel_pre__Q7wUA",
+        chip: "PalettePanel_chip__VWRje",
+        on: "PalettePanel_on___Z9MB",
+        sw: "PalettePanel_sw__srMeU",
+        rg: "PalettePanel_rg__TZJXH",
+        ft: "PalettePanel_ft__JZp8A"
+      }
+    },
+    20772: e => {
+      e.exports = {
+        faq: "Faq_faq__BaZJe",
+        fh: "Faq_fh__79H0c",
+        what: "Faq_what__x1FAi",
+        demo: "Faq_demo__9lhoI",
+        fdH: "Faq_fdH__AaaDK",
+        fdP: "Faq_fdP__sW1zX",
+        fdUp: "Faq_fdUp__OC_QE",
+        fdUpf: "Faq_fdUpf__eyt2K",
+        fdB1: "Faq_fdB1__m3Z6x",
+        fdB2: "Faq_fdB2___6ohb",
+        fdB3: "Faq_fdB3__0cAcP",
+        fdS1: "Faq_fdS1__HGPAi",
+        fdS2: "Faq_fdS2__b4_yI",
+        fdPoc: "Faq_fdPoc__wWbRB",
+        fdN: "Faq_fdN__VPtgW",
+        fdImb: "Faq_fdImb__B0RH3",
+        fdA: "Faq_fdA__ZQAp7",
+        fdT: "Faq_fdT__W07qc",
+        fdPt: "Faq_fdPt__Ad9Th",
+        qa2: "Faq_qa2__g14pM",
+        qa: "Faq_qa__Hgkhm",
+        a: "Faq_a__2QwGs"
+      }
+    },
+    25687: e => {
+      e.exports = {
+        modal: "ShotModal_modal__WTHQq",
+        content: "ShotModal_content__yQvHE",
+        box: "ShotModal_box__eR5GL",
+        sub: "ShotModal_sub__azkhr",
+        tools: "ShotModal_tools__hZNgU",
+        grow: "ShotModal_grow___Motp",
+        ib: "ShotModal_ib__tL7X7",
+        uico: "ShotModal_uico__yyzav",
+        sws: "ShotModal_sws__GpI9n",
+        sw: "ShotModal_sw__UHej4",
+        on: "ShotModal_on___Kik3",
+        stage: "ShotModal_stage__WAsVu",
+        ann: "ShotModal_ann__lW4rm",
+        txt: "ShotModal_txt__NxFjR",
+        note: "ShotModal_note__l6LKT"
+      }
+    },
+    51533: e => {
+      e.exports = {
+        rel: "Related_rel__8IIYV",
+        fh: "Related_fh__7B_Is",
+        grid: "Related_grid__8MabK",
+        card: "Related_card__zxT4D",
+        tg: "Related_tg__vew7_",
+        rtop: "Related_rtop__L17uX",
+        rico: "Related_rico__tn7Yl",
+        coins: "Related_coins__tbjfL",
+        chips: "Related_chips__brvQW",
+        chip: "Related_chip__pMvqG",
+        nm: "Related_nm__YdaKo",
+        sfx: "Related_sfx__QExeX",
+        ico: "Related_ico__zmcPB"
+      }
+    },
+    52396: e => {
+      e.exports = {
+        kpis: "KpiStrip_kpis__9Uri2",
+        kpi: "KpiStrip_kpi__7Xgii",
+        l: "KpiStrip_l__6dF82",
+        d: "KpiStrip_d__HTt_h",
+        v: "KpiStrip_v__yrBOc",
+        coin: "KpiStrip_coin__B2jpS",
+        tight: "KpiStrip_tight__4MT6M",
+        pos: "KpiStrip_pos__VfeNh",
+        neg: "KpiStrip_neg__ejAdU"
+      }
+    },
+    54224: e => {
+      e.exports = {
+        slot: "TopBar_slot__n_K17",
+        top: "TopBar_top__OYnYc",
+        compact: "TopBar_compact__ejGtD",
+        title: "TopBar_title__ltwjY",
+        foldBtn: "TopBar_foldBtn__Jqre9",
+        sheet: "TopBar_sheet__jxt1l",
+        sheetSeg: "TopBar_sheetSeg__9H8SR",
+        inlinePick: "TopBar_inlinePick__Gz5oy",
+        inlineBody: "TopBar_inlineBody__BjAdX",
+        sheetRow: "TopBar_sheetRow__DIrNP",
+        grow: "TopBar_grow__fywa7",
+        logo: "TopBar_logo__cRrCm",
+        logoPh: "TopBar_logoPh___OJRK",
+        chev: "TopBar_chev__c1bQY",
+        kind: "TopBar_kind__ENSai",
+        perp: "TopBar_perp__frhkF",
+        spot: "TopBar_spot__w8jgX",
+        pex: "TopBar_pex__CIsVC",
+        pairBtn: "TopBar_pairBtn__5DCcD",
+        pairLab: "TopBar_pairLab__9jlwV",
+        pairPop: "TopBar_pairPop__HA1xR",
+        phead: "TopBar_phead__DOSzs",
+        search: "TopBar_search__P5dJH",
+        plist: "TopBar_plist__kuENV",
+        pgh: "TopBar_pgh__2JHDB",
+        prow: "TopBar_prow__VbA7A",
+        kb: "TopBar_kb__1qHNn",
+        on: "TopBar_on__Hj5_F",
+        empty: "TopBar_empty__ZIVem",
+        aggLab: "TopBar_aggLab__8lK2S",
+        lgs: "TopBar_lgs__gtaSX",
+        vx: "TopBar_vx__15rrQ",
+        aggFt: "TopBar_aggFt__opYNk",
+        live: "TopBar_live__Y4J_3",
+        ok: "TopBar_ok__0V9N8",
+        warn: "TopBar_warn__7PsXX",
+        bad: "TopBar_bad__fKJ0w",
+        rst: "TopBar_rst__CrFKP",
+        ib: "TopBar_ib__mUXp2",
+        ico: "TopBar_ico__0Zbhy",
+        uico: "TopBar_uico__paVic",
+        ha: "TopBar_ha__ogVaC"
+      }
+    },
+    57534: e => {
+      e.exports = {
+        root: "footprint_root__R_jBF",
+        main: "footprint_main__Ma6Mz",
+        cell: "footprint_cell__k7A_f"
+      }
+    },
+    73454: e => {
+      e.exports = {
+        banner: "Banner_banner__EhBsV",
+        bad: "Banner_bad__HCRTs",
+        grow: "Banner_grow__Il_oQ"
+      }
+    },
+    75742: (e, t, s) => {
+      "use strict";
+      s.r(t), s.d(t, {
+        __N_SSP: () => sy,
+        default: () => sw
+      });
+      var i = s(6029),
+        l = s(63046),
+        a = s(55729),
+        r = s(81278),
+        n = s(83617),
+        o = s(79690),
+        h = s(75227),
+        d = s(60880),
+        c = s(57534),
+        p = s.n(c);
+      let u = (0, a.createContext)(null),
+        f = () => (0, a.useContext)(u),
+        g = null,
+        m = () => g || (g = window.matchMedia("(max-width: 640px)")),
+        b = e => {
+          let t = m();
+          return t.addEventListener("change", e), () => t.removeEventListener("change", e)
+        };
+
+      function v(e, t, s, l) {
+        let a = {};
+        for (let e of Object.keys(s)) a[e] = "\x01" + e + "\x01";
+        return String(e("footprint." + t, {
+          ...a,
+          defaultValue: l,
+          interpolation: {
+            escapeValue: !1
+          }
+        })).split("\x01").map((e, t) => t % 2 ? (0, i.jsx)("span", {
+          children: s[e]
+        }, t) : e)
+      }
+      var x = s(95284);
+      let y = ({
+          endTime: e,
+          limit: t
+        }) => ({
+          minLimit: !1,
+          ...t ? {
+            limit: t
+          } : {},
+          ...e ? {
+            endTime: e
+          } : {}
+        }),
+        w = ({
+          key: e,
+          interval: t,
+          limit: s,
+          endTime: i,
+          signal: l
+        }) => x.ud.get("/api/orderFlow", {
+          params: {
+            symbol: e + "#order_flow",
+            interval: t,
+            ...y({
+              endTime: i,
+              limit: s
+            })
+          },
+          signal: l,
+          timeout: 45e3
+        }),
+        k = ({
+          type: e,
+          exName: t,
+          keyword: s,
+          signal: i,
+          timeout: l = 15e3
+        }) => x.ud.get("/api/select/coins/tickers", {
+          params: {
+            type: e,
+            exName: t,
+            ...s ? {
+              keyword: s
+            } : {}
+          },
+          signal: i,
+          timeout: l
+        }),
+        _ = (e, t, s, i) => e ? e("footprint." + t, {
+          defaultValue: s,
+          ...i
+        }) : s,
+        T = {
+          "1m": 6e4,
+          "5m": 3e5,
+          "15m": 9e5,
+          "30m": 18e5,
+          "1h": 36e5,
+          "4h": 144e5
+        },
+        S = {
+          "1m": "m1",
+          "5m": "m5",
+          "15m": "m15",
+          "30m": "m30",
+          "1h": "h1",
+          "4h": "h4"
+        },
+        j = {
+          "1m": "1m",
+          "5m": "5m",
+          "15m": "15m",
+          "30m": "30m",
+          "1h": "1H",
+          "4h": "4H"
+        },
+        C = [{
+          id: "agg-perp",
+          agg: !0,
+          kind: "perp",
+          venues: ["binance-perp", "okx-perp", "bybit-perp", "hyperliquid-perp"]
+        }, {
+          id: "binance-perp",
+          ex: "Binance",
+          kind: "perp",
+          quote: "USDT",
+          pair: e => e + "USDT"
+        }, {
+          id: "okx-perp",
+          ex: "OKX",
+          kind: "perp",
+          quote: "USDT",
+          pair: e => e + "-USDT-SWAP"
+        }, {
+          id: "bybit-perp",
+          ex: "Bybit",
+          kind: "perp",
+          quote: "USDT",
+          pair: e => e + "USDT"
+        }, {
+          id: "hyperliquid-perp",
+          ex: "Hyperliquid",
+          kind: "perp",
+          quote: "USD",
+          pair: e => e + "-USD"
+        }, {
+          id: "agg-spot",
+          agg: !0,
+          kind: "spot",
+          venues: ["binance-spot", "coinbase-spot", "okx-spot", "bybit-spot"]
+        }, {
+          id: "binance-spot",
+          ex: "Binance",
+          kind: "spot",
+          quote: "USDT",
+          pair: e => e + "USDT"
+        }, {
+          id: "coinbase-spot",
+          ex: "Coinbase",
+          kind: "spot",
+          quote: "USD",
+          pair: e => e + "-USD"
+        }, {
+          id: "okx-spot",
+          ex: "OKX",
+          kind: "spot",
+          quote: "USDT",
+          pair: e => e + "-USDT"
+        }, {
+          id: "bybit-spot",
+          ex: "Bybit",
+          kind: "spot",
+          quote: "USDT",
+          pair: e => e + "USDT"
+        }],
+        N = Object.fromEntries(C.map(e => [e.id, e])),
+        M = C.filter(e => !e.agg),
+        D = [1.5, 2, 3, 4],
+        O = ["ba", "delta", "vol", "cnt", "avg"],
+        B = [
+          ["imb", "Imbalance", "Buys or sells at a price are N\xd7 the diagonal cell; the number is bolded and colored"],
+          ["stack", "Stacked imbalances", "3 consecutive same-side imbalances, outlined and extended right until filled"],
+          ["ua", "Unfinished auction", "Both sides traded at the high/low; marked with a dashed line and extended right until price trades beyond it"],
+          ["poc", "POC \xb7 value area", "Highest-volume price of each bar and its 70% volume range"],
+          ["pocm", "POC migration", "Connects the POCs of consecutive bars, green up and red down, to show where volume is shifting"],
+          ["npoc", "Naked POC", "POCs price hasn't revisited since, extended right (latest 12)"],
+          ["big", "Large trades", "Large trades on the exchanges"],
+          ["bigCell", "Large-trade cells (estimated)", "Prices where the average trade size is 3\xd7 the bar's or more, estimated from trade counts"]
+        ],
+        P = [
+          ["vol", "Volume", "Buys (green) and sells (red) per bar"],
+          ["delta", "Delta", "Buys minus sells per bar"],
+          ["cvd", "Cumulative Delta", "Summed from the leftmost bar in view"],
+          ["oi", "OI change", "Change in open interest per bar (futures only)"],
+          ["tbl", "Stats table", "Numbers table, one column per bar; choose rows below"]
+        ],
+        A = [
+          ["abs", "Absorption", "Selling absorbed at the low / buying absorbed at the high; circles the absorbed prices"],
+          ["trap", "Trapped traders", "Breakout buyers (or breakdown sellers) get reversed within a few bars; boxes the trapped prices"],
+          ["sdiv", "Swing divergence", "Price makes a new high/low but Cumulative Delta doesn't follow; connects the two highs (lows)"],
+          ["div", "Single-bar divergence", "Closes up on negative Delta, or down on positive Delta"],
+          ["exh", "Exhaustion", "New high/low with almost no volume at the extreme"]
+        ],
+        L = [
+          ["vol", "Volume"],
+          ["delta", "Delta"],
+          ["dpct", "Delta %"],
+          ["dmax", "Max Delta"],
+          ["dmin", "Min Delta"],
+          ["cnt", "Trades"],
+          ["avg", "Avg size"],
+          ["ratio", "Buy/sell ratio"]
+        ],
+        F = (e, t, s, i) => "Delta" === i || "Delta %" === i ? i : _(e, t + "." + s, i),
+        R = (e, t, s, i) => _(e, t + "." + s + "Hint", i),
+        V = {
+          sym: "BTC",
+          itv: "15m",
+          mkt: "binance-perp",
+          mode: "ba",
+          unit: "qty",
+          tick: "auto",
+          ratio: 3,
+          tab: "bar",
+          vp: !0,
+          bt: "time",
+          btv: "auto",
+          marks: {
+            imb: !1,
+            stack: !1,
+            ua: !1,
+            poc: !1,
+            pocm: !1,
+            npoc: !1,
+            big: !1,
+            bigCell: !1,
+            sig: !0,
+            vwap: !1
+          },
+          sigs: {
+            abs: !0,
+            div: !0,
+            sdiv: !0,
+            exh: !0,
+            trap: !0
+          },
+          sigBt: "all",
+          sigTy: "all",
+          subs: {
+            vol: !0,
+            delta: !0,
+            cvd: !1,
+            oi: !1,
+            tbl: !0
+          },
+          tbl: {
+            vol: !1,
+            delta: !1,
+            dpct: !0,
+            dmax: !0,
+            dmin: !0,
+            cnt: !0,
+            avg: !0,
+            ratio: !1
+          },
+          subRowH: 64,
+          aggV: {
+            perp: ["binance-perp", "okx-perp", "bybit-perp", "hyperliquid-perp"],
+            spot: ["binance-spot", "coinbase-spot", "okx-spot", "bybit-spot"]
+          }
+        },
+        H = ["BTC", "ETH", "SOL", "XRP", "DOGE", "BNB", "ADA", "SUI", "LINK", "AVAX", "LTC", "TRX", "DOT", "BCH", "NEAR", "APT", "HYPE", "ZEC", "UNI", "ENA", "WLD", "TAO"],
+        W = e => "string" == typeof e && /^[A-Z0-9]{1,20}$/.test(e),
+        I = e => String(e).padStart(2, "0"),
+        U = (e, t, s) => e < t ? t : e > s ? s : e,
+        E = {
+          zh: ["万", "亿"],
+          "zh-TW": ["萬", "億"],
+          ja: ["万", "億"],
+          ko: ["만", "억"]
+        },
+        z = e => {
+          let t = String(+(+e).toPrecision(10)),
+            s = t.indexOf(".");
+          return s < 0 ? 0 : t.length - s - 1
+        };
+
+      function q(e) {
+        if (!(e > 0)) return 1;
+        let t = Math.pow(10, Math.floor(Math.log10(e))),
+          s = e / t;
+        return (s <= 1 ? 1 : s <= 2 ? 2 : s <= 2.5 ? 2.5 : s <= 5 ? 5 : 10) * t
+      }
+      let Y = e => e > 0 ? "pos" : e < 0 ? "neg" : "";
+
+      function X(e, t) {
+        let s = new Date(e),
+          i = I(s.getHours()) + ":" + I(s.getMinutes());
+        return t ? I(s.getMonth() + 1) + "-" + I(s.getDate()) + " " + i : i
+      }
+      let G = e => {
+          let t = new Date(e);
+          return I(t.getHours()) + ":" + I(t.getMinutes()) + ":" + I(t.getSeconds())
+        },
+        K = (e, t = 2) => isFinite(e) ? (e > 0 ? "+" : e < 0 ? "−" : "") + Math.abs(100 * e).toFixed(t) + "%" : "—",
+        $ = (e, t) => null != e && isFinite(e) ? e.toLocaleString("en-US", {
+          minimumFractionDigits: t,
+          maximumFractionDigits: t
+        }) : "—";
+
+      function J(e, t) {
+        if (null == e || !isFinite(e)) return "—";
+        let s = Math.abs(e);
+        return s ? (e < 0 ? "−" : t && e > 0 ? "+" : "") + (s >= 1e6 ? (s / 1e6).toFixed(s >= 1e7 ? 0 : 1) + "M" : s >= 1e4 ? (s / 1e3).toFixed(0) + "K" : s >= 1e3 ? (s / 1e3).toFixed(1) + "K" : s >= 100 ? s.toFixed(0) : s >= 10 ? s.toFixed(1) : s >= .01 ? s.toFixed(2) : "<.01") : "0"
+      }
+
+      function Q(e) {
+        return null != e && isFinite(e) ? (e = Math.round(e)) >= 1e6 ? (e / 1e6).toFixed(1) + "M" : e >= 1e4 ? (e / 1e3).toFixed(0) + "K" : e >= 1e3 ? (e / 1e3).toFixed(1) + "K" : String(e) : "—"
+      }
+      let Z = e => e >= 9.95 ? String(Math.round(e)) : e.toFixed(1).replace(/\.0$/, "");
+
+      function ee(e, t) {
+        if (null == e || !isFinite(e)) return "";
+        let s = Math.abs(e);
+        return s < .005 ? "0" : (e > 0 ? t ? "+" : "" : "−") + (s >= 1e9 ? Z(s / 1e9) + "B" : s >= 1e6 ? Z(s / 1e6) + "M" : s >= 999.5 ? Z(s / 1e3) + "K" : s >= 9.95 ? String(Math.round(s)) : s >= 1 ? s.toFixed(1).replace(/\.0$/, "") : (s >= .1 ? String(+s.toPrecision(2)) : s.toFixed(2)).replace(/^0\./, "."))
+      }
+
+      function et(e, t) {
+        let s = E[e],
+          i = (e, t) => {
+            let i;
+            if (null == e || !isFinite(e)) return "—";
+            let l = Math.abs(e);
+            return i = s ? l >= 1e8 ? (l / 1e8).toFixed(l >= 1e10 ? 1 : 2) + s[1] : l >= 1e4 ? (l / 1e4).toFixed(l >= 1e6 ? 0 : 1) + s[0] : l.toFixed(0) : l >= 1e9 ? (l / 1e9).toFixed(l >= 1e11 ? 1 : 2) + "B" : l >= 1e6 ? (l / 1e6).toFixed(l >= 1e8 ? 1 : 2) + "M" : l >= 1e3 ? (l / 1e3).toFixed(l >= 1e5 ? 0 : 1) + "K" : l.toFixed(0), (e < 0 && "0" !== i ? "−" : t && e > 0 ? "+" : "") + i
+          },
+          l = () => "usd" === t();
+        return {
+          lang: e,
+          usd: l,
+          fmtU: i,
+          fmtV: (e, t, s) => l() ? i(t, s) : J(e, s),
+          fmtA: (e, t) => {
+            if (l()) return i(t);
+            if (!e || !isFinite(e)) return "0";
+            let s = Math.abs(e);
+            return s >= 10 ? J(e) : s >= 1 ? e.toFixed(2) : String(+e.toPrecision(2))
+          },
+          fmtQ: J,
+          fmtN: Q,
+          fmtC: ee,
+          fmtP: $,
+          fmtPct: K,
+          fmtT: X,
+          fmtTs: G
+        }
+      }
+      let es = ["T", "O", "H", "L", "C", "F", "ver", "OIo", "OIc"],
+        ei = e => null != e && isFinite(+e) ? +e : null;
+
+      function el(e) {
+        return {
+          step: e,
+          n: 0,
+          T: [],
+          O: [],
+          H: [],
+          L: [],
+          C: [],
+          F: [],
+          ver: [],
+          OIo: [],
+          OIc: [],
+          idx: new Map
+        }
+      }
+
+      function ea(e, t, s, i, l, a) {
+        if (!(e > 0 && s && s.length)) return null;
+        let r = s.length,
+          n = () => Array(r).fill(0);
+        return {
+          tick: e,
+          lo: t,
+          b: s.slice(),
+          s: i && i.length === r ? i.slice() : n(),
+          bc: l && l.length === r ? l.slice() : n(),
+          sc: a && a.length === r ? a.slice() : n()
+        }
+      }
+
+      function er(e, t) {
+        t.T.push(e[0]), t.O.push(e[1]), t.H.push(e[2]), t.L.push(e[3]), t.C.push(e[4]), t.F.push(ea(e[5], e[6], e[7], e[8], e[9], e[10])), t.OIo.push(ei(e[11])), t.OIc.push(ei(e[12])), t.ver.push(0), t.idx.set(e[0], t.n), t.n++
+      }
+
+      function en(e, t) {
+        for (let s of e) er(s, t)
+      }
+
+      function eo(e) {
+        e.idx = new Map;
+        for (let t = 0; t < e.n; t++) e.idx.set(e.T[t], t)
+      }
+
+      function eh(e) {
+        let t = 1 / 0;
+        for (let s of e.F) s && s.tick < t && (t = s.tick);
+        return isFinite(t) ? t : 0
+      }
+
+      function ed(e, t, s) {
+        if (!s.n) return null;
+        let i = s.T[s.n - 1];
+        if (e <= i) {
+          let t = s.idx.get(e);
+          return null == t ? null : t
+        }
+        let l = s.C[s.n - 1],
+          a = s.OIc[s.n - 1];
+        for (; i + s.step <= e;) er([i += s.step, l, l, l, l, 0, 0, null, null, null, null, a, a], s);
+        let r = s.idx.get(e);
+        return null != r && null != t && (s.O[r] = s.H[r] = s.L[r] = s.C[r] = t), null == r ? null : r
+      }
+
+      function ec(e, t) {
+        let s = {};
+        for (let e of es) s[e] = t[e];
+        for (let e of es) t[e] = [];
+        for (let i of (t.n = 0, en(e, t), es)) t[i] = t[i].concat(s[i]);
+        return t.n = t.T.length, eo(t), e.length
+      }
+
+      function ep(e, t) {
+        for (let s of e) {
+          let e = t.idx.get(s[0]);
+          if (null == e && (t.n && s[0] > t.T[t.n - 1] && (e = ed(s[0], null, t)), null == e)) {
+            t.n || er(s, t);
+            continue
+          }
+          t.O[e] = s[1], t.H[e] = s[2], t.L[e] = s[3], t.C[e] = s[4];
+          let i = ea(s[5], s[6], s[7], s[8], s[9], s[10]);
+          (i || !t.F[e]) && (t.F[e] = i), null != ei(s[12]) && (t.OIo[e] = ei(s[11]), t.OIc[e] = ei(s[12])), t.ver[e]++
+        }
+      }
+
+      function eu(e) {
+        if (!e.length) return null;
+        let t = Math.max(...e.map(e => e.tick)),
+          s = new Map,
+          i = 1 / 0,
+          l = -1 / 0;
+        for (let a of e)
+          for (let e = 0; e < a.b.length; e++) {
+            if (!(a.b[e] || a.s[e])) continue;
+            let r = Math.floor((a.lo + (e + .5) * a.tick) / t + 1e-9),
+              n = s.get(r);
+            n || (n = [0, 0, 0, 0], s.set(r, n)), n[0] += a.b[e], n[1] += a.s[e], n[2] += a.bc[e], n[3] += a.sc[e], r < i && (i = r), r > l && (l = r)
+          }
+        if (!s.size) return null;
+        let a = Array(l - i + 1).fill(0),
+          r = a.slice(),
+          n = a.slice(),
+          o = a.slice();
+        for (let [e, t] of s) {
+          let s = e - i;
+          a[s] = t[0], r[s] = t[1], n[s] = t[2], o[s] = t[3]
+        }
+        return {
+          tick: t,
+          lo: +(i * t).toPrecision(12),
+          b: a,
+          s: r,
+          bc: n,
+          sc: o
+        }
+      }
+
+      function ef(e, t) {
+        if (!e || !e.n) return 1;
+        if ("vol" === t) {
+          let t = 0,
+            s = 0;
+          for (let i = Math.max(0, e.n - 240); i < e.n; i++) {
+            let l = e.F[i];
+            if (l) {
+              for (let e = 0; e < l.b.length; e++) t += l.b[e] + l.s[e];
+              s++
+            }
+          }
+          return q(t / Math.max(1, s) * 10)
+        }
+        return q(.0025 * e.C[e.n - 1])
+      }
+
+      function eg(e, t, s, i, l) {
+        let a = [],
+          r = "vol" === i,
+          n = null;
+        for (let i = t; i <= s; i++) {
+          let t = e.H[i],
+            s = e.L[i];
+          n ? (t > n.H && (n.H = t), s < n.L && (n.L = s), n.C = e.C[i], null != e.OIc[i] && (n.oc = e.OIc[i]), null == n.oo && (n.oo = e.OIo[i])) : n = {
+            si: i,
+            T: e.T[i],
+            O: e.O[i],
+            H: t,
+            L: s,
+            C: e.C[i],
+            fs: [],
+            oo: e.OIo[i],
+            oc: e.OIc[i],
+            v: 0
+          };
+          let o = e.F[i];
+          if (o) {
+            n.fs.push(o);
+            for (let e = 0; e < o.b.length; e++) n.v += o.b[e] + o.s[e]
+          }(r ? n.v >= l : n.H - n.L >= l) && (n.j1 = i, a.push(n), n = null)
+        }
+        return n && (n.j1 = s, a.push(n)), a
+      }
+
+      function em() {
+        return {
+          agg: new Map,
+          ana: new Map,
+          sigs: [],
+          sigKey: "",
+          vw: null,
+          vwKey: "",
+          npoc: [],
+          npKey: "",
+          ua: [],
+          uaKey: "",
+          zones: [],
+          zKey: ""
+        }
+      }
+
+      function eb(e) {
+        let t = e.cache;
+        t.agg.clear(), t.ana.clear(), t.sigKey = "", t.vwKey = "", t.npKey = "", t.uaKey = "", t.zKey = ""
+      }
+
+      function ev(e, t, s) {
+        let i = e.D,
+          l = i.F[t];
+        if (!l) return null;
+        let a = e.prefs.ratio,
+          r = e.cache.agg.get(t);
+        if (r && r.dt === s && r.ratio === a && r.ver === i.ver[t] && r.gver === i.gver) return r;
+        let n = Math.floor((l.lo + .5 * l.tick) / s + 1e-9),
+          o = Math.floor((l.lo + (l.b.length - .5) * l.tick) / s + 1e-9) - n + 1,
+          h = new Float64Array(o),
+          d = new Float64Array(o),
+          c = new Float64Array(o),
+          p = new Float64Array(o);
+        for (let e = 0; e < l.b.length; e++) {
+          let t = Math.floor((l.lo + (e + .5) * l.tick) / s + 1e-9) - n;
+          h[t] += l.b[e], d[t] += l.s[e], c[t] += l.bc[e], p[t] += l.sc[e]
+        }
+        let u = n * s,
+          f = 0,
+          g = 0,
+          m = 0,
+          b = 0,
+          v = 0,
+          x = 0,
+          y = 0,
+          w = 0,
+          k = 0,
+          _ = 0,
+          T = 0,
+          S = 0,
+          j = 0,
+          C = 0,
+          N = 0;
+        for (let e = 0; e < o; e++) {
+          let t = h[e] + d[e],
+            i = h[e] - d[e],
+            l = u + (e + .5) * s;
+          f += t, g += i, m += t * l, b += i * l, v += h[e], x += h[e] * l, y += c[e] + p[e], w += c[e], t > k && (k = t, C = e), h[e] > _ && (_ = h[e]), d[e] > _ && (_ = d[e]), Math.abs(i) > T && (T = Math.abs(i)), t > 0 && N++, c[e] > S && (S = c[e]), p[e] > S && (S = p[e]);
+          let a = c[e] ? h[e] / c[e] : 0,
+            r = p[e] ? d[e] / p[e] : 0;
+          a > j && (j = a), r > j && (j = r)
+        }
+        let M = C,
+          D = C,
+          O = h[C] + d[C],
+          B = .7 * f;
+        for (; O < B && (M > 0 || D < o - 1);) {
+          let e = D < o - 1 ? h[D + 1] + d[D + 1] : -1,
+            t = M > 0 ? h[M - 1] + d[M - 1] : -1;
+          e >= t ? (D++, O += e) : (M--, O += t)
+        }
+        let P = N ? f / N : 0,
+          A = new Uint8Array(o),
+          L = new Uint8Array(o),
+          F = 0,
+          R = 0;
+        for (let e = 0; e < o; e++) {
+          let t = e > 0 ? d[e - 1] : 0,
+            s = e < o - 1 ? h[e + 1] : 0;
+          h[e] > 0 && (t > 0 ? h[e] >= a * t : h[e] >= P) && (A[e] = 1, F++), d[e] > 0 && (s > 0 ? d[e] >= a * s : d[e] >= P) && (L[e] = 1, R++)
+        }
+        let V = y ? f / y : 0,
+          H = new Uint8Array(o),
+          W = new Uint8Array(o),
+          I = 0;
+        if (V > 0)
+          for (let e = 0; e < o; e++) c[e] && h[e] / c[e] >= 3 * V && h[e] >= .5 * P && (H[e] = 1, I++), p[e] && d[e] / p[e] >= 3 * V && d[e] >= .5 * P && (W[e] = 1, I++);
+        let U = [];
+        for (let [e, t] of [
+            ["buy", A],
+            ["sell", L]
+          ]) {
+          let i = -1;
+          for (let l = 0; l <= o; l++) l < o && t[l] ? i < 0 && (i = l) : i >= 0 && (l - i >= 3 && U.push({
+            side: e,
+            k0: i,
+            k1: l - 1,
+            lo: u + i * s,
+            hi: u + l * s
+          }), i = -1)
+        }
+        let E = -1,
+          z = -1;
+        for (let e = o - 1; e >= 0; e--)
+          if (h[e] + d[e] > 0) {
+            E = e;
+            break
+          } for (let e = 0; e < o; e++)
+          if (h[e] + d[e] > 0) {
+            z = e;
+            break
+          } return r = {
+          dt: s,
+          ratio: a,
+          ver: i.ver[t],
+          gver: i.gver,
+          lo: u,
+          n: o,
+          b: h,
+          s: d,
+          bc: c,
+          sc: p,
+          vol: f,
+          dlt: g,
+          volU: m,
+          dltU: b,
+          buy: v,
+          buyU: x,
+          cnt: y,
+          bcnt: w,
+          maxCell: k,
+          maxSide: _,
+          maxAbsD: T,
+          maxCnt: S,
+          maxAvg: j,
+          barAvg: V,
+          poc: C,
+          va0: M,
+          va1: D,
+          imbB: A,
+          imbS: L,
+          nB: F,
+          nS: R,
+          bigB: H,
+          bigS: W,
+          nBig: I,
+          zones: U,
+          top: E,
+          bot: z,
+          uaHi: E >= 0 && h[E] > 0 && d[E] > 0,
+          uaLo: z >= 0 && h[z] > 0 && d[z] > 0,
+          px: f ? m / f : i.C[t]
+        }, e.cache.agg.set(t, r), r
+      }
+
+      function ex(e, t) {
+        let s = e.D,
+          i = s.F[t];
+        if (!i) return null;
+        let l = e.cache.ana.get(t);
+        if (l && l.ver === s.ver[t] && l.gver === s.gver) return l;
+        let a = s.obs.get(s.T[t]),
+          r, n, o = !1;
+        if (a && a.full) r = a.mn, n = a.mx, o = !0;
+        else {
+          let e = i.b.length,
+            l = i.lo,
+            o = i.tick,
+            h = t => U(Math.floor((t - l) / o + 1e-9), 0, e - 1),
+            d = h(s.O[t]),
+            c = h(s.H[t]),
+            p = h(s.L[t]),
+            u = h(s.C[t]),
+            f = s.C[t] >= s.O[t] ? [
+              [d, p],
+              [p, c],
+              [c, u]
+            ] : [
+              [d, c],
+              [c, p],
+              [p, u]
+            ],
+            g = new Uint16Array(e),
+            m = [];
+          for (let [e, t] of f) {
+            let s = e <= t ? 1 : -1;
+            for (let i = e; m.push(i), g[i]++, i !== t; i += s);
+          }
+          for (let t = 0; t < e; t++) !g[t] && (i.b[t] || i.s[t]) && (m.push(t), g[t] = 1);
+          let b = 0;
+          for (let e of (r = 0, n = 0, m))(b += (i.b[e] - i.s[e]) / g[e]) < r && (r = b), b > n && (n = b);
+          a && !a.full && (r = Math.min(r, a.mn), n = Math.max(n, a.mx))
+        }
+        return l = {
+          ver: s.ver[t],
+          gver: s.gver,
+          mn: r,
+          mx: n,
+          real: o
+        }, e.cache.ana.set(t, l), l
+      }
+
+      function ey(e) {
+        let t = e.n,
+          s = [],
+          i = new Float64Array(t);
+        for (let s = 0; s < t; s++) {
+          let t = e.F[s];
+          if (!t) continue;
+          let l = 0;
+          for (let e = 0; e < t.b.length; e++) l += t.b[e] + t.s[e];
+          i[s] = l
+        }
+        for (let l = 5; l < t - 1; l++) {
+          let a = e.F[l];
+          if (!a || !i[l]) continue;
+          let r = [];
+          for (let e = Math.max(0, l - 20); e < l; e++) i[e] && r.push(i[e]);
+          if (r.length < 5 || (r.sort((e, t) => e - t), i[l] < .8 * r[r.length >> 1])) continue;
+          let n = a.b.length,
+            o = i[l],
+            h = 0,
+            d = 0,
+            c = 0,
+            p = -1,
+            u = -1;
+          for (let e = 0; e < n; e++) {
+            let t = a.b[e] + a.s[e];
+            h += a.b[e] - a.s[e], d += a.b[e], c += a.s[e], t > 0 && (u < 0 && (u = e), p = e)
+          }
+          if (p < 0) continue;
+          let f = e.O[l],
+            g = e.H[l],
+            m = e.L[l],
+            b = e.C[l],
+            v = g - m,
+            x = v > 0 ? (b - m) / v : .5,
+            y = (g + m) / 2,
+            w = p - u + 1,
+            k = e => a.lo + e * a.tick;
+          if (b > f && h < 0 && -h >= .15 * o && s.push({
+              i: l,
+              t: "div",
+              side: "sell",
+              p: g,
+              r: h / o
+            }), b < f && h > 0 && h >= .15 * o && s.push({
+              i: l,
+              t: "div",
+              side: "buy",
+              p: m,
+              r: h / o
+            }), w < 5 || v <= 0) continue;
+          let _ = Math.max(2, Math.round(.2 * w)),
+            T = 0,
+            S = 0,
+            j = 0,
+            C = 0;
+          for (let e = p - _ + 1; e <= p; e++) T += a.b[e], S += a.s[e];
+          for (let e = u; e < u + _; e++) j += a.b[e], C += a.s[e];
+          c && C / c >= .3 && C > 1.2 * j && x >= .6 && s.push({
+            i: l,
+            t: "abs",
+            side: "buy",
+            p: m,
+            q: C,
+            u: C * y,
+            lo: k(u),
+            hi: k(u + _)
+          }), d && T / d >= .3 && T > 1.2 * S && x <= .4 && s.push({
+            i: l,
+            t: "abs",
+            side: "sell",
+            p: g,
+            q: T,
+            u: T * y,
+            lo: k(p - _ + 1),
+            hi: k(p + 1)
+          });
+          let N = -1 / 0,
+            M = 1 / 0;
+          for (let t = Math.max(0, l - 10); t < l; t++) e.H[t] > N && (N = e.H[t]), e.L[t] < M && (M = e.L[t]);
+          let D = Math.max(1, Math.round(.1 * w)),
+            O = 0,
+            B = 0;
+          for (let e = p - D + 1; e <= p; e++) O += a.b[e] + a.s[e];
+          for (let e = u; e < u + D; e++) B += a.b[e] + a.s[e];
+          g > N && O <= .02 * o && x <= .5 && s.push({
+            i: l,
+            t: "exh",
+            side: "sell",
+            p: g
+          }), m < M && B <= .02 * o && x >= .5 && s.push({
+            i: l,
+            t: "exh",
+            side: "buy",
+            p: m
+          });
+          let P = -1 / 0,
+            A = 1 / 0;
+          for (let t = Math.max(0, l - 5); t < l; t++) e.H[t] > P && (P = e.H[t]), e.L[t] < A && (A = e.L[t]);
+          if (g > P && d && T / d >= .3 && T > 1.5 * S) {
+            for (let i = l + 1; i <= Math.min(l + 3, t - 2) && !(e.H[i] > g); i++)
+              if (e.C[i] <= m + .25 * v) {
+                s.push({
+                  i: l,
+                  t: "trap",
+                  side: "sell",
+                  p: g,
+                  j: i,
+                  q: T,
+                  u: T * y,
+                  lo: k(p - _ + 1),
+                  hi: k(p + 1)
+                });
+                break
+              }
+          }
+          if (m < A && c && C / c >= .3 && C > 1.5 * j) {
+            for (let i = l + 1; i <= Math.min(l + 3, t - 2) && !(e.L[i] < m); i++)
+              if (e.C[i] >= g - .25 * v) {
+                s.push({
+                  i: l,
+                  t: "trap",
+                  side: "buy",
+                  p: m,
+                  j: i,
+                  q: C,
+                  u: C * y,
+                  lo: k(u),
+                  hi: k(u + _)
+                });
+                break
+              }
+          }
+        }
+        let l = new Float64Array(t),
+          a = 0;
+        for (let s = 0; s < t; s++) {
+          let t = e.F[s];
+          if (t)
+            for (let e = 0; e < t.b.length; e++) a += t.b[e] - t.s[e];
+          l[s] = a
+        }
+        let r = -1,
+          n = -1;
+        for (let a = 3; a <= t - 2 - 3; a++) {
+          let t = !0,
+            o = !0;
+          for (let s = a - 3; s <= a + 3 && (t || o); s++) s !== a && ((s < a ? e.H[s] >= e.H[a] : e.H[s] > e.H[a]) && (t = !1), (s < a ? e.L[s] <= e.L[a] : e.L[s] < e.L[a]) && (o = !1));
+          if (!t && !o) continue;
+          let h = [];
+          for (let e = Math.max(0, a - 20); e < a; e++) i[e] && h.push(i[e]);
+          h.sort((e, t) => e - t);
+          let d = .25 * (h.length ? h[h.length >> 1] : 0);
+          t && (r >= 0 && a - r <= 40 && e.H[a] > e.H[r] && l[r] - l[a] > d && s.push({
+            i: a,
+            t: "sdiv",
+            side: "sell",
+            p: e.H[a],
+            i0: r,
+            p0: e.H[r],
+            dc: l[a] - l[r]
+          }), r = a), o && (n >= 0 && a - n <= 40 && e.L[a] < e.L[n] && l[a] - l[n] > d && s.push({
+            i: a,
+            t: "sdiv",
+            side: "buy",
+            p: e.L[a],
+            i0: n,
+            p0: e.L[n],
+            dc: l[a] - l[n]
+          }), n = a)
+        }
+        return s.sort((e, t) => e.i - t.i), s
+      }
+
+      function ew(e) {
+        let t = e.D,
+          s = t.n,
+          i = e.cache,
+          l = t.gver + "|" + s + "|" + (s > 3 ? t.ver[s - 4] + "." + t.ver[s - 3] + "." + t.ver[s - 2] : "");
+        return l !== i.sigKey && (i.sigKey = l, i.sigs = ey(t)), i.sigs
+      }
+      let ek = (e, t) => !1 !== e.prefs.sigs[t.t];
+
+      function e_(e, t) {
+        let s = e.D,
+          i = e.cache,
+          l = t + "|" + e.prefs.ratio + "|" + s.gver + "|" + s.n;
+        if (l === i.zKey) return i.zones;
+        i.zKey = l;
+        let a = [];
+        for (let i = 0; i < s.n; i++) {
+          let l = ev(e, i, t);
+          if (l)
+            for (let e of l.zones) {
+              let t = -1;
+              for (let l = i + 1; l < s.n; l++)
+                if ("buy" === e.side ? s.L[l] < e.lo : s.H[l] > e.hi) {
+                  t = l;
+                  break
+                } a.push({
+                i,
+                side: e.side,
+                lo: e.lo,
+                hi: e.hi,
+                levels: e.k1 - e.k0 + 1,
+                end: t
+              })
+            }
+        }
+        return i.zones = a
+      }
+
+      function eT(e) {
+        if (!Array.isArray(e) || !e.length) return null;
+        let t = 1 / 0,
+          s = 0;
+        for (let i of e) {
+          let e = +i[0],
+            l = +i[1],
+            a = Math.min(e, l);
+          a < t && (t = a), !s && Math.abs(l - e) > 0 && (s = Math.abs(l - e))
+        }
+        if (!(s > 0) || !isFinite(t)) return null;
+        let i = 0,
+          l = e.map(e => {
+            let l = Math.round((Math.min(+e[0], +e[1]) - t) / s);
+            return l + 1 > i && (i = l + 1), [l, e]
+          }),
+          a = () => Array(i).fill(0),
+          r = {
+            tick: +s.toPrecision(10),
+            lo: t,
+            b: a(),
+            s: a(),
+            bc: a(),
+            sc: a()
+          };
+        for (let [e, t] of l) r.b[e] += +t[2] || 0, r.s[e] += +t[3] || 0, r.bc[e] += +t[8] || 0, r.sc[e] += +t[9] || 0;
+        return r
+      }
+      let eS = (e, t) => t && e ? {
+          ...e,
+          lo: e.lo + t
+        } : e,
+        ej = e => null != e && "" !== e && isFinite(+e) ? +e : null,
+        eC = (e, t = e => e) => {
+          let s = new Map;
+          for (let i of e || []) i && null != i[0] && s.set(1e3 * i[0], t(i));
+          return s
+        },
+        eN = e => e.then(e => ({
+          ok: !0,
+          v: e
+        }), e => ({
+          ok: !1,
+          e
+        }));
+      async function eM(e, t, s, i, l) {
+        let a = {
+            interval: t,
+            limit: s,
+            endTime: i ? Math.floor(i / 1e3) : 0,
+            signal: l
+          },
+          r = e.venues[0],
+          n = e.venues.length > 1,
+          o = "perp" === e.kind,
+          h = e.venues.map(e => ({
+            v: e,
+            flow: eN(w({
+              key: e.key,
+              ...a
+            })),
+            kline: e === r || n && e.usd !== r.usd ? eN((({
+              key: e,
+              interval: t,
+              limit: s,
+              endTime: i,
+              signal: l
+            }) => x.ud.get("/api/v2/kline", {
+              params: {
+                symbol: e + "#kline",
+                interval: t,
+                ...y({
+                  endTime: i,
+                  limit: s
+                })
+              },
+              signal: l,
+              timeout: 2e4
+            }))({
+              key: e.key,
+              ...a
+            })) : null,
+            oi: o ? eN((({
+              key: e,
+              interval: t,
+              limit: s,
+              endTime: i,
+              signal: l
+            }) => x.ud.get("/api/v2/kline", {
+              params: {
+                symbol: e + "#oi_kline",
+                interval: t,
+                ...y({
+                  endTime: i,
+                  limit: s
+                })
+              },
+              signal: l,
+              timeout: 2e4
+            }))({
+              key: e.key,
+              ...a
+            })) : null
+          })),
+          d = await Promise.all(h.map(async e => ({
+            v: e.v,
+            flow: await e.flow,
+            kline: e.kline && await e.kline,
+            oi: e.oi && await e.oi
+          }))),
+          c = d[0];
+        if (!c.kline.ok) throw c.kline.e;
+        let p = eC(c.kline.v.data, e => [ej(e[1]), ej(e[2]), ej(e[3]), ej(e[4])]),
+          u = [],
+          f = new Map,
+          g = new Map,
+          m = [],
+          b = [];
+        for (let e of d) {
+          if (!e.flow.ok || !Array.isArray(e.flow.v.data) || !e.flow.v.data.some(e => e && e[1])) {
+            if (e === c && !e.flow.ok) throw e.flow.e;
+            u.push(e.v.id);
+            continue
+          }
+          let t = eC(e.flow.v.data, e => eT(e[1])),
+            s = null;
+          if (e.kline && e !== c && e.kline.ok) {
+            let t = eC(e.kline.v.data, e => ej(e[4]));
+            for (let [e, i] of(s = new Map, p)) {
+              let l = t.get(e);
+              null != l && null != i[3] && s.set(e, i[3] - l)
+            }
+            let i = [...s.keys()];
+            i.length && g.set(e.v.id, s.get(i[i.length - 1]))
+          }
+          if (s)
+            for (let [e, i] of t) t.set(e, eS(i, s.get(e) || 0));
+          m.push(t);
+          let i = new Map;
+          for (let e of [...t.keys()].sort((e, t) => e - t).slice(-6)) i.set(e, t.get(e));
+          f.set(e.v.id, i), o && b.push(e.oi && e.oi.ok ? eC(e.oi.v.data, e => [ej(e[1]), ej(e[4])]) : null)
+        }
+        let v = [];
+        for (let [e, t] of [...p].sort((e, t) => e[0] - t[0])) {
+          if (t.some(e => null == e)) continue;
+          let s = [];
+          for (let t of m) {
+            let i = t.get(e);
+            i && s.push(i)
+          }
+          let i = s.length > 1 ? eu(s) : s[0] || null,
+            l = null,
+            a = null;
+          if (o && b.length && b.every(Boolean)) {
+            let t = 0,
+              s = 0,
+              i = !0;
+            for (let l of b) {
+              let a = l.get(e);
+              if (!a || null == a[0] || null == a[1]) {
+                i = !1;
+                break
+              }
+              t += a[0], s += a[1]
+            }
+            i && (l = t, a = s)
+          }
+          v.push(i ? [e, t[0], t[1], t[2], t[3], i.tick, i.lo, i.b, i.s, i.bc, i.sc, l, a] : [e, t[0], t[1], t[2], t[3], 0, 0, null, null, null, null, l, a])
+        }
+        return {
+          rows: v,
+          venueF: f,
+          offsets: g,
+          missing: u
+        }
+      }
+      let eD = {
+          dark: {
+            bg: "#0b0d11",
+            surface: "#12151b",
+            s2: "#181c24",
+            s3: "#21262f",
+            line: "#222833",
+            line2: "#313947",
+            fg: "#f4f6f9",
+            fg2: "#b7bfcc",
+            fg3: "#8b94a3",
+            grid: "rgba(160,172,195,.075)",
+            cross: "rgba(230,234,242,.35)",
+            priceBg: "#f1f1f1",
+            priceFg: "#0f0f0f"
+          },
+          light: {
+            bg: "#fafbfc",
+            surface: "#ffffff",
+            s2: "#f4f5f7",
+            s3: "#eceef2",
+            line: "#e6e8ec",
+            line2: "#d2d6dd",
+            fg: "#0f1522",
+            fg2: "#4a5568",
+            fg3: "#687386",
+            grid: "rgba(15,23,42,.055)",
+            cross: "rgba(15,23,42,.45)",
+            priceBg: "#1b2230",
+            priceFg: "#ffffff"
+          }
+        },
+        eO = {
+          dark: {
+            bid: "#3ddc97",
+            ask: "#ff5f7e",
+            up: "#2ec27e",
+            down: "#e9445f",
+            accent: "#f0b90b",
+            mag: "#5b8ff9",
+            perp: "#7ea6ff",
+            perpBg: "rgba(91,143,249,.16)",
+            spot: "#f2b25c",
+            spotBg: "rgba(242,178,92,.15)"
+          },
+          light: {
+            bid: "#0f9d63",
+            ask: "#d7304f",
+            up: "#0a8a52",
+            down: "#c42a46",
+            accent: "#c99400",
+            mag: "#2563eb",
+            perp: "#1d4ed8",
+            perpBg: "rgba(37,99,235,.1)",
+            spot: "#b45309",
+            spotBg: "rgba(217,119,6,.12)"
+          }
+        },
+        eB = {
+          dark: {
+            bid: ["#022c22", "#064e3b", "#065f46", "#047857", "#059669", "#10b981", "#34d399"],
+            ask: ["#4c0519", "#881337", "#9f1239", "#be123c", "#e11d48", "#f43f5e", "#fb7185"],
+            neu: ["#1a1f29", "#222834", "#2b3240", "#353d4d", "#414a5c", "#4f596d", "#5f6a80"],
+            bidT: "#6ee7b7",
+            askT: "#fda4af",
+            slate: "#3d4656",
+            pvOut: "#2a3242",
+            pvIn: "#2f5bd3"
+          },
+          light: {
+            bid: ["#ecfdf5", "#d1fae5", "#a7f3d0", "#6ee7b7", "#34d399", "#10b981", "#059669"],
+            ask: ["#fff1f2", "#ffe4e6", "#fecdd3", "#fda4af", "#fb7185", "#f43f5e", "#e11d48"],
+            neu: ["#f8fafc", "#f1f5f9", "#e2e8f0", "#d5dce6", "#c3ccd8", "#aab5c4", "#94a3b8"],
+            bidT: "#047857",
+            askT: "#be123c",
+            slate: "#cfd6e0",
+            pvOut: "#e3e8ef",
+            pvIn: "#93b4f5"
+          }
+        },
+        eP = [{
+          id: "default"
+        }, {
+          id: "neon",
+          bid: "#d4f54a",
+          ask: "#ef3b4a",
+          up: "#d4f54a",
+          down: "#ef3b4a"
+        }, {
+          id: "ember",
+          bid: "#d97a57",
+          ask: "#d9d9d9",
+          up: "#d97a57",
+          down: "#d9d9d9"
+        }, {
+          id: "cobalt",
+          bid: "#ef4e5a",
+          ask: "#4f86f7",
+          up: "#ef4e5a",
+          down: "#4f86f7"
+        }, {
+          id: "cinnabar",
+          bid: "#ef4e5a",
+          ask: "#4fc28a",
+          up: "#ef4e5a",
+          down: "#4fc28a"
+        }, {
+          id: "marine",
+          bid: "#3fa79c",
+          ask: "#ec5b55",
+          up: "#3fa79c",
+          down: "#ec5b55"
+        }, {
+          id: "amber",
+          bid: "#f8c740",
+          ask: "#f2762a",
+          up: "#f8c740",
+          down: "#f2762a"
+        }, {
+          id: "graphite",
+          bid: "#ebebeb",
+          ask: "#5a5a5a",
+          up: "#ebebeb",
+          down: "#5a5a5a",
+          lt: {
+            bid: "#1f1f1f",
+            ask: "#9a9a9a",
+            up: "#1f1f1f",
+            down: "#9a9a9a"
+          }
+        }, {
+          id: "dusk",
+          bid: "#a9c299",
+          ask: "#b56f79",
+          up: "#a9c299",
+          down: "#b56f79"
+        }],
+        eA = ["bid", "ask", "up", "down", "poc", "mag"],
+        eL = () => ({
+          p: "default",
+          inten: 1,
+          c: {}
+        }),
+        eF = e => "string" == typeof e && /^#[0-9a-f]{6}$/i.test(e),
+        eR = (e, t, s) => e < t ? t : e > s ? s : e,
+        eV = e => {
+          3 === (e = e.replace("#", "")).length && (e = [...e].map(e => e + e).join(""));
+          let t = parseInt(e, 16);
+          return [t >> 16 & 255, t >> 8 & 255, 255 & t]
+        },
+        eH = e => "#" + e.map(e => Math.round(eR(e, 0, 255)).toString(16).padStart(2, "0")).join(""),
+        eW = e => {
+          let t = e => (e /= 255) <= .03928 ? e / 12.92 : Math.pow((e + .055) / 1.055, 2.4);
+          return .2126 * t(e[0]) + .7152 * t(e[1]) + .0722 * t(e[2])
+        },
+        eI = (e, t) => {
+          let s = eW(e),
+            i = eW(t);
+          return (Math.max(s, i) + .05) / (Math.min(s, i) + .05)
+        };
+
+      function eU(e, t) {
+        let [s, i, l] = eV(e);
+        return `rgba(${s},${i},${l},${t})`
+      }
+
+      function eE(e, t, s) {
+        let i = eV(e),
+          l = eV(t),
+          a = 255 * (.2 > eW(l));
+        for (let e = 0; e < 24 && eI(i, l) < s; e++) i = i.map(e => e + (a - e) * .1);
+        return eH(i)
+      }
+      let ez = (e, t, s) => {
+          let i = eV(e),
+            l = eV(t);
+          return eH(i.map((e, t) => e + (l[t] - e) * s))
+        },
+        eq = (e, t, s) => eH(eV(e).map(e => e + (t - e) * s));
+
+      function eY(e, t, s, i) {
+        let l = t + "|" + Math.round(20 * s),
+          a = i && i.get(l);
+        if (a) return a;
+        let r = eV(t),
+          n = eV(e.surface),
+          o = r.map((e, t) => e * s + n[t] * (1 - s)),
+          h = e.light ? "#0f1522" : "#0b0d11";
+        return a = eI(o, [255, 255, 255]) >= eI(o, eV(h)) ? "#ffffff" : h, i && i.set(l, a), a
+      }
+      let eX = "footprintPrefs",
+        eG = (e, t, s) => e < t ? t : e > s ? s : e,
+        eK = () => JSON.parse(JSON.stringify({
+          ...V,
+          pal: eL()
+        })),
+        e$ = 0;
+      var eJ = s(90017);
+      class eQ {
+        constructor() {
+          this.ws = null, this.subs = new Map, this.timer = 0, this.last = 0, this.closed = !0, this.state = "idle", this.openedAt = 0, this.onState = null
+        }
+        setState(e) {
+          this.state !== e && (this.state = e, "open" === e && (this.openedAt = Date.now()), this.onState && this.onState(e))
+        }
+        open() {
+          "u" > typeof WebSocket && (this.closed = !1, this.connect(), clearInterval(this.timer), this.timer = setInterval(() => {
+            if (!this.closed) {
+              if (this.ws && 1 === this.ws.readyState && Date.now() - this.last > 12e3) {
+                this.drop(), this.connect();
+                return
+              }
+              if (!this.ws || this.ws.readyState > 1) return void this.connect();
+              if (1 === this.ws.readyState) try {
+                this.ws.send("ping")
+              } catch (e) {}
+            }
+          }, 5e3))
+        }
+        drop() {
+          let e = this.ws;
+          if (this.ws = null, e) {
+            e.onopen = e.onmessage = e.onclose = e.onerror = null;
+            try {
+              e.close()
+            } catch (e) {}
+          }
+          this.setState("down")
+        }
+        connect() {
+          let e;
+          if (!this.closed && (!this.ws || !(this.ws.readyState <= 1))) {
+            try {
+              e = new WebSocket("wss://wss.coinglass.com/v2/ws")
+            } catch (e) {
+              this.setState("down");
+              return
+            }
+            e.binaryType = "arraybuffer", this.ws = e, this.setState("conn"), e.onopen = () => {
+              for (let e of (this.last = Date.now(), this.setState("open"), this.subs.values())) this.send("subscribe", e)
+            }, e.onmessage = e => {
+              let t;
+              this.last = Date.now();
+              try {
+                let s = (0, eJ.B)(e.data);
+                if ("pong" === s) return;
+                t = JSON.parse(s)
+              } catch (e) {
+                return
+              }
+              let s = t && t.params && t.params.listenerGuid,
+                i = s && this.subs.get(s);
+              if (i) try {
+                i.cb(t.data)
+              } catch (e) {}
+            }, e.onclose = () => {
+              this.ws === e && (this.ws = null, this.setState("down"))
+            }, e.onerror = () => {
+              try {
+                e.close()
+              } catch (e) {}
+            }
+          }
+        }
+        send(e, t) {
+          if (this.ws && 1 === this.ws.readyState) try {
+            this.ws.send(JSON.stringify({
+              method: e,
+              params: [{
+                listenerGuid: t.id,
+                symbol: t.symbol,
+                interval: t.interval,
+                channel: t.channel
+              }]
+            }))
+          } catch (e) {}
+        }
+        subscribe(e, t) {
+          let s = {
+            ...e,
+            cb: t
+          };
+          this.subs.set(e.id, s), this.send("subscribe", s)
+        }
+        unsubscribeAll() {
+          for (let e of this.subs.values()) this.send("unsubscribe", e);
+          this.subs.clear()
+        }
+        close() {
+          this.closed = !0, clearInterval(this.timer), this.unsubscribeAll(), this.drop(), this.setState("idle")
+        }
+      }
+      let eZ = ["T", "O", "H", "L", "C", "F", "ver", "OIo", "OIc", "TE", "si"],
+        e0 = () => ({
+          sym: "",
+          itv: "",
+          mkt: "",
+          step: 9e5,
+          n: 0,
+          T: [],
+          O: [],
+          H: [],
+          L: [],
+          C: [],
+          F: [],
+          ver: [],
+          OIo: [],
+          OIc: [],
+          TE: null,
+          si: null,
+          idx: new Map,
+          obs: new Map,
+          bigs: [],
+          bigIds: new Set,
+          baseTick: 0,
+          done: !1,
+          loading: !1,
+          retryAt: 0,
+          backoff: 1e3,
+          err: "",
+          gver: 0,
+          missing: [],
+          edgeShown: !1
+        });
+      class e1 {
+        constructor(e) {
+          this.subscribe = e => (this.listeners.add(e), () => this.listeners.delete(e)), this.getVersion = () => this.version, this.notify = () => {
+            if (!(this.chart && this.chart.dragging()))
+              for (let e of (this.version++, this.listeners)) e()
+          }, this.prefs = eK(), W(e) && (this.prefs.sym = e), this.t = null, this.lang = "en", this.trMemo = new Map, this.fmt = et("en", () => this.prefs.unit), this.D = e0(), this.S = null, this.cache = em(), this.BT_THR = 0, this.VER_SEQ = 1, this.status = "loading", this.banner = null, this.edge = null, this.SEL = -1, this.PEND_T = null, this.TBS = null, this.M1S = null, this.SIGC = new Map, this.bgPollAt = 0, this.cat = new Map, this.catReady = !1, this.venueF = new Map, this.offsets = new Map, this.plan = null, this.pushAt = new Map, this.liveAt = 0, this.feedSince = 1 / 0, this.cgLast = 0, this.cgErr = "", this.chart = null, this.version = 0, this.listeners = new Set, this.gen = 0, this.timers = [], this.started = !1, this.liveDirty = !1, this.sDirty = !1, this.lastSide = 0, this.sock = new eQ, this.sock.onState = () => {
+            this.updSince(), this.notify()
+          }
+        }
+        tr(e, t, s) {
+          let i = e + "\x01" + t + (s ? "\x01" + JSON.stringify(s) : ""),
+            l = this.trMemo.get(i);
+          return void 0 === l && (l = _(this.t, e, t, s), this.trMemo.size > 4e3 && this.trMemo.clear(), this.trMemo.set(i, l)), l
+        }
+        setLang(e, t) {
+          t !== this.t && this.trMemo.clear(), this.t = t, e !== this.lang && (this.lang = e, this.fmt = et(e, () => this.prefs.unit), this.chart && this.chart.relang())
+        }
+        derived() {
+          return "time" !== this.prefs.bt
+        }
+        market() {
+          return N[this.prefs.mkt]
+        }
+        aggOf(e) {
+          return e.agg ? this.prefs.aggV[e.kind] : [e.id]
+        }
+        aggSub(e) {
+          return e.agg && this.aggOf(e).length < e.venues.length
+        }
+        mktName(e) {
+          if (e.agg) {
+            let t = "perp" === e.kind ? this.tr("mkt.aggPerp", "Aggregated futures") : this.tr("mkt.aggSpot", "Aggregated spot");
+            return this.aggSub(e) ? this.tr("mkt.aggN", "{{name}} ({{n}} exchanges)", {
+              name: t,
+              n: this.aggOf(e).length
+            }) : t
+          }
+          return "perp" === e.kind ? this.tr("mkt.perpOf", "{{ex}} Perp", {
+            ex: e.ex
+          }) : this.tr("mkt.spotOf", "{{ex}} Spot", {
+            ex: e.ex
+          })
+        }
+        instOf(e, t) {
+          let s = this.cat.get(e.id),
+            i = s && s.get(t);
+          return i ? i.inst : e.pair(t)
+        }
+        has(e, t) {
+          if (e.agg) return e.venues.filter(e => this.has(N[e], t)).length >= 2;
+          let s = this.cat.get(e.id);
+          return !this.catReady || !s || s.has(t)
+        }
+        mktPair(e, t) {
+          if (!e.agg) return this.instOf(e, t);
+          let s = this.aggOf(e).map(e => N[e].ex).join(" + ");
+          return "perp" === e.kind ? this.tr("mkt.aggPairPerp", "{{ex}} {{sym}} Perp", {
+            ex: s,
+            sym: t
+          }) : this.tr("mkt.aggPairSpot", "{{ex}} {{sym}} Spot", {
+            ex: s,
+            sym: t
+          })
+        }
+        itvLabel() {
+          return this.derived() ? "vol" === this.prefs.bt ? this.tr("bt.volN", "Volume {{v}}", {
+            v: J(this.BT_THR) + " " + this.prefs.sym
+          }) : this.tr("bt.rangeN", "Range {{v}}", {
+            v: $(this.BT_THR, z(this.BT_THR))
+          }) : j[this.prefs.itv]
+        }
+        barTime(e) {
+          let t = this.D;
+          return this.derived() && t.TE ? X(t.T[e], !0) + " – " + X(t.TE[e]) : X(t.T[e], !0)
+        }
+        barOf(e) {
+          let t = this.D;
+          if (!t.n) return null;
+          if (!this.derived()) {
+            let s = t.idx.get(Math.floor(e / t.step) * t.step);
+            return null == s ? null : s
+          }
+          if (e < t.T[0]) return null;
+          let s = 0,
+            i = t.n - 1;
+          for (; s < i;) {
+            let l = s + i + 1 >> 1;
+            t.T[l] <= e ? s = l : i = l - 1
+          }
+          return s
+        }
+        get sigs() {
+          return ew(this)
+        }
+        sigsOn() {
+          return this.sigs.filter(e => ek(this, e))
+        }
+        start(e) {
+          if (this.started) return;
+          this.started = !0;
+          let t = String(e && e.symbol || "").toUpperCase();
+          this.prefs = function() {
+            let e = eK(),
+              t = null;
+            try {
+              t = JSON.parse(window.localStorage.getItem(eX) || "null")
+            } catch (e) {
+              t = null
+            }
+            if (!t || "object" != typeof t || 1 !== t.v) return e;
+            for (let s of ["marks", "sigs", "subs", "tbl"])
+              if (t[s] && "object" == typeof t[s])
+                for (let i in e[s]) "boolean" == typeof t[s][i] && (e[s][i] = t[s][i]);
+            if (t.aggV && "object" == typeof t.aggV) {
+              for (let s of C)
+                if (s.agg && Array.isArray(t.aggV[s.kind])) {
+                  let i = s.venues.filter(e => t.aggV[s.kind].includes(e));
+                  i.length && (e.aggV[s.kind] = i)
+                }
+            }
+            W(t.sym) && (e.sym = t.sym), T[t.itv] && (e.itv = t.itv), N[t.mkt] && (e.mkt = t.mkt), O.includes(t.mode) && (e.mode = t.mode), ("qty" === t.unit || "usd" === t.unit) && (e.unit = t.unit), ("auto" === t.tick || +t.tick > 0) && (e.tick = "auto" === t.tick ? "auto" : +t.tick), D.includes(+t.ratio) && (e.ratio = +t.ratio), "boolean" == typeof t.vp && (e.vp = t.vp), ["bar", "sig", "zone"].includes(t.tab) && (e.tab = t.tab), ["time", "vol", "range"].includes(t.bt) && (e.bt = t.bt), ("auto" === t.btv || +t.btv > 0) && (e.btv = "auto" === t.btv ? "auto" : +t.btv), ["all", "time", "vol", "range"].includes(t.sigBt) && (e.sigBt = t.sigBt), ["all", "abs", "trap", "div", "exh"].includes(t.sigTy) && (e.sigTy = t.sigTy), +t.subRowH > 0 && (e.subRowH = eG(+t.subRowH, 48, 240));
+            let s = t.pal && "object" == typeof t.pal ? t.pal : {};
+            if (eP.some(e => e.id === s.p) && (e.pal.p = s.p), +s.inten > 0 && (e.pal.inten = eG(+s.inten, .5, 1.6)), s.c && "object" == typeof s.c)
+              for (let t of eA) eF(s.c[t]) && (e.pal.c[t] = s.c[t].toLowerCase());
+            return e
+          }(), W(t) && (this.prefs.sym = t), this.sock.open(), this.loadCatalog(), this.load();
+          let s = e => () => {
+            ("u" < typeof document || !document.hidden) && e()
+          };
+          this.timers.push(setInterval(s(() => this.pollTail()), 1e4)), this.timers.push(setInterval(s(() => this.pollPush()), 3e3)), this.timers.push(setInterval(() => {
+            this.sDirty && this.S && (this.sDirty = !1, this.rebuildDerived(!0), this.liveDirty = !0), this.liveDirty && this.D.n && (this.liveDirty = !1, this.chart && this.chart.markBase(), Date.now() - this.lastSide > 800 && !(this.chart && this.chart.dragging()) && (this.lastSide = Date.now(), this.notify()))
+          }, 250)), this.timers.push(setInterval(() => this.notify(), 5e3)), this.onVis = () => {
+            document.hidden || this.pollTail()
+          }, document.addEventListener("visibilitychange", this.onVis), this.notify()
+        }
+        dispose() {
+          for (let e of this.timers) clearInterval(e);
+          this.timers = [], this.gen++, this.started = !1, this.onVis && document.removeEventListener("visibilitychange", this.onVis), this.sock.close()
+        }
+        attachChart(e) {
+          this.chart = e, e && this.D.n && e.dataChanged(!0)
+        }
+        save() {
+          var e;
+          e = this.prefs, clearTimeout(e$), e$ = setTimeout(() => {
+            try {
+              window.localStorage.setItem(eX, JSON.stringify({
+                ...e,
+                v: 1
+              }))
+            } catch (e) {}
+          }, 200)
+        }
+        set(e, t = "base") {
+          (this.prefs = {
+            ...this.prefs,
+            ...e
+          }, this.save(), "load" === t) ? this.load(): (this.chart && ("layout" === t ? this.chart.relayout() : "colors" === t ? this.chart.recolor() : this.chart.markBase(), this.chart.markOver()), this.notify())
+        }
+        setGroup(e, t, s) {
+          this.set({
+            [e]: {
+              ...this.prefs[e],
+              [t]: s
+            }
+          }, "subs" === e || "tbl" === e ? "layout" : "base"), "marks" === e && "big" === t && s && "ready" === this.status && !this.D.bigs.length && this.loadBigs(this.gen, this.D.T[0], Date.now())
+        }
+        setMode(e) {
+          this.set({
+            mode: e
+          })
+        }
+        setUnit(e) {
+          this.set({
+            unit: e
+          })
+        }
+        setTick(e) {
+          this.set({
+            tick: e
+          })
+        }
+        setRatio(e) {
+          this.cache.zKey = "", this.set({
+            ratio: e
+          })
+        }
+        toggleVp() {
+          this.set({
+            vp: !this.prefs.vp
+          }, "layout")
+        }
+        setTab(e) {
+          this.set({
+            tab: e
+          })
+        }
+        setSigBt(e) {
+          this.set({
+            sigBt: e
+          })
+        }
+        setSigTy(e) {
+          this.set({
+            sigTy: e
+          })
+        }
+        setSubRowH(e) {
+          this.prefs = {
+            ...this.prefs,
+            subRowH: e
+          }, this.save()
+        }
+        setPal(e) {
+          this.set({
+            pal: e
+          }, "colors")
+        }
+        setItv(e) {
+          T[e] && e !== this.prefs.itv && this.set({
+            itv: e
+          }, "load")
+        }
+        setBt(e) {
+          let t = this.derived(),
+            s = this.TBS && this.TBS.itv === this.prefs.itv;
+          if (e === this.prefs.bt) return;
+          if ("ready" !== this.status || ("time" === e ? !(t && s && this.TBS.n) : !t && !(this.M1S && this.M1S.n))) return void this.set({
+            bt: e,
+            btv: "auto"
+          }, "load");
+          if (this.prefs = {
+              ...this.prefs,
+              bt: e,
+              btv: "auto"
+            }, this.save(), t && "time" !== e) {
+            this.BT_THR = this.btThr(), this.rebuildDerived(!1), this.D.baseTick = eh(this.D), this.SEL = -1, this.swapped();
+            return
+          }
+          let i = this.D,
+            l = this.S,
+            a = this.venueF;
+          this.gen++, this.closeLive();
+          let r = this.D = {
+            ...e0(),
+            sym: i.sym,
+            itv: i.itv,
+            mkt: i.mkt,
+            bigs: i.bigs,
+            bigIds: i.bigIds,
+            missing: i.missing
+          };
+          if (this.cache = em(), this.SEL = -1, this.SIGC.clear(), "time" === e) {
+            let e = this.TBS;
+            for (let t of ["T", "O", "H", "L", "C", "F", "ver", "OIo", "OIc"]) r[t] = e[t];
+            r.n = e.n, r.idx = e.idx, r.step = T[r.itv], this.venueF = new Map(e.venueF || []), this.S = null, this.TBS = null, this.M1S = {
+              ...l,
+              v: 1,
+              venueF: a
+            }
+          } else this.S = this.M1S, this.venueF = new Map(this.M1S.venueF || []), this.M1S = null, r.step = 6e4, this.TBS = {
+            ...i,
+            v: 1,
+            venueF: a
+          }, this.BT_THR = this.btThr(), this.rebuildDerived(!1);
+          r.baseTick = eh(r), this.openLive(), this.bgPollAt = 0, this.swapped()
+        }
+        swapped() {
+          if (this.chart && this.chart.dataChanged(!0), null != this.PEND_T) {
+            let e = this.barOf(this.PEND_T);
+            this.PEND_T = null, null != e && this.jumpTo(e)
+          }
+          this.notify()
+        }
+        setBtv(e) {
+          this.prefs = {
+            ...this.prefs,
+            btv: e
+          }, this.save(), this.BT_THR = this.btThr(), this.rebuildDerived(!1), this.D.baseTick = eh(this.D), this.chart && this.chart.resetView(), this.notify()
+        }
+        resetAll() {
+          let {
+            sym: e,
+            mkt: t
+          } = this.prefs;
+          this.prefs = {
+            ...eK(),
+            sym: e,
+            mkt: t
+          }, this.cache.zKey = "", this.save(), this.chart && this.chart.relayout(), this.load()
+        }
+        pickPair(e, t) {
+          let s = this.prefs;
+          (e !== s.sym || t !== s.mkt) && this.set({
+            sym: e,
+            mkt: t,
+            ...e !== s.sym ? {
+              btv: "auto"
+            } : {}
+          }, "load")
+        }
+        setAggV(e, t) {
+          t.length && (this.prefs = {
+            ...this.prefs,
+            aggV: {
+              ...this.prefs.aggV,
+              [e]: t
+            }
+          }, this.save(), this.notify(), clearTimeout(this.aggT), this.aggT = setTimeout(() => this.load(), 450))
+        }
+        async loadCatalog() {
+          let e = await Promise.all(M.map(e => k({
+            type: "perp" === e.kind ? "Futures" : "SPOT",
+            exName: e.ex
+          }).then(e => e.data, () => null)));
+          M.forEach((t, s) => {
+            let i = e[s];
+            if (!Array.isArray(i)) return;
+            let l = new Map;
+            for (let e of i) {
+              let s = e && e.instrument;
+              if (!s || s.quoteAsset !== t.quote || ("perp" === t.kind ? 1 !== s.type : 10 !== s.type && null != s.type)) continue;
+              let i = String(s.baseAsset || "").toUpperCase();
+              !W(i) || l.has(i) || l.set(i, {
+                inst: s.instrumentId,
+                price: +e.price,
+                chg: +e.priceChangePercent,
+                oi: +e.openInterest || 0,
+                vol: +e.volUsd || 0
+              })
+            }
+            this.cat.set(t.id, l)
+          }), this.catReady = this.cat.size > 0, this.notify(), this.catReady && this.searchCatalog(this.prefs.sym).catch(() => {})
+        }
+        async searchCatalog(e) {
+          let t = String(e || "").trim().toUpperCase();
+          if (!t) return;
+          let s = await Promise.all(M.map(e => k({
+              type: "perp" === e.kind ? "Futures" : "SPOT",
+              exName: e.ex,
+              keyword: t
+            }).then(e => e.data, () => null))),
+            i = !1;
+          M.forEach((e, t) => {
+            let l = s[t],
+              a = this.cat.get(e.id);
+            if (Array.isArray(l) && a)
+              for (let t of l) {
+                let s = t && t.instrument;
+                if (!s || s.quoteAsset !== e.quote) continue;
+                let l = String(s.baseAsset || "").toUpperCase();
+                W(l) && !a.has(l) && (a.set(l, {
+                  inst: s.instrumentId,
+                  price: +t.price,
+                  chg: +t.priceChangePercent,
+                  oi: +t.openInterest || 0,
+                  vol: +t.volUsd || 0
+                }), i = !0)
+              }
+          }), i && this.notify()
+        }
+        pairs() {
+          let e = [],
+            t = new Set,
+            s = s => {
+              t.has(s) || (t.add(s), e.push(s))
+            };
+          H.forEach(s);
+          let i = this.cat.get("binance-perp");
+          for (let e of (i && [...i.entries()].sort((e, t) => t[1].vol - e[1].vol).forEach(([e]) => s(e)), M)) {
+            let t = this.cat.get(e.id);
+            if (t)
+              for (let e of t.keys()) s(e)
+          }
+          let l = [];
+          for (let t of e)
+            for (let e of C)(this.catReady ? this.has(e, t) : H.includes(t)) && l.push({
+              s: t,
+              m: e
+            });
+          return l
+        }
+        topCoins(e) {
+          let t = this.cat.get("binance-perp");
+          return t ? [...t.entries()].sort((e, t) => t[1].oi - e[1].oi).map(([e]) => e).slice(0, e) : H.slice(0, e)
+        }
+        tickerOf(e, t) {
+          let s = t.agg ? this.aggOf(t)[0] : t.id,
+            i = this.cat.get(s);
+          return i && i.get(e)
+        }
+        makePlan() {
+          let e = this.prefs,
+            t = N[e.mkt],
+            s = t.agg ? this.aggOf(t).filter(t => this.has(N[t], e.sym)) : [t.id],
+            i = (s.length ? s : this.aggOf(t)).map(t => {
+              let s, i = N[t];
+              return {
+                id: t,
+                m: i,
+                key: (s = this.instOf(i, e.sym), i.ex + ("spot" === i.kind ? "_SPOT" : "") + "_" + s),
+                usd: "USD" === i.quote
+              }
+            });
+          return {
+            kind: t.kind,
+            venues: i,
+            lead: i[0]
+          }
+        }
+        btThr() {
+          let e = this.prefs.btv;
+          return "auto" !== e && +e > 0 ? +e : ef(this.S, this.prefs.bt)
+        }
+        resetData() {
+          let e = this.D = e0();
+          e.sym = this.prefs.sym, e.itv = this.prefs.itv, e.mkt = this.prefs.mkt, e.step = this.derived() ? 6e4 : T[this.prefs.itv], this.cache = em(), this.SEL = -1, this.S = this.derived() ? el(6e4) : null, this.sDirty = !1, this.TBS = this.M1S = null, this.SIGC.clear(), this.venueF = new Map, this.offsets = new Map, this.pushAt = new Map
+        }
+        async load() {
+          let e = ++this.gen;
+          this.resetData();
+          let t = N[this.prefs.mkt],
+            s = this.prefs.sym;
+          if (t.agg && this.catReady && t.venues.some(e => {
+              let t = this.cat.get(e);
+              return t && !t.has(s)
+            }) && (this.status = "loading", this.notify(), await this.searchCatalog(s).catch(() => {}), e !== this.gen)) return;
+          this.plan = this.makePlan(), this.status = "loading", this.banner = null, this.edge = null, this.closeLive(), this.chart && this.chart.dataChanged(!0), this.notify();
+          let i = this.D;
+          try {
+            if (this.derived()) {
+              let t = await eM(this.plan, "m1", 1e3, 0);
+              if (e !== this.gen) return;
+              if (en(t.rows, this.S), this.takeVenue(t), !this.S.n) throw Error(this.tr("err.noM1", "No 1-minute data"));
+              this.BT_THR = this.btThr(), this.rebuildDerived(!1)
+            } else {
+              let t = await eM(this.plan, S[i.itv], 300, 0);
+              if (e !== this.gen) return;
+              en(t.rows, i), this.takeVenue(t)
+            }
+            if (this.cgLast = Date.now(), this.cgErr = "", !i.n) throw Error(this.tr("err.noData", "No data"))
+          } catch (s) {
+            if (e !== this.gen) return;
+            let t = s && s.message || String(s);
+            i.err = this.tr("err.load", "Load failed: {{msg}}", {
+              msg: t
+            }), this.status = "error", this.banner = {
+              kind: "bad",
+              text: this.tr("err.banner", 'Footprint data request failed ({{msg}}). Click "Retry" to try again.', {
+                msg: t
+              }),
+              retry: !0
+            }, this.chart && this.chart.dataChanged(!0), this.notify();
+            return
+          }
+          if (i.baseTick = eh(i), this.status = "ready", i.missing.length && (this.banner = {
+              kind: "info",
+              text: this.tr("err.missing", "{{list}} returned no data this time, so the aggregate only includes the other exchanges for now.", {
+                list: i.missing.map(e => N[e].ex).join(this.tr("sep", ", "))
+              })
+            }), this.chart && this.chart.dataChanged(!0), this.openLive(), null != this.PEND_T) {
+            let e = this.barOf(this.PEND_T);
+            this.PEND_T = null, null != e && this.jumpTo(e)
+          }
+          this.notify(), this.loadBigs(e, i.T[0], Date.now()), this.sigBgLoad(e)
+        }
+        takeVenue(e) {
+          for (let [t, s] of e.venueF) {
+            let e = this.venueF.get(t) || new Map;
+            for (let [t, i] of s) e.set(t, i);
+            let i = [...e.keys()].sort((e, t) => e - t);
+            for (; i.length > 8;) e.delete(i.shift());
+            this.venueF.set(t, e)
+          }
+          for (let [t, s] of e.offsets) this.offsets.set(t, s);
+          e.missing && 0 === this.D.missing.length && (this.D.missing = e.missing)
+        }
+        retry() {
+          this.banner = null, this.load()
+        }
+        clearBanner() {
+          this.banner = null, this.notify()
+        }
+        rebuildDerived(e) {
+          let t = this.S,
+            s = this.D;
+          if (!t) return;
+          let i = 0;
+          if (e && s.n) {
+            for (let e of (i = s.si[s.n - 1], s.idx.delete(s.T[s.n - 1]), eZ)) s[e].pop();
+            s.n--
+          } else {
+            for (let e of eZ) s[e] = [];
+            s.n = 0, s.idx = new Map
+          }
+          for (let e of eg(t, i, t.n - 1, this.prefs.bt, this.BT_THR)) {
+            let t = this.barRow(e);
+            for (let e of eZ) s[e].push(t[e]);
+            s.idx.set(t.T, s.n), s.n++
+          }
+          s.step = this.avgStep(), !e && (eb(this), s.gver++)
+        }
+        barRow(e) {
+          return {
+            T: e.T,
+            O: e.O,
+            H: e.H,
+            L: e.L,
+            C: e.C,
+            F: eu(e.fs),
+            ver: this.VER_SEQ++,
+            OIo: e.oo,
+            OIc: e.oc,
+            TE: this.S.T[e.j1] + this.S.step,
+            si: e.si
+          }
+        }
+        avgStep() {
+          let e = this.D;
+          return e.n > 1 ? Math.max(6e4, (e.T[e.n - 1] - e.T[0]) / (e.n - 1)) : 6e4
+        }
+        prependDerived(e) {
+          let t = this.D,
+            s = eg(this.S, 0, e - 1, this.prefs.bt, this.BT_THR).map(e => this.barRow(e));
+          for (let i of eZ) t[i] = s.map(e => e[i]).concat("si" === i ? t.si.map(t => t + e) : t[i]);
+          return t.n = t.T.length, eo(t), eb(this), t.gver++, t.step = this.avgStep(), s.length
+        }
+        async maybeOlder() {
+          let e = this.D;
+          if (e.loading || e.done || !e.n || Date.now() < e.retryAt || "ready" !== this.status) return;
+          let t = this.gen,
+            s = this.derived();
+          e.loading = !0, this.setEdge(this.tr("edge.loading", "Loading older data…"));
+          try {
+            let i, l = s ? this.S : e,
+              a = await eM(this.plan, s ? "m1" : S[e.itv], s ? 1e3 : 300, l.T[0] - 1);
+            if (t !== this.gen) return;
+            let r = a.rows.filter(e => e[0] < l.T[0]);
+            if (!r.length) {
+              e.done = !0, this.setEdge(this.tr("edge.oldest", "No older data (footprint history goes back about 90 days)"), 2200);
+              return
+            }
+            let n = l.T[0];
+            s ? i = this.prependDerived(ec(r, this.S)) : (i = ec(r, e), eb(this), e.gver++), e.baseTick = eh(e), this.cache.zKey = "", this.SEL >= 0 && (this.SEL += i), this.chart && this.chart.shifted(i), this.setEdge(null), e.backoff = 1e3, this.notify(), this.loadBigs(t, r[0][0], n)
+          } catch (s) {
+            if (t !== this.gen) return;
+            e.backoff = Math.min(3e4, 2 * e.backoff), e.retryAt = Date.now() + e.backoff, this.setEdge(this.tr("edge.failed", "Couldn't load older data; retrying shortly"), 2500)
+          } finally {
+            t === this.gen && (e.loading = !1)
+          }
+        }
+        setEdge(e, t) {
+          clearTimeout(this.edgeT), this.edge = e, e && t && (this.edgeT = setTimeout(() => {
+            this.edge = null, this.notify()
+          }, t)), this.notify()
+        }
+        async pollTail() {
+          let e = this.D;
+          if (!e.n || "ready" !== this.status) return;
+          let t = this.gen;
+          this.pollBg();
+          try {
+            let s = this.derived(),
+              i = await eM(this.plan, s ? "m1" : S[e.itv], 3, 0);
+            if (t !== this.gen) return;
+            this.takeVenue(i), ep(i.rows, s ? this.S : e), s ? this.sDirty = !0 : (e.gver++, this.liveDirty = !0), this.cgLast = Date.now(), this.cgErr = ""
+          } catch (e) {
+            this.cgErr = this.tr("feed.syncFail", "Sync failed, retrying in 10s")
+          }
+        }
+        async pollPush() {
+          if (!this.plan || "ready" !== this.status) return;
+          let e = Date.now(),
+            t = this.plan.venues.filter(t => e - (this.pushAt.get(t.id) || this.liveAt) > 8e3);
+          if (!t.length || this.pollingPush) return;
+          let s = this.gen,
+            i = this.derived();
+          this.pollingPush = !0;
+          try {
+            let e = await Promise.all(t.map(e => w({
+              key: e.key,
+              interval: i ? "m1" : S[this.D.itv],
+              limit: 2
+            }).then(e => e.data, () => null)));
+            if (s !== this.gen) return;
+            t.forEach((t, s) => {
+              for (let i of e[s] || []) i && i[1] && this.venueFlow(t.id, 1e3 * i[0], eT(i[1]), !1)
+            })
+          } finally {
+            this.pollingPush = !1
+          }
+        }
+        closeLive() {
+          this.sock.unsubscribeAll(), this.feedSince = 1 / 0
+        }
+        openLive() {
+          let e = this.plan,
+            t = this.derived() ? "m1" : S[this.D.itv],
+            s = this.gen;
+          if (!e) return;
+          this.feedSince = 1 / 0, this.liveAt = Date.now();
+          let i = e.venues[0];
+          for (let l of (this.sock.subscribe({
+              id: "fp|k|" + i.key + "|" + t,
+              symbol: i.key + "#kline",
+              interval: t,
+              channel: "kline"
+            }, e => {
+              s === this.gen && this.onKline(e)
+            }), e.venues)) this.sock.subscribe({
+            id: "fp|f|" + l.key + "|" + t,
+            symbol: l.key + "#order_flow",
+            interval: t,
+            channel: "order_flow"
+          }, e => {
+            s === this.gen && Array.isArray(e) && (this.pushAt.has(l.id) ? this.pushAt.set(l.id, Date.now()) : (this.pushAt.set(l.id, Date.now()), this.updSince()), this.venueFlow(l.id, 1e3 * e[0], eT(e[1]), !0))
+          }), "perp" === l.m.kind && this.sock.subscribe({
+            id: "fp|b|" + l.key,
+            symbol: l.key,
+            interval: "m1",
+            channel: "large_order"
+          }, e => {
+            s === this.gen && this.onBigs(e, l)
+          })
+        }
+        updSince() {
+          let e = this.plan;
+          if (!e || "open" !== this.sock.state || !e.venues.every(e => this.pushAt.has(e.id))) {
+            this.feedSince = 1 / 0;
+            return
+          }
+          this.feedSince = Math.max(this.sock.openedAt, ...e.venues.map(e => this.pushAt.get(e.id)))
+        }
+        onKline(e) {
+          if (!Array.isArray(e) || "ready" !== this.status) return;
+          let t = e[0] * (1e12 > +e[0] ? 1e3 : 1),
+            s = +e[1],
+            i = +e[2],
+            l = +e[3],
+            a = +e[4];
+          if (![s, i, l, a].every(isFinite)) return;
+          let r = this.derived() ? this.S : this.D,
+            n = ed(t, a, r);
+          null != n && (r.O[n] = s, r.H[n] = Math.max(i, r.H[n] || i), r.L[n] = Math.min(l, r.L[n] || l), r.C[n] = a, r.ver[n]++, this.derived() ? this.sDirty = !0 : this.liveDirty = !0)
+        }
+        venueFlow(e, t, s, i) {
+          if (!s || "ready" !== this.status || !this.plan) return;
+          let l = this.offsets.get(e);
+          l && (s = {
+            ...s,
+            lo: s.lo + l
+          });
+          let a = this.venueF.get(e);
+          a || (a = new Map, this.venueF.set(e, a)), a.set(t, s), a.size > 8 && a.delete(a.keys().next().value);
+          let r = [];
+          for (let e of this.plan.venues) {
+            let s = this.venueF.get(e.id),
+              i = s && s.get(t);
+            i && r.push(i)
+          }
+          let n = r.length > 1 ? eu(r) : r[0];
+          if (!n) return;
+          let o = this.derived(),
+            h = o ? this.S : this.D,
+            d = h.idx.get(t);
+          if (null == d) {
+            if (!h.n || t < h.T[h.n - 1]) return;
+            let e = n.lo + n.tick * (n.b.length / 2);
+            if (null == (d = ed(t, h.C[h.n - 1] || e, h))) return
+          }
+          if (h.F[d] = n, h.ver[d]++, o) {
+            this.sDirty = !0;
+            return
+          }
+          if (this.liveDirty = !0, !i) return;
+          let c = 0;
+          for (let e = 0; e < n.b.length; e++) c += n.b[e] - n.s[e];
+          let p = this.D,
+            u = p.obs.get(t);
+          !u && (u = {
+            mn: 0,
+            mx: 0,
+            full: t >= this.feedSince
+          }, p.obs.set(t, u), p.obs.size > 400 && p.obs.delete(p.obs.keys().next().value)), c < u.mn && (u.mn = c), c > u.mx && (u.mx = c)
+        }
+        addBigs(e) {
+          let t = this.D,
+            s = this.bigThr(),
+            i = 0;
+          for (let l of e || []) {
+            if (!l) continue;
+            let e = null != l.id ? String(l.id) : l.tradeId || l.turnoverTime + "|" + l.price;
+            if (t.bigIds.has(e)) continue;
+            let a = +l.price,
+              r = +l.volUsd || +l.quoteVol || l.baseVol * a,
+              n = +l.baseVol || (a ? r / a : 0),
+              o = +l.turnoverTime || +l.createTime;
+            r >= s && isFinite(a) && o && (t.bigIds.add(e), t.bigs.push([o, a, n, 2 == +l.side ? 1 : -1, r]), i++)
+          }
+          i && (t.bigs.sort((e, t) => e[0] - t[0]), t.bigs.length > 3e3 && t.bigs.splice(0, t.bigs.length - 3e3), this.liveDirty = !0)
+        }
+        onBigs(e, t) {
+          Array.isArray(e) && this.addBigs(e.map(e => ({
+            ...e,
+            ex: t.m.ex
+          })))
+        }
+        async loadBigs(e, t, s) {
+          let i = this.plan;
+          if (!i || !this.prefs.marks.big) return;
+          let l = Math.max(t, Date.now() - 2592e6);
+          if (l >= s) return;
+          let a = await Promise.all(i.venues.map(e => (({
+            key: e,
+            startTime: t,
+            endTime: s,
+            signal: i
+          }) => x.ud.get("/api/largeOrder/v2", {
+            params: {
+              symbol: e,
+              interval: "m15",
+              startTime: t,
+              endTime: s
+            },
+            signal: i,
+            timeout: 2e4
+          }))({
+            key: e.key,
+            startTime: Math.floor(l / 1e3),
+            endTime: Math.ceil(s / 1e3)
+          }).then(e => e.data, () => null)));
+          if (e === this.gen)
+            for (let e of a) Array.isArray(e) && this.addBigs(e)
+        }
+        select(e) {
+          this.SEL = e, this.chart && this.chart.markOver(), this.notify()
+        }
+        jumpTo(e) {
+          this.SEL = e, this.chart && this.chart.jumpTo(e), this.notify()
+        }
+        gotoSig(e) {
+          if (!e) return;
+          let t = this.derived() ? this.prefs.bt : "time";
+          e.s.X === this.D ? this.jumpTo(e.g.i) : (this.PEND_T = e.t, e.s.bt !== t ? this.setBt(e.s.bt) : this.set({
+            btv: "auto"
+          }, "load"))
+        }
+        async sigBgLoad(e) {
+          this.TBS = this.M1S = null, this.SIGC.clear();
+          try {
+            if (this.derived()) {
+              let t = this.prefs.itv,
+                s = await eM(this.plan, S[t], 300, 0);
+              if (e !== this.gen) return;
+              let i = el(T[t]);
+              i.itv = t, i.v = 1, i.venueF = s.venueF, en(s.rows, i), this.TBS = i
+            } else {
+              let t = await eM(this.plan, "m1", 1e3, 0);
+              if (e !== this.gen) return;
+              let s = el(6e4);
+              s.v = 1, s.venueF = t.venueF, en(t.rows, s), this.M1S = s
+            }
+            this.bgPollAt = Date.now(), this.notify()
+          } catch (e) {}
+        }
+        async pollBg() {
+          if (Date.now() - this.bgPollAt < 6e4) return;
+          this.bgPollAt = Date.now();
+          let e = this.gen;
+          try {
+            if (this.derived() && this.TBS) {
+              let t = await eM(this.plan, S[this.TBS.itv], 3, 0);
+              e === this.gen && (ep(t.rows, this.TBS), this.TBS.v++)
+            } else if (!this.derived() && this.M1S) {
+              let t = await eM(this.plan, "m1", 6, 0);
+              e === this.gen && (ep(t.rows, this.M1S), this.M1S.v++)
+            }
+          } catch (e) {}
+        }
+        cachedSigs(e, t) {
+          let s = this.SIGC.get(e);
+          return s || (s = t(), this.SIGC.size > 16 && this.SIGC.clear(), this.SIGC.set(e, s)), s
+        }
+        sigSets() {
+          let e = [],
+            t = this.derived() ? this.prefs.bt : "time",
+            s = this.D,
+            i = this.prefs.sym;
+          if ("time" === t) e.push({
+            bt: "time",
+            label: j[s.itv] || this.prefs.itv,
+            X: s,
+            sigs: this.sigs
+          });
+          else if (this.TBS && this.TBS.n) {
+            let t = this.TBS;
+            e.push({
+              bt: "time",
+              label: j[t.itv],
+              X: t,
+              sigs: this.cachedSigs("t|" + t.itv + "|" + t.v + "|" + t.n, () => ey(t))
+            })
+          }
+          let l = this.derived() ? this.S : this.M1S;
+          for (let a of ["vol", "range"]) {
+            if (a === t) {
+              e.push({
+                bt: a,
+                label: this.itvLabel(),
+                X: s,
+                sigs: this.sigs
+              });
+              continue
+            }
+            if (!l || !l.n) continue;
+            let r = ef(l, a),
+              n = l === this.S ? "S" + s.gver + "." + l.n : "M" + l.v + "." + l.n,
+              o = this.cachedSigs(a + "|" + n + "|" + r, () => {
+                let e = function(e, t, s) {
+                  let i = {
+                    n: 0,
+                    T: [],
+                    O: [],
+                    H: [],
+                    L: [],
+                    C: [],
+                    F: [],
+                    TE: []
+                  };
+                  if (!e || !e.n) return i;
+                  for (let l of eg(e, 0, e.n - 1, t, s)) i.T.push(l.T), i.O.push(l.O), i.H.push(l.H), i.L.push(l.L), i.C.push(l.C), i.F.push(eu(l.fs)), i.TE.push(e.T[l.j1] + e.step), i.n++;
+                  return i
+                }(l, a, r);
+                return {
+                  X: e,
+                  sigs: ey(e)
+                }
+              });
+            e.push({
+              bt: a,
+              label: "vol" === a ? this.tr("bt.volN", "Volume {{v}}", {
+                v: J(r) + " " + i
+              }) : this.tr("bt.rangeN", "Range {{v}}", {
+                v: $(r, z(r))
+              }),
+              X: o.X,
+              sigs: o.sigs
+            })
+          }
+          return e
+        }
+        sigTypeOk(e) {
+          let t = this.prefs.sigTy;
+          return "all" === t || ("div" === t ? "div" === e.t || "sdiv" === e.t : e.t === t)
+        }
+        sigOffCount() {
+          return A.filter(([e]) => !this.prefs.sigs[e]).length
+        }
+        sigName(e) {
+          let t = "buy" === e.side;
+          return "div" === e.t ? this.tr("sig.div", "Divergence") : "sdiv" === e.t ? t ? this.tr("sig.bullDiv", "Bull div") : this.tr("sig.bearDiv", "Bear div") : "abs" === e.t ? this.tr("sig.abs", "Absorption") : "trap" === e.t ? t ? this.tr("sig.trapShort", "Trapped shorts") : this.tr("sig.trapLong", "Trapped longs") : this.tr("sig.exh", "Exhaustion")
+        }
+        sigText(e, t = this.D) {
+          let s = "buy" === e.side,
+            i = this.fmt;
+          if ("div" === e.t) return s ? [this.tr("sig.divBuy", "Drop without taker selling"), this.tr("sig.divBuyD", "Closed down on positive Delta ({{v}}), bullish", {
+            v: i.fmtPct(e.r, 0)
+          })] : [this.tr("sig.divSell", "Rally without taker buying"), this.tr("sig.divSellD", "Closed up on negative Delta ({{v}}), bearish", {
+            v: i.fmtPct(e.r, 0)
+          })];
+          if ("abs" === e.t) return s ? [this.tr("sig.absBuy", "Selling absorbed at the low"), this.tr("sig.absBuyD", "{{v}} of taker selling at the low (30%+ of the bar's selling), yet closed near the high, bullish", {
+            v: i.fmtV(e.q, e.u)
+          })] : [this.tr("sig.absSell", "Buying absorbed at the high"), this.tr("sig.absSellD", "{{v}} of taker buying at the high (30%+ of the bar's buying), yet closed near the low, bearish", {
+            v: i.fmtV(e.q, e.u)
+          })];
+          if ("trap" === e.t) return s ? [this.tr("sig.trapBuy", "Failed breakdown"), this.tr("sig.trapBuyD", "Broke the 5-bar low on {{v}} of taker selling at the bottom, then rallied back into the upper part of the bar {{n}} bars later. Breakdown sellers trapped, bullish", {
+            v: i.fmtV(e.q, e.u),
+            n: e.j - e.i
+          })] : [this.tr("sig.trapSell", "Failed breakout"), this.tr("sig.trapSellD", "Broke the 5-bar high on {{v}} of taker buying at the top, then fell back into the lower part of the bar {{n}} bars later. Breakout buyers trapped, bearish", {
+            v: i.fmtV(e.q, e.u),
+            n: e.j - e.i
+          })];
+          if ("sdiv" === e.t) {
+            let l = t.C[e.i],
+              a = Math.abs(e.dc),
+              r = X(t.T[e.i0], !0),
+              n = i.fmtV(a, a * l);
+            return s ? [this.tr("sig.sdivBuy", "Lower low, higher Cumulative Delta"), this.tr("sig.sdivBuyD", "Lower low than {{t}}, yet Cumulative Delta rose {{v}} over the swing. Sellers aren't following through, bullish", {
+              t: r,
+              v: n
+            })] : [this.tr("sig.sdivSell", "Higher high, lower Cumulative Delta"), this.tr("sig.sdivSellD", "Higher high than {{t}}, yet Cumulative Delta fell {{v}} over the swing. Buyers aren't following through, bearish", {
+              t: r,
+              v: n
+            })]
+          }
+          return s ? [this.tr("sig.exhBuy", "Seller exhaustion"), this.tr("sig.exhBuyD", "New 10-bar low with almost no volume in the bottom 10% of the bar, closed in the upper half, bullish")] : [this.tr("sig.exhSell", "Buyer exhaustion"), this.tr("sig.exhSellD", "New 10-bar high with almost no volume in the top 10% of the bar, closed in the lower half, bearish")]
+        }
+        bigThr() {
+          return 5e6
+        }
+        get dp() {
+          let e, t = this.D;
+          return t.n ? (e = t.C[t.n - 1]) >= 1e3 ? 1 : e >= 100 ? 2 : e >= 10 ? 3 : e >= 1 ? 4 : e >= .01 ? 5 : 7 : 2
+        }
+        tickOptions() {
+          let e = this.D.baseTick || 1;
+          return [1, 2, 4, 5, 10, 20, 25, 50, 100].map(t => +(e * t).toPrecision(10))
+        }
+        btvOptions() {
+          let e = ef(this.S, this.prefs.bt);
+          return {
+            auto: e,
+            ladder: [...new Set([.25, .5, 1, 2, 4].map(t => +q(e * t).toPrecision(6)))]
+          }
+        }
+      }
+      var e2 = s(71616),
+        e5 = s(25636),
+        e3 = s(3226),
+        e4 = s(35850),
+        e6 = s(54224),
+        e8 = s.n(e6),
+        e7 = s(94258),
+        e9 = s.n(e7);
+      let te = (...e) => e.filter(Boolean).join(" "),
+        tt = (e, ...t) => te(...t, "compact" === e && e9().compact),
+        ts = (e, t) => e.find(e => String(e.value) === String(t));
+
+      function ti({
+        as: e = "div",
+        children: t
+      }) {
+        let {
+          vars: s
+        } = f();
+        return (0, i.jsx)(e, {
+          className: e9().scope,
+          style: s,
+          children: t
+        })
+      }
+
+      function tl({
+        size: e = "compact",
+        variant: t,
+        selected: s,
+        icon: l,
+        className: a,
+        children: r,
+        ...n
+      }) {
+        return (0, i.jsx)(e5.$n, {
+          className: tt(e, e9().button, l && e9().icon, "primary" === t && e9().primary, "toggle" === t && s && e9().selected, a),
+          "aria-pressed": "toggle" === t ? !!s : void 0,
+          onlyIcon: l,
+          iconComp: l ? r : void 0,
+          ...n,
+          children: l ? null : r
+        })
+      }
+
+      function ta({
+        options: e,
+        value: t,
+        onChange: s,
+        size: l = "compact",
+        className: a,
+        label: r
+      }) {
+        return (0, i.jsx)(e5.tU, {
+          variant: "segmented",
+          className: tt(l, e9().tabs, a),
+          selectedIndex: String(t),
+          "aria-label": r,
+          onChange: i => {
+            let l = ts(e, i);
+            l && !l.disabled && l.value !== t && s(l.value)
+          },
+          children: e.map(e => (0, i.jsx)(e5.oz, {
+            value: String(e.value),
+            label: e.label,
+            title: e.title,
+            disabled: e.disabled,
+            "data-on": String(e.value) === String(t) ? "" : void 0
+          }, String(e.value)))
+        })
+      }
+
+      function tr({
+        options: e,
+        value: t,
+        onChange: s,
+        size: l = "compact",
+        label: r,
+        title: n,
+        disabled: o,
+        align: h = "start",
+        className: d,
+        ariaLabel: c
+      }) {
+        let p = ts(e, t),
+          u = (0, a.useRef)(null),
+          f = "fp-sel-" + (0, a.useId)().replace(/[^a-zA-Z0-9_-]/g, "");
+        return (0, i.jsx)("span", {
+          ref: u,
+          className: te(e9().selBox, d),
+          title: n,
+          "aria-label": c,
+          children: (0, i.jsx)(e5.l6, {
+            size: "sm",
+            disabled: o,
+            options: e.map(e => ({
+              value: String(e.value),
+              label: e.label,
+              iconComp: e.icon ? (0, i.jsx)(ti, {
+                as: "span",
+                children: e.icon
+              }) : void 0
+            })),
+            value: [String(t)],
+            onChange: i => {
+              let l = ts(e, i[0]);
+              l && l.value !== t && s(l.value)
+            },
+            allowClear: !1,
+            allowedPlacements: [`bottom-${h}`, `top-${h}`, `bottom-${"start"===h?"end":"start"}`, `top-${"start"===h?"end":"start"}`],
+            triggerClassName: tt(l, e9().select),
+            contentClassName: te(e9().menu, f),
+            onOpenChange: e => {
+              e && requestAnimationFrame(() => document.querySelectorAll("." + f).forEach(e => {
+                u.current && e.style.setProperty("--glass-menu-min", u.current.getBoundingClientRect().width + "px")
+              }))
+            },
+            dropdownProps: {
+              keepMounted: !1,
+              mobileResponsive: !1
+            },
+            selectedDisplayRenderFn: () => (0, i.jsxs)("span", {
+              className: e9().selVal,
+              children: [r ? (0, i.jsx)("span", {
+                className: e9().caption,
+                children: r
+              }) : null, p && p.icon, p ? p.label : ""]
+            })
+          })
+        })
+      }
+
+      function tn({
+        trigger: e,
+        size: t = "compact",
+        align: s = "start",
+        width: l = 330,
+        label: r,
+        title: n,
+        triggerClassName: o,
+        open: h,
+        onOpenChange: d,
+        disabled: c,
+        children: p
+      }) {
+        let [u, f] = (0, a.useState)(!1), g = null != h ? h : u, m = e => {
+          f(e), d && d(e)
+        };
+        return (0, i.jsx)(e5.AM, {
+          arrow: !1,
+          triggerType: "click",
+          open: g,
+          onChange: m,
+          allowedPlacements: [`bottom-${s}`, `top-${s}`],
+          shift: !0,
+          contentClassName: te(e9().menu, e9().popMenu),
+          mobileResponsive: !1,
+          content: (0, i.jsx)(ti, {
+            children: (0, i.jsx)("div", {
+              className: e9().popBody,
+              role: "dialog",
+              "aria-label": r,
+              style: {
+                width: `min(${l}px, calc(100vw - 32px))`
+              },
+              children: "function" == typeof p ? p({
+                close: () => m(!1)
+              }) : p
+            })
+          }),
+          children: (0, i.jsx)(e5.$n, {
+            className: tt(t, e9().button, g && e9().open, o),
+            "aria-expanded": g,
+            "aria-haspopup": "dialog",
+            "aria-label": r,
+            title: n,
+            disabled: c,
+            children: e
+          })
+        })
+      }
+
+      function to({
+        checked: e,
+        onChange: t,
+        disabled: s,
+        label: l,
+        hint: r
+      }) {
+        let n = (0, a.useId)();
+        return (0, i.jsxs)("label", {
+          className: te(e9().row, e && e9().rowOn, s && e9().rowDis),
+          htmlFor: n,
+          children: [(0, i.jsxs)("span", {
+            className: e9().rowText,
+            children: [l, r ? (0, i.jsx)("small", {
+              children: r
+            }) : null]
+          }), (0, i.jsx)(e5.Sc, {
+            id: n,
+            checked: !!e,
+            disabled: s,
+            onChange: e => t(e.target.checked),
+            rootProps: {
+              className: e9().checkbox
+            }
+          })]
+        })
+      }
+      let th = ({
+        children: e
+      }) => (0, i.jsx)("div", {
+        className: e9().sec,
+        children: e
+      });
+
+      function td({
+        checked: e,
+        onChange: t,
+        title: s,
+        children: l
+      }) {
+        let r = (0, a.useId)();
+        return (0, i.jsxs)("label", {
+          className: te(e9().chip, !e && e9().chipOff),
+          title: s,
+          children: [(0, i.jsx)(e5.Sc, {
+            id: r,
+            checked: !!e,
+            onChange: e => t(e.target.checked),
+            rootProps: {
+              className: e9().checkbox
+            }
+          }), l]
+        })
+      }
+
+      function tc({
+        children: e,
+        title: t,
+        className: s
+      }) {
+        return (0, i.jsx)("span", {
+          className: te(e9().lbl, s),
+          title: t,
+          children: e
+        })
+      }
+      var tp = s(17849),
+        tu = s.n(tp);
+      let tf = {
+          default: "Default",
+          neon: "Neon",
+          ember: "Ember",
+          cobalt: "Cobalt",
+          cinnabar: "Cinnabar",
+          marine: "Marine",
+          amber: "Amber",
+          graphite: "Graphite",
+          dusk: "Dusk"
+        },
+        tg = {
+          bid: "Buys",
+          ask: "Sells",
+          up: "Up candle",
+          down: "Down candle",
+          poc: "POC marker",
+          mag: "Volume color"
+        };
+
+      function tm() {
+        let {
+          term: e,
+          CL: t
+        } = f(), s = e.prefs.pal, l = Object.keys(s.c).length > 0, r = (0, a.useRef)(0), n = (0, a.useRef)(null), o = t => {
+          n.current = t, r.current || (r.current = requestAnimationFrame(() => {
+            r.current = 0, e.setPal(n.current)
+          }))
+        }, h = {
+          bid: t.bid,
+          ask: t.ask,
+          up: t.up,
+          down: t.down,
+          poc: t.poc,
+          mag: t.mag
+        };
+        return (0, i.jsxs)("div", {
+          className: tu().pal,
+          children: [(0, i.jsxs)("div", {
+            className: tu().ph,
+            children: [(0, i.jsx)("b", {
+              children: e.tr("pal.title", "Colors")
+            }), (0, i.jsx)("span", {
+              children: e.tr("pal.saved", "Saved in this browser")
+            })]
+          }), (0, i.jsx)("div", {
+            className: tu().sec,
+            children: e.tr("pal.presets", "Presets")
+          }), (0, i.jsx)("div", {
+            className: tu().pre,
+            children: eP.map(a => {
+              let r, n = "default" === a.id ? {
+                  bid: (r = eO[t.light ? "light" : "dark"]).bid,
+                  ask: r.ask
+                } : t.light && a.lt ? a.lt : a,
+                o = a.id === s.p && !l;
+              return (0, i.jsxs)("button", {
+                type: "button",
+                className: te(tu().chip, o && tu().on),
+                "aria-pressed": o,
+                onClick: () => e.setPal({
+                  ...s,
+                  p: a.id,
+                  c: {}
+                }),
+                children: [(0, i.jsx)("i", {
+                  style: {
+                    background: n.bid
+                  }
+                }), (0, i.jsx)("i", {
+                  style: {
+                    background: n.ask
+                  }
+                }), e.tr("pal.p." + a.id, tf[a.id])]
+              }, a.id)
+            })
+          }), (0, i.jsx)("div", {
+            className: tu().sec,
+            children: e.tr("pal.custom", "Custom")
+          }), (0, i.jsx)("div", {
+            className: tu().sw,
+            children: eA.map(t => {
+              let l = e.tr("pal." + t, tg[t]);
+              return (0, i.jsxs)("label", {
+                children: [(0, i.jsx)("span", {
+                  children: l
+                }), (0, i.jsx)("input", {
+                  type: "color",
+                  value: (s.c[t] || h[t] || "#888888").toLowerCase(),
+                  "aria-label": e.tr("pal.colorOf", "{{name}} color", {
+                    name: l
+                  }),
+                  onChange: e => o({
+                    ...s,
+                    c: {
+                      ...s.c,
+                      [t]: e.target.value.toLowerCase()
+                    }
+                  })
+                })]
+              }, t)
+            })
+          }), (0, i.jsx)("div", {
+            className: tu().sec,
+            children: e.tr("pal.inten", "Cell intensity")
+          }), (0, i.jsxs)("div", {
+            className: tu().rg,
+            children: [(0, i.jsx)("input", {
+              type: "range",
+              min: "50",
+              max: "160",
+              step: "5",
+              value: Math.round(100 * s.inten),
+              "aria-label": e.tr("pal.inten", "Cell intensity"),
+              style: {
+                "--fill": (100 * s.inten - 50) / 110 * 100 + "%"
+              },
+              onChange: e => o({
+                ...s,
+                inten: e.target.value / 100
+              })
+            }), (0, i.jsxs)("span", {
+              children: [Math.round(100 * s.inten), "%"]
+            })]
+          }), (0, i.jsxs)("div", {
+            className: tu().ft,
+            children: [(0, i.jsx)("span", {
+              children: e.tr("pal.note", "Colors that are too dark or too bright are adjusted to stay readable")
+            }), (0, i.jsx)(tl, {
+              onClick: () => e.setPal(eL()),
+              children: e.tr("pal.reset", "Reset to default")
+            })]
+          })]
+        })
+      }
+      let tb = ({
+        ex: e,
+        className: t
+      }) => (0, i.jsx)("img", {
+        className: te(e8().logo, t),
+        src: (0, e4.EO)(String(e).toLowerCase()),
+        alt: "",
+        loading: "lazy"
+      });
+
+      function tv({
+        sym: e,
+        className: t
+      }) {
+        let {
+          logoOf: s
+        } = f(), l = s(e);
+        return l ? (0, i.jsx)("img", {
+          className: te(e8().logo, t),
+          src: l,
+          alt: "",
+          loading: "lazy"
+        }) : (0, i.jsx)("span", {
+          className: te(e8().logo, e8().logoPh, t),
+          children: e.slice(0, 1)
+        })
+      }
+      let tx = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#2b3240"/><g fill="none" stroke="#e6e9ef" stroke-width="2.4"><circle cx="13" cy="15" r="6"/><circle cx="23" cy="15" r="6"/><circle cx="18" cy="23" r="6"/></g></svg>'),
+        ty = ({
+          kind: e
+        }) => {
+          let {
+            term: t
+          } = f();
+          return (0, i.jsx)("i", {
+            className: te(e8().kind, "perp" === e ? e8().perp : e8().spot),
+            children: "perp" === e ? t.tr("mkt.perp", "Perp") : t.tr("mkt.spot", "Spot")
+          })
+        },
+        tw = (e, t, s) => s.agg ? t : e.instOf(s, t),
+        tk = e => e.toLowerCase().replace(/[\s\-_/]/g, "");
+
+      function t_({
+        size: e = "standard"
+      }) {
+        let {
+          term: t
+        } = f(), s = t.prefs, l = N[s.mkt], [r, n] = (0, a.useState)(!1), [o, h] = (0, a.useState)(""), [d, c] = (0, a.useState)("all"), [p, u] = (0, a.useState)(-1), g = (0, a.useRef)(null);
+        (0, a.useEffect)(() => {
+          if (!r) return;
+          let e = setTimeout(() => t.searchCatalog(o), 350);
+          return () => clearTimeout(e)
+        }, [o, r]);
+        let m = o.trim().toLowerCase().split(/\s+/).filter(Boolean).map(tk),
+          b = t.pairs(),
+          v = (0, a.useMemo)(() => {
+            let e = b.filter(({
+              s: e,
+              m: s
+            }) => {
+              if ("all" !== d && s.kind !== d) return !1;
+              if (!m.length) return !0;
+              let i = tk([e, tw(t, e, s), s.agg ? "agg aggregated 聚合 " + t.mktName(s) + " " + s.venues.map(e => N[e].ex).join(" ") : s.ex, "perp" === s.kind ? "perp swap futures 合约 永续 " + t.tr("mkt.perp", "Perp") : "spot 现货 " + t.tr("mkt.spot", "Spot")].join(" "));
+              return m.every(e => i.includes(e))
+            });
+            if (!m.length) return e;
+            let s = new Map(e.map(e => {
+              var s, i;
+              let l, a;
+              return [e, (s = e.s, i = tw(t, e.s, e.m), l = tk(s), a = tk(i), Math.min(3, ...m.map(e => l === e ? 0 : l.startsWith(e) || a.startsWith(e) ? 1 : l.includes(e) || a.includes(e) ? 2 : 3)))]
+            }));
+            return e.sort((e, t) => s.get(e) - s.get(t))
+          }, [b, d, o]),
+          x = m.length || "all" !== d ? [
+            [null, v]
+          ] : [l.kind, "perp" === l.kind ? "spot" : "perp"].map(e => ["perp" === e ? t.tr("mkt.futures", "Futures") : t.tr("mkt.spot", "Spot"), v.filter(t => t.m.kind === e)]),
+          y = [];
+        for (let [, e] of x)
+          for (let t of e.slice(0, 400)) y.push(t);
+        let w = y.findIndex(e => e.s === s.sym && e.m.id === s.mkt),
+          k = p >= 0 && p < y.length ? p : m.length ? 0 : Math.max(0, w);
+        (0, a.useEffect)(() => {
+          let e = g.current && g.current.querySelector("[data-kb]");
+          e && e.scrollIntoView({
+            block: "nearest"
+          })
+        }, [k, r]);
+        let _ = (e, s) => {
+            s(), h(""), e && t.pickPair(e.s, e.m.id)
+          },
+          T = -1;
+        return (0, i.jsx)(tn, {
+          open: r,
+          onOpenChange: e => {
+            n(e), u(-1)
+          },
+          width: 400,
+          label: t.tr("top.pair", "Pair"),
+          size: e,
+          triggerClassName: e8().pairBtn,
+          title: s.sym + " \xb7 " + t.mktName(l) + " \xb7 " + t.mktPair(l, s.sym),
+          trigger: (0, i.jsxs)("span", {
+            className: e8().pairLab,
+            children: [(0, i.jsx)(tv, {
+              sym: s.sym
+            }), (0, i.jsx)("b", {
+              children: tw(t, s.sym, l)
+            }), (0, i.jsx)(ty, {
+              kind: l.kind
+            }), (0, i.jsx)("span", {
+              className: e8().pex,
+              children: l.agg ? t.mktName(l) : l.ex
+            }), (0, i.jsx)(e3.D3D, {
+              className: e8().chev
+            })]
+          }),
+          children: ({
+            close: e
+          }) => (0, i.jsxs)("div", {
+            className: e8().pairPop,
+            children: [(0, i.jsxs)("div", {
+              className: e8().phead,
+              children: [(0, i.jsx)(e5.pd, {
+                value: o,
+                onChange: e => {
+                  h(e || ""), u(-1)
+                },
+                placeholder: t.tr("top.searchPh", "Search pairs: BTC, ETHUSDT, OKX"),
+                iconComp: (0, i.jsx)(e3.WIv, {}),
+                className: e8().search,
+                nativeInputProps: {
+                  autoFocus: !0,
+                  spellCheck: !1,
+                  autoComplete: "off",
+                  "aria-label": t.tr("top.searchPh", "Search pairs: BTC, ETHUSDT, OKX"),
+                  onKeyDown: t => {
+                    "ArrowDown" === t.key || "ArrowUp" === t.key ? (t.preventDefault(), y.length && u((k + ("ArrowDown" === t.key ? 1 : -1) + y.length) % y.length)) : "Enter" === t.key && (t.preventDefault(), _(y[k], e))
+                  }
+                }
+              }), (0, i.jsx)(ta, {
+                value: d,
+                onChange: e => {
+                  c(e), u(-1)
+                },
+                options: [{
+                  value: "all",
+                  label: t.tr("top.all", "All")
+                }, {
+                  value: "perp",
+                  label: t.tr("mkt.futures", "Futures")
+                }, {
+                  value: "spot",
+                  label: t.tr("mkt.spot", "Spot")
+                }]
+              })]
+            }), (0, i.jsx)("div", {
+              className: e8().plist,
+              ref: g,
+              role: "listbox",
+              "aria-label": t.tr("top.pair", "Pair"),
+              children: y.length ? x.map(([l, r], n) => (0, i.jsxs)(a.Fragment, {
+                children: [l && r.length ? (0, i.jsx)("div", {
+                  className: e8().pgh,
+                  children: l
+                }) : null, r.slice(0, 400).map(l => {
+                  let a = ++T,
+                    r = l.s === s.sym && l.m.id === s.mkt;
+                  return (0, i.jsxs)("div", {
+                    role: "option",
+                    "aria-selected": r,
+                    "data-kb": a === k ? "" : void 0,
+                    className: te(e8().prow, r && e8().on, a === k && e8().kb),
+                    onPointerDown: e => e.preventDefault(),
+                    onPointerMove: () => a !== k && u(a),
+                    onClick: () => _(l, e),
+                    children: [(0, i.jsx)(tv, {
+                      sym: l.s
+                    }), (0, i.jsx)("b", {
+                      children: tw(t, l.s, l.m)
+                    }), (0, i.jsx)(ty, {
+                      kind: l.m.kind
+                    }), (0, i.jsxs)("span", {
+                      className: e8().pex,
+                      title: l.m.agg ? t.aggOf(l.m).map(e => N[e].ex).join(" + ") : l.m.ex,
+                      children: [l.m.agg ? (0, i.jsx)("img", {
+                        className: e8().logo,
+                        src: tx,
+                        alt: ""
+                      }) : (0, i.jsx)(tb, {
+                        ex: l.m.ex
+                      }), l.m.agg ? t.mktName(l.m) : l.m.ex]
+                    })]
+                  }, l.m.id + l.s)
+                })]
+              }, n)) : (0, i.jsx)("div", {
+                className: e8().empty,
+                children: t.tr("top.noMatch", "No matching pairs")
+              })
+            })]
+          })
+        })
+      }
+
+      function tT({
+        inline: e
+      }) {
+        let {
+          term: t
+        } = f(), [s, l] = (0, a.useState)(!1), r = N[t.prefs.mkt];
+        if (!r.agg) return null;
+        let n = t.aggOf(r),
+          o = t.tr("agg.label", "Aggregated exchanges {{n}} / {{total}}", {
+            n: n.length,
+            total: r.venues.length
+          }),
+          h = (0, i.jsxs)("span", {
+            className: e8().aggLab,
+            children: [(0, i.jsx)("span", {
+              className: e8().lgs,
+              children: n.map(e => (0, i.jsx)(tb, {
+                ex: N[e].ex
+              }, e))
+            }), n.length, "/", r.venues.length, (0, i.jsx)(e3.D3D, {
+              className: e8().chev
+            })]
+          }),
+          d = (0, i.jsxs)(i.Fragment, {
+            children: [(0, i.jsx)(th, {
+              children: t.tr("agg.head", "{{name}}: check the exchanges to merge", {
+                name: t.mktName({
+                  ...r,
+                  venues: r.venues
+                })
+              })
+            }), r.venues.map(e => {
+              let s = N[e],
+                l = n.includes(e);
+              return (0, i.jsx)(to, {
+                checked: l,
+                disabled: l && 1 === n.length,
+                onChange: () => {
+                  let s;
+                  (s = n.includes(e) ? n.filter(t => t !== e) : r.venues.filter(t => n.includes(t) || t === e)).length && t.setAggV(r.kind, s)
+                },
+                label: (0, i.jsxs)("span", {
+                  className: e8().vx,
+                  children: [(0, i.jsx)(tb, {
+                    ex: s.ex
+                  }), s.ex]
+                }),
+                hint: "USD" === s.quote ? t.tr("agg.usd", "{{pair}} {{kind}}, USD-quoted, adjusted for the USD/USDT spread", {
+                  pair: t.instOf(s, t.prefs.sym),
+                  kind: "perp" === s.kind ? t.tr("mkt.perp", "Perp") : t.tr("mkt.spot", "Spot")
+                }) : t.instOf(s, t.prefs.sym) + " " + ("perp" === s.kind ? t.tr("mkt.perp", "Perp") : t.tr("mkt.spot", "Spot"))
+              }, e)
+            }), (0, i.jsxs)("div", {
+              className: e8().aggFt,
+              children: [(0, i.jsx)(tl, {
+                disabled: n.length === r.venues.length,
+                onClick: () => t.setAggV(r.kind, r.venues.slice()),
+                children: t.tr("agg.all", "Select all")
+              }), (0, i.jsx)("span", {
+                children: t.tr("agg.note", "Keep at least one. Candles and price come from the first checked exchange")
+              })]
+            })]
+          });
+        return e ? (0, i.jsxs)("div", {
+          className: e8().inlinePick,
+          children: [(0, i.jsx)(tl, {
+            "aria-expanded": s,
+            "aria-label": o,
+            onClick: () => l(!s),
+            children: h
+          }), s ? (0, i.jsx)("div", {
+            className: e8().inlineBody,
+            role: "group",
+            "aria-label": o,
+            children: d
+          }) : null]
+        }) : (0, i.jsx)(tn, {
+          size: "standard",
+          width: 330,
+          label: o,
+          title: t.tr("agg.title", "Aggregated: {{list}} (click to change)", {
+            list: n.map(e => N[e].ex).join(" + ")
+          }),
+          trigger: h,
+          children: d
+        })
+      }
+
+      function tS() {
+        let {
+          term: e
+        } = f(), t = "loading" === e.status ? "idle" : "error" === e.status ? "bad" : "open" === e.sock.state ? "ok" : "warn", s = "loading" === e.status ? e.tr("st.loading", "Loading…") : "error" === e.status ? e.tr("st.error", "Failed") : "open" === e.sock.state ? e.tr("st.live", "Live") : e.tr("st.reconnect", "Reconnecting");
+        return (0, i.jsxs)("span", {
+          className: te(e8().live, e8()[t]),
+          title: e.tr("st.title", "Data source"),
+          children: [(0, i.jsx)("i", {}), s]
+        })
+      }
+      let tj = () => (0, i.jsxs)("svg", {
+        className: e8().ico,
+        viewBox: "0 0 16 16",
+        "aria-hidden": "true",
+        children: [(0, i.jsx)("path", {
+          d: "M2.8 3.2v3.3h3.3"
+        }), (0, i.jsx)("path", {
+          d: "M3.2 6.3A5.2 5.2 0 1 1 3 9.6"
+        })]
+      });
+
+      function tC({
+        onDone: e
+      }) {
+        let {
+          term: t
+        } = f();
+        return (0, i.jsxs)("div", {
+          className: e8().rst,
+          children: [(0, i.jsx)("p", {
+            children: t.tr("top.resetAsk", "Reset timeframe, display, markers, panes, colors and exchanges to their defaults? The current pair stays.")
+          }), (0, i.jsx)(tl, {
+            onClick: () => {
+              e(), t.resetAll()
+            },
+            children: t.tr("top.resetGo", "Reset all")
+          })]
+        })
+      }
+
+      function tN() {
+        let {
+          term: e
+        } = f(), [t, s] = (0, a.useState)(!1);
+        return (0, i.jsx)(tn, {
+          size: "standard",
+          align: "end",
+          width: 260,
+          open: t,
+          onOpenChange: s,
+          label: e.tr("top.resetTitle", "Reset all settings"),
+          title: e.tr("top.resetTitle", "Reset all settings"),
+          trigger: (0, i.jsxs)("span", {
+            className: e8().ib,
+            children: [(0, i.jsx)(tj, {}), (0, i.jsx)("span", {
+              className: e8().ha,
+              children: e.tr("top.reset", "Reset")
+            })]
+          }),
+          children: (0, i.jsx)(tC, {
+            onDone: () => s(!1)
+          })
+        })
+      }
+      let tM = () => (0, i.jsxs)("svg", {
+        className: e8().ico,
+        viewBox: "0 0 16 16",
+        "aria-hidden": "true",
+        children: [(0, i.jsx)("path", {
+          d: "M8 1.8a6.2 6.2 0 1 0 0 12.4c.9 0 1.4-.7 1.1-1.4l-.2-.5c-.3-.9.3-1.8 1.3-1.8h1.4a2.6 2.6 0 0 0 2.6-2.6C14.2 4.5 11.4 1.8 8 1.8z"
+        }), (0, i.jsx)("circle", {
+          cx: "4.9",
+          cy: "7.4",
+          r: ".8"
+        }), (0, i.jsx)("circle", {
+          cx: "7.3",
+          cy: "4.8",
+          r: ".8"
+        }), (0, i.jsx)("circle", {
+          cx: "10.4",
+          cy: "5.3",
+          r: ".8"
+        })]
+      });
+
+      function tD() {
+        let {
+          term: e
+        } = f(), t = e.prefs, s = e.derived(), l = (0, a.useSyncExternalStore)(b, () => m().matches, () => !1), r = (0, a.useRef)(null), [n, o] = (0, a.useState)(!1), [h, d] = (0, a.useState)(!1), [c, p] = (0, a.useState)(!1);
+        (0, a.useEffect)(() => {
+          let e = r.current;
+          if (!e || "u" < typeof IntersectionObserver) return;
+          let t = new IntersectionObserver(([e]) => o(!e.isIntersecting && e.boundingClientRect.top < 0), {
+            rootMargin: "-45px 0px 0px 0px"
+          });
+          return t.observe(e), () => t.disconnect()
+        }, []);
+        let u = e.tr("titleOf", "{{sym}} Footprint chart", {
+            sym: t.sym
+          }),
+          g = (0, i.jsx)(tl, {
+            size: "standard",
+            onClick: () => {
+              let e = document.getElementById("fp-faq");
+              e && e.scrollIntoView({
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+                block: "start"
+              })
+            },
+            title: e.tr("top.faqTitle", "FAQ (bottom of page)"),
+            "aria-label": e.tr("faq.title", "FAQ"),
+            children: (0, i.jsxs)("span", {
+              className: e8().ib,
+              children: [(0, i.jsx)(e3.C5G, {
+                className: e8().uico
+              }), (0, i.jsx)("span", {
+                className: e8().ha,
+                children: e.tr("faq.title", "FAQ")
+              })]
+            })
+          });
+        return (0, i.jsxs)(i.Fragment, {
+          children: [(0, i.jsx)("div", {
+            className: e8().slot,
+            children: (0, i.jsxs)("header", {
+              ref: r,
+              className: e8().top,
+              children: [(0, i.jsx)("h1", {
+                className: e8().title,
+                children: u
+              }), (0, i.jsx)(t_, {}), (0, i.jsx)(tT, {}), (0, i.jsx)(tr, {
+                size: "standard",
+                value: t.itv,
+                onChange: t => e.setItv(t),
+                disabled: s,
+                ariaLabel: e.tr("top.itv", "Timeframe"),
+                title: s ? e.tr("top.itvOff", "Volume and range bars are built from 1-minute footprint data, not by timeframe") : void 0,
+                options: Object.keys(T).map(e => ({
+                  value: e,
+                  label: j[e]
+                }))
+              }), (0, i.jsx)("div", {
+                className: e8().grow
+              }), (0, i.jsx)(tS, {}), (0, i.jsx)(tn, {
+                size: "standard",
+                align: "end",
+                width: 320,
+                label: e.tr("pal.title", "Colors"),
+                title: e.tr("pal.title", "Colors"),
+                trigger: (0, i.jsxs)("span", {
+                  className: e8().ib,
+                  children: [(0, i.jsx)(tM, {}), (0, i.jsx)("span", {
+                    className: e8().ha,
+                    children: e.tr("pal.title", "Colors")
+                  })]
+                }),
+                children: (0, i.jsx)(tm, {})
+              }), (0, i.jsx)(tN, {}), g]
+            })
+          }), l && n ? (0, i.jsxs)("div", {
+            className: te(e8().top, e8().compact),
+            children: [(0, i.jsx)("span", {
+              className: e8().title,
+              children: u
+            }), (0, i.jsx)(t_, {
+              size: "compact"
+            }), (0, i.jsx)("span", {
+              className: e8().grow
+            }), (0, i.jsx)(tn, {
+              size: "compact",
+              align: "end",
+              width: 340,
+              label: e.tr("tb.settings", "Settings"),
+              title: e.tr("tb.settings", "Settings"),
+              triggerClassName: e8().foldBtn,
+              trigger: (0, i.jsxs)("svg", {
+                className: e8().ico,
+                viewBox: "0 0 16 16",
+                "aria-hidden": "true",
+                children: [(0, i.jsx)("path", {
+                  d: "M2.5 4.5h7M12.5 4.5h1M2.5 11.5h2M7.5 11.5h6"
+                }), (0, i.jsx)("circle", {
+                  cx: "11",
+                  cy: "4.5",
+                  r: "1.6"
+                }), (0, i.jsx)("circle", {
+                  cx: "6",
+                  cy: "11.5",
+                  r: "1.6"
+                })]
+              }),
+              children: (0, i.jsxs)("div", {
+                className: e8().sheet,
+                children: [(0, i.jsx)(ta, {
+                  size: "standard",
+                  className: e8().sheetSeg,
+                  label: e.tr("top.itv", "Timeframe"),
+                  value: t.itv,
+                  onChange: t => !s && e.setItv(t),
+                  options: Object.keys(T).map(e => ({
+                    value: e,
+                    label: j[e],
+                    disabled: s
+                  }))
+                }), (0, i.jsx)(tT, {
+                  inline: !0
+                }), (0, i.jsxs)("div", {
+                  className: e8().sheetRow,
+                  children: [(0, i.jsx)(tS, {}), (0, i.jsx)(tl, {
+                    size: "standard",
+                    "aria-expanded": h,
+                    onClick: () => d(!h),
+                    title: e.tr("pal.title", "Colors"),
+                    "aria-label": e.tr("pal.title", "Colors"),
+                    children: (0, i.jsx)("span", {
+                      className: e8().ib,
+                      children: (0, i.jsx)(tM, {})
+                    })
+                  }), (0, i.jsx)(tl, {
+                    size: "standard",
+                    "aria-expanded": c,
+                    onClick: () => p(!c),
+                    title: e.tr("top.resetTitle", "Reset all settings"),
+                    "aria-label": e.tr("top.resetTitle", "Reset all settings"),
+                    children: (0, i.jsx)("span", {
+                      className: e8().ib,
+                      children: (0, i.jsx)(tj, {})
+                    })
+                  }), g]
+                }), h ? (0, i.jsx)("div", {
+                  className: e8().inlineBody,
+                  children: (0, i.jsx)(tm, {})
+                }) : null, c ? (0, i.jsx)("div", {
+                  className: e8().inlineBody,
+                  children: (0, i.jsx)(tC, {
+                    onDone: () => p(!1)
+                  })
+                }) : null]
+              })
+            })]
+          }) : null]
+        })
+      }
+      var tO = s(73454),
+        tB = s.n(tO);
+
+      function tP() {
+        let {
+          term: e
+        } = f(), t = e.banner;
+        return t ? (0, i.jsxs)("div", {
+          className: te(tB().banner, "bad" === t.kind && tB().bad),
+          role: "bad" === t.kind ? "alert" : "status",
+          children: [(0, i.jsx)("span", {
+            children: t.text
+          }), (0, i.jsx)("div", {
+            className: tB().grow
+          }), t.retry ? (0, i.jsx)(tl, {
+            onClick: () => e.retry(),
+            children: e.tr("banner.retry", "Retry")
+          }) : null, (0, i.jsx)(tl, {
+            onClick: () => e.clearBanner(),
+            children: e.tr("banner.close", "Close")
+          })]
+        }) : null
+      }
+      var tA = s(52396),
+        tL = s.n(tA),
+        tF = s(82538);
+
+      function tR({
+        label: e,
+        title: t,
+        value: s,
+        valueCls: l,
+        sub: r
+      }) {
+        let {
+          version: n
+        } = f(), o = (0, a.useRef)(null);
+        return (0, tF.i)(o, n, 32, 20, tL().tight), (0, i.jsxs)("div", {
+          className: tL().kpi,
+          children: [(0, i.jsx)("div", {
+            className: tL().l,
+            title: t,
+            children: e
+          }), (0, i.jsx)("div", {
+            ref: o,
+            className: te(tL().v, l && tL()[l]),
+            children: s
+          }), (0, i.jsx)("div", {
+            className: tL().d,
+            children: r
+          })]
+        })
+      }
+
+      function tV() {
+        var e;
+        let t, {
+            term: s
+          } = f(),
+          l = s.D,
+          a = s.fmt,
+          r = s.chart,
+          n = r && r.G.dt,
+          o = N[s.prefs.mkt],
+          h = {
+            px: s.tr("kpi.price", "Last price"),
+            d: s.tr("kpi.delta", "Current bar Delta"),
+            v: s.tr("kpi.vol", "Current bar volume"),
+            i: s.tr("kpi.imb", "Current bar imbalances"),
+            vd: s.tr("kpi.viewDelta", "Delta in view"),
+            g: s.tr("kpi.sig", "Latest signal")
+          };
+        if (!l.n || !n) return (0, i.jsx)("section", {
+          className: tL().kpis,
+          children: Object.values(h).map(e => (0, i.jsx)(tR, {
+            label: e,
+            value: "—",
+            sub: "—"
+          }, e))
+        });
+        let d = l.n,
+          c = l.C[d - 1],
+          p = s.barOf(l.T[d - 1] - 864e5),
+          u = null != p ? c / l.C[p] - 1 : 0 / 0,
+          g = ev(s, d - 1, n),
+          [m, b] = r.visRange(),
+          v = 0,
+          x = 0;
+        for (let e = m; e <= b; e++) {
+          let t = ev(s, e, n);
+          t && (v += t.dlt, x += t.dltU)
+        }
+        let y = s.sigsOn(),
+          w = y[y.length - 1],
+          k = s.tr("kpi.priceOf", "Last price \xb7 {{m}}", {
+            m: s.mktName(o)
+          });
+        return (0, i.jsxs)("section", {
+          className: tL().kpis,
+          children: [(0, i.jsx)(tR, {
+            label: k,
+            title: k,
+            value: (0, i.jsxs)(i.Fragment, {
+              children: [(0, i.jsx)(tv, {
+                sym: l.sym,
+                className: tL().coin
+              }), $(c, s.dp)]
+            }),
+            sub: isFinite(u) ? (0, i.jsxs)(i.Fragment, {
+              children: [(0, i.jsx)("span", {
+                className: "pos" === Y(u) ? tL().pos : "neg" === Y(u) ? tL().neg : "",
+                children: K(u)
+              }), " 24h"]
+            }) : l.sym + " " + ("perp" === o.kind ? s.tr("mkt.perpetual", "Perpetual") : s.tr("mkt.spot", "Spot"))
+          }), g ? (0, i.jsxs)(i.Fragment, {
+            children: [(0, i.jsx)(tR, {
+              label: h.d,
+              value: a.fmtV(g.dlt, g.dltU, !0),
+              valueCls: Y(g.dlt),
+              sub: s.tr("kpi.buySell", "Buy {{b}} \xb7 Sell {{s}}", {
+                b: a.fmtV(g.buy, g.buyU),
+                s: a.fmtV(g.vol - g.buy, g.volU - g.buyU)
+              })
+            }), (0, i.jsx)(tR, {
+              label: h.v,
+              value: a.fmtV(g.vol, g.volU),
+              sub: s.tr("kpi.trades", "{{n}} trades \xb7 avg {{a}}", {
+                n: Q(g.cnt),
+                a: g.cnt ? a.fmtA(g.vol / g.cnt, g.volU / g.cnt) : "—"
+              })
+            }), (0, i.jsx)(tR, {
+              label: h.i,
+              value: (0, i.jsxs)(i.Fragment, {
+                children: [(0, i.jsx)("span", {
+                  className: tL().pos,
+                  children: g.nB
+                }), (0, i.jsx)("small", {
+                  children: s.tr("kpi.buy", "Buy")
+                }), (0, i.jsx)("span", {
+                  className: tL().neg,
+                  children: g.nS
+                }), (0, i.jsx)("small", {
+                  children: s.tr("kpi.sell", "Sell")
+                })]
+              }),
+              sub: s.tr("kpi.imbSub", "Large cells {{n}} \xb7 ratio {{r}}%", {
+                n: g.nBig,
+                r: 100 * s.prefs.ratio
+              })
+            })]
+          }) : [h.d, h.v, h.i].map(e => (0, i.jsx)(tR, {
+            label: e,
+            value: "—",
+            sub: s.tr("kpi.noFp", "No footprint data for the current bar yet")
+          }, e)), (0, i.jsx)(tR, {
+            label: h.vd,
+            value: a.fmtV(v, x, !0),
+            valueCls: Y(v),
+            sub: X(l.T[m], !0) + " – " + X(l.T[b], !0)
+          }), w ? (0, i.jsx)(tR, {
+            label: h.g,
+            value: (0, i.jsxs)(i.Fragment, {
+              children: [s.sigName(w), (0, i.jsx)("small", {
+                children: "buy" === w.side ? s.tr("sig.bullish", "Bullish") : s.tr("sig.bearish", "Bearish")
+              })]
+            }),
+            valueCls: "buy" === w.side ? "pos" : "neg",
+            sub: s.sigText(w)[0] + " \xb7 " + (e = l.T[w.i], (t = (Date.now() - e) / 1e3) < 60 ? s.tr("ago.now", "just now") : t < 3600 ? s.tr("ago.m", "{{n}}m ago", {
+              n: Math.floor(t / 60)
+            }) : t < 86400 ? s.tr("ago.h", "{{n}}h ago", {
+              n: Math.floor(t / 3600)
+            }) : s.tr("ago.d", "{{n}}d ago", {
+              n: Math.floor(t / 86400)
+            }))
+          }) : (0, i.jsx)(tR, {
+            label: h.g,
+            value: s.tr("kpi.none", "None"),
+            sub: s.tr("kpi.sigTypes", "Absorption / trapped / divergence / exhaustion")
+          })]
+        })
+      }
+      var tH = s(89750),
+        tW = s.n(tH);
+      let tI = (e, t, s, i, l, a) => {
+          a && e.roundRect ? e.roundRect(t, s, i, l, a) : e.rect(t, s, i, l)
+        },
+        tU = e => {
+          let t = e >= 18,
+            s = t ? U(.06 * e, 1.5, 6) : 0,
+            i = t ? U(.12 * e, 3, 9) : 0;
+          return {
+            fp: t,
+            gap: s,
+            cw: i,
+            off: s + i + 5 * !!t,
+            cellW: t ? Math.max(1, e - 2 * s - i - 5) : 0
+          }
+        };
+      class tE {
+        constructor(e, t, s, i) {
+          this.T = e, this.plot = t, this.cvB = s, this.cvO = i, this.cb = s.getContext("2d"), this.co = i.getContext("2d"), this.V = {
+            start: 0,
+            span: 14,
+            yAuto: !0,
+            pLo: 0,
+            pHi: 1
+          }, this.G = {
+            W: 0,
+            H: 0,
+            dpr: 1,
+            plotW: 0,
+            pvX: 0,
+            pvW: 0,
+            axX: 0,
+            statsY: 0,
+            timeY: 0,
+            subRowH: 0,
+            tblH: 0,
+            dt: 0,
+            y: null,
+            p: null,
+            viewOk: !1
+          }, this.AX = 76, this.dirty = {
+            base: !0,
+            over: !0
+          }, this.raf = 0, this.rafT = 0, this.hover = null, this.drag = null, this.touches = new Map, this.CL = null, this.ff = "Arial, sans-serif", this.TW = new Map, this.TWS = new Map, this.INK = new Map, this.SN = new Map, this.onTip = null, this.onSettle = null, this.onLayout = null, this.frame = this.frame.bind(this), this.bind(), this.ro = "u" > typeof ResizeObserver ? new ResizeObserver(() => this.resize()) : null, this.ro && this.ro.observe(t)
+        }
+        destroy() {
+          this.ro && this.ro.disconnect(), this.unbind(), cancelAnimationFrame(this.raf), clearTimeout(this.rafT), clearTimeout(this.settleT)
+        }
+        setColors(e, t) {
+          this.CL = e, this.INK.clear(), t && (this.ff = t);
+          let s = this.ff;
+          Object.assign(this, {
+            FONT: "500 12px " + s,
+            FONTB: "700 12px " + s,
+            FONTL: "12.5px " + s,
+            FONTLB: "600 12.5px " + s,
+            FONTM: "600 13px " + s,
+            FONTT: "600 11.5px " + s,
+            FONTSB: "600 12px " + s,
+            FONTX: "500 11px " + s,
+            FONTXB: "600 11px " + s
+          }), this.TW.clear(), this.TWS.clear(), this.relayout()
+        }
+        recolor() {
+          this.onRecolor && this.onRecolor()
+        }
+        relang() {
+          this.TW.clear(), this.TWS.clear(), this.SN.clear(), this.relayout()
+        }
+        tw(e) {
+          let t = this.TW.get(e);
+          return null == t && (this.cb.font = this.FONTB, t = this.cb.measureText(e).width, this.TW.size > 8e3 && this.TW.clear(), this.TW.set(e, t)), t
+        }
+        twS(e) {
+          let t = this.TWS.get(e);
+          return null == t && (this.cb.font = this.FONTSB, t = this.cb.measureText(e).width, this.TWS.size > 8e3 && this.TWS.clear(), this.TWS.set(e, t)), t
+        }
+        snap(e) {
+          return Math.round(e * this.G.dpr) / this.G.dpr
+        }
+        markBase() {
+          this.dirty.base = !0, this.kick()
+        }
+        markOver() {
+          this.dirty.over = !0, this.kick()
+        }
+        kick() {
+          this.raf || (this.raf = requestAnimationFrame(this.frame), clearTimeout(this.rafT), this.rafT = setTimeout(() => {
+            this.raf && (cancelAnimationFrame(this.raf), this.frame())
+          }, 120))
+        }
+        frame() {
+          this.raf = 0, clearTimeout(this.rafT), this.CL && (this.dirty.base && (this.dirty.base = !1, this.drawBase(), this.dirty.over = !0), this.dirty.over && (this.dirty.over = !1, this.drawOver()))
+        }
+        dragging() {
+          return !!this.drag
+        }
+        bw() {
+          return this.G.plotW / this.V.span
+        }
+        xOf(e) {
+          return (e - this.V.start) * this.bw()
+        }
+        clampView() {
+          let e = Math.max(1, this.T.D.n),
+            t = this.V;
+          t.span = U(t.span, 3, Math.max(3, Math.min(1500, 1.2 * e + 10))), t.start = U(t.start, -(.3 * t.span), e - Math.min(2, .5 * t.span))
+        }
+        resetView() {
+          let e = this.G,
+            t = this.V,
+            s = this.T.D.n;
+          e.viewOk = e.W > 0, t.span = U(Math.round(e.plotW / 108), 5, Math.max(5, s)), t.start = s - t.span + 1.5, t.yAuto = !0, this.clampView(), this.viewChanged()
+        }
+        visRange() {
+          let e = this.T.D,
+            t = this.V;
+          return [Math.max(0, Math.floor(t.start)), Math.min(e.n - 1, Math.ceil(t.start + t.span) - 1)]
+        }
+        subRows() {
+          let e = this.T.prefs.subs;
+          return ["vol", "delta", "cvd", "oi"].filter(t => e[t])
+        }
+        tblRows() {
+          let e = this.T.prefs;
+          return e.subs.tbl ? this.TBL.filter(t => e.tbl[t.k]) : []
+        }
+        subName(e) {
+          let t = this.SN.get(e);
+          if (null == t) {
+            let s = P.find(t => t[0] === e);
+            t = F(this.T.t, "subs", e, s[1]), this.SN.set(e, t)
+          }
+          return t
+        }
+        axW() {
+          if (!this.FONT) return 76;
+          let e = this.cb,
+            t = 0;
+          for (let s of (e.font = this.FONTM, this.subRows())) t = Math.max(t, e.measureText(this.subName(s)).width);
+          for (let s of (e.font = this.FONT, this.tblRows())) t = Math.max(t, e.measureText(s.n).width);
+          return U(Math.ceil(t + 16), 76, this.G.W < 600 ? 92 : 132)
+        }
+        axText(e, t) {
+          let s = this.AX - 12;
+          if (e.measureText(t).width <= s) return t;
+          for (; t.length > 1 && e.measureText(t + "…").width > s;) t = t.slice(0, -1);
+          return t.trimEnd() + "…"
+        }
+        layout() {
+          this.buildTbl();
+          let e = this.G,
+            t = this.T.prefs;
+          this.AX = this.axW();
+          let s = t.vp && e.W > 560 ? U(Math.round(.11 * e.W), 90, 160) : 0;
+          e.pvW = s, e.plotW = Math.max(10, e.W - this.AX - s), e.pvX = e.plotW, e.axX = e.plotW + s, e.timeY = e.H - 26;
+          let i = this.subRows().length,
+            l = this.tblRows().length;
+          e.tblH = l ? 22 * l + 8 : 0;
+          let a = i ? U(t.subRowH, 48, 240) : 0,
+            r = .55 * e.timeY;
+          i && i * a + e.tblH > r && (a = Math.max(40, Math.floor((r - e.tblH) / i))), e.subRowH = a, e.statsY = e.timeY - i * a - e.tblH, this.onLayout && this.onLayout({
+            right: e.W - e.plotW,
+            bottom: e.H - e.statsY
+          })
+        }
+        resize() {
+          let e = this.plot.getBoundingClientRect();
+          if (!e.width || !e.height) return;
+          let t = this.G,
+            s = this.V,
+            i = this.T.D,
+            l = Math.min(2, window.devicePixelRatio || 1),
+            a = t.plotW ? this.bw() : 0,
+            r = s.start + s.span;
+          for (let s of (t.W = e.width, t.H = e.height, t.dpr = l, [this.cvB, this.cvO])) s.width = Math.max(1, Math.round(e.width * l)), s.height = Math.max(1, Math.round(e.height * l));
+          this.layout(), i.n && !t.viewOk ? this.resetView() : i.n && a > 0 && (s.span = t.plotW / a, s.start = r - s.span), this.clampView(), this.dirty.base = this.dirty.over = !0, this.frame(), i.n && this.settleSoon()
+        }
+        relayout() {
+          let e = this.G,
+            t = this.V,
+            s = e.plotW ? this.bw() : 0,
+            i = t.start + t.span;
+          this.layout(), s > 0 && (t.span = e.plotW / s, t.start = i - t.span, this.clampView()), this.markBase()
+        }
+        dataChanged(e) {
+          e ? (this.hover = null, this.layout(), this.T.D.n ? this.resetView() : this.markBase()) : this.markBase()
+        }
+        shifted(e) {
+          let t = this.V,
+            s = this.drag;
+          t.start += e, s && "pan" === s.type && (s.s0 += e), s && "tz" === s.type && (s.right += e), this.markBase(), this.settleSoon()
+        }
+        jumpTo(e) {
+          this.V.start = e - .6 * this.V.span, this.clampView(), this.viewChanged(), this.markOver()
+        }
+        viewChanged() {
+          this.markBase(), this.V.start < 20 && this.T.maybeOlder(), this.settleSoon()
+        }
+        settleSoon() {
+          clearTimeout(this.settleT), this.settleT = setTimeout(() => {
+            !this.drag && this.onSettle && this.onSettle()
+          }, 250)
+        }
+        pickTick(e, t, s, i) {
+          let l = this.T.D,
+            a = this.T.prefs,
+            r = 0;
+          for (let s = e; s <= t; s++) {
+            let e = l.F[s];
+            e && e.tick > r && (r = e.tick)
+          }
+          if (r || (r = l.baseTick || 1), "auto" !== a.tick) {
+            let e = +a.tick;
+            return e >= r ? e : r
+          }
+          let n = i >= 36 ? 15 : i >= 18 ? 12 : i > 0 ? 7 : 3;
+          for (let e of [1, 2, 4, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1e3, 2e3, 5e3]) {
+            let t = +(r * e).toPrecision(10);
+            if (t * s >= n) return t
+          }
+          return 5e3 * r
+        }
+        timeTicks(e, t, s) {
+          let i = this.T.D,
+            l = Math.max(i.step, 110 / s * i.step),
+            a = this.cb,
+            r = [1, 5, 15, 30, 60, 120, 240, 360, 720, 1440, 2880, 4320, 10080, 20160].map(e => 6e4 * e).find(e => e >= l) || 0,
+            n = r ? 0 : [1, 2, 3, 6, 12].find(e => 30.44 * e * 864e5 >= l) || 12,
+            o = 6e4 * new Date().getTimezoneOffset(),
+            h = e => e >= 0 && e < i.n ? i.T[e] : i.T[0] + e * i.step,
+            d = e => {
+              if (n) {
+                let t = new Date(e);
+                return Math.floor((12 * t.getFullYear() + t.getMonth()) / n)
+              }
+              return Math.floor((e - o) / r)
+            },
+            c = [],
+            p = d(h(e - 1)),
+            u = Math.floor((h(e - 1) - o) / 864e5),
+            f = -1e9;
+          a.font = this.FONTB;
+          for (let l = e; l <= t; l++) {
+            let e, t, h = i.T[l],
+              g = d(h),
+              m = Math.floor((h - o) / 864e5);
+            if (g === p) {
+              u = m;
+              continue
+            }
+            let b = new Date(h),
+              v = m !== u;
+            p = g, u = m, n ? e = (t = 0 === b.getMonth()) ? String(b.getFullYear()) : b.getFullYear() + "-" + I(b.getMonth() + 1) : r >= 864e5 || v ? (t = !0, e = I(b.getMonth() + 1) + "-" + I(b.getDate())) : (t = !1, e = X(h));
+            let x = this.xOf(l) + s / 2,
+              y = a.measureText(e).width;
+            x - y / 2 < Math.max(2, f + 12) || x + y / 2 > this.G.plotW - 4 || (f = x + y / 2, c.push([l, e, t]))
+          }
+          return c
+        }
+        drawBase() {
+          let e = this.T,
+            t = e.D,
+            s = e.prefs,
+            i = this.G,
+            l = this.V,
+            a = this.CL,
+            r = this.cb;
+          if (r.setTransform(i.dpr, 0, 0, i.dpr, 0, 0), r.clearRect(0, 0, i.W, i.H), !t.n || !i.plotW) {
+            r.fillStyle = a.fg3, r.font = this.FONTL, r.textAlign = "center", r.textBaseline = "middle", r.fillText(t.err || (N[s.mkt].agg ? e.tr("chart.loadingAgg", "Loading… (aggregates pull data from several exchanges, so this takes a bit longer)") : e.tr("chart.loading", "Loading…")), i.W / 2, i.H / 2), i.y = null;
+            return
+          }
+          let n = this.bw(),
+            o = Math.max(0, Math.floor(l.start)),
+            h = Math.min(t.n - 1, Math.ceil(l.start + l.span));
+          if (l.yAuto) {
+            let e = 1 / 0,
+              s = -1 / 0;
+            for (let i = o; i <= h; i++) t.L[i] < e && (e = t.L[i]), t.H[i] > s && (s = t.H[i]);
+            if (!isFinite(e)) return;
+            let i = (s - e) * .06 || .001 * s;
+            l.pLo = e - i, l.pHi = s + i
+          }
+          let d = i.statsY - 8,
+            c = l.pHi,
+            p = l.pLo,
+            u = (d - 10) / (c - p),
+            f = e => 10 + (c - e) * u;
+          i.y = f, i.p = e => c - (e - 10) / u, i.top = 10, i.bot = d;
+          let g = tU(n);
+          i.geo = g;
+          let m = this.pickTick(o, h, u, g.cellW);
+          i.dt = m;
+          let b = m * u;
+          i.rowH = b;
+          let v = 1 / i.dpr,
+            x = e => this.snap(e),
+            y = e_(e, m);
+          ew(e);
+          let w = q((c - p) / Math.max(2, Math.floor((d - 10) / 56))),
+            k = [];
+          r.fillStyle = a.grid;
+          for (let e = Math.ceil(p / w) * w; e <= c; e += w) {
+            let t = f(e);
+            t < 9 || t > d + 1 || (r.fillRect(0, x(t), i.plotW, v), k.push([t, e]))
+          }
+          let _ = this.timeTicks(o, h, n);
+          for (let [e] of _) r.fillRect(x(this.xOf(e) + n / 2), 0, v, i.timeY);
+          if (r.save(), r.beginPath(), r.rect(0, 0, i.plotW, i.statsY), r.clip(), s.marks.stack)
+            for (let e of y) {
+              if ((e.end < 0 ? h + 1 : e.end) < o || e.i > h) continue;
+              let t = this.xOf(e.i) + n - g.gap,
+                s = e.end < 0 ? i.plotW : this.xOf(e.end) + n / 2,
+                l = f(e.hi),
+                d = f(e.lo);
+              if (s <= t) continue;
+              let c = "buy" === e.side ? a.bid : a.ask;
+              r.fillStyle = eU(c, e.end < 0 ? .06 : .03), r.fillRect(t, l, s - t, d - l), r.fillStyle = eU(c, e.end < 0 ? .45 : .18), r.fillRect(t, x(l), s - t, 1), r.fillRect(t, x(d) - 1, s - t, 1)
+            }
+          s.marks.vwap && this.drawVwap(r, o, h, n, f), i.npocLabels = null, s.marks.npoc && this.drawNpoc(r, o, h, n, m, f), s.marks.ua && this.drawUA(r, o, h, n, f), g.fp ? this.drawCells(r, o, h, g, m, f, b) : this.drawCandles(r, o, h, n, m, f), s.marks.pocm && this.drawPocm(r, o, h, n, m, f, g), s.marks.big && this.drawBigs(r, o, h, n, f), s.marks.sig && this.drawSigs(r, o, h, n, f), r.restore();
+          let T = t.C[t.n - 1],
+            S = f(T),
+            j = e.dp;
+          S >= 0 && S <= i.statsY && (r.strokeStyle = eU(a.fg2, .6), r.lineWidth = 1, r.setLineDash([4, 4]), r.beginPath(), r.moveTo(0, x(S) + v / 2), r.lineTo(i.axX, x(S) + v / 2), r.stroke(), r.setLineDash([])), i.pvW ? this.drawProfile(r, o, h, m, f) : i.pv = null, this.drawSub(r, o, h, n, m), r.fillStyle = a.line, r.fillRect(0, x(i.timeY), i.W, v), r.fillRect(x(i.axX), 0, v, i.timeY), i.pvW && r.fillRect(x(i.pvX), 0, v, i.timeY), r.font = this.FONT, r.textAlign = "left", r.textBaseline = "middle", r.fillStyle = a.fg3;
+          let C = Math.max(0, Math.min(8, Math.ceil(-Math.log10(w) - 1e-9)));
+          for (let [e, t] of k) 15 > Math.abs(e - S) || r.fillText($(t, C), i.axX + 8, e);
+          for (let [e, t, s] of(S >= 0 && S <= i.statsY && this.axisTag(r, S, $(T, j), a.priceBg, a.priceFg, 0, i.statsY, this.FONTLB), r.textAlign = "center", _)) r.font = s ? this.FONTB : this.FONT, r.fillStyle = s ? a.fg2 : a.fg3, r.fillText(t, this.xOf(e) + n / 2, i.timeY + 13 + 1)
+        }
+        drawCells(e, t, s, i, l, a, r) {
+          let n = this.T,
+            o = n.D,
+            h = n.prefs,
+            d = n.fmt,
+            c = this.CL,
+            p = this.G,
+            u = e => this.snap(e),
+            {
+              gap: f,
+              cw: g,
+              cellW: m
+            } = i,
+            b = 1 / p.dpr,
+            v = h.mode,
+            x = h.marks.imb,
+            y = h.marks.bigCell,
+            w = "ba" === v || "cnt" === v || "avg" === v,
+            k = {},
+            _ = e => k[e] || (k[e] = new Path2D),
+            T = [],
+            S = [],
+            j = [],
+            C = [],
+            N = [],
+            M = [],
+            D = new Path2D,
+            O = new Path2D,
+            B = [],
+            P = r >= 15,
+            A = r >= 11 && m >= 14,
+            L = +(r >= 10),
+            F = 2 * (r >= 11 && m >= 28),
+            R = +(m >= 16),
+            V = (m - R) / 2,
+            H = (e, t) => Math.max(1, Math.min(8, Math.round(8 * e / (t || 1)))),
+            W = "usd" === h.unit,
+            I = [];
+          for (let e = t; e <= s; e++) {
+            let t = ev(n, e, l);
+            if (!t) continue;
+            let s = this.xOf(e),
+              r = s + i.off,
+              o = [],
+              h = 0,
+              c = 0,
+              u = 0,
+              f = "ba" === v ? t.maxCell : t.maxAvg;
+            if ("cnt" === v) {
+              f = 0;
+              for (let e = 0; e < t.n; e++) {
+                let s = t.bc[e] + t.sc[e];
+                s > f && (f = s)
+              }
+            }
+            for (let e = 0; e < t.n; e++) {
+              let s = t.b[e],
+                i = t.s[e];
+              if (!(s + i)) continue;
+              let r = a(t.lo + (e + 1) * l),
+                n = a(t.lo + e * l);
+              if (n < 0 || r > p.statsY) continue;
+              let f = "",
+                g = "",
+                m = "",
+                x = "",
+                y = "",
+                k = 0,
+                _ = 0,
+                T = 1,
+                S = t.lo + (e + .5) * l;
+              if ("ba" === v ? (k = i, _ = s, T = t.maxSide) : "cnt" === v ? (k = t.sc[e], _ = t.bc[e], T = t.maxCnt) : "avg" === v && (k = t.sc[e] ? i / t.sc[e] : 0, _ = t.bc[e] ? s / t.bc[e] : 0, T = t.maxAvg), A)
+                if (w) {
+                  let l = e => "cnt" === v ? Q(e) : "avg" === v ? d.fmtA(e, e * S) : d.fmtV(e, e * S),
+                    a = e => "cnt" !== v && W ? e * S : e;
+                  f = l(k), g = l(_), h = Math.max(h, 2 * Math.max(this.tw(f), this.tw(g)) + 14), m = ee(a(k)), x = ee(a(_)), c = Math.max(c, Math.max(this.twS(m), this.twS(x)) + 2);
+                  let r = t.sc[e] + t.bc[e];
+                  y = ee(a("cnt" === v ? r : "avg" === v ? r ? (s + i) / r : 0 : s + i)), u = Math.max(u, this.twS(y) + 2)
+                } else {
+                  let e = s - i,
+                    t = "delta" === v ? e : s + i;
+                  f = "delta" === v ? d.fmtV(e, e * S, !0) : d.fmtV(t, t * S), h = Math.max(h, this.tw(f) + 10), m = ee(W ? t * S : t, "delta" === v), c = Math.max(c, this.twS(m) + ("delta" === v ? 2 : 4))
+                } o.push([e, r, Math.max(b, n - r - L), f, g, k, _, T, m, x, y])
+            }
+            I.push({
+              a: t,
+              gx: s,
+              x0: r,
+              rows: o,
+              need: h,
+              needC: c,
+              needO: u,
+              nT: f
+            })
+          }
+          let E = 11 / 12,
+            z = w ? V : m,
+            q = {
+              n: e => P && e.needC <= z,
+              s: e => e.needC * E <= z,
+              o: e => P && e.needO <= m,
+              os: e => e.needO * E <= m
+            },
+            Y = "",
+            X = I.filter(e => e.rows.length);
+          if (A && X.length)
+            for (let e of w ? ["n", "s", "o", "os"] : ["n", "s"]) {
+              let t = 0;
+              for (let s of X) q[e](s) && t++;
+              if (t >= .8 * X.length) {
+                Y = e;
+                break
+              }
+            }
+          for (let e of I) {
+            let {
+              a: t,
+              gx: s,
+              x0: i,
+              rows: n,
+              nT: o
+            } = e, d = n.length ? "n" === Y ? P && e.need <= m ? "f" : q.n(e) ? "c" : q.s(e) ? "cs" : "" : "s" === Y ? q.s(e) ? "cs" : "" : "o" === Y ? q.o(e) ? "o" : q.os(e) ? "os" : "" : "os" === Y && q.os(e) ? "os" : "" : "", c = !!d, b = "o" === d || "os" === d, k = c && w && !b, A = c ? "t|" : "n|";
+            for (let [e, s, l, a, r, h, p, , f, g, j] of n) {
+              let n = t.b[e],
+                C = t.s[e],
+                N = x && t.imbB[e],
+                M = x && t.imbS[e],
+                P = "f" === d ? a : b ? j : f,
+                L = "f" === d ? r : g;
+              if (w) {
+                let e = h + p;
+                e > 0 && tI(_(A + (Math.abs(p - h) < .1 * e ? "neu" : p > h ? "bid" : "ask") + "|" + H("avg" === v ? Math.max(h, p) : e, o)), i, s, m, l, F)
+              } else if ("delta" === v) {
+                let e = n - C;
+                tI(_(A + (e > 0 ? "bid|" + H(e, t.maxAbsD) : e < 0 ? "ask|" + H(-e, t.maxAbsD) : "neu|2")), i, s, m, l, F)
+              } else {
+                let e = n + C,
+                  a = e / t.maxCell * m,
+                  r = C / e * a;
+                C && _("askv").rect(i, s, r, l), n && _("bidv").rect(i + r, s, a - r, l)
+              }
+              y && (t.bigB[e] || t.bigS[e]) && (k ? (t.bigS[e] && O.rect(u(i) + .75, u(s) + .75, V - 1.5, Math.max(1, l - 1.5)), t.bigB[e] && D.rect(u(i + V + R) + .75, u(s) + .75, V - 1.5, Math.max(1, l - 1.5))) : B.push([i, s, l, t.bigB[e], t.bigS[e]])), c && T.push([i, s, l, P, L, N, M, d]), (!c || b) && (N || M) && S.push([i, s, l, N, M])
+            }
+            if (h.marks.poc && t.maxCell > 0 && (j.push([i, a(t.lo + (t.poc + 1) * l), a(t.lo + t.poc * l) - L]), C.push([s + f + g + 1.75, a(t.lo + (t.va1 + 1) * l), a(t.lo + t.va0 * l)])), h.marks.ua && r >= 8 && (t.uaHi && N.push([i, a(t.lo + (t.top + 1) * l) - 2]), t.uaLo && N.push([i, a(t.lo + t.bot * l) + 2])), h.marks.stack)
+              for (let e of t.zones) {
+                let s = a(t.lo + (e.k1 + 1) * l),
+                  r = a(t.lo + e.k0 * l) - L;
+                if (r < 0 || s > p.statsY) continue;
+                let n = "sell" === e.side;
+                M.push(w ? [n ? i : i + V + R, s, V, r - s, n, k] : [i, s, m, r - s, n, c])
+              }
+          }
+          for (let t in k) {
+            let s = t.split("|");
+            if (s.length < 3) {
+              e.fillStyle = c.ramp[("b" === s[0][0] ? "bid" : "ask") + "0"][6], e.fill(k[t]);
+              continue
+            }
+            e.fillStyle = c.ramp[s[1] + +("t" === s[0])][+s[2]], e.fill(k[t])
+          }
+          let G = new Path2D,
+            K = new Path2D;
+          for (let e = t; e <= s; e++) {
+            let t = this.xOf(e) + f,
+              s = o.O[e],
+              i = o.C[e],
+              l = i >= s ? G : K,
+              r = u(t + g / 2);
+            l.rect(r - b / 2, a(o.H[e]), b, Math.max(b, a(o.L[e]) - a(o.H[e])));
+            let n = a(Math.max(s, i)),
+              h = a(Math.min(s, i));
+            l.rect(u(t), n, Math.max(b, u(g)), Math.max(b, h - n))
+          }
+          for (let [t, s, i, l, a, r] of(e.fillStyle = c.up, e.fill(G), e.fillStyle = c.down, e.fill(K), M)) {
+            let n = a ? c.ask : c.bid;
+            r && i >= 10 && l >= 6 ? (e.strokeStyle = n, e.lineWidth = 2, e.beginPath(), tI(e, u(t) + 1, u(s) + 1, i - 2, l - 2, 3), e.stroke()) : (e.fillStyle = n, e.fillRect(a ? t - 1 : t + i - 1, s, 2, Math.max(2, l)))
+          }
+          for (let [t, s, i, l, a] of(e.lineWidth = 1.5, e.strokeStyle = c.bid, e.stroke(D), e.strokeStyle = c.ask, e.stroke(O), B)) {
+            let r = U(.32 * i, 1.6, 3),
+              n = s + i / 2;
+            a && (e.fillStyle = c.ask, e.beginPath(), e.arc(t + r + 1, n, r, 0, 7), e.fill()), l && (e.fillStyle = c.bid, e.beginPath(), e.arc(t + m - r - 1, n, r, 0, 7), e.fill())
+          }
+          if (C.length)
+            for (let [t, s, i] of(e.fillStyle = eU(c.fg3, .8), C)) e.fillRect(u(t), s, 1.5, Math.max(1, i - s));
+          if (j.length)
+            for (let [t, s, i] of(e.strokeStyle = c.poc, e.fillStyle = c.poc, e.lineWidth = r >= 6 ? 1.5 : 1, j)) {
+              let l = i - s;
+              r >= 4 ? e.strokeRect(u(t) + .75, u(s) + .75, m - 1.5, Math.max(1, l - 1.5)) : e.fillRect(t, s, m, Math.max(1.5, l))
+            }
+          if (N.length) {
+            for (let [t, s] of(e.strokeStyle = c.poc, e.lineWidth = 1.5, e.setLineDash([3, 2]), e.beginPath(), N)) e.moveTo(t, u(s) + .5), e.lineTo(t + m, u(s) + .5);
+            e.stroke(), e.setLineDash([])
+          }
+          if (T.length)
+            for (let [t, s, i, l, a, r, n, o] of(e.textBaseline = "middle", T)) {
+              let h = s + i / 2 + .5,
+                d = "cs" === o || "os" === o,
+                p = d ? this.FONTX : this.FONT,
+                u = d ? this.FONTXB : this.FONTSB;
+              if ("o" === o || "os" === o) {
+                e.textAlign = "center", e.font = p, e.fillStyle = c.fg, e.fillText(l, t + m / 2, h);
+                continue
+              }
+              if (w) {
+                let s = t + V + R / 2;
+                if ("f" !== o) {
+                  e.textAlign = "center", e.font = n ? u : p, e.fillStyle = n ? c.askT : c.fg, e.fillText(l, t + V / 2, h), e.font = r ? u : p, e.fillStyle = r ? c.bidT : c.fg, e.fillText(a, t + V + R + V / 2, h);
+                  continue
+                }
+                e.textAlign = "right", e.font = n ? this.FONTB : this.FONT, e.fillStyle = n ? c.askT : c.fg, e.fillText(l, s - 6, h), e.textAlign = "left", e.font = r ? this.FONTB : this.FONT, e.fillStyle = r ? c.bidT : c.fg, e.fillText(a, s + 6, h)
+              } else "delta" === v ? (e.textAlign = "center", e.font = r || n ? d ? this.FONTXB : this.FONTB : p, e.fillStyle = r ? c.bidT : n ? c.askT : c.fg, e.fillText(l, t + m / 2, h)) : (e.textAlign = "right", e.font = p, e.fillStyle = c.fg, e.fillText(l, t + m - 4, h))
+            }
+          for (let [t, s, i, l, a] of S) a && (e.fillStyle = c.ask, e.fillRect(t, s, 2.5, i)), l && (e.fillStyle = c.bid, e.fillRect(t + m - 2.5, s, 2.5, i))
+        }
+        drawCandles(e, t, s, i, l, a) {
+          let r = this.T,
+            n = r.D,
+            o = this.CL,
+            h = 1 / this.G.dpr,
+            d = e => this.snap(e),
+            c = Math.max(h, Math.min(18, .72 * i)),
+            p = new Path2D,
+            u = new Path2D,
+            f = new Path2D;
+          for (let e = t; e <= s; e++) {
+            let t = this.xOf(e) + i / 2,
+              s = n.O[e],
+              o = n.C[e],
+              g = o >= s ? p : u,
+              m = d(t);
+            g.rect(m - h / 2, a(n.H[e]), h, Math.max(h, a(n.L[e]) - a(n.H[e])));
+            let b = a(Math.max(s, o)),
+              v = a(Math.min(s, o));
+            if (g.rect(d(t - c / 2), b, Math.max(h, d(c)), Math.max(h, v - b)), r.prefs.marks.poc && i >= 5) {
+              let s = ev(r, e, l);
+              if (s && s.maxCell > 0) {
+                let e = d(a(s.lo + (s.poc + .5) * l)),
+                  r = c / 2 + Math.min(3, .12 * i);
+                f.rect(d(t - r), e - 1, d(2 * r), 2)
+              }
+            }
+          }
+          e.globalAlpha = .92, e.fillStyle = o.up, e.fill(p), e.fillStyle = o.down, e.fill(u), e.globalAlpha = 1, e.fillStyle = o.poc, e.fill(f)
+        }
+        drawPocm(e, t, s, i, l, a, r) {
+          let n = this.T,
+            o = n.D,
+            h = this.CL,
+            d = [];
+          for (let e = Math.max(0, t - 1); e <= Math.min(o.n - 1, s + 1); e++) {
+            let t = ev(n, e, l);
+            d.push(t && t.maxCell ? [e, a(t.lo + (t.poc + .5) * l)] : null)
+          }
+          e.lineWidth = r.fp ? 1.75 : 1.5, e.lineCap = "round";
+          for (let t = 1; t < d.length; t++) {
+            let s = d[t - 1],
+              l = d[t];
+            if (!s || !l) continue;
+            let a = r.fp ? this.xOf(s[0]) + r.off + r.cellW : this.xOf(s[0]) + i / 2,
+              n = r.fp ? this.xOf(l[0]) + r.off : this.xOf(l[0]) + i / 2;
+            e.strokeStyle = eU(l[1] < s[1] - .5 ? h.up : l[1] > s[1] + .5 ? h.down : h.fg3, .9), e.beginPath(), e.moveTo(a, s[1]), e.lineTo(n, l[1]), e.stroke()
+          }
+          if (e.lineCap = "butt", !r.fp && !n.prefs.marks.poc && i >= 6)
+            for (let t of (e.fillStyle = h.poc, d)) t && (e.beginPath(), e.arc(this.xOf(t[0]) + i / 2, t[1], Math.min(3, .2 * i), 0, 7), e.fill())
+        }
+        drawUA(e, t, s, i, l) {
+          let a = function(e) {
+              let t = e.D,
+                s = t.n,
+                i = e.cache,
+                l = t.gver + "|" + s + "|" + (s ? t.ver[s - 1] : 0);
+              if (l === i.uaKey) return i.ua;
+              i.uaKey = l;
+              let a = new Float64Array(s),
+                r = new Float64Array(s),
+                n = -1 / 0,
+                o = 1 / 0;
+              for (let e = s - 1; e >= 0; e--) a[e] = n, r[e] = o, t.H[e] > n && (n = t.H[e]), t.L[e] < o && (o = t.L[e]);
+              let h = [],
+                d = [];
+              for (let e = 0; e < s - 1; e++) {
+                let s = t.F[e];
+                if (!s) continue;
+                let i = -1,
+                  l = -1;
+                for (let e = s.b.length - 1; e >= 0; e--)
+                  if (s.b[e] + s.s[e] > 0) {
+                    i = e;
+                    break
+                  } if (!(i < 0)) {
+                  for (let e = 0; e <= i; e++)
+                    if (s.b[e] + s.s[e] > 0) {
+                      l = e;
+                      break
+                    } s.b[i] > 0 && s.s[i] > 0 && a[e] < t.H[e] && h.push({
+                    i: e,
+                    p: t.H[e]
+                  }), s.b[l] > 0 && s.s[l] > 0 && r[e] > t.L[e] && d.push({
+                    i: e,
+                    p: t.L[e]
+                  })
+                }
+              }
+              return i.ua = h.slice(-8).concat(d.slice(-8))
+            }(this.T),
+            r = this.G;
+          if (a.length) {
+            for (let {
+                i: t,
+                p: n
+              }
+              of(e.strokeStyle = eU(this.CL.fg2, .55), e.lineWidth = 1, e.setLineDash([1, 3]), e.beginPath(), a)) {
+              if (t > s) continue;
+              let a = Math.max(0, this.xOf(t) + i),
+                o = this.snap(l(n)) + .5;
+              o < 0 || o > r.statsY || a >= r.plotW || (e.moveTo(a, o), e.lineTo(r.plotW, o))
+            }
+            e.stroke(), e.setLineDash([])
+          }
+        }
+        drawBigs(e, t, s, i, l) {
+          let a = this.T,
+            r = a.D,
+            n = this.CL;
+          if (!r.bigs.length) return;
+          let o = a.bigThr();
+          for (let [h, d, , c, p] of(e.lineWidth = 1.5, r.bigs)) {
+            let r = a.barOf(h);
+            if (null == r || r < t || r > s) continue;
+            let u = U(4 * Math.sqrt(p / o), 4, 16),
+              f = this.xOf(r) + i / 2 + (c > 0 ? 1 : -1) * Math.min(.22 * i, 14),
+              g = l(d),
+              m = c > 0 ? n.bid : n.ask;
+            e.beginPath(), e.arc(f, g, u, 0, 7), e.fillStyle = eU(m, .18), e.fill(), e.strokeStyle = m, e.stroke()
+          }
+        }
+        drawSigs(e, t, s, i, l) {
+          let a = this.T,
+            r = a.D,
+            n = this.CL,
+            o = this.G,
+            h = o.geo,
+            d = n.light,
+            c = ew(a).filter(e => ek(a, e) && e.i <= s && ("trap" === e.t ? e.j : e.i) >= t),
+            p = e => h.fp ? [this.xOf(e) + h.off, h.cellW] : [this.xOf(e) + .14 * i, .72 * i];
+          for (let t of c)
+            if ("trap" === t.t) {
+              let s = "sell" === t.side ? n.ask : n.bid,
+                [i] = p(t.i),
+                [a, r] = p(t.j),
+                o = a + r,
+                h = l(t.hi),
+                c = Math.max(5, l(t.lo) - h);
+              e.save(), e.beginPath(), e.rect(i, h, o - i, c), e.fillStyle = eU(s, d ? .1 : .14), e.fill(), e.clip(), e.strokeStyle = eU(s, .4), e.lineWidth = 1, e.beginPath();
+              for (let t = i - c; t < o; t += 7) e.moveTo(t, h + c), e.lineTo(t + c, h);
+              e.stroke(), e.restore(), e.strokeStyle = s, e.lineWidth = 1.5, e.setLineDash([4, 3]), e.strokeRect(this.snap(i) + .75, this.snap(h) + .75, o - i - 1.5, c - 1.5), e.setLineDash([])
+            } for (let s of c)
+            if ("abs" === s.t && s.i >= t) {
+              let t = "buy" === s.side ? n.bid : n.ask,
+                [i, a] = p(s.i),
+                r = l(s.hi),
+                o = l(s.lo),
+                d = Math.max(8, a / 2 + (h.fp ? 8 : 5)),
+                c = Math.max(8, (o - r) / 2 + 6);
+              e.beginPath(), e.ellipse(i + a / 2, (r + o) / 2, d, c, 0, 0, 7), e.fillStyle = eU(t, .1), e.fill(), e.lineWidth = 2, e.strokeStyle = t, e.stroke()
+            } for (let t of c)
+            if ("sdiv" === t.t) {
+              let s = "sell" === t.side ? n.ask : n.bid,
+                a = "sell" === t.side ? -7 : 7,
+                r = this.xOf(t.i0) + i / 2,
+                o = this.xOf(t.i) + i / 2,
+                h = l(t.p0) + a,
+                d = l(t.p) + a;
+              for (let [t, i] of(e.strokeStyle = s, e.lineWidth = 1.75, e.setLineDash([6, 4]), e.beginPath(), e.moveTo(r, h), e.lineTo(o, d), e.stroke(), e.setLineDash([]), e.fillStyle = s, [
+                  [r, h],
+                  [o, d]
+                ])) e.beginPath(), e.arc(t, i, 3, 0, 7), e.fill()
+            } let u = new Map;
+          for (let e of c) {
+            if (e.i < t) continue;
+            let s = e.i + e.side;
+            u.has(s) || u.set(s, []), u.get(s).push(e)
+          }
+          for (let t of (e.font = this.FONTT, e.textAlign = "center", e.textBaseline = "middle", u.values())) {
+            let s = t[0],
+              h = s.i,
+              c = "sell" === s.side,
+              p = this.xOf(h) + i / 2,
+              u = c ? n.ask : n.bid,
+              f = c ? n.askT : n.bidT,
+              g = c ? l(r.H[h]) - 12 : l(r.L[h]) + 12;
+            if (i < 34) {
+              e.fillStyle = u, e.beginPath(), c ? (e.moveTo(p - 4, g - 5), e.lineTo(p + 4, g - 5), e.lineTo(p, g + 1)) : (e.moveTo(p - 4, g + 5), e.lineTo(p + 4, g + 5), e.lineTo(p, g - 1)), e.fill();
+              continue
+            }
+            let m = t.map(t => {
+                let s = a.sigName(t);
+                return [s, Math.ceil(e.measureText(s).width) + 10]
+              }),
+              b = 21 * m.length > (c ? g : o.statsY - g),
+              v = p - (m.reduce((e, t) => e + t[1] + 4, 0) - 4) / 2,
+              x = Math.round(c ? Math.max(2, g - 18) : Math.min(o.statsY - 2 - 18, g));
+            for (let [t, s] of m) {
+              let i = Math.round(b ? v : p - s / 2),
+                l = b ? x : Math.round(c ? g - 18 : g);
+              e.beginPath(), tI(e, i, l, s, 18, 4), e.fillStyle = n.surface, e.fill(), e.fillStyle = eU(u, d ? .14 : .2), e.fill(), e.fillStyle = f, e.fillText(t, i + s / 2, l + 9 + .5), b ? v += s + 4 : g += c ? -21 : 21
+            }
+          }
+        }
+        drawVwap(e, t, s, i, l) {
+          let a = this.T,
+            r = a.D,
+            n = this.CL,
+            o = this.G,
+            h = function(e) {
+              let t = e.D,
+                s = t.n,
+                i = e.cache,
+                l = t.gver + "|" + s + "|" + (s ? t.ver[s - 1] : 0);
+              if (l === i.vwKey && i.vw) return i.vw;
+              i.vwKey = l;
+              let a = new Float64Array(s),
+                r = new Float64Array(s),
+                n = new Uint8Array(s),
+                o = -1,
+                h = 0,
+                d = 0,
+                c = 0;
+              for (let e = 0; e < s; e++) {
+                let s = Math.floor(t.T[e] / 864e5);
+                s !== o && (o = s, h = d = c = 0, n[e] = 1);
+                let i = t.F[e];
+                if (i)
+                  for (let e = 0; e < i.b.length; e++) {
+                    let t = i.b[e] + i.s[e];
+                    if (!t) continue;
+                    let s = i.lo + (e + .5) * i.tick;
+                    h += t, d += t * s, c += t * s * s
+                  }
+                h > 0 ? (a[e] = d / h, r[e] = Math.sqrt(Math.max(0, c / h - a[e] * a[e]))) : (a[e] = 0 / 0, r[e] = 0 / 0)
+              }
+              return i.vw = {
+                v: a,
+                sd: r,
+                st: n
+              }
+            }(a);
+          for (let [a, r, o] of [
+              [0, 1.5, .95],
+              [1, 1, .5],
+              [-1, 1, .5],
+              [2, 1, .28],
+              [-2, 1, .28]
+            ]) {
+            e.strokeStyle = eU(n.accent, o), e.lineWidth = r, e.setLineDash(a ? [4, 3] : []), e.beginPath();
+            let d = !1;
+            for (let r = t; r <= s; r++) {
+              let t = h.v[r];
+              if ((!isFinite(t) || h.st[r]) && (d = !1), !isFinite(t)) continue;
+              let s = l(t + a * h.sd[r]),
+                n = this.xOf(r) + i / 2;
+              d ? e.lineTo(n, s) : (e.moveTo(n, s), d = !0)
+            }
+            e.stroke()
+          }
+          e.setLineDash([]);
+          let d = Math.min(s, r.n - 1);
+          if (isFinite(h.v[d])) {
+            let t = l(h.v[d]),
+              s = Math.min(this.xOf(d) + i / 2 + 6, o.plotW - 80);
+            e.font = this.FONTT, e.textAlign = "left", e.textBaseline = "middle";
+            let r = "VWAP " + $(h.v[d], a.dp),
+              c = e.measureText(r).width + 10;
+            e.fillStyle = n.surface, e.globalAlpha = .9, e.fillRect(s, t - 9, c, 18), e.globalAlpha = 1, e.fillStyle = n.accent, e.fillText(r, s + 5, t + .5)
+          }
+        }
+        drawNpoc(e, t, s, i, l, a) {
+          let r = this.T,
+            n = this.CL,
+            o = this.G,
+            h = function(e, t) {
+              let s = e.D,
+                i = s.n,
+                l = e.cache,
+                a = t + "|" + s.gver + "|" + i + "|" + (i ? s.ver[i - 1] : 0);
+              if (a === l.npKey) return l.npoc;
+              l.npKey = a;
+              let r = [],
+                n = 1 / 0,
+                o = -1 / 0,
+                h = new Float64Array(i),
+                d = new Float64Array(i);
+              for (let e = i - 1; e >= 0; e--) h[e] = n, d[e] = o, s.L[e] < n && (n = s.L[e]), s.H[e] > o && (o = s.H[e]);
+              for (let l = 0; l < i - 1; l++) {
+                let a = ev(e, l, t);
+                if (!a || !a.maxCell) continue;
+                let n = a.lo + (a.poc + .5) * t;
+                if (n < h[l] || n > d[l]) r.push({
+                  i: l,
+                  p: n
+                });
+                else {
+                  let e = !0;
+                  for (let t = l + 1; t < i; t++)
+                    if (s.L[t] <= n && s.H[t] >= n) {
+                      e = !1;
+                      break
+                    } e && r.push({
+                    i: l,
+                    p: n
+                  })
+                }
+              }
+              return l.npoc = r.slice(-12)
+            }(r, l);
+          if (!h.length) return;
+          e.strokeStyle = eU(n.poc, .8), e.lineWidth = 1, e.setLineDash([2, 3]), e.font = this.FONTT, e.textBaseline = "middle";
+          let d = [];
+          for (let {
+              i: t,
+              p: l
+            }
+            of(e.beginPath(), h)) {
+            if (t > s) continue;
+            let r = Math.max(0, this.xOf(t) + .9 * i),
+              n = this.snap(a(l)) + .5;
+            n < 0 || n > o.statsY || (e.moveTo(r, n), e.lineTo(o.plotW, n), d.push([n, l]))
+          }
+          if (e.stroke(), e.setLineDash([]), o.npocLabels = d, !o.pvW)
+            for (let [t, s] of(e.textAlign = "right", d)) {
+              let i = r.tr("chart.npoc", "Naked POC {{p}}", {
+                  p: $(s, z(l))
+                }),
+                a = e.measureText(i).width + 10;
+              e.fillStyle = n.surface, e.globalAlpha = .85, e.fillRect(o.plotW - a - 4, t - 9, a, 18), e.globalAlpha = 1, e.fillStyle = n.poc, e.fillText(i, o.plotW - 9, t + .5)
+            }
+        }
+        drawProfile(e, t, s, i, l) {
+          let a = this.T,
+            r = this.CL,
+            n = this.G,
+            o = this.V,
+            h = n.pvX,
+            d = n.pvW,
+            c = new Map,
+            p = e => this.snap(e),
+            u = 1 / 0,
+            f = -1 / 0;
+          for (let e = t; e <= s; e++) {
+            let t = ev(a, e, i);
+            if (!t) continue;
+            let s = Math.round(t.lo / i);
+            for (let e = 0; e < t.n; e++) {
+              if (!(t.b[e] + t.s[e])) continue;
+              let i = s + e,
+                l = c.get(i);
+              l || (l = [0, 0], c.set(i, l)), l[0] += t.b[e], l[1] += t.s[e], i < u && (u = i), i > f && (f = i)
+            }
+          }
+          if (e.save(), e.beginPath(), e.rect(h, 0, d, n.statsY), e.clip(), e.fillStyle = r.surface, e.fillRect(h, 0, d, n.statsY), e.font = this.FONTT, e.fillStyle = r.fg3, e.textAlign = "left", e.textBaseline = "middle", e.fillText(a.tr("chart.vp", "Visible range profile"), h + 8, 14), !c.size) {
+            e.restore(), n.pv = null;
+            return
+          }
+          let g = 0,
+            m = 0,
+            b = u;
+          for (let [e, t] of c) {
+            let s = t[0] + t[1];
+            g += s, s > m && (m = s, b = e)
+          }
+          let v = b,
+            x = b,
+            y = m,
+            w = e => {
+              let t = c.get(e);
+              return t ? t[0] + t[1] : 0
+            };
+          for (; y < .7 * g && (v > u || x < f);) {
+            let e = x < f ? w(x + 1) : -1,
+              t = v > u ? w(v - 1) : -1;
+            e >= t ? (x++, y += e) : (v--, y += t)
+          }
+          let k = d - 16,
+            _ = i * (n.bot - n.top) / (o.pHi - o.pLo),
+            T = +(_ >= 4),
+            S = new Path2D,
+            j = new Path2D,
+            C = new Path2D;
+          for (let [e, t] of c) {
+            let s = l((e + 1) * i),
+              a = l(e * i);
+            if (a < 0 || s > n.statsY) continue;
+            let r = Math.max(1 / n.dpr, a - s - T),
+              o = Math.max(1, (t[0] + t[1]) / m * k);
+            (e === b ? C : e >= v && e <= x ? S : j).rect(h + 6, s, o, r)
+          }
+          e.fillStyle = r.pvOut, e.fill(j), e.fillStyle = r.pvIn, e.fill(S), e.fillStyle = r.mag, e.fill(C);
+          let N = l((b + .5) * i),
+            M = l((x + 1) * i),
+            D = l(v * i);
+          e.strokeStyle = r.poc, e.lineWidth = 1.5, e.strokeRect(h + 6, p(l((b + 1) * i)) + .75, k, Math.max(1, _ - 1.5)), e.restore(), e.save(), e.beginPath(), e.rect(0, 0, n.pvX + n.pvW, n.statsY), e.clip(), e.lineWidth = 1, e.setLineDash([6, 4]), e.strokeStyle = eU(r.poc, .55), e.beginPath(), e.moveTo(0, p(N) + .5), e.lineTo(n.pvX, p(N) + .5), e.stroke(), e.strokeStyle = eU(r.fg3, .55), e.beginPath(), e.moveTo(0, p(M) + .5), e.lineTo(n.pvX, p(M) + .5), e.moveTo(0, p(D) + .5), e.lineTo(n.pvX, p(D) + .5), e.stroke(), e.setLineDash([]), e.font = this.FONTT, e.textAlign = "right", e.textBaseline = "bottom";
+          let O = h + d - 6;
+          if (e.fillStyle = r.poc, e.fillText("POC", O, p(N) - 2), e.fillStyle = r.fg3, e.fillText("VAH", O, p(M) - 2), e.textBaseline = "top", e.fillText("VAL", O, p(D) + 3), a.prefs.marks.npoc && n.npocLabels) {
+            for (let [t] of(e.textAlign = "left", e.textBaseline = "middle", e.setLineDash([2, 3]), e.strokeStyle = eU(r.poc, .8), e.beginPath(), n.npocLabels)) e.moveTo(n.pvX, t), e.lineTo(n.pvX + n.pvW, t);
+            for (let [t, s] of(e.stroke(), e.setLineDash([]), n.npocLabels)) {
+              if (t < 28) continue;
+              let l = "nPOC " + $(s, z(i)),
+                a = e.measureText(l).width + 8;
+              e.fillStyle = r.surface, e.globalAlpha = .9, e.fillRect(n.pvX + 3, t - 9, a, 18), e.globalAlpha = 1, e.fillStyle = r.poc, e.fillText(l, n.pvX + 7, t + .5)
+            }
+          }
+          e.restore(), n.pv = {
+            acc: c,
+            dt: i,
+            tot: g,
+            poc: b,
+            va0: v,
+            va1: x
+          }
+        }
+        buildTbl() {
+          let e = this.T,
+            t = e.fmt,
+            s = t => {
+              let s = L.find(e => e[0] === t);
+              return F(e.t, "tbl", t, s[1])
+            },
+            i = (e, s, i) => s ? (s.real ? "" : "≈") + t.fmtV(s[e], s[e] * i.px, !0) : "—";
+          this.TBL = [{
+            k: "vol",
+            n: s("vol"),
+            v: t => "usd" === e.prefs.unit ? t.volU : t.vol,
+            f: e => t.fmtV(e.vol, e.volU)
+          }, {
+            k: "delta",
+            n: "Delta",
+            sg: 1,
+            v: t => "usd" === e.prefs.unit ? t.dltU : t.dlt,
+            f: e => t.fmtV(e.dlt, e.dltU, !0)
+          }, {
+            k: "dpct",
+            n: "Delta %",
+            sg: 1,
+            v: e => e.vol ? e.dlt / e.vol : 0,
+            f: e => e.vol ? K(e.dlt / e.vol, 0) : "—"
+          }, {
+            k: "dmax",
+            n: s("dmax"),
+            sg: 1,
+            v: (t, s) => {
+              let i = ex(e, s);
+              return i ? i.mx * ("usd" === e.prefs.unit ? t.px : 1) : 0
+            },
+            f: (t, s) => i("mx", ex(e, s), t)
+          }, {
+            k: "dmin",
+            n: s("dmin"),
+            sg: 1,
+            v: (t, s) => {
+              let i = ex(e, s);
+              return i ? i.mn * ("usd" === e.prefs.unit ? t.px : 1) : 0
+            },
+            f: (t, s) => i("mn", ex(e, s), t)
+          }, {
+            k: "cnt",
+            n: s("cnt"),
+            v: e => e.cnt,
+            f: e => Q(e.cnt)
+          }, {
+            k: "avg",
+            n: s("avg"),
+            v: t => t.cnt ? ("usd" === e.prefs.unit ? t.volU : t.vol) / t.cnt : 0,
+            f: e => e.cnt ? t.fmtA(e.vol / e.cnt, e.volU / e.cnt) : "—"
+          }, {
+            k: "ratio",
+            n: s("ratio"),
+            sg: 1,
+            v: e => {
+              let t = e.vol - e.buy;
+              return t > 0 && e.buy > 0 ? Math.log(e.buy / t) : 0
+            },
+            f: e => {
+              let t = e.vol - e.buy;
+              return t > 0 ? (e.buy / t).toFixed(2) : "—"
+            }
+          }]
+        }
+        volMA(e, t, s, i) {
+          let l = new Float64Array(t - e + 1),
+            a = [],
+            r = 0;
+          for (let n = Math.max(0, e - 20 + 1); n <= t; n++) {
+            let t = ev(this.T, n, s),
+              o = t ? i ? t.volU : t.vol : 0;
+            a.push(o), r += o, a.length > 20 && (r -= a.shift()), n >= e && (l[n - e] = r / a.length)
+          }
+          return l
+        }
+        drawSub(e, t, s, i, l) {
+          let a = this.T,
+            r = a.D,
+            n = a.prefs,
+            o = a.fmt,
+            h = this.CL,
+            d = this.G,
+            c = e => this.snap(e),
+            p = this.subRows(),
+            u = this.tblRows();
+          if (!p.length && !u.length) return;
+          let f = d.subRowH,
+            g = 1 / d.dpr,
+            m = "usd" === n.unit,
+            b = h.light,
+            v = [],
+            x = [],
+            y = [],
+            w = p.includes("delta") && i >= 5,
+            k = 0,
+            _ = 0,
+            T = 0,
+            S = 0,
+            j = 0,
+            C = 0,
+            M = !1,
+            D = {
+              vol: 0,
+              volU: 0,
+              dlt: 0,
+              dltU: 0,
+              buy: 0,
+              cnt: 0,
+              oi: 0,
+              oiU: 0
+            };
+          for (let e = t; e <= s; e++) {
+            let t = ev(a, e, l);
+            v.push(t);
+            let s = null;
+            if (t) {
+              let i = m ? t.volU : t.vol,
+                l = m ? t.dltU : t.dlt;
+              if (i > k && (k = i), Math.abs(l) > _ && (_ = Math.abs(l)), S += l, D.vol += t.vol, D.volU += t.volU, D.dlt += t.dlt, D.dltU += t.dltU, D.buy += t.buy, D.cnt += t.cnt, w && (s = ex(a, e))) {
+                let e = m ? t.px : 1;
+                _ = Math.max(_, s.mx * e, -s.mn * e)
+              }
+            }
+            x.push(s), y.push(S), S < j && (j = S), S > C && (C = S);
+            let i = r.OIo[e],
+              n = r.OIc[e];
+            if (null != i && null != n) {
+              M = !0, D.oi += n - i, D.oiU += (n - i) * r.C[e];
+              let t = Math.abs((n - i) * (m ? r.C[e] : 1));
+              t > T && (T = t)
+            }
+          }
+          let O = i >= 58,
+            B = i < 24 ? Math.max(g, .72 * i) : Math.min(.5 * i, 34),
+            P = [],
+            A = p.includes("vol") ? this.volMA(t, s, l, m) : null;
+          for (let [l, u, w, S] of(e.save(), e.beginPath(), e.rect(0, d.statsY, d.plotW, d.timeY - d.statsY), e.clip(), p.forEach((l, p) => {
+              let u = d.statsY + p * f,
+                w = u + (O && "cvd" !== l ? 24 : 8),
+                S = u + f - 6,
+                D = Math.max(4, S - w),
+                L = w + D / 2,
+                F = new Path2D,
+                R = new Path2D,
+                V = new Path2D,
+                H = new Path2D,
+                W = new Path2D,
+                I = new Path2D,
+                U = new Path2D;
+              if (("delta" === l || "oi" === l) && (e.fillStyle = eU(h.fg3, .5), e.fillRect(0, c(L), d.plotW, g)), "cvd" === l) {
+                let l = Math.max(C - j, 1e-12),
+                  r = e => S - (e - j) / l * D,
+                  o = r(0);
+                e.fillStyle = eU(h.fg3, .5), e.fillRect(0, c(o), d.plotW, g);
+                let p = [];
+                for (let e = t; e <= s; e++) p.push([this.xOf(e) + i / 2, r(y[e - t])]);
+                if (p.length)
+                  for (let [t, s] of [
+                      [h.bid, 1],
+                      [h.ask, -1]
+                    ]) {
+                    e.save(), e.beginPath(), s > 0 ? e.rect(0, w - 2, d.plotW, o - w + 2) : e.rect(0, o, d.plotW, S - o + 2), e.clip();
+                    let i = e.createLinearGradient(0, s > 0 ? w : S, 0, o);
+                    for (let [s, l] of(i.addColorStop(0, eU(t, b ? .26 : .3)), i.addColorStop(1, eU(t, .02)), e.beginPath(), e.moveTo(p[0][0], o), p)) e.lineTo(s, l);
+                    e.lineTo(p[p.length - 1][0], o), e.closePath(), e.fillStyle = i, e.fill(), e.beginPath(), p.forEach(([t, s], i) => i ? e.lineTo(t, s) : e.moveTo(t, s)), e.strokeStyle = t, e.lineWidth = 1.75, e.lineJoin = "round", e.stroke(), e.restore()
+                  }
+                if (n.marks.sig && n.sigs.sdiv)
+                  for (let l of ew(a)) {
+                    if ("sdiv" !== l.t || l.i0 < t || l.i > s) continue;
+                    let a = "sell" === l.side ? h.ask : h.bid,
+                      n = this.xOf(l.i0) + i / 2,
+                      o = this.xOf(l.i) + i / 2,
+                      d = r(y[l.i0 - t]),
+                      c = r(y[l.i - t]);
+                    for (let [t, s] of(e.strokeStyle = a, e.lineWidth = 1.75, e.setLineDash([6, 4]), e.beginPath(), e.moveTo(n, d), e.lineTo(o, c), e.stroke(), e.setLineDash([]), e.fillStyle = a, [
+                        [n, d],
+                        [o, c]
+                      ])) e.beginPath(), e.arc(t, s, 3, 0, 7), e.fill()
+                  }
+                return
+              }
+              if ("oi" === l && !M) {
+                e.font = this.FONTL, e.fillStyle = h.fg3, e.textAlign = "center", e.textBaseline = "middle", e.fillText("spot" === N[r.mkt].kind ? a.tr("chart.noOiSpot", "No open interest on spot") : a.tr("chart.noOi", "No open interest data for this period"), d.plotW / 2, u + f / 2);
+                return
+              }
+              for (let e = t; e <= s; e++) {
+                let s = v[e - t],
+                  a = c(this.xOf(e) + (i - B) / 2),
+                  n = Math.max(g, c(B)),
+                  d = this.xOf(e) + i / 2;
+                if ("vol" === l) {
+                  if (!s) continue;
+                  let i = m ? s.volU : s.vol;
+                  if (i && k) {
+                    let s = Math.max(g, D * i / k);
+                    (A[e - t] > 0 && i >= 2 * A[e - t] ? V : F).rect(a, S - s, n, s)
+                  }
+                  O && P.push([d, u + 13, o.fmtV(s.vol, s.volU), h.fg2])
+                } else if ("delta" === l) {
+                  if (!s) continue;
+                  let l = m ? s.dltU : s.dlt,
+                    r = l >= 0;
+                  if (_) {
+                    let o = D / 2 / _,
+                      h = x[e - t];
+                    if (h) {
+                      let e = m ? s.px : 1,
+                        t = L - h.mx * e * o,
+                        l = L - h.mn * e * o,
+                        a = i >= 24 ? 1.5 : 1;
+                      (h.real ? r ? H : W : r ? I : U).rect(c(d - a / 2), t, a, Math.max(g, l - t))
+                    }
+                    let p = Math.max(g, Math.abs(l) * o);
+                    (r ? F : R).rect(a, r ? L - p : L, n, p)
+                  }
+                  O && P.push([d, u + 13, o.fmtV(s.dlt, s.dltU, !0), s.dlt >= 0 ? h.up : h.down])
+                } else {
+                  let t = r.OIo[e],
+                    s = r.OIc[e];
+                  if (null == t || null == s) continue;
+                  let i = s - t,
+                    l = i * (m ? r.C[e] : 1);
+                  if (T) {
+                    let e = Math.max(g, D / 2 * Math.abs(l) / T);
+                    (l >= 0 ? F : R).rect(a, l >= 0 ? L - e : L, n, e)
+                  }
+                  O && P.push([d, u + 13, o.fmtV(i, i * r.C[e], !0), i >= 0 ? h.up : h.down])
+                }
+              }
+              if ("delta" === l && (e.fillStyle = h.bid, e.fill(H), e.fillStyle = h.ask, e.fill(W), e.fillStyle = eU(h.bid, .5), e.fill(I), e.fillStyle = eU(h.ask, .5), e.fill(U)), "vol" === l ? (e.fillStyle = h.volN, e.fill(F), e.fillStyle = h.mag, e.fill(V)) : (e.globalAlpha = .9, e.fillStyle = h.bid, e.fill(F), e.fillStyle = h.ask, e.fill(R), e.globalAlpha = 1), "vol" === l && A && k) {
+                e.beginPath();
+                let l = !1;
+                for (let a = t; a <= s; a++) {
+                  let s = A[a - t];
+                  if (!(s > 0)) continue;
+                  let r = this.xOf(a) + i / 2,
+                    n = Math.max(w - 4, S - D * s / k);
+                  l ? e.lineTo(r, n) : (e.moveTo(r, n), l = !0)
+                }
+                e.strokeStyle = eU(h.fg, b ? .5 : .55), e.lineWidth = 1.25, e.lineJoin = "round", e.stroke()
+              }
+            }), e.font = this.FONT, e.textAlign = "center", e.textBaseline = "middle", P)) e.fillStyle = S, e.fillText(w, l, u);
+          if (u.length) {
+            let l = d.statsY + p.length * f + 4,
+              a = +(i >= 6),
+              r = h.inten;
+            u.forEach((n, o) => {
+              let d = l + 22 * o,
+                p = [],
+                u = [];
+              for (let e = t; e <= s; e++) {
+                let s = v[e - t],
+                  i = s ? n.v(s, e) : null;
+                p.push(i), null != i && isFinite(i) && u.push(Math.abs(i))
+              }
+              u.sort((e, t) => e - t);
+              let f = u.length,
+                m = f ? Math.max(u[Math.floor((f - 1) * .92)], .35 * u[f - 1]) : 0,
+                x = n.sg || !f ? 0 : Math.min(u[Math.floor((f - 1) * .05)], .8 * m),
+                y = b ? .06 : .09,
+                w = n.sg ? b ? .8 : .76 : b ? .66 : .62;
+              for (let l = t; l <= s; l++) {
+                let s = v[l - t],
+                  o = p[l - t];
+                if (!s || null == o || !isFinite(o)) continue;
+                let u = Math.min(.95, (y + (w - y) * Math.pow(m > x ? U((Math.abs(o) - x) / (m - x), 0, 1) : 0, .85)) * r),
+                  f = n.sg ? o > 0 ? h.bid : o < 0 ? h.ask : h.fg3 : h.mag,
+                  b = c(this.xOf(l)) + a,
+                  k = Math.max(g, c(this.xOf(l + 1)) - c(this.xOf(l)) - a);
+                if (e.fillStyle = eU(f, n.sg && !o ? y : u), e.fillRect(b, d + 1, k, 20), i >= 40) {
+                  let t = n.f(s, l);
+                  if (this.tw(t) + 6 <= i) {
+                    let s = u >= .5;
+                    e.font = s ? this.FONTSB : this.FONT, e.fillStyle = s ? eY(h, f, u, this.INK) : n.sg ? o > 0 ? h.bidT : o < 0 ? h.askT : h.fg2 : h.fg, e.fillText(t, b + k / 2, d + 11 + .5)
+                  }
+                }
+              }
+            })
+          }
+          if (e.restore(), d.pvW) {
+            let i = d.pvX,
+              l = i + d.pvW - 10,
+              r = e => e > 0 ? h.up : e < 0 ? h.down : h.fg2;
+            if (e.fillStyle = eU(h.fg, b ? .025 : .035), e.fillRect(i, d.statsY, d.pvW, d.timeY - d.statsY), e.fillStyle = h.line, e.fillRect(c(i), d.statsY, g, d.H - d.statsY), e.textAlign = "right", e.textBaseline = "middle", p.forEach((t, s) => {
+                let i = "—",
+                  a = h.fg3;
+                "vol" === t ? (i = o.fmtV(D.vol, D.volU), a = h.fg) : "delta" === t || "cvd" === t ? (i = o.fmtV(D.dlt, D.dltU, !0), a = r(D.dlt)) : "oi" === t && M && (i = o.fmtV(D.oi, D.oiU, !0), a = r(D.oi)), e.font = this.FONTLB, e.fillStyle = a, e.fillText(i, l, d.statsY + s * f + 14)
+              }), u.length) {
+              let i = d.statsY + p.length * f + 4,
+                n = -1,
+                c = -1,
+                g = -1 / 0,
+                b = 1 / 0;
+              if (u.some(e => "dmax" === e.k || "dmin" === e.k))
+                for (let e = t; e <= s; e++) {
+                  let s = v[e - t],
+                    i = s && ex(a, e);
+                  if (!i) continue;
+                  let l = m ? s.px : 1;
+                  i.mx * l > g && (g = i.mx * l, n = e), i.mn * l < b && (b = i.mn * l, c = e)
+                }
+              let x = (e, s) => {
+                let i = ex(a, e),
+                  l = v[e - t];
+                return [(i.real ? "" : "≈") + o.fmtV(i[s], i[s] * l.px, !0), r(i[s])]
+              };
+              u.forEach((t, s) => {
+                let a = "—",
+                  d = h.fg,
+                  p = D.vol - D.buy;
+                "vol" === t.k ? a = o.fmtV(D.vol, D.volU) : "delta" === t.k ? (a = o.fmtV(D.dlt, D.dltU, !0), d = r(D.dlt)) : "dpct" === t.k ? D.vol && (a = K(D.dlt / D.vol, 1), d = r(D.dlt)) : "dmax" === t.k ? n >= 0 && ([a, d] = x(n, "mx")) : "dmin" === t.k ? c >= 0 && ([a, d] = x(c, "mn")) : "cnt" === t.k ? a = Q(D.cnt) : "avg" === t.k ? D.cnt && (a = o.fmtA(D.vol / D.cnt, D.volU / D.cnt)) : "ratio" === t.k && p > 0 && (a = (D.buy / p).toFixed(2), d = r(D.buy - p)), e.font = this.FONT, e.fillStyle = d, e.fillText(a, l, i + 22 * s + 11 + .5)
+              })
+            }
+            e.font = this.FONTT, e.fillStyle = h.fg3, e.fillText(a.tr("chart.viewTotal", "View total"), l, d.timeY + 13 + 1)
+          }
+          if (p.forEach((t, s) => {
+              let i = d.statsY + s * f;
+              e.fillStyle = s ? h.line : h.line2, e.fillRect(0, c(i), d.W, s ? g : 1), e.font = this.FONTM, e.fillStyle = h.fg2, e.textAlign = "left", e.textBaseline = "middle", e.fillText(this.axText(e, this.subName(t)), d.axX + 8, i + 14)
+            }), u.length) {
+            let t = d.statsY + p.length * f;
+            e.fillStyle = p.length ? h.line : h.line2, e.fillRect(0, c(t), d.W, p.length ? g : 1), e.font = this.FONT, e.fillStyle = h.fg2, e.textAlign = "left", e.textBaseline = "middle", u.forEach((s, i) => e.fillText(this.axText(e, s.n), d.axX + 8, t + 4 + 22 * i + 11 + .5))
+          }
+        }
+        axisTag(e, t, s, i, l, a, r, n) {
+          let o = this.G;
+          return t = U(t, a + 10, r - 10), e.fillStyle = i, e.beginPath(), e.moveTo(o.axX + 1, t), e.lineTo(o.axX + 6, t - 10), e.lineTo(o.W - 1, t - 10), e.lineTo(o.W - 1, t + 10), e.lineTo(o.axX + 6, t + 10), e.closePath(), e.fill(), e.fillStyle = l, e.font = n || this.FONTB, e.textAlign = "left", e.textBaseline = "middle", e.fillText(s, o.axX + 9, t + .5), t
+        }
+        hit() {
+          let e = this.T,
+            t = e.D,
+            s = this.G,
+            i = this.V,
+            l = this.hover;
+          if (!l || !t.n || !s.y || l.y >= s.timeY) return null;
+          if (s.pvW && l.x >= s.pvX && l.x < s.axX && l.y < s.statsY) return s.pv ? {
+            pv: !0,
+            k: Math.floor(s.p(l.y) / s.pv.dt)
+          } : null;
+          if (l.x >= s.plotW) return null;
+          let a = Math.floor(i.start + l.x / this.bw());
+          if (a < 0 || a >= t.n) return null;
+          let r = s.dt,
+            n = ev(e, a, r);
+          if (l.y >= s.statsY) return {
+            i: a,
+            a: n,
+            k: -1,
+            p: null,
+            sub: !0
+          };
+          let o = s.p(l.y),
+            h = -1;
+          return n && s.geo && s.geo.fp && ((h = Math.floor((o - n.lo) / r)) < 0 || h >= n.n) && (h = -1), {
+            i: a,
+            a: n,
+            k: h,
+            p: o
+          }
+        }
+        nearSplit(e) {
+          return this.subRows().length > 0 && 5 >= Math.abs(e.y - this.G.statsY) && e.x < this.G.axX
+        }
+        drawOver() {
+          let e = this.T,
+            t = e.D,
+            s = e.prefs,
+            i = e.fmt,
+            l = this.CL,
+            a = this.G,
+            r = this.V,
+            n = this.co,
+            o = e => this.snap(e);
+          if (n.setTransform(a.dpr, 0, 0, a.dpr, 0, 0), n.clearRect(0, 0, a.W, a.H), !t.n || !a.y) return;
+          let h = this.bw(),
+            d = a.geo || tU(h),
+            c = 1 / a.dpr,
+            p = e.SEL,
+            u = this.hover;
+          if (p >= 0 && p < t.n) {
+            let e = this.xOf(p);
+            e > -h && e < a.plotW && (n.strokeStyle = eU(l.poc, .8), n.lineWidth = 1, n.strokeRect(o(e) + .5, .5, h - 1, a.timeY - 1))
+          }
+          let f = this.drag ? null : this.hit();
+          if (this.subRows().length && (this.drag && "split" === this.drag.type || !this.drag && u && this.nearSplit(u)) && (n.fillStyle = l.fg3, n.fillRect(0, o(a.statsY) - 1, a.axX, 2)), u && !this.drag && u.x < a.axX && u.y < a.timeY) {
+            let s = u.x < a.plotW,
+              i = Math.floor(r.start + u.x / h);
+            if (n.strokeStyle = l.cross, n.lineWidth = c, n.setLineDash([3, 3]), n.beginPath(), s) {
+              let e = o(this.xOf(i) + h / 2) + c / 2;
+              n.moveTo(e, 0), n.lineTo(e, a.timeY)
+            }
+            if (u.y < a.statsY) {
+              let e = o(u.y) + c / 2;
+              n.moveTo(0, e), n.lineTo(a.axX, e)
+            }
+            if (n.stroke(), n.setLineDash([]), f && f.a && f.k >= 0) {
+              let e = a.y(f.a.lo + (f.k + 1) * a.dt),
+                t = a.y(f.a.lo + f.k * a.dt);
+              n.strokeStyle = l.fg, n.lineWidth = 1.5, n.strokeRect(o(this.xOf(i) + d.off) - .25, o(e) - .25, d.cellW + .5, Math.max(1, t - e - (a.rowH >= 6) + .5))
+            }
+            if (f && f.pv) {
+              let e = a.y((f.k + 1) * a.pv.dt),
+                t = a.y(f.k * a.pv.dt);
+              n.strokeStyle = l.fg, n.lineWidth = 1, n.strokeRect(o(a.pvX) + 3.5, o(e) + .5, a.pvW - 7, Math.max(1, t - e - 1))
+            }
+            if (s && i >= 0 && i < t.n) {
+              let t = e.barTime(i);
+              n.font = this.FONT;
+              let s = n.measureText(t).width + 14,
+                r = U(this.xOf(i) + h / 2 - s / 2, 0, a.plotW - s);
+              n.fillStyle = l.s3, n.fillRect(r, a.timeY + 3, s, 20), n.fillStyle = l.fg, n.textAlign = "center", n.textBaseline = "middle", n.fillText(t, r + s / 2, a.timeY + 13 + 1)
+            }
+            if (u.y < a.statsY) {
+              let t = $(a.p(u.y), e.dp);
+              n.fillStyle = l.s3, n.fillRect(a.axX + 1, u.y - 10, this.AX - 2, 20), n.fillStyle = l.fg, n.textAlign = "left", n.textBaseline = "middle", n.font = this.FONT, n.fillText(t, a.axX + 8, u.y + .5)
+            }
+          }
+          let g = f && null != f.i ? f.i : p >= 0 && p < t.n ? p : t.n - 1,
+            m = this.subRows();
+          if (m.length) {
+            let o = ev(e, g, a.dt),
+              h = "usd" === s.unit;
+            n.font = this.FONTLB, n.textAlign = "left", n.textBaseline = "middle";
+            let d = 0;
+            if (m.includes("cvd")) {
+              let t = Math.max(0, Math.floor(r.start));
+              for (let s = t; s <= g; s++) {
+                let t = ev(e, s, a.dt);
+                t && (d += h ? t.dltU : t.dlt)
+              }
+            }
+            m.forEach((e, s) => {
+              let r = "—",
+                c = l.fg3;
+              if ("vol" === e && o) r = i.fmtV(o.vol, o.volU), c = l.fg;
+              else if ("delta" === e && o) r = i.fmtV(o.dlt, o.dltU, !0), c = o.dlt >= 0 ? l.up : l.down;
+              else if ("cvd" === e) r = h ? i.fmtU(d, !0) : J(d, !0), c = d >= 0 ? l.up : l.down;
+              else if ("oi" === e && null != t.OIc[g] && null != t.OIo[g]) {
+                let e = t.OIc[g] - t.OIo[g];
+                r = i.fmtV(e, e * t.C[g], !0), c = e >= 0 ? l.up : l.down
+              }
+              n.fillStyle = c, n.fillText(r, a.axX + 8, a.statsY + s * a.subRowH + 33)
+            })
+          }
+          let b = N[t.mkt],
+            v = t.O[g],
+            x = g ? t.C[g] / t.C[g - 1] - 1 : 0,
+            y = t.C[g] >= v ? l.up : l.down,
+            w = e.dp,
+            k = [
+              [t.sym + " \xb7 " + e.mktName(b) + " \xb7 " + e.itvLabel(), l.fg, this.FONTLB]
+            ];
+          if (a.plotW < 520) return this.legend(n, a.plotW, [k, [
+            [$(t.C[g], w), y],
+            [K(x), y]
+          ]]);
+          this.legend(n, Math.min(a.plotW, 600), [k, [
+              [e.tr("ohlc.o", "O"), l.fg3],
+              [$(v, w), y]
+            ],
+            [
+              [e.tr("ohlc.h", "H"), l.fg3],
+              [$(t.H[g], w), y]
+            ],
+            [
+              [e.tr("ohlc.l", "L"), l.fg3],
+              [$(t.L[g], w), y]
+            ],
+            [
+              [e.tr("ohlc.c", "C"), l.fg3],
+              [$(t.C[g], w), y]
+            ],
+            [
+              [K(x), y]
+            ],
+            [
+              [e.tr("chart.rowSize", "Row size {{v}}", {
+                v: $(a.dt, z(a.dt))
+              }), l.fg3]
+            ]
+          ])
+        }
+        legend(e, t, s) {
+          let i = [],
+            l = t => t.reduce((t, [s, , i]) => (e.font = i || this.FONTL, t + e.measureText(s).width + 7), -7),
+            a = 10,
+            r = 0,
+            n = 0;
+          for (let e of s) {
+            let s = l(e);
+            a > 10 && a + s > t - 10 && (a = 10, r += 1), i.push([e, a, r]), a += s + 7 + 3, n = Math.max(n, a)
+          }
+          let o = (r + 1) * 20 + 6;
+          for (let [s, l, a] of(e.globalAlpha = .94, e.fillStyle = this.CL.surface, e.fillRect(0, 0, r ? t : Math.min(t, n + 10), o), e.globalAlpha = 1, e.textBaseline = "middle", e.textAlign = "left", i)) {
+            let t = l;
+            for (let [i, l, r] of s) e.font = r || this.FONTL, e.fillStyle = l, e.fillText(i, t, 13 + 20 * a), t += e.measureText(i).width + 7
+          }
+        }
+        tipModel() {
+          let e, t, s = this.hit();
+          if (!s || this.drag) return null;
+          let i = this.T,
+            l = i.D,
+            a = this.G,
+            r = i.fmt,
+            n = i.dp,
+            o = (e, t, s = "") => [e, t, s],
+            h = {
+              x: this.hover.x,
+              y: this.hover.y,
+              W: a.W,
+              H: a.H,
+              head: ["", ""],
+              rows: [],
+              tags: []
+            };
+          if (s.pv) {
+            let e = a.pv.acc.get(s.k);
+            if (!e) return null;
+            let t = a.pv.dt,
+              l = s.k * t,
+              n = l + t / 2,
+              d = e[0] + e[1],
+              c = z(t);
+            if (h.head = [i.tr("chart.vp", "Visible range profile", void 0), ""], h.rows = [o(i.tr("tip.level", "Price", void 0), $(l, c) + " – " + $(l + t, c)), o(i.tr("tip.vol", "Volume", void 0), r.fmtV(d, d * n)), o(i.tr("tip.buySell", "Buys \xb7 sells", void 0), [
+                [r.fmtV(e[0], e[0] * n), "pos"], " \xb7 ", [r.fmtV(e[1], e[1] * n), "neg"]
+              ]), o(i.tr("tip.ofView", "% of volume in view", void 0), (d / a.pv.tot * 100).toFixed(1) + "%")], s.k === a.pv.poc) h.tags.push([i.tr("tip.vpPoc", "VPVR POC", void 0), "a"]);
+            else s.k >= a.pv.va0 && s.k <= a.pv.va1 && h.tags.push([i.tr("tip.vpVa", "In VPVR value area", void 0), "a"]);
+            return h
+          }
+          let d = s.i,
+            c = s.a,
+            p = i.derived(),
+            u = d === l.n - 1;
+          if (h.head = [i.barTime(d), (p ? "" : j[l.itv]) + (u ? (p ? "" : " \xb7 ") + i.tr("tip.forming", "Forming", void 0) : "")], !c || s.k < 0) {
+            if (null != s.p && h.rows.push(o(i.tr("tip.price", "Price", void 0), $(s.p, n))), c) h.rows.push(...((e, t) => {
+              let s = ex(i, t),
+                a = e.vol - e.buy,
+                n = e.volU - e.buyU,
+                h = [o(i.tr("tip.vol", "Volume", void 0), r.fmtV(e.vol, e.volU)), o(i.tr("tip.buySell", "Buys \xb7 sells", void 0), [
+                  [r.fmtV(e.buy, e.buyU), "pos"], " \xb7 ", [r.fmtV(a, n), "neg"]
+                ]), o("Delta", r.fmtV(e.dlt, e.dltU, !0) + " \xb7 " + (e.vol ? K(e.dlt / e.vol, 0) : "—"), Y(e.dlt))];
+              if (s && h.push(o(i.tr("tip.dRange", "Max / min Delta", void 0), (s.real ? "" : "≈") + r.fmtV(s.mx, s.mx * e.px, !0) + " / " + (s.real ? "" : "≈") + r.fmtV(s.mn, s.mn * e.px, !0), s.real ? "" : "est")), h.push(o(i.tr("tip.cntAvg", "Trades \xb7 avg size", void 0), e.cnt ? Q(e.cnt) + " \xb7 " + r.fmtA(e.vol / e.cnt, e.volU / e.cnt) : "—")), null != l.OIc[t] && null != l.OIo[t]) {
+                let e = l.OIc[t] - l.OIo[t];
+                h.push(o(i.tr("tip.oi", "OI change", void 0), r.fmtV(e, e * l.C[t], !0), Y(e)))
+              }
+              return h
+            })(c, d));
+            else h.note = i.tr("tip.noFp", "No footprint data for this bar", void 0);
+            if (i.prefs.marks.sig)
+              for (let e of ew(i)) e.i === d && ek(i, e) && h.tags.push([i.sigName(e) + " \xb7 " + i.sigText(e)[0], "buy" === e.side ? "b" : "s"]);
+            return h
+          }
+          let f = s.k,
+            g = c.b[f],
+            m = c.s[f],
+            b = c.lo + f * a.dt,
+            v = b + a.dt / 2,
+            x = g + m,
+            y = z(a.dt),
+            w = c.bc[f],
+            k = c.sc[f];
+          return h.rows = [o(i.tr("tip.level", "Price", void 0), $(b, y) + " – " + $(b + a.dt, y)), o(i.tr("tip.sellBid", "Sells (bid)", void 0), J(m) + " \xb7 " + r.fmtU(m * v), "neg"), o(i.tr("tip.buyAsk", "Buys (ask)", void 0), J(g) + " \xb7 " + r.fmtU(g * v), "pos"), o("Delta", r.fmtV(g - m, (g - m) * v, !0), Y(g - m)), o(i.tr("tip.cntSB", "Trades sell \xb7 buy", void 0), Q(k) + " \xb7 " + Q(w)), o(i.tr("tip.avgSB", "Avg size sell \xb7 buy", void 0), (k ? r.fmtA(m / k, m / k * v) : "—") + " \xb7 " + (w ? r.fmtA(g / w, g / w * v) : "—")), o(i.tr("tip.ofBar", "% of bar volume", void 0), c.vol ? (x / c.vol * 100).toFixed(1) + "%" : "—")], f === c.poc && h.tags.push(["POC", "a"]), f >= c.va0 && f <= c.va1 && f !== c.poc && h.tags.push([i.tr("tip.inVa", "In value area", void 0), "a"]), c.imbB[f] && h.tags.push([i.tr("tip.imbB", "Buy imbalance", void 0) + (f > 0 && c.s[f - 1] > 0 ? " " + (g / c.s[f - 1]).toFixed(1) + "\xd7" : ""), "b"]), c.imbS[f] && h.tags.push([i.tr("tip.imbS", "Sell imbalance", void 0) + (f < c.n - 1 && c.b[f + 1] > 0 ? " " + (m / c.b[f + 1]).toFixed(1) + "\xd7" : ""), "s"]), i.prefs.marks.bigCell && c.bigB[f] && h.tags.push([(e = {
+            v: (g / w / c.barAvg).toFixed(1)
+          }, i.tr("tip.bigB", "Large buys {{v}}\xd7", e)), "b"]), i.prefs.marks.bigCell && c.bigS[f] && h.tags.push([(t = {
+            v: (m / k / c.barAvg).toFixed(1)
+          }, i.tr("tip.bigS", "Large sells {{v}}\xd7", t)), "s"]), (f === c.top && c.uaHi || f === c.bot && c.uaLo) && h.tags.push([i.tr("marks.ua", "Unfinished auction", void 0), "a"]), h.rows.push("hr", o(i.tr("tip.barDelta", "Bar Delta", void 0), r.fmtV(c.dlt, c.dltU, !0), Y(c.dlt)), o(i.tr("tip.barAvg", "Bar avg size", void 0), c.cnt ? r.fmtA(c.vol / c.cnt, c.volU / c.cnt) : "—")), h
+        }
+        tipSoon() {
+          this.tipRaf || (this.tipRaf = requestAnimationFrame(() => {
+            this.tipRaf = 0, this.onTip && this.onTip(this.tipModel())
+          }))
+        }
+        hideTip() {
+          this.onTip && this.onTip(null)
+        }
+        pt(e) {
+          let t = this.plot.getBoundingClientRect();
+          return {
+            x: e.clientX - t.left,
+            y: e.clientY - t.top
+          }
+        }
+        bind() {
+          let e = this.plot;
+          this.h = {
+            down: e => this.onDown(e),
+            move: e => this.onMove(e),
+            up: e => this.onUp(e),
+            lost: e => this.onUp(e),
+            leave: () => {
+              this.drag || (this.hover = null, this.hideTip(), this.markOver())
+            },
+            blur: () => {
+              this.drag = null, this.touches.clear(), this.hover = null, this.hideTip(), this.markOver()
+            },
+            wheel: e => this.onWheel(e),
+            dbl: e => this.onDbl(e),
+            key: e => this.onKey(e)
+          }, e.addEventListener("pointerdown", this.h.down), e.addEventListener("pointermove", this.h.move), e.addEventListener("pointerup", this.h.up), e.addEventListener("pointercancel", this.h.up), e.addEventListener("lostpointercapture", this.h.lost), e.addEventListener("pointerleave", this.h.leave), window.addEventListener("blur", this.h.blur), e.addEventListener("wheel", this.h.wheel, {
+            passive: !1
+          }), e.addEventListener("dblclick", this.h.dbl), e.addEventListener("keydown", this.h.key)
+        }
+        unbind() {
+          let e = this.plot,
+            t = this.h;
+          e.removeEventListener("pointerdown", t.down), e.removeEventListener("pointermove", t.move), e.removeEventListener("pointerup", t.up), e.removeEventListener("pointercancel", t.up), e.removeEventListener("lostpointercapture", t.lost), e.removeEventListener("pointerleave", t.leave), window.removeEventListener("blur", t.blur), e.removeEventListener("wheel", t.wheel), e.removeEventListener("dblclick", t.dbl), e.removeEventListener("keydown", t.key)
+        }
+        pinchOf() {
+          let [e, t] = [...this.touches.values()];
+          return {
+            d: Math.max(20, Math.hypot(e.x - t.x, e.y - t.y)),
+            x: Math.min((e.x + t.x) / 2, this.G.plotW)
+          }
+        }
+        onDown(e) {
+          if (0 !== e.button || !this.T.D.n) return;
+          let t = this.pt(e),
+            s = this.G,
+            i = this.V;
+          if ("touch" === e.pointerType) {
+            if (this.touches.set(e.pointerId, t), this.touches.size > 2) return;
+            if (2 === this.touches.size) {
+              let t = this.pinchOf();
+              this.drag = {
+                type: "pinch",
+                d0: t.d,
+                span0: i.span,
+                anchor: i.start + t.x / this.bw(),
+                moved: 1 / 0
+              };
+              try {
+                this.plot.setPointerCapture(e.pointerId)
+              } catch (e) {}
+              this.hover = null, this.hideTip(), this.markOver(), e.preventDefault();
+              return
+            }
+          }
+          if (this.nearSplit(t)) this.drag = {
+            type: "split",
+            x0: t.x,
+            y0: t.y,
+            h0: s.subRowH,
+            n: this.subRows().length,
+            moved: 0
+          };
+          else if (t.x >= s.axX && t.y < s.statsY) this.drag = {
+            type: "py",
+            y0: t.y,
+            lo: i.pLo,
+            hi: i.pHi,
+            moved: 0
+          };
+          else if (t.y >= s.timeY) this.drag = {
+            type: "tz",
+            x0: t.x,
+            span0: i.span,
+            right: i.start + i.span,
+            moved: 0
+          };
+          else {
+            if (!(t.x < s.plotW)) return;
+            this.drag = {
+              type: "pan",
+              x0: t.x,
+              y0: t.y,
+              s0: i.start,
+              lo: i.pLo,
+              hi: i.pHi,
+              moved: 0
+            }
+          }
+          this.drag.id = e.pointerId, this.hover = t;
+          try {
+            this.plot.setPointerCapture(e.pointerId)
+          } catch (e) {}
+          this.hideTip(), this.plot.focus({
+            preventScroll: !0
+          }), e.preventDefault()
+        }
+        onMove(e) {
+          let t = this.pt(e),
+            s = this.G,
+            i = this.V,
+            l = this.drag;
+          if ("touch" === e.pointerType && this.touches.has(e.pointerId) && this.touches.set(e.pointerId, t), l && "pinch" === l.type) {
+            if (this.touches.size < 2) return;
+            let e = this.pinchOf();
+            i.span = l.span0 * l.d0 / e.d, this.clampView(), i.start = l.anchor - e.x / this.bw(), this.clampView(), this.viewChanged();
+            return
+          }
+          if (l) {
+            if (null != l.id && e.pointerId !== l.id) return;
+            if (0 === e.buttons && "mouse" === e.pointerType) return void this.endDrag(e);
+            if (l.moved = Math.max(l.moved, Math.abs(t.x - (l.x0 ?? t.x)) + Math.abs(t.y - (l.y0 ?? t.y))), "pan" === l.type) {
+              if (i.start = l.s0 - (t.x - l.x0) / this.bw(), this.clampView(), !i.yAuto) {
+                let e = (t.y - l.y0) / ((s.bot - s.top) / (l.hi - l.lo));
+                i.pLo = l.lo + e, i.pHi = l.hi + e
+              }
+              this.viewChanged()
+            } else if ("tz" === l.type) i.span = l.span0 * Math.exp(-(.006 * (t.x - l.x0))), this.clampView(), i.start = l.right - i.span, this.clampView(), this.viewChanged();
+            else if ("split" === l.type) this.T.setSubRowH(Math.round(U(l.h0 + (l.y0 - t.y) / l.n, 48, 240))), this.layout(), this.markBase();
+            else {
+              let e = Math.exp((t.y - l.y0) * .006),
+                s = (l.lo + l.hi) / 2,
+                a = (l.hi - l.lo) / 2 * e;
+              i.yAuto = !1, i.pLo = s - a, i.pHi = s + a, this.markBase()
+            }
+            return void(this.hover = t)
+          }
+          this.hover = t, this.plot.style.cursor = this.nearSplit(t) ? "row-resize" : t.x >= s.axX && t.y < s.statsY ? "ns-resize" : t.y >= s.timeY ? "ew-resize" : t.x >= s.plotW ? "default" : "crosshair", this.markOver(), this.tipSoon()
+        }
+        onUp(e) {
+          if (e && "touch" === e.pointerType) {
+            if (!this.touches.delete(e.pointerId)) return;
+            let t = this.drag;
+            if (t && "pinch" === t.type) {
+              if (1 === this.touches.size) {
+                let [
+                  [e, t]
+                ] = [...this.touches], s = this.V;
+                this.drag = {
+                  type: "pan",
+                  id: e,
+                  x0: t.x,
+                  y0: t.y,
+                  s0: s.start,
+                  lo: s.pLo,
+                  hi: s.pHi,
+                  moved: 1 / 0
+                }
+              } else this.touches.size || (this.drag = null, this.hover = null, this.markOver(), this.settleSoon());
+              return
+            }
+          }
+          e && this.drag && null != this.drag.id && e.pointerId !== this.drag.id || this.endDrag()
+        }
+        endDrag(e) {
+          let t = this.drag;
+          if (t) {
+            if (this.drag = null, "pan" === t.type && t.moved < 4 && this.hover) {
+              let e = Math.floor(this.V.start + this.hover.x / this.bw());
+              e >= 0 && e < this.T.D.n && this.T.select(this.T.SEL === e ? -1 : e), this.tipSoon()
+            }
+            this.markOver(), this.settleSoon()
+          }
+        }
+        onWheel(e) {
+          if (!this.T.D.n) return;
+          e.preventDefault();
+          let t = this.pt(e),
+            s = this.G,
+            i = this.V,
+            l = 1 === e.deltaMode ? 16 : 2 === e.deltaMode ? s.H : 1;
+          if (t.x >= s.axX && t.y < s.statsY) {
+            let t = Math.exp(e.deltaY * l * .0015),
+              s = (i.pLo + i.pHi) / 2,
+              a = (i.pHi - i.pLo) / 2 * t;
+            i.yAuto = !1, i.pLo = s - a, i.pHi = s + a, this.markBase();
+            return
+          }
+          if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            i.start += (e.shiftKey ? e.deltaY : e.deltaX) * l / this.bw(), this.clampView(), this.viewChanged();
+            return
+          }
+          let a = Math.min(t.x, s.plotW),
+            r = i.start + a / this.bw(),
+            n = i.span;
+          i.span *= Math.exp(e.deltaY * l * .0015), this.clampView(), i.start = r - a / this.bw(), this.clampView();
+          let o = i.span / n;
+          if (t.y < s.statsY && s.p && 1 !== o) {
+            let e = s.p(t.y);
+            i.yAuto = !1, i.pLo = e - (e - i.pLo) * o, i.pHi = e + (i.pHi - e) * o
+          }
+          this.viewChanged(), this.hover && (this.hover = t, this.tipSoon())
+        }
+        onDbl(e) {
+          let t = this.pt(e);
+          if (t.x >= this.G.axX && t.y < this.G.statsY) {
+            this.V.yAuto = !0, this.markBase();
+            return
+          }
+          this.resetView()
+        }
+        onKey(e) {
+          if (!this.T.D.n) return;
+          let t = e.key,
+            s = this.V;
+          if ("ArrowLeft" === t || "ArrowRight" === t) s.start += ("ArrowLeft" === t ? -1 : 1) * Math.max(1, .15 * s.span), this.clampView(), this.viewChanged(), e.preventDefault();
+          else if ("+" === t || "=" === t || "-" === t || "_" === t) {
+            let i = s.start + s.span;
+            s.span *= "-" === t || "_" === t ? 1.25 : .8, this.clampView(), s.start = i - s.span, this.clampView(), this.viewChanged(), e.preventDefault()
+          } else "Home" === t ? (this.resetView(), e.preventDefault()) : "Escape" === t && this.T.select(-1)
+        }
+        renderHi(e) {
+          let t = this.G,
+            s = t.dpr,
+            i = this.hover;
+          for (let s of (this.hover = null, t.dpr = e, [this.cvB, this.cvO])) s.width = Math.round(t.W * e), s.height = Math.round(t.H * e);
+          this.drawBase(), this.drawOver();
+          let l = document.createElement("canvas");
+          l.width = this.cvB.width, l.height = this.cvB.height;
+          let a = l.getContext("2d");
+          for (let e of (a.drawImage(this.cvB, 0, 0), a.drawImage(this.cvO, 0, 0), t.dpr = s, this.hover = i, [this.cvB, this.cvO])) e.width = Math.round(t.W * s), e.height = Math.round(t.H * s);
+          return this.dirty.base = this.dirty.over = !0, this.frame(), l
+        }
+      }
+      var tz = s(69892),
+        tq = s(25687),
+        tY = s.n(tq);
+      async function tX(e, t, s) {
+        let i, l = t.G,
+          a = t.CL,
+          r = t.ff,
+          n = e.D,
+          o = N[n.mkt],
+          h = n.n,
+          d = Math.round(l.W),
+          c = Math.round(l.H),
+          p = t.renderHi(2),
+          u = document.createElement("canvas");
+        u.width = (d + 40) * 2, u.height = (70 + c + 44) * 2;
+        let f = u.getContext("2d");
+        f.scale(2, 2), f.fillStyle = a.surface, f.fillRect(0, 0, d + 40, 70 + c + 44);
+        let g = o.agg ? e.aggOf(o).map(e => N[e].ex).join(" + ") : o.ex,
+          m = 20;
+        f.fillStyle = a.s3, f.beginPath(), f.arc(m + 15, 35, 15, 0, 7), f.fill(), f.fillStyle = a.fg, f.font = "700 14px " + r, f.textAlign = "center", f.textBaseline = "middle", f.fillText(n.sym.slice(0, 1), m + 15, 35.5), m += 42, f.textBaseline = "middle", f.textAlign = "left", f.font = "600 21px " + r, f.fillStyle = a.fg, f.fillText(n.sym + " \xb7 " + e.mktName(o) + " \xb7 " + e.itvLabel(), m, 25), f.font = "500 13px " + r, f.fillStyle = a.fg3, f.fillText(e.tr("shot.sub", "Footprint chart \xb7 {{ex}}", {
+          ex: g
+        }), m, 49);
+        let b = n.C[h - 1],
+          v = e.barOf(n.T[h - 1] - 864e5),
+          x = null != v ? b / n.C[v] - 1 : 0 / 0,
+          y = new Date;
+        f.textAlign = "right", f.font = "700 22px " + r, f.fillStyle = a.fg, f.fillText($(b, e.dp), d + 20, 25);
+        let w = y.getFullYear() + "-" + I(y.getMonth() + 1) + "-" + I(y.getDate()) + " " + I(y.getHours()) + ":" + I(y.getMinutes()) + " " + ("UTC" + ((i = -new Date().getTimezoneOffset() / 60) >= 0 ? "+" : "−")) + Math.abs(i);
+        if (f.font = "500 13px " + r, f.fillStyle = a.fg3, f.fillText(w, d + 20, 49), isFinite(x)) {
+          let e = f.measureText(w).width + 12;
+          f.font = "600 13px " + r, f.fillStyle = x >= 0 ? a.up : a.down, f.fillText(K(x) + " 24h", d + 20 - e, 49)
+        }
+        f.fillStyle = a.line, f.fillRect(0, 69, d + 40, 1), f.drawImage(p, 0, 0, p.width, p.height, 20, 70, d, c);
+        let k = await
+        function(e) {
+          let t = e && e.querySelector("svg");
+          if (!t) return Promise.resolve(null);
+          let s = t.getBoundingClientRect(),
+            i = t.cloneNode(!0);
+          i.setAttribute("width", 2 * s.width), i.setAttribute("height", 2 * s.height), i.setAttribute("fill", getComputedStyle(e).color), i.removeAttribute("class");
+          let l = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString(i));
+          return new Promise(e => {
+            let t = new Image;
+            t.onload = () => e(t), t.onerror = () => e(null), t.src = l
+          })
+        }(s);
+        if (k) {
+          let e = t.plot.getBoundingClientRect(),
+            i = s.getBoundingClientRect();
+          f.drawImage(k, 20 + i.left - e.left, 70 + i.top - e.top, i.width, i.height)
+        }
+        let _ = 70 + c + 22;
+        for (let [e, t, s] of(f.fillStyle = a.line, f.fillRect(0, 70 + c, d + 40, 1), f.fillStyle = a.poc, [
+            [0, 0, 1],
+            [7, 0, .5],
+            [0, 5, .5],
+            [7, 5, 1]
+          ])) f.globalAlpha = s, f.fillRect(20 + e, _ - 5 + t, 5, 3.5);
+        f.globalAlpha = 1, f.textAlign = "left", f.font = "600 13px " + r, f.fillStyle = a.fg2, f.fillText("CoinGlass \xb7 " + e.tr("title", "Footprint chart"), 40, _);
+        let T = e.prefs,
+          S = T.marks.sig ? A.filter(([e]) => T.sigs[e]).map(([t, s]) => F(e.t, "sigs", t, s)) : [],
+          j = [
+            [e.tr("pal.bid", "Buys"), a.bid],
+            [e.tr("pal.ask", "Sells"), a.ask], ...T.marks.poc ? [
+              ["POC", a.poc]
+            ] : [], ...S.map(e => [e, a.fg3])
+          ];
+        f.textAlign = "right", f.font = "500 12.5px " + r;
+        let C = d + 20,
+          M = e.tr("shot.data", "Data: {{ex}}", {
+            ex: g
+          });
+        f.fillStyle = a.fg3, f.fillText(M, C, _), C -= f.measureText(M).width + 18;
+        for (let e = j.length - 1; e >= 0; e--) {
+          let [t, s] = j[e], i = f.measureText(t).width;
+          f.fillStyle = a.fg2, f.fillText(t, C, _), f.fillStyle = s, f.beginPath(), f.arc(C - i - 8, _, 3.5, 0, 7), f.fill(), C -= i + 24
+        }
+        return u
+      }
+      let tG = (e, t) => "ask" === t ? e.ask : "bid" === t ? e.bid : "acc" === t ? e.poc : e.fg;
+
+      function tK(e, t, s, i) {
+        let l = tG(t, i.col);
+        if (e.save(), e.strokeStyle = l, e.fillStyle = l, e.lineWidth = 6, e.lineCap = "round", e.lineJoin = "round", e.shadowColor = "rgba(0,0,0,.28)", e.shadowBlur = 8, "rect" === i.t || "ellipse" === i.t) {
+          let t = Math.min(i.x0, i.x1),
+            s = Math.min(i.y0, i.y1),
+            l = Math.abs(i.x1 - i.x0),
+            a = Math.abs(i.y1 - i.y0);
+          e.beginPath(), "ellipse" === i.t ? e.ellipse(t + l / 2, s + a / 2, l / 2, a / 2, 0, 0, 7) : e.roundRect ? e.roundRect(t, s, l, a, 10) : e.rect(t, s, l, a), e.stroke()
+        } else if ("arrow" === i.t) {
+          let t = i.x1 - i.x0,
+            s = i.y1 - i.y0,
+            l = Math.hypot(t, s);
+          if (l >= 2) {
+            let a = t / l,
+              r = s / l,
+              n = Math.min(40, .5 * l),
+              o = i.x1 - a * n * .8,
+              h = i.y1 - r * n * .8;
+            e.beginPath(), e.moveTo(i.x0, i.y0), e.lineTo(o, h), e.stroke(), e.beginPath(), e.moveTo(i.x1, i.y1), e.lineTo(i.x1 - a * n - r * n * .5, i.y1 - r * n + a * n * .5), e.lineTo(i.x1 - a * n + r * n * .5, i.y1 - r * n - a * n * .5), e.closePath(), e.fill()
+          }
+        } else if ("pen" === i.t) e.beginPath(), i.pts.forEach(([t, s], i) => i ? e.lineTo(t, s) : e.moveTo(t, s)), e.stroke();
+        else if ("text" === i.t) {
+          e.font = "600 34px " + s;
+          let a = e.measureText(i.text).width + 40;
+          e.beginPath(), e.roundRect ? e.roundRect(i.x, i.y - 32, a, 64, 16) : e.rect(i.x, i.y - 32, a, 64), e.fill(), e.shadowColor = "transparent", e.fillStyle = eY(t, l, 1), e.textAlign = "left", e.textBaseline = "middle", e.fillText(i.text, i.x + 20, i.y + 2)
+        }
+        e.restore()
+      }
+      let t$ = [
+          ["arrow", "Arrow"],
+          ["rect", "Box"],
+          ["ellipse", "Circle"],
+          ["text", "Text"],
+          ["pen", "Pen"]
+        ],
+        tJ = [
+          ["ask", "Red"],
+          ["bid", "Green"],
+          ["acc", "Yellow"],
+          ["fg", "Black/white"]
+        ],
+        tQ = {
+          arrow: ["shot.hintArrow", "Drag on the chart to draw an arrow; Ctrl+Z to undo"],
+          rect: ["shot.hintRect", "Drag on the chart to draw a box; Ctrl+Z to undo"],
+          ellipse: ["shot.hintEllipse", "Drag on the chart to draw a circle; Ctrl+Z to undo"],
+          text: ["shot.hintText", "Click on the chart to add text; Ctrl+Z to undo"],
+          pen: ["shot.hintPen", "Drag on the chart to draw freehand; Ctrl+Z to undo"]
+        };
+
+      function tZ({
+        chartRef: e,
+        logoRef: t,
+        onClose: s
+      }) {
+        let {
+          term: l,
+          CL: r,
+          font: n
+        } = f(), o = (0, a.useRef)(null), h = (0, a.useRef)(null), d = (0, a.useRef)(null), c = (0, a.useRef)(null), [p, u] = (0, a.useState)("arrow"), [g, m] = (0, a.useState)("ask"), [b, v] = (0, a.useState)(l.tr("shot.rendering", "Rendering…")), [x, y] = (0, a.useState)(null), w = (0, a.useRef)({
+          shapes: [],
+          cur: null
+        }), k = () => {
+          let e = h.current;
+          if (!e) return;
+          let t = e.getContext("2d");
+          for (let s of (t.clearRect(0, 0, e.width, e.height), w.current.shapes)) tK(t, r, n, s);
+          w.current.cur && tK(t, r, n, w.current.cur)
+        }, [_, T] = (0, a.useState)(null), [S, j] = (0, a.useState)(null), [C, N] = (0, a.useState)(null);
+        (0, a.useEffect)(() => {
+          let s = !0;
+          return Promise.resolve().then(() => tX(l, e.current, t && t.current)).then(e => {
+            s && T(e)
+          }).catch(e => {
+            s && v(l.tr("shot.failed", "Could not render the chart ({{msg}})", {
+              msg: e && e.message || String(e)
+            }))
+          }), () => {
+            s = !1
+          }
+        }, []), (0, a.useEffect)(() => {
+          _ && S && C && (S.width = C.width = _.width, S.height = C.height = _.height, S.getContext("2d").drawImage(_, 0, 0), k(), v(l.tr(...tQ[p])))
+        }, [_, S, C]), (0, a.useEffect)(() => {
+          let e = e => {
+            (e.ctrlKey || e.metaKey) && "z" === e.key.toLowerCase() && !x && (e.preventDefault(), w.current.shapes.pop(), k())
+          };
+          return document.addEventListener("keydown", e), () => document.removeEventListener("keydown", e)
+        });
+        let M = () => {
+            if (!x) return;
+            let e = c.current && c.current.value.trim() || "";
+            e && (w.current.shapes.push({
+              t: "text",
+              col: g,
+              x: x.x,
+              y: x.y,
+              text: e
+            }), k()), y(null)
+          },
+          D = e => {
+            let t = h.current,
+              s = t.getBoundingClientRect();
+            return [(e.clientX - s.left) * t.width / s.width, (e.clientY - s.top) * t.height / s.height]
+          },
+          O = () => {
+            let e = w.current.cur;
+            e && (w.current.cur = null, ("pen" === e.t ? e.pts.length > 2 : Math.hypot(e.x1 - e.x0, e.y1 - e.y0) > 16) && w.current.shapes.push(e), k())
+          },
+          B = () => {
+            if (!_) return Promise.resolve(null);
+            let e = document.createElement("canvas");
+            e.width = o.current.width, e.height = o.current.height;
+            let t = e.getContext("2d");
+            return t.drawImage(o.current, 0, 0), t.drawImage(h.current, 0, 0), new Promise(t => e.toBlob(t, "image/png"))
+          },
+          P = async () => {
+            M();
+            try {
+              if (!_) return;
+              if (!navigator.clipboard || !window.ClipboardItem) throw Error("no clipboard");
+              await navigator.clipboard.write([new window.ClipboardItem({
+                "image/png": B()
+              })]), v(l.tr("shot.copied", "Copied. Paste it straight into X, Telegram, Discord and more"))
+            } catch (e) {
+              v(l.tr("shot.noCopy", 'Can\'t copy the image here. Use "Download PNG" instead'))
+            }
+          }, A = async () => {
+            let e, t;
+            M();
+            let s = await B();
+            if (!s) return;
+            let i = (e = new Date, t = l.D, `footprint_${t.sym}_${t.mkt}_${l.derived()?l.prefs.bt:l.prefs.itv}_${e.getFullYear()}${I(e.getMonth()+1)}${I(e.getDate())}-${I(e.getHours())}${I(e.getMinutes())}.png`),
+              a = document.createElement("a");
+            a.href = URL.createObjectURL(s), a.download = i, document.body.appendChild(a), a.click(), a.remove(), setTimeout(() => URL.revokeObjectURL(a.href), 5e3), v(l.tr("shot.saved", "Downloaded {{name}}", {
+              name: i
+            }))
+          }, L = tG(r, g);
+        return (0, i.jsx)(e5.aF, {
+          isOpen: !0,
+          onClose: s,
+          title: l.tr("shot.title", "Screenshot"),
+          className: tY().modal,
+          contentClassName: tY().content,
+          closeOnOverlayClick: !0,
+          closeOnEsc: !x,
+          children: (0, i.jsxs)("div", {
+            className: tY().box,
+            children: [(0, i.jsx)("p", {
+              className: tY().sub,
+              children: l.tr("shot.sub2", "Signals and markers on the chart are included. Add arrows, boxes, circles and text, then copy or download")
+            }), (0, i.jsxs)("div", {
+              className: tY().tools,
+              children: [(0, i.jsx)(ta, {
+                value: p,
+                onChange: e => {
+                  M(), u(e), v(l.tr(...tQ[e]))
+                },
+                label: l.tr("shot.tools", "Annotation tools"),
+                options: t$.map(([e, t]) => ({
+                  value: e,
+                  label: l.tr("shot.t." + e, t)
+                }))
+              }), (0, i.jsx)("div", {
+                className: tY().sws,
+                role: "group",
+                "aria-label": l.tr("shot.colors", "Annotation color"),
+                children: tJ.map(([e, t]) => (0, i.jsx)("button", {
+                  type: "button",
+                  className: te(tY().sw, g === e && tY().on),
+                  style: {
+                    "--c": tG(r, e)
+                  },
+                  "aria-pressed": g === e,
+                  "aria-label": l.tr("shot.c." + e, t),
+                  onClick: () => m(e)
+                }, e))
+              }), (0, i.jsx)(tl, {
+                onClick: () => {
+                  M(), w.current.shapes.pop(), k()
+                },
+                title: l.tr("shot.undoHint", "Undo (Ctrl+Z)"),
+                children: l.tr("shot.undo", "Undo")
+              }), (0, i.jsx)(tl, {
+                onClick: () => {
+                  y(null), w.current.shapes = [], k()
+                },
+                children: l.tr("shot.clear", "Clear")
+              }), (0, i.jsx)("div", {
+                className: tY().grow
+              }), (0, i.jsx)(tl, {
+                onClick: P,
+                children: (0, i.jsxs)("span", {
+                  className: tY().ib,
+                  children: [(0, i.jsx)(e3.TdU, {
+                    className: tY().uico
+                  }), l.tr("shot.copy", "Copy image")]
+                })
+              }), (0, i.jsx)(tl, {
+                variant: "primary",
+                onClick: A,
+                children: (0, i.jsxs)("span", {
+                  className: tY().ib,
+                  children: [(0, i.jsx)(e3.s3U, {
+                    className: tY().uico
+                  }), l.tr("shot.download", "Download PNG")]
+                })
+              })]
+            }), (0, i.jsxs)("div", {
+              className: tY().stage,
+              ref: d,
+              children: [(0, i.jsx)("canvas", {
+                ref: e => {
+                  o.current = e, j(e)
+                }
+              }), (0, i.jsx)("canvas", {
+                ref: e => {
+                  h.current = e, N(e)
+                },
+                className: tY().ann,
+                style: {
+                  cursor: "text" === p ? "text" : "crosshair"
+                },
+                onPointerDown: e => {
+                  if (0 !== e.button || !_) return;
+                  e.preventDefault();
+                  let t = !!x;
+                  M();
+                  let [s, i] = D(e);
+                  if ("text" === p) {
+                    if (t) return;
+                    let l = d.current.getBoundingClientRect(),
+                      a = h.current.getBoundingClientRect().width / (h.current.width / 2);
+                    y({
+                      left: e.clientX - l.left,
+                      top: e.clientY - l.top - 16 * a,
+                      x: s,
+                      y: i,
+                      k: a
+                    });
+                    return
+                  }
+                  h.current.setPointerCapture(e.pointerId), w.current.cur = "pen" === p ? {
+                    t: "pen",
+                    col: g,
+                    pts: [
+                      [s, i]
+                    ]
+                  } : {
+                    t: p,
+                    col: g,
+                    x0: s,
+                    y0: i,
+                    x1: s,
+                    y1: i
+                  }, k()
+                },
+                onPointerMove: e => {
+                  let t = w.current.cur;
+                  if (!t) return;
+                  let [s, i] = D(e);
+                  "pen" === t.t ? t.pts.push([s, i]) : (t.x1 = s, t.y1 = i), k()
+                },
+                onPointerUp: O,
+                onPointerCancel: O,
+                "aria-label": l.tr("shot.canvas", "Annotation canvas")
+              }), x ? (0, i.jsx)("input", {
+                ref: c,
+                className: tY().txt,
+                autoFocus: !0,
+                maxLength: 60,
+                placeholder: l.tr("shot.txtPh", "Type text, press Enter to finish"),
+                style: {
+                  left: x.left,
+                  top: x.top,
+                  height: 32 * x.k,
+                  font: `600 ${17*x.k}px ${n}`,
+                  "--c": L,
+                  "--ct": eY(r, L, 1)
+                },
+                onKeyDown: e => {
+                  "Enter" === e.key ? (e.preventDefault(), M()) : "Escape" === e.key && (e.preventDefault(), e.stopPropagation(), y(null))
+                },
+                onBlur: () => setTimeout(M, 0)
+              }) : null]
+            }), (0, i.jsx)("div", {
+              className: tY().note,
+              children: b
+            })]
+          })
+        })
+      }
+
+      function t0({
+        m: e
+      }) {
+        let t = (0, a.useRef)(null),
+          [s, l] = (0, a.useState)(null);
+        return ((0, a.useLayoutEffect)(() => {
+          let s = t.current;
+          if (!e || !s) return;
+          let i = s.offsetWidth,
+            a = s.offsetHeight,
+            r = e.x + 16,
+            n = e.y + 16;
+          r + i > e.W - 4 && (r = e.x - i - 16), n + a > e.H - 4 && (n = Math.max(4, e.y - a - 16)), l([Math.max(4, r), n])
+        }, [e]), e) ? (0, i.jsxs)("div", {
+          ref: t,
+          className: tW().tip,
+          style: s ? {
+            left: s[0],
+            top: s[1]
+          } : {
+            visibility: "hidden"
+          },
+          children: [(0, i.jsxs)("div", {
+            className: tW().th,
+            children: [(0, i.jsx)("span", {
+              children: e.head[0]
+            }), (0, i.jsx)("span", {
+              children: e.head[1]
+            })]
+          }), e.rows.map((e, t) => {
+            let s;
+            return "hr" === e ? (0, i.jsx)("hr", {}, t) : (0, i.jsxs)("div", {
+              className: tW().tr,
+              children: [(0, i.jsx)("b", {
+                children: e[0]
+              }), (0, i.jsx)("span", {
+                className: te(tW().num, e[2] && tW()[e[2]]),
+                children: Array.isArray(s = e[1]) ? s.map((e, t) => Array.isArray(e) ? (0, i.jsx)("span", {
+                  className: tW()[e[1]],
+                  children: e[0]
+                }, t) : (0, i.jsx)(a.Fragment, {
+                  children: e
+                }, t)) : s
+              })]
+            }, t)
+          }), e.note ? (0, i.jsxs)("div", {
+            className: tW().tr,
+            children: [(0, i.jsx)("b", {}), (0, i.jsx)("span", {
+              children: e.note
+            })]
+          }) : null, e.tags.length ? (0, i.jsx)("div", {
+            children: e.tags.map(([e, t], s) => (0, i.jsx)("span", {
+              className: te(tW().tg, tW()["tg" + t]),
+              children: e
+            }, s))
+          }) : null]
+        }) : null
+      }
+
+      function t1() {
+        let {
+          term: e
+        } = f(), t = e.prefs;
+        return (0, i.jsxs)(i.Fragment, {
+          children: [(0, i.jsx)(th, {
+            children: e.tr("marks.head", "Chart markers")
+          }), B.map(([s, l, a]) => (0, i.jsx)(to, {
+            checked: t.marks[s],
+            onChange: t => e.setGroup("marks", s, t),
+            label: F(e.t, "marks", s, l),
+            hint: R(e.t, "marks", s, a)
+          }, s)), (0, i.jsxs)(th, {
+            children: [e.tr("marks.sigHead", "Signal types"), t.marks.sig ? "" : e.tr("marks.sigOff", ' ("Signals" is off in the toolbar)')]
+          }), A.map(([s, l, a]) => (0, i.jsx)(to, {
+            checked: t.sigs[s],
+            disabled: !t.marks.sig,
+            onChange: t => e.setGroup("sigs", s, t),
+            label: F(e.t, "sigs", s, l),
+            hint: R(e.t, "sigs", s, a)
+          }, s))]
+        })
+      }
+
+      function t2() {
+        let {
+          term: e
+        } = f(), t = e.prefs;
+        return (0, i.jsxs)(i.Fragment, {
+          children: [(0, i.jsx)(th, {
+            children: e.tr("subs.head", "Panes (drag the dividers to resize)")
+          }), P.map(([s, l, a]) => (0, i.jsx)(to, {
+            checked: t.subs[s],
+            onChange: t => e.setGroup("subs", s, t),
+            label: F(e.t, "subs", s, l),
+            hint: R(e.t, "subs", s, a)
+          }, s)), (0, i.jsx)(th, {
+            children: e.tr("subs.tblHead", "Table rows")
+          }), (0, i.jsx)("div", {
+            className: tW().grid2,
+            children: L.map(([s, l]) => (0, i.jsx)(to, {
+              checked: t.tbl[s],
+              disabled: !t.subs.tbl,
+              onChange: t => e.setGroup("tbl", s, t),
+              label: F(e.t, "tbl", s, l)
+            }, s))
+          })]
+        })
+      }
+
+      function t5({
+        c: e
+      }) {
+        let {
+          term: t
+        } = f(), s = t.prefs, l = (e, t) => (0, i.jsxs)("div", {
+          className: tW().lrow,
+          children: [(0, i.jsx)("span", {
+            className: tW().lcap,
+            children: e
+          }), (0, i.jsx)("div", {
+            className: tW().lctl,
+            children: t
+          })]
+        });
+        return (0, i.jsxs)("div", {
+          className: tW().layers,
+          children: [l(t.tr("tb.show", "Show"), (0, i.jsx)(ta, {
+            value: s.mode,
+            onChange: e => t.setMode(e),
+            options: e.modeOpts
+          })), l(t.tr("tb.unit", "Unit"), (0, i.jsx)(ta, {
+            value: s.unit,
+            onChange: e => t.setUnit(e),
+            options: e.unitOpts
+          })), l(t.tr("tb.bars", "Bars"), (0, i.jsx)(ta, {
+            value: s.bt,
+            onChange: e => t.setBt(e),
+            options: e.btOpts
+          })), e.btvOpts ? l(t.tr("tb.btv", "Bar size"), (0, i.jsx)(ta, {
+            value: String(s.btv),
+            onChange: e => t.setBtv("auto" === e ? "auto" : +e),
+            options: e.btvOpts
+          })) : null, l(t.tr("tb.tick", "Row size"), (0, i.jsx)(ta, {
+            value: String(s.tick),
+            onChange: e => t.setTick("auto" === e ? "auto" : +e),
+            options: e.tickOpts
+          })), l(t.tr("tb.ratio", "Imbalance ratio"), (0, i.jsx)(ta, {
+            value: String(s.ratio),
+            onChange: e => t.setRatio(+e),
+            options: e.ratioOpts
+          })), (0, i.jsx)(th, {
+            children: t.tr("tb.layersShow", "On the chart")
+          }), (0, i.jsx)(to, {
+            checked: s.vp,
+            onChange: () => t.toggleVp(),
+            label: t.tr("tb.vp", "Volume profile")
+          }), (0, i.jsx)(to, {
+            checked: s.marks.vwap,
+            onChange: e => t.setGroup("marks", "vwap", e),
+            label: "VWAP"
+          }), (0, i.jsx)(to, {
+            checked: s.marks.sig,
+            onChange: e => t.setGroup("marks", "sig", e),
+            label: t.tr("tb.sig", "Signals")
+          }), (0, i.jsx)(t1, {}), (0, i.jsx)(t2, {})]
+        })
+      }
+
+      function t3() {
+        let {
+          term: e,
+          CL: t,
+          font: s
+        } = f(), l = e.prefs, r = e.derived(), n = l.sym, o = (0, a.useRef)(null), h = (0, a.useRef)(null), d = (0, a.useRef)(null), c = (0, a.useRef)(null), [p, u] = (0, a.useState)(null), [g, m] = (0, a.useState)(null), b = (0, a.useRef)(null), [v, x] = (0, a.useState)(!1), y = (0, a.useRef)(null), w = (0, a.useRef)(null);
+        (0, tF.M)(y, [tW().f1, tW().f2, tW().f3, tW().f4], e.lang + e.itvLabel() + l.mkt), (0, tF.M)(w, [tW().f1, tW().f2, tW().f3, tW().f4], e.lang + l.bt + +!!e.S), (0, a.useEffect)(() => {
+          let i = new tE(e, o.current, h.current, d.current);
+          return c.current = i, i.onTip = u, i.onSettle = () => e.notify(), i.onLayout = e => m(t => t && t.right === e.right && t.bottom === e.bottom ? t : e), i.setColors(t, s), e.attachChart(i), i.resize(), () => {
+            e.attachChart(null), i.destroy()
+          }
+        }, []), (0, a.useEffect)(() => {
+          c.current && c.current.setColors(t, s)
+        }, [t, s]);
+        let k = {
+          auto: 0,
+          ladder: []
+        };
+        r && e.S && e.S.n && Object.assign(k, e.btvOptions());
+        let _ = t => "vol" === l.bt ? J(t) + " " + n : e.tr("bt.usd", "${{v}}", {
+            v: $(t, z(t))
+          }),
+          T = e.D.n ? e.tickOptions() : [],
+          S = Object.keys(l.marks).filter(e => "sig" !== e && "vwap" !== e && l.marks[e]).length,
+          j = Object.values(l.subs).filter(Boolean).length,
+          C = n + " \xb7 " + e.mktName({
+            ...e.market()
+          }) + " \xb7 " + e.itvLabel(),
+          N = {
+            modeOpts: [
+              ["ba", "Bid \xd7 Ask", "Sell volume on the left of each cell, buy volume on the right"],
+              ["delta", "Delta", "Each cell shows buys minus sells"],
+              ["vol", "Volume", "Each cell gets a horizontal volume bar (sells red, buys green)"],
+              ["cnt", "Trades", "Sell trade count on the left of each cell, buy trade count on the right"],
+              ["avg", "Avg size", "Avg sell size on the left of each cell, avg buy size on the right"]
+            ].map(([t, s, i]) => ({
+              value: t,
+              label: "delta" === t ? "Delta" : e.tr("mode." + t, s),
+              title: e.tr("mode." + t + "Hint", i)
+            })),
+            unitOpts: [{
+              value: "qty",
+              label: e.tr("unit.qty", "Coin"),
+              title: e.tr("unit.qtyHint", "Show in coin units")
+            }, {
+              value: "usd",
+              label: e.tr("unit.usd", "USD"),
+              title: e.tr("unit.usdHint", "Show in USD")
+            }],
+            btOpts: [{
+              value: "time",
+              label: e.tr("bt.time", "Time")
+            }, {
+              value: "vol",
+              label: e.tr("bt.vol", "Volume")
+            }, {
+              value: "range",
+              label: e.tr("bt.range", "Range")
+            }],
+            btvOpts: r && k.auto ? [{
+              value: "auto",
+              label: e.tr("bt.auto", "Auto \xb7 {{v}}", {
+                v: _(k.auto)
+              })
+            }, ...k.ladder.map(t => ({
+              value: String(t),
+              label: e.tr("bt.per", "{{v}} per bar", {
+                v: _(t)
+              })
+            }))] : null,
+            tickOpts: [{
+              value: "auto",
+              label: e.tr("tb.auto", "Auto")
+            }, ...T.map(e => ({
+              value: String(e),
+              label: $(e, z(e))
+            })), ..."auto" === l.tick || T.includes(+l.tick) ? [] : [{
+              value: String(l.tick),
+              label: $(+l.tick, z(+l.tick))
+            }]],
+            ratioOpts: D.map(e => ({
+              value: String(e),
+              label: 100 * e + "%"
+            }))
+          };
+        return (0, i.jsxs)("div", {
+          className: tW().pane,
+          children: [(0, i.jsxs)("div", {
+            className: tW().toolbar,
+            ref: y,
+            children: [(0, i.jsxs)("h2", {
+              className: tW().h,
+              children: [(0, i.jsx)("span", {
+                children: e.tr("title", "Footprint chart")
+              }), (0, i.jsx)("span", {
+                className: tW().eyebrow,
+                children: C
+              })]
+            }), (0, i.jsxs)("div", {
+              className: tW().dk,
+              children: [(0, i.jsx)("span", {
+                className: tW().vsep
+              }), (0, i.jsx)(tc, {
+                className: tW().lbl,
+                children: e.tr("tb.show", "Show")
+              }), (0, i.jsx)(ta, {
+                value: l.mode,
+                onChange: t => e.setMode(t),
+                label: e.tr("tb.show", "Show"),
+                options: N.modeOpts
+              }), (0, i.jsx)(ta, {
+                value: l.unit,
+                onChange: t => e.setUnit(t),
+                options: N.unitOpts
+              })]
+            }), (0, i.jsx)("div", {
+              className: tW().mb,
+              children: (0, i.jsx)(tn, {
+                width: 360,
+                label: e.tr("tb.layers", "Layers"),
+                trigger: (0, i.jsxs)("span", {
+                  className: tW().ib,
+                  children: [(0, i.jsx)(e3.jlm, {
+                    className: tW().uico
+                  }), e.tr("tb.layers", "Layers"), (0, i.jsx)(e3.D3D, {
+                    className: tW().chev
+                  })]
+                }),
+                children: (0, i.jsx)(t5, {
+                  c: N
+                })
+              })
+            }), (0, i.jsx)("div", {
+              className: tW().grow
+            }), (0, i.jsx)(tl, {
+              onClick: () => x(!0),
+              disabled: !e.D.n,
+              title: e.tr("tb.shotHint", "Capture the chart as an image, mark it up with arrows, boxes and text, then copy or download"),
+              children: (0, i.jsxs)("span", {
+                className: tW().ib,
+                children: [(0, i.jsx)(e3.xpe, {
+                  className: tW().uico
+                }), (0, i.jsx)("span", {
+                  className: tW().tx,
+                  children: e.tr("tb.shot", "Screenshot")
+                })]
+              })
+            }), (0, i.jsx)(tl, {
+              onClick: () => c.current && c.current.resetView(),
+              title: e.tr("tb.resetHint", "Reset view (or double-click the chart)"),
+              "aria-label": e.tr("tb.reset", "Reset view"),
+              children: (0, i.jsxs)("span", {
+                className: tW().ib,
+                children: [(0, i.jsx)(e3.fNY, {
+                  className: tW().uico
+                }), (0, i.jsx)("span", {
+                  className: tW().tx,
+                  children: e.tr("tb.reset", "Reset view")
+                })]
+              })
+            })]
+          }), (0, i.jsxs)("div", {
+            className: tW().subbar,
+            ref: w,
+            children: [(0, i.jsx)(tc, {
+              className: tW().lbl,
+              title: e.tr("tb.btHint", "Time-based bars, or bars built from 1-minute footprint data by volume (volume bars) or price range (range bars)"),
+              children: e.tr("tb.bars", "Bars")
+            }), (0, i.jsx)(tr, {
+              value: l.bt,
+              onChange: t => e.setBt(t),
+              ariaLabel: e.tr("tb.bars", "Bars"),
+              options: N.btOpts
+            }), N.btvOpts ? (0, i.jsx)(tr, {
+              value: String(l.btv),
+              onChange: t => e.setBtv("auto" === t ? "auto" : +t),
+              ariaLabel: e.tr("tb.btv", "Bar size"),
+              options: N.btvOpts
+            }) : null, (0, i.jsx)("span", {
+              className: tW().vsep
+            }), (0, i.jsx)(tc, {
+              className: te(tW().lbl, tW().opt),
+              title: e.tr("tb.tickHint", "Price range per row. Auto picks a row size that fits the numbers at the current zoom"),
+              children: e.tr("tb.tick", "Row size")
+            }), (0, i.jsx)(tr, {
+              value: String(l.tick),
+              onChange: t => e.setTick("auto" === t ? "auto" : +t),
+              ariaLabel: e.tr("tb.tick", "Row size"),
+              options: N.tickOpts
+            }), (0, i.jsx)(tc, {
+              className: te(tW().lbl, tW().opt),
+              title: e.tr("tb.ratioHint", "Imbalance when buys are this many times the sells one row below (or the reverse)"),
+              children: e.tr("tb.ratio", "Imbalance ratio")
+            }), (0, i.jsx)(tr, {
+              value: String(l.ratio),
+              onChange: t => e.setRatio(+t),
+              ariaLabel: e.tr("tb.ratio", "Imbalance ratio"),
+              options: N.ratioOpts
+            }), (0, i.jsx)("span", {
+              className: tW().vsep
+            }), (0, i.jsx)(tn, {
+              width: 340,
+              label: e.tr("marks.head", "Chart markers"),
+              trigger: (0, i.jsxs)("span", {
+                className: tW().ib,
+                children: [e.tr("tb.marks", "Markers"), (0, i.jsx)("b", {
+                  className: tW().cnt,
+                  children: S
+                }), (0, i.jsx)(e3.D3D, {
+                  className: tW().chev
+                })]
+              }),
+              children: (0, i.jsx)(t1, {})
+            }), (0, i.jsx)(tn, {
+              width: 340,
+              label: e.tr("subs.head", "Panes (drag the dividers to resize)"),
+              trigger: (0, i.jsxs)("span", {
+                className: tW().ib,
+                children: [e.tr("tb.subs", "Panes"), (0, i.jsx)("b", {
+                  className: tW().cnt,
+                  children: j
+                }), (0, i.jsx)(e3.D3D, {
+                  className: tW().chev
+                })]
+              }),
+              children: (0, i.jsx)(t2, {})
+            }), (0, i.jsx)("span", {
+              className: tW().vsep
+            }), (0, i.jsx)(td, {
+              checked: l.vp,
+              onChange: () => e.toggleVp(),
+              title: e.tr("tb.vpHint", "Volume profile of the visible range on the right side of the chart, with POC and value area"),
+              children: e.tr("tb.vp", "Volume profile")
+            }), (0, i.jsx)(td, {
+              checked: l.marks.vwap,
+              onChange: t => e.setGroup("marks", "vwap", t),
+              title: e.tr("tb.vwapHint", "Volume-weighted average price, reset daily at 00:00 UTC, with \xb11σ / \xb12σ bands"),
+              children: "VWAP"
+            }), (0, i.jsx)(td, {
+              checked: l.marks.sig,
+              onChange: t => e.setGroup("marks", "sig", t),
+              title: e.tr("tb.sigHint", 'Absorption, trapped traders, divergence, exhaustion (pick types in "Markers")'),
+              children: e.tr("tb.sig", "Signals")
+            })]
+          }), (0, i.jsxs)("div", {
+            className: tW().plot,
+            ref: o,
+            tabIndex: 0,
+            "aria-label": e.tr("chart.aria", "Footprint chart: drag to pan, scroll to zoom, drag the price axis to scale vertically, double-click to reset, click a bar for details"),
+            children: [(0, i.jsx)("canvas", {
+              ref: h
+            }), (0, i.jsx)("canvas", {
+              ref: d
+            }), e.D.n && g ? (0, i.jsx)("span", {
+              ref: b,
+              className: tW().wm,
+              style: {
+                right: g.right + 12,
+                bottom: g.bottom + 12
+              },
+              "aria-hidden": "true",
+              children: (0, i.jsx)(tz.A, {})
+            }) : null, (0, i.jsx)(t0, {
+              m: p
+            }), e.edge ? (0, i.jsx)("div", {
+              className: tW().edge,
+              children: e.edge
+            }) : null]
+          }), v ? (0, i.jsx)(tZ, {
+            chartRef: c,
+            logoRef: b,
+            onClose: () => x(!1)
+          }) : null]
+        })
+      }
+      var t4 = s(94389),
+        t6 = s.n(t4);
+      let t8 = {
+          ba: ["Sells", "Buys"],
+          delta: ["Sells", "Buys"],
+          vol: ["Sells", "Buys"],
+          cnt: ["Sell #", "Buy #"],
+          avg: ["Avg sell", "Avg buy"]
+        },
+        t7 = {
+          ba: ["pal.ask", "pal.bid"],
+          delta: ["pal.ask", "pal.bid"],
+          vol: ["pal.ask", "pal.bid"],
+          cnt: ["bar.sellN", "bar.buyN"],
+          avg: ["bar.sellAvg", "bar.buyAvg"]
+        },
+        t9 = (e, t) => t ? e[t] : "";
+
+      function se() {
+        let {
+          term: e
+        } = f(), t = e.D, s = e.fmt, l = e.chart && e.chart.G.dt, r = e.prefs.mode, n = (0, a.useRef)(null), o = (0, a.useRef)(""), h = t8[r], d = t7[r], c = e.prefs.marks.bigCell, p = t.n && l ? e.SEL >= 0 && e.SEL < t.n ? e.SEL : t.n - 1 : -1, u = p >= 0 ? ev(e, p, l) : null;
+        if ((0, a.useEffect)(() => {
+            let e = p + "|" + l + "|" + t.gver;
+            if (!u || e === o.current || !n.current) return;
+            o.current = e;
+            let s = n.current.querySelector("[data-poc]");
+            s && (n.current.scrollTop = Math.max(0, s.offsetTop - n.current.clientHeight / 2))
+          }), p < 0) return (0, i.jsxs)("div", {
+          className: t6().view,
+          children: [(0, i.jsx)("div", {
+            className: t6().bhead,
+            children: (0, i.jsx)("div", {
+              className: t6().t,
+              children: (0, i.jsx)("span", {
+                children: "—"
+              })
+            })
+          }), (0, i.jsx)("div", {
+            className: t6().empty,
+            children: t.err || e.tr("chart.loading", "Loading…")
+          })]
+        });
+        let g = e.dp,
+          m = z(l),
+          b = p ? t.C[p] / t.C[p - 1] - 1 : 0,
+          v = e.derived(),
+          x = u && ex(e, p),
+          y = x && !x.real ? "≈" : "",
+          w = null != t.OIc[p] && null != t.OIo[p] ? t.OIc[p] - t.OIo[p] : null,
+          k = (e, t, s) => (0, i.jsxs)("div", {
+            children: [(0, i.jsx)("b", {
+              children: e
+            }), (0, i.jsx)("span", {
+              className: t9(t6(), s),
+              children: t
+            })]
+          }, e),
+          _ = [];
+        if (u)
+          for (let e = u.n - 1; e >= 0; e--)(u.b[e] + u.s[e] > 0 || e === u.poc) && _.push(e);
+        return (0, i.jsxs)("div", {
+          className: t6().view,
+          children: [(0, i.jsxs)("div", {
+            className: t6().bhead,
+            children: [(0, i.jsxs)("div", {
+              className: t6().t,
+              children: [(0, i.jsx)("span", {
+                children: v ? e.barTime(p) : X(t.T[p], !0) + " \xb7 " + j[t.itv]
+              }), (0, i.jsx)("small", {
+                children: e.SEL >= 0 ? e.tr("bar.selected", "Selected \xb7 Esc to clear") : e.tr("bar.latest", "Latest bar") + (p === t.n - 1 ? " \xb7 " + e.tr("tip.forming", "Forming") : "")
+              })]
+            }), (0, i.jsxs)("div", {
+              className: t6().o,
+              children: [e.tr("ohlc.o", "O"), " ", $(t.O[p], g), " \xb7 ", e.tr("ohlc.h", "H"), " ", $(t.H[p], g), " \xb7 ", e.tr("ohlc.l", "L"), " ", $(t.L[p], g), " \xb7 ", e.tr("ohlc.c", "C"), " ", (0, i.jsxs)("span", {
+                className: t9(t6(), Y(b)),
+                children: [$(t.C[p], g), " ", K(b)]
+              })]
+            })]
+          }), u ? (0, i.jsxs)("div", {
+            className: t6().stats,
+            children: [k(e.tr("tip.vol", "Volume"), s.fmtV(u.vol, u.volU)), k("Delta", s.fmtV(u.dlt, u.dltU, !0) + " \xb7 " + (u.vol ? K(u.dlt / u.vol, 0) : "—"), Y(u.dlt)), k(e.tr("bar.buys", "Taker buys"), s.fmtV(u.buy, u.buyU), "pos"), k(e.tr("bar.sells", "Taker sells"), s.fmtV(u.vol - u.buy, u.volU - u.buyU), "neg"), k(e.tr("tbl.dmax", "Max Delta"), x ? y + s.fmtV(x.mx, x.mx * u.px, !0) : "—", x && !x.real ? "est" : ""), k(e.tr("tbl.dmin", "Min Delta"), x ? y + s.fmtV(x.mn, x.mn * u.px, !0) : "—", x && !x.real ? "est" : ""), k(e.tr("tbl.cnt", "Trades"), Q(u.cnt)), k(e.tr("tbl.avg", "Avg size"), u.cnt ? s.fmtA(u.vol / u.cnt, u.volU / u.cnt) : "—"), k("POC", $(u.lo + u.poc * l, m)), k(e.tr("bar.va", "Value area"), $(u.lo + u.va0 * l, m) + " – " + $(u.lo + (u.va1 + 1) * l, m)), (0, i.jsxs)("div", {
+              children: [(0, i.jsx)("b", {
+                children: e.tr("bar.imb", "Imbalances buy \xb7 sell")
+              }), (0, i.jsxs)("span", {
+                children: [(0, i.jsx)("span", {
+                  className: t6().pos,
+                  children: u.nB
+                }), " \xb7 ", (0, i.jsx)("span", {
+                  className: t6().neg,
+                  children: u.nS
+                })]
+              })]
+            }), k(e.tr("bar.big", "Large-trade cells"), e.tr("bar.cells", "{{n}} cells", {
+              n: u.nBig
+            })), k(e.tr("tip.oi", "OI change"), null == w ? "spot" === N[t.mkt].kind ? e.tr("bar.oiSpot", "n/a (spot)") : "—" : s.fmtV(w, w * t.C[p], !0), null == w ? "" : Y(w)), k(e.tr("marks.ua", "Unfinished auction"), [u.uaHi ? e.tr("bar.top", "Top") : "", u.uaLo ? e.tr("bar.bottom", "Bottom") : ""].filter(Boolean).join(" \xb7 ") || e.tr("bar.none", "None"))]
+          }) : null, (0, i.jsxs)("div", {
+            className: te(t6().lrow, t6().lhead, t6().lv),
+            children: [(0, i.jsx)("span", {
+              children: e.tr("tip.level", "Price")
+            }), (0, i.jsx)("span", {
+              className: t6().rt,
+              children: e.tr(d[0], h[0])
+            }), (0, i.jsx)("span", {
+              className: t6().rt,
+              children: e.tr(d[1], h[1])
+            }), (0, i.jsx)("span", {
+              className: t6().rt,
+              children: "Delta"
+            })]
+          }), u ? (0, i.jsx)("div", {
+            className: t6().list,
+            ref: n,
+            children: _.map(t => {
+              let a = u.b[t],
+                n = u.s[t],
+                o = u.lo + (t + .5) * l,
+                h = a - n,
+                d = "cnt" === r ? Q(u.sc[t]) : "avg" === r ? u.sc[t] ? s.fmtA(n / u.sc[t], n / u.sc[t] * o) : "—" : s.fmtV(n, n * o),
+                p = "cnt" === r ? Q(u.bc[t]) : "avg" === r ? u.bc[t] ? s.fmtA(a / u.bc[t], a / u.bc[t] * o) : "—" : s.fmtV(a, a * o);
+              return (0, i.jsxs)("div", {
+                className: te(t6().lrow, t6().lv, t === u.poc && t6().poc),
+                "data-poc": t === u.poc ? "" : void 0,
+                children: [(0, i.jsx)("span", {
+                  children: $(u.lo + t * l, m)
+                }), (0, i.jsxs)("span", {
+                  className: te(t6().rt, u.imbS[t] && t6().im, u.imbS[t] && t6().neg),
+                  children: [d, c && u.bigS[t] ? (0, i.jsx)("i", {
+                    className: t6().bg,
+                    children: e.tr("bar.bigTag", "L")
+                  }) : null]
+                }), (0, i.jsxs)("span", {
+                  className: te(t6().rt, u.imbB[t] && t6().im, u.imbB[t] && t6().pos),
+                  children: [p, c && u.bigB[t] ? (0, i.jsx)("i", {
+                    className: t6().bg,
+                    children: e.tr("bar.bigTag", "L")
+                  }) : null]
+                }), (0, i.jsx)("span", {
+                  className: te(t6().rt, t9(t6(), Y(h))),
+                  children: s.fmtV(h, h * o, !0)
+                })]
+              }, t)
+            })
+          }) : (0, i.jsx)("div", {
+            className: t6().empty,
+            children: e.tr("tip.noFp", "No footprint data for this bar")
+          })]
+        })
+      }
+
+      function st() {
+        let {
+          term: e
+        } = f(), t = e.D, s = e.prefs;
+        if (!t.n) return (0, i.jsx)("div", {
+          className: t6().view,
+          children: (0, i.jsx)("div", {
+            className: t6().sum,
+            children: t.err ? "—" : e.tr("chart.loading", "Loading…")
+          })
+        });
+        let l = e.sigSets(),
+          a = {},
+          r = [];
+        for (let t of l) {
+          let s = t.sigs.filter(t => ek(e, t) && e.sigTypeOk(t));
+          for (let e of (a[t.bt] = s.length, s)) r.push({
+            g: e,
+            s: t,
+            t: t.X.T[e.i]
+          })
+        }
+        let n = new Set(l.map(e => e.bt)),
+          o = "all" === s.sigBt || n.has(s.sigBt) ? s.sigBt : "all",
+          h = (t, s, l) => ({
+            value: t,
+            label: (0, i.jsxs)(i.Fragment, {
+              children: [s, (0, i.jsx)("i", {
+                className: t6().n,
+                children: null == l ? "" : l
+              })]
+            }),
+            disabled: "all" !== t && !n.has(t),
+            title: "all" === t || n.has(t) ? void 0 : e.tr("sig.btOff", "Loading, or this pair has no 1-minute data")
+          }),
+          d = ("all" === o ? r : r.filter(e => e.s.bt === o)).sort((e, t) => t.t - e.t).slice(0, 200),
+          c = d.filter(e => "buy" === e.g.side).length,
+          p = e.sigOffCount(),
+          u = p ? e.tr("sig.off", ' ({{n}} types off; turn them on in "Markers")', {
+            n: p
+          }) : "";
+        return (0, i.jsxs)("div", {
+          className: t6().view,
+          children: [(0, i.jsxs)("div", {
+            className: t6().sigf,
+            children: [(0, i.jsx)(ta, {
+              value: o,
+              onChange: t => e.setSigBt(t),
+              label: e.tr("sig.byBt", "Filter signals by bar type"),
+              options: [h("all", e.tr("top.all", "All"), r.length), ...["time", "vol", "range"].map(t => h(t, "time" === t ? j[s.itv] || e.tr("bt.time", "Time") : "vol" === t ? e.tr("bt.vol", "Volume") : e.tr("bt.range", "Range"), a[t]))]
+            }), (0, i.jsx)(tr, {
+              value: s.sigTy,
+              onChange: t => e.setSigTy(t),
+              ariaLabel: e.tr("sig.type", "Signal types"),
+              options: [{
+                value: "all",
+                label: e.tr("sig.allTypes", "All types")
+              }, {
+                value: "abs",
+                label: e.tr("sigs.abs", "Absorption")
+              }, {
+                value: "trap",
+                label: e.tr("sigs.trap", "Trapped traders")
+              }, {
+                value: "div",
+                label: e.tr("sig.div", "Divergence")
+              }, {
+                value: "exh",
+                label: e.tr("sigs.exh", "Exhaustion")
+              }]
+            })]
+          }), (0, i.jsxs)("div", {
+            className: t6().sum,
+            children: [d.length ? v(e.t, "sig.sum", {
+              n: (0, i.jsx)("b", {
+                children: d.length
+              }),
+              b: (0, i.jsx)("b", {
+                className: t6().pos,
+                children: c
+              }),
+              s: (0, i.jsx)("b", {
+                className: t6().neg,
+                children: d.length - c
+              })
+            }, "{{n}} signals: {{b}} bullish, {{s}} bearish") : e.tr("sig.empty", "No signals here"), u, (0, i.jsx)("div", {
+              className: t6().basis,
+              children: e.tr("sig.basis", "The same move gives different signals on different bars, so they're computed for each: {{list}}. Click a signal to switch to its bars and jump to it.", {
+                list: l.map(e => e.label).join(e.tr("sep", ", "))
+              })
+            })]
+          }), (0, i.jsx)("div", {
+            className: t6().list,
+            children: d.map(t => {
+              let [s, l] = e.sigText(t.g, t.s.X);
+              return (0, i.jsxs)("div", {
+                className: te(t6().lrow, t6().sg),
+                role: "button",
+                tabIndex: 0,
+                onClick: () => e.gotoSig(t),
+                onKeyDown: s => {
+                  "Enter" === s.key && e.gotoSig(t)
+                },
+                children: [(0, i.jsxs)("span", {
+                  className: t6().tm,
+                  children: [(0, i.jsx)("b", {
+                    children: X(t.t, !0)
+                  }), (0, i.jsx)("small", {
+                    children: t.s.label
+                  })]
+                }), (0, i.jsx)("span", {
+                  children: (0, i.jsx)("span", {
+                    className: te(t6().tag, "buy" === t.g.side ? t6().buy : t6().sell),
+                    children: e.sigName(t.g)
+                  })
+                }), (0, i.jsxs)("span", {
+                  className: t6().d,
+                  children: [(0, i.jsx)("b", {
+                    children: s
+                  }), (0, i.jsxs)("span", {
+                    children: [l, " \xb7 ", $(t.g.p, e.dp)]
+                  })]
+                })]
+              }, t.s.bt + t.g.t + t.g.side + t.t)
+            })
+          })]
+        })
+      }
+
+      function ss() {
+        let {
+          term: e
+        } = f(), t = e.D, s = e.chart && e.chart.G.dt;
+        if (!t.n || !s) return (0, i.jsx)("div", {
+          className: t6().view,
+          children: (0, i.jsx)("div", {
+            className: t6().sum,
+            children: t.err ? "—" : e.tr("chart.loading", "Loading…")
+          })
+        });
+        let l = e_(e, s),
+          a = l.filter(e => e.end < 0).length,
+          r = z(s),
+          n = l.slice().reverse().slice(0, 120);
+        return (0, i.jsxs)("div", {
+          className: t6().view,
+          children: [(0, i.jsx)("div", {
+            className: t6().sum,
+            children: l.length ? v(e.t, "zone.sum", {
+              dt: (0, i.jsx)("b", {
+                children: $(s, r)
+              }),
+              r: (0, i.jsx)("b", {
+                children: 100 * e.prefs.ratio
+              }),
+              n: (0, i.jsx)("b", {
+                children: l.length
+              }),
+              open: (0, i.jsx)("b", {
+                children: a
+              })
+            }, "Row size {{dt}} \xb7 ratio {{r}}% \xb7 {{n}} zones, {{open}} open") : e.tr("zone.empty", "No stacked imbalances in the loaded data (3+ consecutive same-side imbalances)")
+          }), (0, i.jsxs)("div", {
+            className: te(t6().lrow, t6().lhead, t6().zn),
+            children: [(0, i.jsx)("span", {
+              children: e.tr("zone.time", "Time")
+            }), (0, i.jsx)("span", {
+              children: e.tr("zone.side", "Side")
+            }), (0, i.jsx)("span", {
+              className: t6().rt,
+              children: e.tr("zone.range", "Price range")
+            }), (0, i.jsx)("span", {
+              className: t6().rt,
+              children: e.tr("zone.status", "Status")
+            })]
+          }), (0, i.jsx)("div", {
+            className: t6().list,
+            children: n.map(s => (0, i.jsxs)("div", {
+              className: te(t6().lrow, t6().zn),
+              role: "button",
+              tabIndex: 0,
+              onClick: () => e.jumpTo(s.i),
+              onKeyDown: t => {
+                "Enter" === t.key && e.jumpTo(s.i)
+              },
+              children: [(0, i.jsx)("span", {
+                children: X(t.T[s.i], !0)
+              }), (0, i.jsx)("span", {
+                children: (0, i.jsx)("span", {
+                  className: te(t6().tag, "buy" === s.side ? t6().buy : t6().sell),
+                  children: "buy" === s.side ? e.tr("zone.buy", "Buy") : e.tr("zone.sell", "Sell")
+                })
+              }), (0, i.jsxs)("span", {
+                className: t6().rt,
+                children: [$(s.lo, r), " – ", $(s.hi, r)]
+              }), (0, i.jsx)("span", {
+                className: te(t6().rt, s.end < 0 && ("buy" === s.side ? t6().pos : t6().neg)),
+                children: s.end < 0 ? e.tr("zone.open", "Open") : e.tr("zone.filled", "Filled")
+              })]
+            }, s.side + t.T[s.i] + "|" + s.lo))
+          })]
+        })
+      }
+
+      function si() {
+        let {
+          term: e
+        } = f(), t = e.prefs.tab;
+        return (0, i.jsxs)("div", {
+          className: t6().side,
+          children: [(0, i.jsx)(e5.tU, {
+            className: t6().tabs,
+            selectedIndex: t,
+            onChange: s => s !== t && e.setTab(String(s)),
+            children: [
+              ["bar", "side.bar", "Bar details"],
+              ["sig", "side.sig", "Signals"],
+              ["zone", "side.zone", "Imbalances"]
+            ].map(([s, l, a]) => (0, i.jsx)(e5.oz, {
+              value: s,
+              label: e.tr(l, a),
+              "data-on": s === t ? "" : void 0
+            }, s))
+          }), "bar" === t ? (0, i.jsx)(se, {}) : "sig" === t ? (0, i.jsx)(st, {}) : (0, i.jsx)(ss, {})]
+        })
+      }
+      var sl = s(82203),
+        sa = s.n(sl),
+        sr = s(51533),
+        sn = s.n(sr);
+      let so = [
+        ["heatmap", "flow", (0, d.Au)(), '<path d="M2.5 4.5h7M2.5 8.5h12M2.5 12.5h5"/>', "Order Book Heatmap", "Resting orders in the book over time and across prices."],
+        ["largeOrders", "flow", (0, d.sQ)("largeOrders"), '<path d="M2.5 14.5h12M4.5 14.5v-6M8.5 14.5v-11M12.5 14.5v-4"/>', "Large Orders", "Bid and ask walls, large trades and pulled orders."],
+        ["depth", "flow", "/pro/depth-delta", '<path d="M8.5 2.5v12M8.5 5h-5M8.5 8.5h3.5M8.5 12h-2.5"/>', "Depth Delta", "How the gap between bid and ask depth changes."],
+        ["aggBook", "flow", "/mergev2/BTC-USDT", '<path d="M8.5 2.5l6 3-6 3-6-3z"/><path d="M2.5 9l6 3 6-3M2.5 12.5l6 3 6-3"/>', "Aggregated Order Book", "Order book depth combined across exchanges."],
+        ["pressure", "flow", "/orderbook-pressure", '<path d="M2.5 12.5l3.5-3.5 3 2 5-6"/><path d="M11 5h3v3"/>', "Order Book Pressure", "Whether bids or asks dominate the book near the price."],
+        ["liqHeatmap", "liq", "/pro/futures/LiquidationHeatMap", '<path d="M8.5 15c3 0 5-2 5-4.8 0-2.6-2-4.2-3-6.7-1.5 1.5-1.2 3.5-2.2 4.2C7.5 6.5 7 4.5 7 3 4.5 5 3.5 7.6 3.5 10.2 3.5 13 5.5 15 8.5 15z"/>', "Liquidation Heatmap", "Estimated liquidation intensity at each price, showing where liquidations are stacked."]
+      ];
+
+      function sh() {
+        let {
+          term: e,
+          nameOf: t
+        } = f(), s = e.prefs.sym, l = e.topCoins(21).filter(e => e !== s).slice(0, 20), a = e.tr("title", "Footprint chart"), r = e.tr("rel.chipSuffix", "Footprint"), n = {
+          flow: e.tr("rel.flow", "Order flow"),
+          liq: e.tr("rel.liq", "Liquidations")
+        };
+        return (0, i.jsxs)("section", {
+          className: sn().rel,
+          "aria-labelledby": "fp-rel-h",
+          children: [(0, i.jsxs)("div", {
+            className: sn().fh,
+            children: [(0, i.jsx)("h2", {
+              id: "fp-rel-h",
+              children: e.tr("rel.title", "Related tools")
+            }), (0, i.jsx)("p", {
+              children: e.tr("rel.sub", "The footprint shows who traded aggressively at each price; these pages add the order book, large orders and liquidations to the picture.")
+            })]
+          }), (0, i.jsx)("nav", {
+            className: sn().grid,
+            "aria-label": e.tr("rel.title", "Related tools"),
+            children: so.map(([t, s, l, a, r, o]) => (0, i.jsxs)(sa(), {
+              href: l,
+              className: sn().card,
+              children: [(0, i.jsxs)("span", {
+                className: sn().rtop,
+                children: [(0, i.jsx)("span", {
+                  className: sn().rico,
+                  children: (0, i.jsx)("svg", {
+                    viewBox: "0 0 17 17",
+                    "aria-hidden": "true",
+                    dangerouslySetInnerHTML: {
+                      __html: a
+                    }
+                  })
+                }), (0, i.jsx)("span", {
+                  className: sn().tg,
+                  children: n[s]
+                })]
+              }), (0, i.jsx)("b", {
+                children: e.tr("rel." + t + ".name", r)
+              }), (0, i.jsx)("p", {
+                children: e.tr("rel." + t + ".desc", o)
+              })]
+            }, t))
+          }), (0, i.jsxs)("div", {
+            className: sn().coins,
+            children: [(0, i.jsx)("h3", {
+              children: e.tr("rel.coins", "Footprint chart for other coins")
+            }), (0, i.jsx)("nav", {
+              className: sn().chips,
+              "aria-label": e.tr("rel.coins", "Footprint chart for other coins"),
+              children: l.map(s => {
+                let l = t(s),
+                  n = l.toUpperCase() === s ? s : l + " (" + s + ")",
+                  o = l.toUpperCase() === s ? e.tr("rel.coinShort", "{{sym}} {{page}}", {
+                    sym: s,
+                    page: a
+                  }) : e.tr("rel.coinLink", "{{name}} ({{sym}}) {{page}}", {
+                    name: l,
+                    sym: s,
+                    page: a
+                  });
+                return (0, i.jsxs)("a", {
+                  className: sn().chip,
+                  href: (0, d.sQ)("footprint", s),
+                  onClick: t => ((t, s) => {
+                    if (t.metaKey || t.ctrlKey || t.shiftKey || t.button) return;
+                    t.preventDefault();
+                    let i = e.has(e.market(), s) ? e.prefs.mkt : "binance-perp";
+                    e.pickPair(s, i);
+                    let l = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                    window.scrollTo({
+                      top: 0,
+                      behavior: l ? "auto" : "smooth"
+                    })
+                  })(t, s),
+                  title: o,
+                  "aria-label": o,
+                  children: [(0, i.jsx)(tv, {
+                    sym: s,
+                    className: sn().ico
+                  }), (0, i.jsx)("span", {
+                    className: sn().nm,
+                    children: n
+                  }), (0, i.jsx)("span", {
+                    className: sn().sfx,
+                    children: r
+                  })]
+                }, s)
+              })
+            })]
+          })]
+        })
+      }
+      var sd = s(95669),
+        sc = s.n(sd),
+        sp = s(20772),
+        su = s.n(sp);
+      let sf = "What is a footprint chart?",
+        sg = ["A regular candle gives you four prices and one volume number: whether the last 15 minutes closed up or down, and how much traded. It can't tell you who was buying, who was selling, or which price traded the most.", "A footprint chart (also called an order flow chart or bid/ask footprint) slices each candle into price levels and prints two numbers at every level: on the left, the volume sold aggressively at that price; on the right, the volume bought aggressively. Futures traders have long used it for order flow analysis, and it reads the same way on BTC, ETH and other crypto perps and spot pairs.", "Aggressive means the taker side of a trade. A market buy that lifts the offer is a taker buy; a market sell that hits the bid is a taker sell. Makers, whose limit orders rest on the book waiting to be filled, don't count. Price moves because someone is willing to pay the spread to get filled right now.", "Say a strong green candle closes near its high. Break it open and the top few levels show almost no taker buying, while most of the volume sits in the lower half of the bar. Nobody chased the last leg up; it was probably shorts getting stopped out, and the move may not have much left. A plain candle can't tell you that."],
+        sm = {
+          sells: "Sells",
+          buys: "Buys",
+          imb: "Imbalance: 58 is 3.4\xd7 the 17",
+          green: "Green: more buys than sells",
+          poc: ": highest-volume price",
+          red: "Red: more sells than buys"
+        },
+        sb = [
+          ["Reading the chart", 0, [
+            ["How do you read the numbers on a footprint chart?", 'Each level reads Bid \xd7 Ask. The left number is volume that traded at the bid, meaning taker sells; the right number is volume that traded at the ask, meaning taker buys.\nThe "Coin / USD" toggle in the toolbar switches units. When cells get narrow, numbers are shortened to 52, 5.2, .45 or 1.2K. Narrower still, each cell shows a single number: bid and ask combined (in Avg size mode, the average trade size of both sides). Hover a cell to see the exact figure.'],
+            ["What do the colors on a footprint chart mean?", 'Each cell is colored by the side that traded more at that price: green when buys dominate, red when sells dominate, gray when the two are within 10% of each other. The brighter the cell (darker in the light theme), the larger its share of the bar\'s volume, so you can see at a glance where the volume concentrated. Change the colors or the overall intensity under "Colors".'],
+            ["What are the POC and value area on a footprint chart?", 'The Point of Control (POC) is the price level with the most volume in a bar, outlined in gold. The value area (VAH/VAL) starts at the POC and expands up and down until it holds 70% of the bar\'s volume; its top edge is the value area high (VAH) and its bottom edge the value area low (VAL), drawn as a thin vertical line between the candle and the cells.\nWith "POC migration" on, the POCs of consecutive bars are connected, green when the POC moves up and red when it moves down, so you can see which way volume is shifting.'],
+            ["What is an imbalance and a stacked imbalance?", "An imbalance (also called a bid/ask imbalance) is read diagonally: buys at one level against sells one level below, and sells at one level against buys one level above. When one side beats the other by the set ratio (300% by default), the number turns bold and colored, which means one side was clearly more aggressive at that price.\nThree or more imbalances in a row on the same side make a stacked imbalance. It gets an outline and extends right as a colored band until a later bar trades through the whole zone. Buy-side stacks often act as support and sell-side stacks as resistance."],
+            ["What is an unfinished auction and a naked POC?", "If both buyers and sellers traded at a bar's high, the auction up there didn't finish. That's an unfinished auction, and price often comes back to retest it; the same goes for the low. Until price trades beyond them, these levels extend right as gray dotted lines.\nA naked POC (also called a virgin POC or nPOC) is a POC that price hasn't touched since. It extends right as a gold dotted line, and traders watch it as a level price tends to get pulled back to."],
+            ["How are large trades marked on the footprint?", "Large-trade cells are estimated from the trade count: when a cell's average trade size is 3\xd7 the bar's average or more, it gets flagged.\nSingle trades of $5M or more recorded by CoinGlass (the last 30 days, and new ones as they print) are drawn as circles beside the bar they hit, buys on the right and sells on the left, sized by their USD value. Those are actual trades."],
+            ["Bid \xd7 Ask, Delta, Volume, Trades, Avg size: what's the difference?", "Bid \xd7 Ask prints sell and buy volume in each cell. Delta shows only buys minus sells. Volume draws a horizontal bar in each cell, which works as the candle's own volume profile. Trades shows how many trades went through. Avg size shows the average trade size: for the same volume, fewer trades and a bigger average look more like large players stepping in."]
+          ]],
+          ["Data and controls", 0, [
+            ["Where does the footprint data come from, and how often does it update?", "From CoinGlass's record of the exchanges' trades: how much takers bought and sold at each price and how many trades it took, going back about 90 days. Candles and open interest come from the same pair.\nOn futures the forming bar's footprint is pushed several times a second; on spot it refreshes every 3 seconds. Every 10 seconds the last 3 bars, including open interest (OI), are reconciled again, and once a bar closes it doesn't change."],
+            ["Which exchanges and pairs are supported?", "Futures: USDT perpetual futures (perps) on Binance, OKX and Bybit, plus USD perps on Hyperliquid. Spot: USDT pairs on Binance, OKX and Bybit, plus USD pairs on Coinbase. There are also two aggregates, Aggregated futures and Aggregated spot, which merge several exchanges into one footprint.\nThe pair list shows each exchange's most-traded coins, on timeframes from 1m to 4H; type in the search box of the pair button to find any other coin, by coin, exchange, futures or spot."],
+            ["How do you use the chart?", "Drag to pan, scroll to zoom around the cursor, drag up or down on the price axis to scale vertically, and double-click to reset. Click a bar to list every level in the panel on the right, and drag the divider between the main chart and the panes to resize them. Display mode, markers, colors and other settings are saved in your browser."]
+          ]],
+          ["Signals", 1, [
+            ["What is absorption in order flow?", "Sellers hit the bid hard but couldn't push price lower, because passive limit buyers below took all of it. The rule here: at least 30% of the bar's taker selling sits in the lowest part of the bar, yet the bar closes near its high. That zone gets circled on the chart as bullish. The mirror case at the high is buying absorbed by sellers, which is bearish."],
+            ["What are trapped traders?", "Traders who chased the move and ended up on the wrong side. Price breaks the 5-bar high with heavy taker buying in the top levels, so people are chasing the breakout; within 3 bars it fails to make a new high and falls back into the lower part of that bar. Those buyers are now trapped and likely to sell to stop out. The chart boxes the trapped prices with hatching, a common read on a fakeout. The mirror case after a breakdown is trapped shorts."],
+            ["What are the two types of Delta divergence?", "Swing divergence compares two consecutive swing highs: price makes a higher high, but Cumulative Delta (CVD) over that stretch is lower, so the new high wasn't driven by taker buying. That's a bearish divergence, and the chart connects the two highs. At swing lows the mirror case is a bullish divergence.\nSingle-bar divergence (delta divergence) looks at one bar only: it closes up with negative Delta, meaning more taker selling, or closes down with positive Delta."],
+            ["What is exhaustion in order flow?", "Price makes a new 10-bar high, but the very top of the bar shows almost no volume and the bar closes in its lower half: the buyers willing to chase have run out. That's buyer exhaustion; the mirror case at a new low is seller exhaustion."],
+            ["Why do signals change with the timeframe or bar type?", 'Signals are computed on the bars you\'re viewing. Take one sharp flush and recovery: volume bars may split the drop and the bounce into two or three bars and catch the trapped traders, while a 15m candle packs both legs into one bar that just shows a long lower wick. Different signals on different timeframes are normal, and checking a few timeframes side by side gives a more reliable read.\nThe "Signals" list on the right runs all three bar types (time, volume and range) and shows them together under "All", each tagged with the bar type it came from. Click one to switch to that bar type and jump to it.'],
+            ["Can you trade footprint signals on their own?", "Not recommended. These signals only automate the search for common footprint patterns with fixed thresholds; they don't account for the bigger trend, news or liquidity. Treat them as alerts and confirm with key levels and higher timeframes."]
+          ]],
+          ["Tools", 1, [
+            ["What are volume bars and range bars?", "Volume bars: every bar holds the same volume, for example one bar per 2,000 BTC. Bars print fast when the market is busy and slowly when it's quiet, so each footprint carries about the same amount of information. Range bars: every bar spans the same high-to-low distance, for example $200, so no new bars print while price chops inside the range.\nBoth are built from 1-minute footprint data and close once the threshold is reached, so a bar can overshoot it slightly. With either one selected, the timeframe dropdown is disabled."],
+            ["How do you read the volume profile and VWAP?", "The volume profile (VPVR, Volume Profile Visible Range) adds up the volume of every bar on screen by price. Gray is outside the value area, blue is inside, the brightest row is the POC, and VAH/VAL mark the value area edges, extended into the main chart as dashed lines. It recalculates as you pan or zoom.\nVWAP (Volume Weighted Average Price) resets every day at 00:00 UTC; the outer bands are \xb11 and \xb12 standard deviations."],
+            ["How do you read the Delta, Cumulative Delta and OI change panes?", "Delta is each bar's taker buys minus taker sells; a positive number means buyers were more aggressive. Cumulative Delta sums Delta bar by bar from the leftmost bar on screen, which makes it CVD (Cumulative Volume Delta), and shows whether price and taker flow move together. In the volume pane, bars at 2\xd7 the average or more are highlighted in blue.\nOI change is the per-bar change in open interest, futures only. Price up with OI up usually means new longs are opening; price up with OI falling points to shorts closing, and that kind of rally usually has less staying power."],
+            ['What does "≈" mean in the panes and stats table?', "Max/min Delta is the highest and lowest Delta reached inside a bar. Futures bars that formed while the page was open, with the live push connected the whole time, are measured from the pushes; older bars and spot bars are estimated from the path price took and marked with ≈.\nThe stats table has one column per bar, with darker shading for larger values. With the volume profile on, the column below it shows totals for what's on screen."],
+            ["How does exchange aggregation work, and can I pick exchanges?", "Aggregated futures combines Binance, OKX, Bybit and Hyperliquid perps; Aggregated spot combines Binance, Coinbase, OKX and Bybit spot. Within each bar, every exchange's volume is lined up by price and summed. Coinbase and Hyperliquid quote in USD, so they get shifted by the USD/USDT spread first. Candles and price come from the first exchange in the list; open interest is the sum of the exchanges.\nWith an aggregate selected, the exchange button next to the pair lets you keep only some of them, for example just Binance and OKX."],
+            ["How do you take and share a screenshot?", 'Click "Screenshot" in the toolbar. The current view is captured at 2\xd7 resolution with the pair, timeframe, price and time in the header. Draw arrows, boxes, circles or text, then use "Copy image" or "Download PNG". To focus on one signal type, turn the others off in "Markers" first.']
+          ]]
+        ];
+
+      function sv() {
+        let {
+          term: e
+        } = f(), t = (t, s) => e.tr("faq." + t, s), [s, l] = (0, a.useState)("g1q1"), r = sg.map((e, s) => t("hero.p" + (s + 1), e)), n = e => t("hero.s." + e, sm[e]), o = (e, s) => t(`g${e}.q${s}`, sb[e - 1][2][s - 1][0]), h = (e, s) => t(`g${e}.a${s}`, sb[e - 1][2][s - 1][1]), d = e => sb.map(([r, n, d], c) => n !== e ? null : (0, i.jsxs)(a.Fragment, {
+          children: [(0, i.jsx)("h4", {
+            children: t(`g${c+1}.h`, r)
+          }), d.map((e, t) => {
+            var a, r;
+            let n;
+            return a = c + 1, r = t + 1, n = `g${a}q${r}`, (0, i.jsxs)("details", {
+              open: s === n,
+              children: [(0, i.jsx)("summary", {
+                onClick: e => {
+                  e.preventDefault(), l(e => e === n ? null : n)
+                },
+                children: o(a, r)
+              }), (0, i.jsx)("div", {
+                className: su().a,
+                children: String(h(a, r)).split("\n").filter(Boolean).map((e, t) => (0, i.jsx)("p", {
+                  children: e
+                }, t))
+              })]
+            }, n)
+          })]
+        }, c)), c = {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            [t("hero.h", sf), r.join("\n")], ...sb.flatMap(([, , e], t) => e.map((e, s) => [o(t + 1, s + 1), h(t + 1, s + 1)]))
+          ].map(([e, t]) => ({
+            "@type": "Question",
+            name: e,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: t
+            }
+          }))
+        };
+        return (0, i.jsxs)("section", {
+          className: su().faq,
+          id: "fp-faq",
+          "aria-labelledby": "fp-faq-h",
+          children: [(0, i.jsx)(sc(), {
+            children: (0, i.jsx)("script", {
+              type: "application/ld+json",
+              dangerouslySetInnerHTML: {
+                __html: JSON.stringify(c).replace(/</g, "\\u003c")
+              }
+            }, "fp-faq-ld")
+          }), (0, i.jsxs)("div", {
+            className: su().fh,
+            children: [(0, i.jsx)("h2", {
+              id: "fp-faq-h",
+              children: e.tr("faq.title", "FAQ")
+            }), (0, i.jsx)("p", {
+              children: t("sub", "How to read a footprint chart, what the markers and signals mean, and where the data comes from.")
+            })]
+          }), (0, i.jsxs)("article", {
+            className: su().what,
+            children: [(0, i.jsxs)("div", {
+              children: [(0, i.jsx)("h3", {
+                children: t("hero.h", sf)
+              }), r.map((e, t) => (0, i.jsx)("p", {
+                children: e
+              }, t))]
+            }), (0, i.jsxs)("figure", {
+              className: su().demo,
+              children: [(0, i.jsxs)("svg", {
+                viewBox: "0 0 440 236",
+                role: "img",
+                "aria-label": t("hero.h", sf),
+                children: [(0, i.jsx)("text", {
+                  className: su().fdH,
+                  x: "123",
+                  y: "16",
+                  textAnchor: "middle",
+                  children: n("sells")
+                }), (0, i.jsx)("text", {
+                  className: su().fdH,
+                  x: "199",
+                  y: "16",
+                  textAnchor: "middle",
+                  children: n("buys")
+                }), (0, i.jsx)("line", {
+                  className: su().fdUp,
+                  x1: "68",
+                  y1: "32",
+                  x2: "68",
+                  y2: "206",
+                  strokeWidth: "1.5"
+                }), (0, i.jsx)("rect", {
+                  className: su().fdUpf,
+                  x: "63",
+                  y: "50",
+                  width: "10",
+                  height: "146",
+                  rx: "1"
+                }), (0, i.jsxs)("g", {
+                  className: su().fdP,
+                  textAnchor: "end",
+                  children: [(0, i.jsx)("text", {
+                    x: "52",
+                    y: "47",
+                    children: "64,825"
+                  }), (0, i.jsx)("text", {
+                    x: "52",
+                    y: "77",
+                    children: "64,820"
+                  }), (0, i.jsx)("text", {
+                    x: "52",
+                    y: "107",
+                    children: "64,815"
+                  }), (0, i.jsx)("text", {
+                    x: "52",
+                    y: "137",
+                    children: "64,810"
+                  }), (0, i.jsx)("text", {
+                    x: "52",
+                    y: "167",
+                    children: "64,805"
+                  }), (0, i.jsx)("text", {
+                    x: "52",
+                    y: "197",
+                    children: "64,800"
+                  })]
+                }), (0, i.jsx)("rect", {
+                  className: su().fdB1,
+                  x: "86",
+                  y: "29",
+                  width: "150",
+                  height: "28",
+                  rx: "2"
+                }), (0, i.jsx)("rect", {
+                  className: su().fdB2,
+                  x: "86",
+                  y: "59",
+                  width: "150",
+                  height: "28",
+                  rx: "2"
+                }), (0, i.jsx)("rect", {
+                  className: su().fdB3,
+                  x: "86",
+                  y: "89",
+                  width: "150",
+                  height: "28",
+                  rx: "2"
+                }), (0, i.jsx)("rect", {
+                  className: su().fdB3,
+                  x: "86",
+                  y: "119",
+                  width: "150",
+                  height: "28",
+                  rx: "2"
+                }), (0, i.jsx)("rect", {
+                  className: su().fdS2,
+                  x: "86",
+                  y: "149",
+                  width: "150",
+                  height: "28",
+                  rx: "2"
+                }), (0, i.jsx)("rect", {
+                  className: su().fdS1,
+                  x: "86",
+                  y: "179",
+                  width: "150",
+                  height: "28",
+                  rx: "2"
+                }), (0, i.jsx)("rect", {
+                  className: su().fdPoc,
+                  x: "86.75",
+                  y: "119.75",
+                  width: "148.5",
+                  height: "26.5",
+                  rx: "2"
+                }), (0, i.jsxs)("g", {
+                  className: su().fdN,
+                  children: [(0, i.jsxs)("g", {
+                    textAnchor: "end",
+                    children: [(0, i.jsx)("text", {
+                      x: "154",
+                      y: "47",
+                      children: "4"
+                    }), (0, i.jsx)("text", {
+                      x: "154",
+                      y: "77",
+                      children: "22"
+                    }), (0, i.jsx)("text", {
+                      x: "154",
+                      y: "107",
+                      children: "17"
+                    }), (0, i.jsx)("text", {
+                      x: "154",
+                      y: "137",
+                      children: "41"
+                    }), (0, i.jsx)("text", {
+                      x: "154",
+                      y: "167",
+                      children: "38"
+                    }), (0, i.jsx)("text", {
+                      x: "154",
+                      y: "197",
+                      children: "9"
+                    })]
+                  }), (0, i.jsxs)("g", {
+                    textAnchor: "start",
+                    children: [(0, i.jsx)("text", {
+                      x: "168",
+                      y: "47",
+                      children: "11"
+                    }), (0, i.jsx)("text", {
+                      className: su().fdImb,
+                      x: "168",
+                      y: "77",
+                      children: "58"
+                    }), (0, i.jsx)("text", {
+                      x: "168",
+                      y: "107",
+                      children: "95"
+                    }), (0, i.jsx)("text", {
+                      x: "168",
+                      y: "137",
+                      children: "76"
+                    }), (0, i.jsx)("text", {
+                      x: "168",
+                      y: "167",
+                      children: "20"
+                    }), (0, i.jsx)("text", {
+                      x: "168",
+                      y: "197",
+                      children: "3"
+                    })]
+                  })]
+                }), (0, i.jsxs)("g", {
+                  className: su().fdA,
+                  children: [(0, i.jsx)("line", {
+                    x1: "240",
+                    y1: "73",
+                    x2: "252",
+                    y2: "73"
+                  }), (0, i.jsx)("line", {
+                    x1: "240",
+                    y1: "133",
+                    x2: "252",
+                    y2: "133"
+                  }), (0, i.jsx)("line", {
+                    x1: "240",
+                    y1: "193",
+                    x2: "252",
+                    y2: "193"
+                  }), (0, i.jsx)("line", {
+                    x1: "240",
+                    y1: "103",
+                    x2: "252",
+                    y2: "103"
+                  })]
+                }), (0, i.jsx)("text", {
+                  className: su().fdT,
+                  x: "258",
+                  y: "77",
+                  children: n("imb")
+                }), (0, i.jsx)("text", {
+                  className: su().fdT,
+                  x: "258",
+                  y: "107",
+                  children: n("green")
+                }), (0, i.jsxs)("text", {
+                  className: su().fdT,
+                  x: "258",
+                  y: "137",
+                  children: [(0, i.jsx)("tspan", {
+                    className: su().fdPt,
+                    children: "POC"
+                  }), n("poc")]
+                }), (0, i.jsx)("text", {
+                  className: su().fdT,
+                  x: "258",
+                  y: "197",
+                  children: n("red")
+                })]
+              }), (0, i.jsx)("figcaption", {
+                children: t("hero.cap", "One 15-minute up candle, broken down by price. The brighter the cell, the more volume traded there; levels where both sides are roughly even are gray.")
+              })]
+            })]
+          }), (0, i.jsxs)("div", {
+            className: su().qa2,
+            children: [(0, i.jsx)("div", {
+              className: su().qa,
+              children: d(0)
+            }), (0, i.jsx)("div", {
+              className: su().qa,
+              children: d(1)
+            })]
+          })]
+        })
+      }
+
+      function sx({
+        symbol: e
+      }) {
+        let {
+          t,
+          i18n: s
+        } = (0, n.Bd)(), l = (0, r.useRouter)(), c = (0, a.useMemo)(() => new e1(e), []), f = (0, a.useSyncExternalStore)(c.subscribe, c.getVersion, c.getVersion);
+        c.setLang(s.language, t);
+        let {
+          mode: g,
+          systemMode: m
+        } = (0, o.Ut)(), b = ("system" === g ? m : g) === "light" ? "light" : "dark", [v, y] = (0, a.useState)(!1);
+        (0, a.useEffect)(() => (c.start({
+          symbol: l.query.symbol
+        }), y(!0), () => c.dispose()), []);
+        let w = c.prefs.pal,
+          {
+            CL: k,
+            vars: _
+          } = (0, a.useMemo)(() => (function(e, t) {
+            let s = "light" === e,
+              i = s ? "light" : "dark",
+              l = eD[i],
+              a = eO[i],
+              r = eB[i],
+              n = t || eL(),
+              o = eP.find(e => e.id === n.p) || eP[0],
+              h = s && o.lt ? {
+                ...o,
+                ...o.lt
+              } : o,
+              d = n.c || {},
+              c = {
+                ...l,
+                light: s,
+                accent: a.accent
+              };
+            for (let e of ["bid", "ask", "up", "down"]) {
+              let t = d[e] || h[e];
+              c[e] = t ? eE(t, l.bg, 3.5) : a[e]
+            }
+            c.poc = d.poc ? eE(d.poc, l.bg, 2.2) : a.accent, c.mag = d.mag ? eE(d.mag, l.bg, 3) : a.mag;
+            let p = s ? "#ffffff" : l.surface,
+              u = e => (s ? [.08, .16, .28, .42, .58, .76, .92] : [.16, .26, .38, .52, .68, .84, 1]).map(t => ez(p, e, t)),
+              f = e => d[e] || h[e],
+              g = {
+                bid: f("bid") ? u(c.bid) : r.bid,
+                ask: f("ask") ? u(c.ask) : r.ask,
+                neu: r.neu
+              },
+              m = eR(+n.inten || 1, .5, 1.6);
+            for (let e of (c.ramp = {}, ["bid", "ask", "neu"]))
+              for (let t of [0, 1]) {
+                let i = t ? s ? 4 : 3 : 6,
+                  l = [g[e][0]];
+                for (let t = 1; t <= 8; t++) l.push(g[e][eR(Math.round((t - 1) / 7 * i * m), 0, i)]);
+                c.ramp[e + t] = l
+              }
+            c.inten = m, c.volN = r.slate, c.pvOut = r.pvOut, c.pvIn = d.mag ? ez(p, c.mag, s ? .45 : .7) : r.pvIn, c.bidT = f("bid") ? s ? eq(c.bid, 0, .32) : eq(c.bid, 255, .14) : r.bidT, c.askT = f("ask") ? s ? eq(c.ask, 0, .25) : eq(c.ask, 255, .14) : r.askT;
+            let b = {
+              "--fp-bid": c.bid,
+              "--fp-ask": c.ask,
+              "--fp-up": c.up,
+              "--fp-down": c.down,
+              "--fp-bid-soft": eU(c.bid, s ? .1 : .13),
+              "--fp-ask-soft": eU(c.ask, s ? .09 : .13),
+              "--fp-accent": c.poc,
+              "--fp-accent-soft": eU(c.poc, s ? .1 : .14),
+              "--fp-mag": c.mag,
+              "--fp-perp": a.perp,
+              "--fp-perp-bg": a.perpBg,
+              "--fp-spot": a.spot,
+              "--fp-spot-bg": a.spotBg
+            };
+            return {
+              CL: c,
+              vars: b
+            }
+          })(b, w), [b, w]),
+          T = (0, a.useRef)(null),
+          [S, j] = (0, a.useState)("Arial, sans-serif");
+        (0, a.useEffect)(() => {
+          let e = () => T.current && j(getComputedStyle(T.current).fontFamily || "Arial, sans-serif");
+          e(), document.fonts && document.fonts.ready && document.fonts.ready.then(e)
+        }, []);
+        let C = c.prefs.sym;
+        (0, a.useEffect)(() => {
+          if (!c.started || l.query.symbol === C) return;
+          let {
+            symbol: e,
+            ...t
+          } = l.query;
+          l.replace((0, d.sQ)("footprint", C, t), void 0, {
+            shallow: !0,
+            scroll: !1
+          })
+        }, [C]);
+        let N = (0, e2.I)({
+            queryKey: ["footprint", "coins"],
+            queryFn: ({
+              signal: e
+            }) => (({
+              signal: e
+            } = {}) => x.ud.get("/api/v2/support/symbol", {
+              signal: e
+            }))({
+              signal: e
+            }).then(e => new Map((e.data || []).filter(e => e && e.symbol).map(e => [String(e.symbol).toUpperCase(), {
+              logo: e.coinLogo || "",
+              name: e.coinName || ""
+            }]))),
+            staleTime: 18e5
+          }),
+          M = e => N.data && N.data.get(e) || null,
+          D = e => {
+            let t = M(e);
+            return t && t.logo || ""
+          },
+          O = e => {
+            let t = M(e);
+            return t && t.name || e
+          },
+          B = (0, a.useMemo)(() => ({
+            term: c,
+            version: f,
+            t,
+            fmt: c.fmt,
+            CL: k,
+            vars: _,
+            font: S,
+            logoOf: D,
+            nameOf: O,
+            colorMode: b
+          }), [c, f, t, k, _, S, N.data, b]);
+        return (0, i.jsx)(u.Provider, {
+          value: B,
+          children: (0, i.jsxs)("div", {
+            ref: T,
+            className: p().root,
+            style: v ? _ : void 0,
+            children: [(0, i.jsx)(h.A, {
+              title: "footprint.tdk.t",
+              d: "footprint.tdk.d",
+              tObj: {
+                symbol: C,
+                defaultValue: "{{symbol}} Footprint Chart - Order Flow, Delta, Imbalance | CoinGlass"
+              },
+              dObj: {
+                symbol: C,
+                defaultValue: "{{symbol}} footprint chart: taker buys and sells at every price level, POC, value area, imbalances, absorption, trapped traders and delta divergence signals, with volume and range bars."
+              }
+            }), (0, i.jsx)(tD, {}), (0, i.jsx)(tP, {}), (0, i.jsx)(tV, {}), (0, i.jsxs)("section", {
+              className: p().main,
+              children: [(0, i.jsx)("div", {
+                className: p().cell,
+                children: (0, i.jsx)(t3, {})
+              }), (0, i.jsx)("div", {
+                className: p().cell,
+                children: (0, i.jsx)(si, {})
+              })]
+            }), (0, i.jsx)(sh, {}), (0, i.jsx)(sv, {})]
+          })
+        })
+      }
+      var sy = !0;
+
+      function sw({
+        symbol: e
+      }) {
+        return (0, i.jsx)(sx, {
+          symbol: e
+        })
+      }
+      sw.getLayout = function(e) {
+        return (0, i.jsx)(l.A, {
+          children: e
+        })
+      }
+    },
+    89750: e => {
+      e.exports = {
+        pane: "ChartPane_pane__NVmmr",
+        toolbar: "ChartPane_toolbar__0DWAr",
+        subbar: "ChartPane_subbar__DiREV",
+        h: "ChartPane_h__q4Gwb",
+        eyebrow: "ChartPane_eyebrow__VgNgR",
+        vsep: "ChartPane_vsep__LnNhs",
+        grow: "ChartPane_grow__c_riy",
+        ib: "ChartPane_ib__vnmCv",
+        uico: "ChartPane_uico__IZLwC",
+        chev: "ChartPane_chev__A9Why",
+        cnt: "ChartPane_cnt__xGGgx",
+        f1: "ChartPane_f1__xyJhh",
+        f2: "ChartPane_f2__hJE7n",
+        tx: "ChartPane_tx__WSIqk",
+        f3: "ChartPane_f3__OLuIv",
+        lbl: "ChartPane_lbl___7smY",
+        f4: "ChartPane_f4__4wU1R",
+        opt: "ChartPane_opt__nosR1",
+        dk: "ChartPane_dk__bOFwM",
+        mb: "ChartPane_mb__fsnUC",
+        layers: "ChartPane_layers__1qf3_",
+        lrow: "ChartPane_lrow__JJzWp",
+        lcap: "ChartPane_lcap__blHCv",
+        lctl: "ChartPane_lctl__pY24c",
+        plot: "ChartPane_plot__o9CVJ",
+        wm: "ChartPane_wm__4WF1F",
+        edge: "ChartPane_edge__fihnu",
+        grid2: "ChartPane_grid2__fZGbE",
+        tip: "ChartPane_tip__ftPtZ",
+        th: "ChartPane_th__hLgiG",
+        tr: "ChartPane_tr__gF7gI",
+        num: "ChartPane_num__XLliB",
+        pos: "ChartPane_pos__Q_f_x",
+        neg: "ChartPane_neg__JJpXC",
+        est: "ChartPane_est__4hbYn",
+        tg: "ChartPane_tg__Ux_Je",
+        tgb: "ChartPane_tgb__3R3kG",
+        tgs: "ChartPane_tgs__uFV3p",
+        tga: "ChartPane_tga__Fgit3"
+      }
+    },
+    90017: (e, t, s) => {
+      "use strict";
+      s.d(t, {
+        B: () => l
+      });
+      var i = s(84207);
+
+      function l(e) {
+        return "string" == typeof e ? e : i.Ay.inflate(e, {
+          to: "string"
+        })
+      }
+    },
+    94258: e => {
+      e.exports = {
+        scope: "ui_scope__IYtB_",
+        button: "ui_button__VdWJ7",
+        compact: "ui_compact__vMUla",
+        icon: "ui_icon__UgN_z",
+        primary: "ui_primary__a_giQ",
+        selected: "ui_selected__0a4B4",
+        open: "ui_open__YeiKD",
+        tabs: "ui_tabs__YI1Ll",
+        selBox: "ui_selBox__EKSfz",
+        selVal: "ui_selVal__CNGF8",
+        select: "ui_select__qYY0u",
+        caption: "ui_caption__wQWJm",
+        menu: "ui_menu__8O4ZH",
+        content: "ui_content__vlW7F",
+        popMenu: "ui_popMenu__cXakZ",
+        popBody: "ui_popBody__x869f",
+        checkbox: "ui_checkbox__8zzbu",
+        chip: "ui_chip__0VVUa",
+        chipOff: "ui_chipOff__owomU",
+        lbl: "ui_lbl__iTUMr",
+        sec: "ui_sec__s5Fkc",
+        row: "ui_row__L_vhP",
+        rowOn: "ui_rowOn__J_M8E",
+        rowDis: "ui_rowDis__qJO_v",
+        rowText: "ui_rowText__zJ_aK"
+      }
+    },
+    94389: e => {
+      e.exports = {
+        side: "SidePanel_side__ah9_P",
+        tabs: "SidePanel_tabs__0lhZR",
+        view: "SidePanel_view__kHXBp",
+        bhead: "SidePanel_bhead__GnCc_",
+        t: "SidePanel_t__CNTsE",
+        o: "SidePanel_o__ATchb",
+        stats: "SidePanel_stats__xB0LD",
+        list: "SidePanel_list__5Qi3W",
+        lrow: "SidePanel_lrow__m40N_",
+        lhead: "SidePanel_lhead__vop0Q",
+        rt: "SidePanel_rt__NYWzF",
+        lv: "SidePanel_lv__9RPnw",
+        poc: "SidePanel_poc__tIVxq",
+        im: "SidePanel_im__pYwb6",
+        bg: "SidePanel_bg__rfspM",
+        zn: "SidePanel_zn__94_98",
+        sg: "SidePanel_sg__HvgZG",
+        tm: "SidePanel_tm__ELzVF",
+        d: "SidePanel_d__e4aqB",
+        tag: "SidePanel_tag__LWh0H",
+        buy: "SidePanel_buy__05ol3",
+        sell: "SidePanel_sell__5m7fJ",
+        sigf: "SidePanel_sigf__2Kmb0",
+        n: "SidePanel_n__HE72D",
+        sum: "SidePanel_sum__4a7fc",
+        basis: "SidePanel_basis__U3UVn",
+        empty: "SidePanel_empty__MDRRP",
+        pos: "SidePanel_pos__F4lbT",
+        neg: "SidePanel_neg__toGbW",
+        est: "SidePanel_est__SYg2X"
+      }
+    },
+    98797: (e, t, s) => {
+      (window.__NEXT_P = window.__NEXT_P || []).push(["/footprint/[symbol]", function() {
+        return s(75742)
+      }])
+    }
+  },
+  e => {
+    e.O(0, [47532, 4958, 15789, 45474, 36501, 34790, 88185, 38370, 16301, 69897, 84023, 12985, 62256, 55394, 25727, 89831, 28906, 71616, 73305, 66728, 90636, 46593, 38792], () => e(e.s = 98797)), _N_E = e.O()
+  }
+]);

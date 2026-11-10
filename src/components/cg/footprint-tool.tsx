@@ -24,6 +24,8 @@ import {
 } from "@/lib/cg/cg-signals";
 import { fmtPrice } from "@/lib/cg/format";
 import { assetOf, fpVenues } from "@/lib/cg/assets";
+import { useTicker } from "./use-cg-data";
+import { useLiveForming, foldTapeIntoFp } from "@/lib/live/forming";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -63,8 +65,10 @@ interface FpResponse {
   ok: boolean;
   error?: string;
   sym: string;
+  itv?: string;
   bars: FpBar[];
   missing?: string[];
+  updatedAt?: number;
 }
 
 interface SignalSet {
@@ -102,13 +106,39 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
 
   // ---- data: the exact calls the live page makes ----
   // time series at the selected interval (their TBS/D, 300 bars)
-  const tfQ = usePolling<FpResponse>(`/api/cg/fp?sym=${sym}&itv=${tf}&limit=300`, 30_000);
+  const tfQ = usePolling<FpResponse>(`/api/cg/fp?sym=${sym}&itv=${tf}&limit=300`, 10_000);
   // m1 series for volume / range bars (their M1S, 1000 bars)
-  const m1Q = usePolling<FpResponse>(`/api/cg/fp?sym=${sym}&itv=m1&limit=1000`, 45_000);
+  const m1Q = usePolling<FpResponse>(`/api/cg/fp?sym=${sym}&itv=m1&limit=1000`, 30_000);
+
+  // ---- LIVE LANES ----
+  // fast REST lane: the last ≤8 bars of the ACTIVE bar-type's source series,
+  // 8 s server TTL → the forming aggregate bar resyncs 1–2×/10 s
+  const liveItv = bt === "time" ? tf : "m1";
+  const liveQ = usePolling<FpResponse>(`/api/cg/fp?sym=${sym}&itv=${liveItv}&limit=8&live=1`, 8_000);
+  // real-time lane: Binance futures aggTrade tape → the forming bar moves
+  // on every print (4 Hz render), merged ON TOP of the aggregate (trades
+  // newer than the aggregate's updatedAt are added — never double-counted)
+  const forming = useLiveForming(sym, liveItv);
+  const liveOk = liveQ.data?.sym === sym && liveQ.data.itv === liveItv && !!liveQ.data.ok;
+  const aggUpdatedAt = liveOk ? (liveQ.data as FpResponse & { updatedAt?: number }).updatedAt ?? null : null;
+
+  // merge the fresh tail into the heavy history loads (same-ts bars: fresh wins)
+  const mergeTail = (big: FpBar[], small: FpBar[] | undefined): FpBar[] => {
+    if (!small?.length) return big;
+    if (!big.length) return small;
+    const cutoff = small[0].ts;
+    return [...big.filter((b) => b.ts < cutoff), ...small];
+  };
 
   // defense-in-depth: never render bars that belong to another symbol
-  const timeBars = useMemo(() => (tfQ.data?.sym === sym ? tfQ.data.bars : []), [tfQ.data, sym]);
-  const m1Bars = useMemo(() => (m1Q.data?.sym === sym ? m1Q.data.bars : []), [m1Q.data, sym]);
+  const timeBars = useMemo(
+    () => mergeTail(tfQ.data?.sym === sym ? tfQ.data.bars : [], liveOk && liveItv === tf ? liveQ.data?.bars : undefined),
+    [tfQ.data, liveQ.data, sym, tf, liveItv, liveOk]
+  );
+  const m1Bars = useMemo(
+    () => mergeTail(m1Q.data?.sym === sym ? m1Q.data.bars : [], liveOk && liveItv === "m1" ? liveQ.data?.bars : undefined),
+    [m1Q.data, liveQ.data, sym, liveItv, liveOk]
+  );
 
   // ---- auto thresholds (their ef) ----
   const volAuto = useMemo(() => (m1Bars.length ? autoThreshold(m1Bars, "vol") : 0), [m1Bars]);
@@ -171,6 +201,50 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
   const currentBars = currentSet?.bars ?? [];
   const currentSigs = currentSet?.sigs ?? [];
 
+  // ---- REAL-TIME DISPLAY OVERLAY (the forming bar moves on every print) ----
+  // aggregate bars stay authoritative for history + signals; the LAST bar
+  // gets the Binance tape folded in (trades newer than the aggregate's
+  // updatedAt) and its h/l/c extended by the live prints. 4 Hz refresh.
+  const displayBars = useMemo(() => {
+    if (!forming || !currentBars.length || aggUpdatedAt == null) return currentBars;
+    const last = currentBars[currentBars.length - 1];
+    // +1.5 s guard: trades inside the upstream build-lag ambiguity window are
+    // skipped — the forming bar may slightly undercount for a moment, but it
+    // can NEVER show phantom (double-counted) volume. The 8 s resync corrects.
+    const cut = Math.max(aggUpdatedAt + 1_500, Date.now() - 40_000);
+    if (bt === "time") {
+      // overlay the forming tf bar directly
+      if (forming.barTs !== last.ts || !forming.lastPrice) return currentBars;
+      const overlaid: FpBar = {
+        ...last,
+        h: Math.max(last.h, forming.hi ?? last.h),
+        l: Math.min(last.l, forming.lo ?? last.l),
+        c: forming.lastPrice,
+        fp: last.fp ? foldTapeIntoFp(last.fp, forming.tape, cut) : null,
+      };
+      return [...currentBars.slice(0, -1), overlaid];
+    }
+    // derived bars: rebuild from the overlaid forming m1 bar
+    const m1Last = m1Bars[m1Bars.length - 1];
+    if (!m1Last || m1Last.ts !== forming.barTs || !forming.lastPrice) return currentBars;
+    const m1Overlaid: FpBar = {
+      ...m1Last,
+      h: Math.max(m1Last.h, forming.hi ?? m1Last.h),
+      l: Math.min(m1Last.l, forming.lo ?? m1Last.l),
+      c: forming.lastPrice,
+      fp: m1Last.fp ? foldTapeIntoFp(m1Last.fp, forming.tape, cut) : null,
+    };
+    const m1Live = [...m1Bars.slice(0, -1), m1Overlaid];
+    const rebuilt = bt === "vol" ? buildDerivedBars(m1Live, "vol", volThr || 1) : buildDerivedBars(m1Live, "range", rangeThr || 1);
+    return rebuilt.length ? rebuilt : currentBars;
+  }, [currentBars, forming, aggUpdatedAt, bt, m1Bars, volThr, rangeThr]);
+
+  const overlayActive =
+    !!forming &&
+    forming.lastPrice != null &&
+    displayBars !== currentBars &&
+    Date.now() - (forming.at ?? 0) < 5_000;
+
   const onSignalClick = (g: CgSignal, set: SignalSet) => {
     setActiveSignal(g);
     // switch to the signal's bars (their gotoSig) and jump the chart to it
@@ -186,7 +260,7 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
   };
 
   // ---- focus bar stats ----
-  const focusBar = hoverBar ?? currentBars[currentBars.length - 1] ?? null;
+  const focusBar = hoverBar ?? displayBars[displayBars.length - 1] ?? null;
   const focusStats = useMemo(() => {
     if (!focusBar?.fp) return null;
     const fp = focusBar.fp;
@@ -219,12 +293,16 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
   }, [focusBar, ratio]);
 
   // stats strip
-  const lastBar = currentBars[currentBars.length - 1] ?? null;
+  const lastBar = displayBars[displayBars.length - 1] ?? null;
   const dp = assetOf(sym)?.priceDecs ?? priceDecimals(lastBar?.c ?? 0);
   const latestSignal = currentSigs.length ? currentSigs.reduce((a, b) => (b.ts > a.ts ? b : a)) : null;
   const err = tfQ.error ?? m1Q.error;
   const missing = [...(tfQ.data?.sym === sym ? tfQ.data.missing ?? [] : []), ...(m1Q.data?.sym === sym ? m1Q.data.missing ?? [] : [])];
   const sigUnit: SigUnit = unit === "usd" ? "usd" : "qty";
+
+  // live ticker — the same real-time price the header shows (one truth)
+  const tk = useTicker(sym);
+  const livePrice = tk.price ?? lastBar?.c ?? null;
 
   const marks = useMemo(
     () => currentSigs.map((s) => ({ ts: s.ts, dir: s.side === "buy" ? ("bullish" as const) : ("bearish" as const), type: s.t })),
@@ -350,6 +428,17 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
           Profile
         </label>
         <div className="ml-auto flex items-center gap-2">
+          <span
+            className={`flex items-center gap-1.5 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ring-1 ${
+              overlayActive
+                ? "bg-emerald-500/15 text-emerald-400 ring-emerald-500/40"
+                : "bg-neutral-800/60 text-neutral-500 ring-neutral-700/60"
+            }`}
+            title="Binance futures aggTrade tape folded into the forming bar in real time (4 Hz); multi-venue aggregate resyncs every 8 s"
+          >
+            <span className={`h-1.5 w-1.5 rounded-full ${overlayActive ? "animate-pulse bg-emerald-400" : "bg-neutral-600"}`} />
+            {overlayActive ? "tape live" : "tape off"}
+          </span>
           <span className={`flex items-center gap-1.5 text-xs ${err ? "text-red-400" : "text-emerald-400"}`}>
             <span className={`inline-block h-1.5 w-1.5 rounded-full ${err ? "bg-red-400" : "animate-pulse bg-emerald-400"}`} />
             {err ? "offline" : "live"}
@@ -383,8 +472,10 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
         <Stat
           label="Latest price"
-          value={lastBar ? fmtPriceDec(lastBar.c, dp) : "—"}
-          sub={focusStats ? `${fmtPctSigned(lastBar && currentBars.length > 96 ? (lastBar.c - (currentBars[currentBars.length - 97]?.c ?? lastBar.c)) / (currentBars[currentBars.length - 97]?.c ?? 1) : 0, 2)} 24 bars` : ""}
+          value={livePrice != null ? fmtPriceDec(livePrice, dp) : "—"}
+          sub={`${tk.source === "ws" ? "real-time tape" : tk.source === "rest" ? "0.25s rest" : "aggregate"}${
+            focusStats ? ` · ${fmtPctSigned(lastBar && currentBars.length > 96 ? (lastBar.c - (currentBars[currentBars.length - 97]?.c ?? lastBar.c)) / (currentBars[currentBars.length - 97]?.c ?? 1) : 0, 2)} 24 bars` : ""
+          }`}
           tone={
             lastBar && currentBars.length > 96
               ? lastBar.c >= (currentBars[currentBars.length - 97]?.c ?? lastBar.c)
@@ -427,7 +518,7 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
         <div className="h-[560px] min-w-0 flex-1 overflow-hidden rounded-lg border border-neutral-800 bg-[#0b0e11]">
           {currentBars.length > 0 ? (
             <FootprintCanvas
-              bars={currentBars}
+              bars={displayBars}
               mode={mode}
               unit={unit}
               imbalanceRatio={ratio}

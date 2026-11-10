@@ -26,7 +26,7 @@ export const dynamic = "force-dynamic";
  * BOUNDED (the engine pages history here — varying endTime must not grow it). */
 const cache = new BoundedMap<{ at: number; body: unknown }>(16);
 
-async function loadStopmap(sym: string, endTime: number | undefined, ttlMs = 30_000) {
+async function loadStopmap(sym: string, endTime: number | undefined, ttlMs = 25_000) {
   const ck = `${sym}|${endTime ?? ""}`;
   const hit = cache.get(ck);
   if (hit && Date.now() - hit.at < ttlMs) return hit.body;

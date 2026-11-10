@@ -57,7 +57,7 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
   const [windowPct, setWindowPct] = useState<number>(4);
   const [tab, setTab] = useState<"levels" | "stops">("levels");
 
-  const liqQ = usePolling<LiqResponse>(tab === "levels" ? `/api/cg/liqlevels?sym=${sym}&range=${range}&lvR=${windowPct}` : null, 45_000);
+  const liqQ = usePolling<LiqResponse>(tab === "levels" ? `/api/cg/liqlevels?sym=${sym}&range=${range}&lvR=${windowPct}` : null, 30_000);
   // defense-in-depth: never render stats that belong to another symbol
   const stats = liqQ.data?.sym === sym ? liqQ.data.stats ?? null : null;
   const err = liqQ.error;

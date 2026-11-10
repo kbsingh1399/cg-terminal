@@ -1,0 +1,4575 @@
+! function() {
+  try {
+    var e = "u" > typeof window ? window : "u" > typeof global ? global : "u" > typeof globalThis ? globalThis : "u" > typeof self ? self : {},
+      t = (new e.Error).stack;
+    t && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[t] = "c8b2d684-9077-4675-ad48-9165ef81b634", e._sentryDebugIdIdentifier = "sentry-dbid-c8b2d684-9077-4675-ad48-9165ef81b634")
+  } catch (e) {}
+}(), (self.webpackChunk_N_E = self.webpackChunk_N_E || []).push([
+  [16488], {
+    12549: e => {
+      e.exports = {
+        root: "Faq_root__ph9WX",
+        svg: "Faq_svg__Kyx_x",
+        g: "Faq_g__6hgxG",
+        ax: "Faq_ax__F_vhu",
+        lab: "Faq_lab__qDCbn",
+        note: "Faq_note__7EXvb",
+        lead: "Faq_lead__ojA07",
+        ca: "Faq_ca__4mFyf",
+        cb: "Faq_cb__7_2j9",
+        ta: "Faq_ta__Dg2cN",
+        tb: "Faq_tb__T5pPL",
+        up: "Faq_up__Pc2vk",
+        dn: "Faq_dn__vf7K_",
+        wk: "Faq_wk__bDdHF",
+        now: "Faq_now__KQ3Ge",
+        ptag: "Faq_ptag__dwh1V",
+        ptxt: "Faq_ptxt__2DVAQ"
+      }
+    },
+    26441: (e, t, l) => {
+      (window.__NEXT_P = window.__NEXT_P || []).push(["/liquidation-levels/[symbol]", function() {
+        return l(96008)
+      }])
+    },
+    42920: e => {
+      e.exports = {
+        root: "faq_root__G_7G1",
+        head: "faq_head__UJSJQ",
+        h2: "faq_h2__ejc9Q",
+        sub: "faq_sub__6pA28",
+        card: "faq_card__nBKoF",
+        hero: "faq_hero__G1N2E",
+        heroOnly: "faq_heroOnly__d88ds",
+        text: "faq_text__M6xGY",
+        h3: "faq_h3__fZd5L",
+        p: "faq_p__jFPiz",
+        figure: "faq_figure__jVNWy",
+        cap: "faq_cap__GcXhC",
+        grid: "faq_grid__9kdYn",
+        single: "faq_single__COHuT",
+        col: "faq_col__6eWGV",
+        gh: "faq_gh__iH5_s",
+        item: "faq_item__asZuc",
+        q: "faq_q__OivXU",
+        qText: "faq_qText__y_qkJ",
+        a: "faq_a__BAmGr"
+      }
+    },
+    80029: e => {
+      e.exports = {
+        button: "ui_button__bQ_VD",
+        compact: "ui_compact__z4aai",
+        icon: "ui_icon__fB9OZ",
+        primary: "ui_primary__50nBA",
+        selected: "ui_selected__SUSuD",
+        tabs: "ui_tabs__qwr3m",
+        chip: "ui_chip__3sd5x",
+        chipStandard: "ui_chipStandard__whzYS",
+        chipOff: "ui_chipOff__o0koR",
+        checkbox: "ui_checkbox__JDeQI",
+        marker: "ui_marker__95RWB"
+      }
+    },
+    96008: (e, t, l) => {
+      "use strict";
+      l.r(t), l.d(t, {
+        __N_SSP: () => tw,
+        default: () => ty
+      });
+      var i = l(6029),
+        a = l(63046),
+        s = l(55729),
+        r = l(83617),
+        n = l(79690),
+        o = l(81278),
+        h = l(75227),
+        d = l(60880),
+        c = l(52416);
+      let p = ["dark", "light"],
+        u = {
+          dark: {
+            bg: "#0b0d11",
+            surface: "#12151b",
+            surface2: "#181c24",
+            surface3: "#21262f",
+            line: "#222833",
+            lineStrong: "#313947",
+            ink: "#f4f6f9",
+            ink2: "#b7bfcc",
+            ink3: "#8b94a3",
+            segOn: "#ffffff",
+            segOnInk: "#0f1522",
+            segRing: "#ffffff",
+            selMark: "#f4f6f9",
+            selSoft: "rgba(255,255,255,.10)",
+            accentInk: "#17120a",
+            bull: "#3fd68f",
+            bear: "#ff6b6b",
+            grid: "rgba(160,172,195,.075)",
+            cross: "rgba(230,234,242,.35)",
+            mark: 1,
+            softPct: 14,
+            linePct: 38
+          },
+          light: {
+            bg: "#fafbfc",
+            surface: "#ffffff",
+            surface2: "#f4f5f7",
+            surface3: "#eceef2",
+            line: "#e6e8ec",
+            lineStrong: "#d2d6dd",
+            ink: "#0f1522",
+            ink2: "#4a5568",
+            ink3: "#687386",
+            segOn: "#111318",
+            segOnInk: "#ffffff",
+            segRing: "#111318",
+            selMark: "#0f1522",
+            selSoft: "rgba(15,21,34,.08)",
+            accentInk: "#fff8e8",
+            bull: "#15803d",
+            bear: "#c62828",
+            grid: "rgba(15,23,42,.055)",
+            cross: "rgba(15,23,42,.45)",
+            mark: .8,
+            softPct: 10,
+            linePct: 30
+          }
+        },
+        g = [
+          ["above", "key.above"],
+          ["below", "key.below"],
+          ["lev100", "key.lev100"],
+          ["lev50", "key.lev50"],
+          ["lev25", "key.lev25"],
+          ["up", "key.up"],
+          ["dn", "key.dn"],
+          ["accent", "key.accent"]
+        ],
+        m = {
+          lev100: "#f0b90b",
+          lev50: "#b48cff",
+          lev25: "#5aa9ff"
+        },
+        x = {
+          lev100: "#b7860b",
+          lev50: "#6d4fc4",
+          lev25: "#1f6fd1"
+        },
+        f = {
+          dark: {
+            above: "#2ec27e",
+            below: "#e9445f",
+            ...m,
+            up: "#2ec27e",
+            dn: "#e9445f",
+            accent: "#f0b90b"
+          },
+          light: {
+            above: "#0a8a52",
+            below: "#c42a46",
+            ...x,
+            up: "#0a8a52",
+            dn: "#c42a46",
+            accent: "#c99400"
+          }
+        },
+        v = [{
+          id: "classic",
+          dark: f.dark,
+          light: f.light
+        }, {
+          id: "contrast",
+          dark: {
+            above: "#22d37f",
+            below: "#ff4a6e",
+            ...m,
+            up: "#22d37f",
+            dn: "#ff4a6e",
+            accent: "#f0b90b"
+          },
+          light: {
+            above: "#0f9d63",
+            below: "#d7304f",
+            ...x,
+            up: "#0f9d63",
+            dn: "#d7304f",
+            accent: "#c99400"
+          }
+        }],
+        b = () => {
+          let e = v.find(e => "contrast" === e.id);
+          return {
+            dark: {
+              ...e.dark
+            },
+            light: {
+              ...e.light
+            },
+            preset: {
+              dark: "contrast",
+              light: "contrast"
+            }
+          }
+        },
+        w = e => "string" == typeof e && /^#[0-9a-f]{6}$/i.test(e),
+        y = e => [parseInt(e.slice(1, 3), 16), parseInt(e.slice(3, 5), 16), parseInt(e.slice(5, 7), 16)],
+        k = e => "#" + e.map(e => Math.round(Math.max(0, Math.min(255, e))).toString(16).padStart(2, "0")).join(""),
+        j = ([e, t, l]) => {
+          let i = e => (e /= 255) <= .03928 ? e / 12.92 : Math.pow((e + .055) / 1.055, 2.4);
+          return .2126 * i(e) + .7152 * i(t) + .0722 * i(l)
+        },
+        N = (e, t) => {
+          let l = j(e),
+            i = j(t);
+          return (Math.max(l, i) + .05) / (Math.min(l, i) + .05)
+        },
+        M = (e, t) => {
+          let [l, i, a] = y(e);
+          return `rgba(${l},${i},${a},${t})`
+        };
+
+      function _(e, t) {
+        let l = "light" === e ? "light" : "dark",
+          i = u[l],
+          a = t && t[l] || f[l],
+          s = {};
+        for (let [e] of g) s[e] = function(e, t, l) {
+          if (!w(e) || !w(t)) return e;
+          let i = y(e),
+            a = y(t),
+            s = .3 > j(a);
+          for (let e = 0; e < 30 && N(i, a) < l; e++) i = i.map(e => s ? e + (255 - e) * .1 : .9 * e);
+          return k(i)
+        }(w(a[e]) ? a[e] : f[l][e], i.surface, "accent" === e ? 2.2 : 3);
+        let r = k(y(s.accent).map(e => .74 * e));
+        return {
+          T: {
+            mode: l,
+            dark: "dark" === l,
+            mark: i.mark,
+            bg: i.bg,
+            surface: i.surface,
+            surface2: i.surface2,
+            line: i.line,
+            lineStrong: i.lineStrong,
+            ink: i.ink,
+            ink2: i.ink2,
+            ink3: i.ink3,
+            bull: i.bull,
+            bear: i.bear,
+            grid: i.grid,
+            cross: i.cross,
+            accent: s.accent,
+            accent2: r,
+            accentInk: i.accentInk,
+            up: s.up,
+            dn: s.dn,
+            segOn: i.segOn,
+            segOnInk: i.segOnInk,
+            segRing: i.segRing,
+            selMark: i.selMark,
+            selSoft: i.selSoft,
+            above: s.above,
+            below: s.below,
+            lev: [s.lev100, s.lev50, s.lev25]
+          },
+          vars: {
+            "--ll-accent": s.accent,
+            "--ll-accent-2": r,
+            "--ll-accent-ink": i.accentInk,
+            "--ll-accent-soft": M(s.accent, i.softPct / 100),
+            "--ll-accent-line": M(s.accent, i.linePct / 100),
+            "--ll-up": s.up,
+            "--ll-dn": s.dn,
+            "--ll-bull": i.bull,
+            "--ll-bear": i.bear,
+            "--ll-above": s.above,
+            "--ll-below": s.below,
+            "--ll-lev100": s.lev100,
+            "--ll-lev50": s.lev50,
+            "--ll-lev25": s.lev25
+          },
+          effective: s
+        }
+      }
+      let T = e => Object.entries(_(e, b()).vars).map(([e, t]) => `${e}:${t};`).join(""),
+        q = (0, c.A)("div")`
+${T("dark")}
+[data-joy-color-scheme="light"] & { ${T("light")} }
+color: var(--glass-fg);
+font-size: 14px;
+line-height: 1.45;
+container: ll / inline-size; /* width: the layout's cg-content-full container; breakpoints follow the page's own width */
+padding: 0 16px 32px;
+display: flex;
+flex-direction: column;
+gap: 12px;
+font-variant-numeric: tabular-nums;
+-webkit-font-smoothing: antialiased;
+& *, & *::before, & *::after { box-sizing: border-box; }
+& [hidden] { display: none !important; }
+& button, & input { font-family: inherit; } /* family only: size, weight and colour would outrank the Glass components' own classes */
+& .ll-num { font-variant-numeric: tabular-nums; }
+& b, & strong { font-weight: 600; }
+& .ll-symBtn:focus-visible, & .ll-preset:focus-visible, & .ll-relcard:focus-visible, & .ll-cchip:focus-visible, & .ll-hex:focus-visible { outline: 2px solid var(--glass-focus); outline-offset: 1px; }
+& .ll-spacer { flex: 1; }
+& .ll-eyebrow { font-size: 11px; font-weight: 500; line-height: 1; letter-spacing: .08em; text-transform: uppercase; color: var(--glass-fg-3); white-space: nowrap; }
+& svg.ll-ico, & .ll-ico { width: 16px; height: 16px; flex: none; }
+& svg.ll-ico { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* top rail: one row of standard (38px) controls */
+/* the rail sticks to the top of the window (desktop); the slot reaches the page edges, so content never shows beside it */
+& .ll-rail-slot { position: sticky; top: 0; z-index: 20; margin: 0 -16px; }
+& .ll-rail { display: flex; align-items: center; gap: 10px; min-height: 60px; flex-wrap: wrap; padding: 11px 16px; border-bottom: 1px solid var(--glass-line); background: var(--cg-bg, var(--glass-bg)); }
+/* phone: a one-row bar floating at the top once the rail has scrolled away (a zero-height sticky slot: the page is a
+   size container, so position: fixed would be relative to it) */
+& .ll-float-slot { position: sticky; top: 0; z-index: 21; height: 0; margin-bottom: -12px; }
+& .ll-float { position: absolute; top: 0; left: -16px; right: -16px; flex-wrap: nowrap; gap: 8px; min-height: 0; padding: 7px 16px; }
+& .ll-float .ttl { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; color: var(--glass-fg); }
+& .ll-sym.compact { flex: none; }
+& .ll-sym.compact .ll-symBtn { height: 30px; padding: 0 28px 0 10px; gap: 7px; font-size: 13px; }
+& .ll-sym.compact .ll-symBtn .ex, & .ll-sym.compact .ll-symBtn .px { display: none; }
+& .ll-sym.compact .ll-caret { right: 11px; }
+& .ll-filter-pop { left: 0; right: auto; width: min(320px, calc(100vw - 32px)); }
+& .ll-float .ll-filter-pop { left: auto; right: 0; }
+/* in the floating bar the pair menu spans the bar (16px from each screen edge), not the trigger */
+& .ll-float .ll-sym { position: static; }
+& .ll-float .ll-menu { left: 16px; right: 16px; width: auto; min-width: 0; top: calc(100% + 4px); }
+& .ll-filter-pop .ll-chips { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+& .ll-rail h1 { margin: 0 2px 0 0; font-size: 17px; font-weight: 600; line-height: 1.4; color: var(--glass-fg); white-space: nowrap; }
+& .ll-chips { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+
+/* pair picker: dropdown trigger + self-drawn menu panel */
+& .ll-sym { position: relative; }
+& .ll-symBtn { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 34px 0 13px; border: 0; border-radius: 8px; background: var(--glass-ctl); cursor: pointer; font-size: 14px; font-weight: 600; color: var(--glass-fg); white-space: nowrap; transition: background .15s; }
+& .ll-symBtn:hover, & .ll-symBtn[aria-expanded="true"] { background: var(--glass-ctl-hi); }
+& .ll-symBtn .ex { color: var(--glass-fg-3); font-weight: 500; }
+& .ll-symBtn .px { padding-left: 8px; border-left: 1px solid var(--glass-line-2); color: var(--glass-fg); font-weight: 600; }
+& .ll-caret { position: absolute; right: 13px; top: 50%; width: 7px; height: 7px; margin-top: -5px; border-right: 1.6px solid var(--glass-fg-2); border-bottom: 1.6px solid var(--glass-fg-2); transform: rotate(45deg); transition: transform .15s; }
+& .ll-symBtn[aria-expanded="true"] .ll-caret { transform: translateY(3px) rotate(225deg); }
+& .ll-logos { display: inline-flex; align-items: center; }
+& .ll-logo { width: 16px; height: 16px; border-radius: 50%; flex: none; display: inline-block; vertical-align: -3px; object-fit: cover; }
+& .ll-logo.sm { width: 14px; height: 14px; }
+& .ll-coin-ph { display: inline-grid; place-items: center; background: var(--glass-surface-3); color: var(--glass-fg-2); font-size: 9px; font-weight: 700; line-height: 1; text-transform: uppercase; }
+& .ll-logos .ll-logo + .ll-logo { margin-left: -5px; box-shadow: 0 0 0 1.5px var(--glass-surface); }
+& .ll-menu { position: absolute; left: 0; top: calc(100% + 6px); min-width: 320px; max-width: calc(100vw - 16px); max-height: min(440px, 70vh); overflow: auto; overscroll-behavior: contain; padding: 0 5px 5px; border: 1px solid var(--glass-menu-line); border-radius: 10px; background: var(--glass-menu); box-shadow: var(--glass-menu-shadow); z-index: 30; animation: ll-fade .12s ease-out; }
+& .ll-menu .search { padding: 5px 0 3px; position: sticky; top: 0; background: var(--glass-menu); z-index: 1; } /* stays put while the list scrolls; opaque, so rows never show through */
+& .ll-menu .search input { width: 100%; height: 34px; border: 0; border-radius: 8px; padding: 0 11px; background: var(--glass-ctl); font-size: 14px; font-weight: 500; color: var(--glass-fg); outline: none; }
+& .ll-menu .search input::placeholder { color: var(--glass-fg-2); }
+& .ll-menu .search input:focus-visible { outline: 2px solid var(--glass-focus); outline-offset: 0; }
+& .ll-menu .search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+& .ll-menu .empty { padding: 10px 12px; color: var(--glass-fg-3); font-size: 13px; }
+& .ll-menu .grp { font-size: 11px; font-weight: 500; line-height: 1; letter-spacing: .08em; text-transform: uppercase; color: var(--glass-fg-3); padding: 10px 12px 6px; display: flex; align-items: center; gap: 7px; }
+& .ll-menu mark { background: var(--glass-tab-on); color: var(--glass-tab-on-ink); border-radius: 3px; padding: 0 1px; font-weight: 600; }
+& .ll-menu [role="option"] { position: relative; display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: center; gap: 8px; width: 100%; height: 34px; margin-top: 2px; border: 0; background: transparent; border-radius: 7px; padding: 0 36px 0 12px; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--glass-fg-2); text-align: left; white-space: nowrap; }
+& .ll-menu [role="option"] .nm { overflow: hidden; text-overflow: ellipsis; }
+& .ll-menu [role="option"][aria-selected="true"] { color: var(--glass-fg); font-weight: 600; }
+& .ll-menu [role="option"]:hover, & .ll-menu [role="option"].hl { background: var(--glass-menu-hover); color: var(--glass-fg); }
+& .ll-menu [role="option"] .chk { position: absolute; right: 15px; top: 50%; width: 5px; height: 9px; margin-top: -6px; border: solid var(--glass-fg); border-width: 0 2px 2px 0; transform: rotate(45deg); font-size: 0; visibility: hidden; }
+& .ll-menu [role="option"][aria-selected="true"] .chk { visibility: visible; }
+& .ll-menu [role="option"] small { color: var(--glass-fg-3); font-weight: 400; font-size: 12.5px; }
+@keyframes ll-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* colour settings popover */
+& .ll-pop-wrap { position: relative; }
+& .ll-pop { position: absolute; right: 0; top: calc(100% + 6px); width: min(360px, calc(100vw - 16px)); max-height: calc(100vh - 140px); overflow: auto; overscroll-behavior: contain; padding: 14px; border: 1px solid var(--glass-menu-line); border-radius: 10px; background: var(--glass-menu); box-shadow: var(--glass-menu-shadow); z-index: 30; animation: ll-fade .12s ease-out; }
+& .ll-pop h4 { margin: 0 0 8px; font-size: 13px; color: var(--glass-fg-3); font-weight: 500; }
+& .ll-pop .sec { margin-bottom: 14px; }
+& .ll-pop .sec:last-child { margin-bottom: 0; }
+& .ll-pop .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+& .ll-pop .row h4 { margin: 0; }
+& .ll-pop .note { font-size: 13px; color: var(--glass-fg-3); margin-top: 8px; line-height: 1.5; }
+& .ll-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+& .ll-preset { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 10px; border: 0; border-radius: 8px; background: var(--glass-ctl); cursor: pointer; font-size: 13.5px; font-weight: 500; color: var(--glass-fg); text-align: left; white-space: nowrap; min-width: 0; transition: background .15s; }
+& .ll-preset .nm { overflow: hidden; text-overflow: ellipsis; }
+& .ll-preset:hover { background: var(--glass-ctl-hi); }
+& .ll-preset[aria-pressed="true"], & .ll-preset[aria-pressed="true"]:hover { background: var(--glass-toggle-on); color: var(--glass-toggle-on-ink); font-weight: 600; }
+& .ll-preset .sw { display: inline-flex; gap: 2px; flex: none; }
+& .ll-preset .sw i { width: 8px; height: 14px; border-radius: 2px; display: block; }
+& .ll-cp { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; font-size: 13.5px; color: var(--glass-fg-2); padding: 3px 0; }
+& .ll-cp small { color: var(--glass-fg-3); margin-left: 6px; font-size: 12.5px; }
+& .ll-cp .hexw { display: flex; align-items: center; gap: 8px; }
+& .ll-hex { width: 92px; height: 30px; padding: 0 10px; border: 0; border-radius: 8px; background: var(--glass-ctl); color: var(--glass-fg); font-size: 13px; font-variant-numeric: tabular-nums; outline: 0; transition: background .15s; }
+& .ll-hex:hover { background: var(--glass-ctl-hi); }
+/* the swatch is the picker's button: the system colour input fills it invisibly */
+& .ll-swb { position: relative; width: 28px; height: 28px; border-radius: 6px; flex: none; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0,0,0,.22); cursor: pointer; transition: box-shadow .15s; }
+& .ll-swb:hover, & .ll-swb:has(input:focus-visible) { box-shadow: inset 0 0 0 1px rgba(0,0,0,.22), 0 0 0 2px var(--glass-menu), 0 0 0 3.5px var(--glass-fg-2); }
+& .ll-swb input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; }
+
+/* KPI cards */
+& .ll-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+& .ll-kpi { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 16px 18px; background: var(--glass-surface); border: 1px solid var(--glass-line); border-radius: 8px; }
+& .ll-kpi .l { color: var(--glass-fg-3); font-size: 13.5px; font-weight: 500; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+& .ll-kpi .l .ll-dot { margin-right: 0; }
+& .ll-kpi .v { font-size: 32px; font-weight: 600; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--glass-fg); font-variant-numeric: proportional-nums; }
+& .ll-kpi .v.tight { font-size: 26px; line-height: 35.2px; } /* a long zone range: same line box, so the cards in a row stay level */
+& .ll-kpi .s { color: var(--glass-fg-3); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+& .ll-kpi .v.ll-ab { color: var(--ll-above); } & .ll-kpi .v.ll-be { color: var(--ll-below); }
+& .ll-kpi-more { display: none !important; }
+& .ll-chev { display: inline-block; flex: none; width: 7px; height: 7px; margin: -3px 0 0 2px; border-right: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(45deg); }
+& .ll-kpis.open .ll-chev { margin-top: 3px; transform: rotate(225deg); }
+& .ll-kpi .vrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }
+& .ll-kpi .vrow .v { flex: none; }
+& .ll-kpi .tp { display: flex; flex-direction: column; align-items: flex-end; min-width: 0; font-size: 13px; line-height: 17px; text-align: end; }
+& .ll-kpi .tp b, & .ll-kpi .tp span { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+& .ll-kpi .tp span { color: var(--glass-fg-3); }
+& .ll-up { color: var(--ll-up); } & .ll-dn { color: var(--ll-dn); } & .ll-ab { color: var(--ll-above); } & .ll-be { color: var(--ll-below); }
+& .ll-bull { color: var(--ll-bull); } & .ll-bear { color: var(--ll-bear); }
+& .ll-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); vertical-align: 1px; margin-right: 6px; flex: none; }
+& .ll-live { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--ll-up); flex: none; }
+
+/* chart card: toolbar, legend row, stage */
+& .ll-card { display: flex; flex-direction: column; background: var(--glass-surface); border: 1px solid var(--glass-line); border-radius: 8px; min-width: 0; }
+& .ll-card-h { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 14px; border-bottom: 1px solid var(--glass-line); flex-wrap: wrap; }
+& .ll-card-h h2 { margin: 0; display: flex; align-items: center; gap: 12px; min-width: 0; font-size: 17px; font-weight: 600; line-height: 1.4; color: var(--glass-fg); white-space: nowrap; overflow: hidden; }
+& .ll-card-h h2 .ttl { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+& .ll-card-h h2 .ll-eyebrow { padding-left: 10px; border-left: 1px solid var(--glass-line-2); overflow: hidden; text-overflow: ellipsis; max-width: 260px; min-width: 0; flex: 0 100 auto; } /* the source tag gives way before the title */
+& .ll-legend-row { display: flex; align-items: center; gap: 10px 14px; padding: 8px 14px; border-bottom: 1px solid var(--glass-line); flex-wrap: wrap; }
+& .ll-legend { display: flex; gap: 6px 14px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--glass-fg-2); font-weight: 500; }
+& .ll-legend span { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+& .ll-legend i { width: 14px; height: 3px; border-radius: 2px; background: var(--c); }
+& .ll-range { display: inline-flex; align-items: center; gap: 8px; color: var(--glass-fg-2); font-size: 13px; font-weight: 500; flex: none; }
+/* range slider in the range-navigator look: 8px track, pill handle */
+& .ll-range input { width: 110px; height: 22px; margin: 0; padding: 0; background: transparent; cursor: pointer; -webkit-appearance: none; appearance: none; }
+& .ll-range input:focus-visible { outline: 2px solid var(--glass-focus); outline-offset: 2px; border-radius: 4px; }
+& .ll-range input::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; /* @noflip */ background: linear-gradient(to right,var(--glass-line-2) var(--p, 50%), var(--glass-surface-3) var(--p, 50%)); }
+& .ll-range input::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 10px; height: 20px; margin-top: -6px; border-radius: 5px; background: var(--glass-menu); border: 1.5px solid var(--glass-focus); }
+& .ll-range input:hover::-webkit-slider-thumb { border-color: var(--glass-fg); }
+& .ll-range input::-moz-range-track { height: 8px; border-radius: 4px; background: var(--glass-surface-3); }
+& .ll-range input::-moz-range-progress { height: 8px; border-radius: 4px; background: var(--glass-line-2); }
+& .ll-range input::-moz-range-thumb { width: 10px; height: 20px; border-radius: 5px; background: var(--glass-menu); border: 1.5px solid var(--glass-focus); box-sizing: border-box; }
+& .ll-hist { display: flex; flex-direction: column; gap: 3px; width: 220px; flex: none; }
+& .ll-hist .hh { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--glass-fg-2); font-weight: 500; line-height: 1; }
+& .ll-hist .hh button { border: 0; background: none; color: var(--glass-fg-3); cursor: pointer; font-size: 12.5px; padding: 0; font-weight: 500; border-radius: 4px; }
+& .ll-hist .hh button:hover { color: var(--glass-fg); }
+& .ll-hist .hh button:focus-visible { outline: 2px solid var(--glass-focus); outline-offset: 1px; }
+& .ll-hist canvas { display: block; width: 220px; height: 30px; cursor: ew-resize; touch-action: none; border-radius: 6px; background: var(--glass-surface-2); }
+& .ll-hist .hv { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--glass-fg-3); line-height: 1; }
+& .ll-stage { position: relative; height: 724px; user-select: none; touch-action: none; cursor: crosshair; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; overflow: hidden; outline: none; } /* not in the tab order (focus by click for the chart keys), no focus frame */
+& .ll-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity .25s ease; }
+& .ll-stage.loading canvas, & .ll-stage.error canvas { opacity: .5; }
+& .ll-watermark { position: absolute; /* @noflip */ right: 232px; bottom: 126px; width: 100px; color: var(--joy-cg-chartlogo); pointer-events: none; user-select: none; z-index: 2; }
+& .ll-watermark svg { display: block; width: 100%; height: auto; }
+@container ll (max-width: 733px) { & .ll-watermark { /* @noflip */ right: 146px; bottom: 96px; width: 72px; } } /* stage under 700px: narrower profile / axis / CLLD strip */
+& .ll-tip { position: absolute; pointer-events: none; background: var(--glass-surface); border: 1px solid var(--glass-line-2); border-radius: 10px; padding: 12px 14px; font-size: 13px; min-width: 236px; box-shadow: var(--glass-menu-shadow); display: none; z-index: 4; }
+& .ll-tip .t { font-weight: 700; font-size: 15px; margin-bottom: 6px; color: var(--glass-fg); }
+& .ll-tip .row { display: flex; justify-content: space-between; gap: 16px; color: var(--glass-fg-2); line-height: 1.6; }
+& .ll-tip .row b { color: var(--glass-fg); font-weight: 600; }
+& .ll-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 5; }
+& .ll-overlay .box { display: flex; align-items: center; gap: 10px; background: var(--glass-surface); border: 1px solid var(--glass-line-2); border-radius: 10px; padding: 12px 16px; font-size: 13.5px; font-weight: 600; color: var(--glass-fg-2); box-shadow: var(--glass-menu-shadow); pointer-events: auto; }
+& .ll-spin { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--glass-line-2); border-top-color: var(--glass-fg); animation: ll-spin .8s linear infinite; }
+@keyframes ll-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { & .ll-stage canvas { transition: none; } & .ll-spin { animation-duration: 1.6s; } & .ll-menu, & .ll-pop { animation: none; } & .ll-caret { transition: none; } }
+
+/* analysis panels */
+& .ll-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+& .ll-panel { background: var(--glass-surface); border: 1px solid var(--glass-line); border-radius: 8px; min-width: 0; display: flex; flex-direction: column; }
+& .ll-ph { display: flex; align-items: center; gap: 6px 10px; min-height: 52px; padding: 14px 18px; border-bottom: 1px solid var(--glass-line); flex-wrap: wrap; }
+& .ll-ph h3 { margin: 0; font-size: 15.5px; font-weight: 600; line-height: 1.4; color: var(--glass-fg); white-space: nowrap; }
+& .ll-ph small { flex: 1 1 200px; min-width: 0; color: var(--glass-fg-3); font-size: 12.5px; }
+& .ll-ph .ll-ph-tools { margin-inline-start: auto; }
+& .ll-pb { padding: 16px 18px; min-width: 0; flex: 1; display: flex; flex-direction: column; }
+& .ll-table { width: 100%; border-collapse: collapse; font-size: 14.5px; table-layout: fixed; }
+& .ll-table th { text-align: left; color: var(--glass-fg-3); font-weight: 400; font-size: 13.5px; padding: 0 10px 12px; border-bottom: 1px solid var(--glass-line); white-space: nowrap; }
+& .ll-table td { padding: 0 10px; height: 50px; border-bottom: 1px solid var(--glass-line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--glass-fg); font-weight: 500; }
+& .ll-table tbody tr:hover td:not(.cur):not(.empty) { background: var(--glass-surface-2); }
+& .ll-table td.r, & .ll-table th.r { text-align: right; }
+& .ll-table td.muted { color: var(--glass-fg-2); }
+& .ll-table tr:last-child td { border-bottom: 0; }
+& .ll-table td.empty { text-align: center; color: var(--glass-fg-3); font-weight: 400; }
+& .ll-table td.cur { text-align: center; color: var(--glass-fg-2); font-size: 13px; height: 30px; background: var(--glass-surface-2); }
+/* levels table: text columns shrink-wrap their content in every language, the strength bar takes the rest */
+& .ll-levels { table-layout: auto; }
+& .ll-levels th.bar, & .ll-levels td.bar { width: 100%; min-width: 60px; }
+& .ll-levels .short, & .ll-levels .dist-m { display: none; }
+& .ll-track { height: 6px; background: var(--glass-surface-3); border-radius: 3px; overflow: hidden; }
+& .ll-track i { display: block; height: 100%; background: var(--c); border-radius: 3px; opacity: .85; }
+& .ll-hbars { display: grid; grid-template-columns: minmax(72px, max-content) 1fr 56px 8px 56px; align-items: center; gap: 12px 8px; font-size: 13.5px; }
+& .ll-hb { display: contents; }
+& .ll-hb .lb { white-space: nowrap; max-width: 170px; overflow: hidden; text-overflow: ellipsis; display: inline-flex; align-items: center; }
+& .ll-hb .tr { height: 8px; background: var(--glass-surface-3); border-radius: 4px; overflow: hidden; display: flex; gap: 2px; }
+& .ll-hb .tr i { display: block; height: 100%; opacity: .85; }
+& .ll-hb .tr i.a { background: var(--ll-above); } & .ll-hb .tr i.b { background: var(--ll-below); }
+& .ll-hb .va, & .ll-hb .vb, & .ll-hb .sep { text-align: right; }
+& .ll-hb .sep { text-align: center; color: var(--glass-fg-3); }
+& .ll-lsum { display: flex; gap: 16px; margin-bottom: 14px; font-size: 13.5px; color: var(--glass-fg-2); flex-wrap: wrap; }
+& .ll-lsum b { color: var(--glass-fg); font-weight: 600; }
+& .ll-mini { display: block; width: 100%; flex: 1; min-height: 240px; cursor: crosshair; touch-action: pan-y; }
+& .ll-mini-legend { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; padding: 10px 2px 0; font-size: 13px; font-weight: 600; color: var(--glass-fg-2); }
+& .ll-ts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; font-size: 13.5px; color: var(--glass-fg-2); }
+& .ll-ts .muted { color: var(--glass-fg-3); }
+& .ll-turns { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13.5px; }
+& .ll-turns b { color: var(--glass-fg-2); font-weight: 600; }
+& .ll-turns span { font-weight: 600; white-space: nowrap; }
+& .ll-turns span i { font-style: normal; font-weight: 500; color: var(--glass-fg-3); }
+& .ll-ts-note { font-size: 13px; color: var(--glass-fg-3); line-height: 1.5; }
+
+/* magnet zones */
+& .ll-zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0 24px; }
+& .ll-zones h4 { margin: 0 0 4px; font-size: 13.5px; font-weight: 600; color: var(--glass-fg-2); display: flex; align-items: center; gap: 6px; }
+& .ll-zone { display: grid; grid-template-columns: 26px 1fr auto; gap: 3px 10px; align-items: center; padding: 11px 0; border-top: 1px solid var(--glass-line); }
+& .ll-zone .rk { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; font-size: 12.5px; font-weight: 600; background: var(--glass-ctl); color: var(--glass-fg-2); grid-row: span 2; }
+& .ll-zone .rg { font-weight: 600; color: var(--glass-fg); font-size: 14.5px; min-width: 0; overflow-wrap: anywhere; }
+& .ll-zone.empty { opacity: .45; } & .ll-zone.empty .rg { font-weight: 500; color: var(--glass-fg-3); }
+& .ll-zone .ds { font-size: 13.5px; font-weight: 600; text-align: right; white-space: nowrap; }
+& .ll-zone .st { grid-column: 2 / 4; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--glass-fg-3); min-width: 0; }
+& .ll-zone .mix { flex: 1; height: 6px; border-radius: 3px; overflow: hidden; display: flex; gap: 1px; background: var(--glass-surface-3); min-width: 40px; }
+& .ll-zone .mix i { display: block; height: 100%; }
+& .ll-zone .tot { color: var(--glass-fg); font-weight: 600; white-space: nowrap; }
+
+/* near-field balance */
+& .ll-bal .lbls { display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 600; gap: 12px; }
+& .ll-bal .bar { height: 14px; border-radius: 7px; overflow: hidden; display: flex; gap: 2px; background: var(--glass-surface-3); margin: 8px 0 10px; }
+& .ll-bal .bar i { display: block; height: 100%; transition: width .25s; }
+& .ll-bal .bar i.b { background: var(--ll-below); } & .ll-bal .bar i.a { background: var(--ll-above); }
+& .ll-bal .read { font-size: 13.5px; color: var(--glass-fg-2); margin: 0 0 12px; line-height: 1.5; }
+& .ll-bal .cap { font-size: 13px; color: var(--glass-fg-3); display: flex; justify-content: space-between; margin-bottom: 4px; }
+& .ll-bal canvas { display: block; width: 100%; height: 120px; }
+
+/* section head of related tools */
+& .ll-sh h2 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: .01em; color: var(--glass-fg); }
+& .ll-sh p { margin: 6px 0 0; font-size: 14px; color: var(--glass-fg-3); }
+
+/* related tools */
+& .ll-rel { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; }
+& .ll-relgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+& .ll-relcard { display: flex; flex-direction: column; gap: 8px; min-height: 136px; padding: 16px 18px; background: var(--glass-surface); border: 1px solid var(--glass-line); border-radius: 8px; color: var(--glass-fg); text-decoration: none; transition: background .15s, border-color .15s; }
+& .ll-relcard:hover { background: var(--glass-surface-2); border-color: var(--glass-line-2); color: var(--glass-fg); }
+& .ll-relcard .rtop { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+& .ll-relcard .rico { width: 32px; height: 32px; border-radius: 8px; background: var(--glass-ctl); color: var(--glass-fg-2); display: inline-flex; align-items: center; justify-content: center; flex: none; }
+& .ll-relcard .rico svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+& .ll-relcard .tg { height: 18px; padding: 0 5px; border-radius: 4px; background: var(--glass-surface-3); color: var(--glass-fg-2); font-size: 11.5px; font-weight: 600; line-height: 18px; white-space: nowrap; }
+& .ll-relcard b { display: flex; flex-direction: column; gap: 2px; font-size: 15.5px; font-weight: 600; }
+& .ll-relcard b .en { font-size: 12.5px; font-weight: 500; color: var(--glass-fg-3); }
+& .ll-relcard p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--glass-fg-2); }
+& .ll-relcoins h3 { margin: 6px 0 10px; font-size: 15.5px; font-weight: 600; color: var(--glass-fg); }
+/* five coins per row, each with its logo; a long name ends in an ellipsis (full text in the link title) */
+& .ll-cchips { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+& .ll-cchip { height: 38px; display: flex; align-items: center; gap: 8px; min-width: 0; padding: 0 12px 0 8px; border-radius: 8px; background: var(--glass-ctl); color: var(--glass-fg); font-size: 13.5px; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background .15s; }
+& .ll-cchip[aria-current="page"] { box-shadow: inset 0 0 0 1px var(--glass-line-2); cursor: default; }
+& .ll-cchip > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+& .ll-cchip:hover { background: var(--glass-ctl-hi); color: var(--glass-fg); }
+& .ll-cchip .ll-logo { width: 22px; height: 22px; }
+& .ll-cchip .ll-coin-ph { font-size: 11px; }
+
+
+/* top rail: the picker's price, then its exchange name give way as the page narrows (measured for English; the
+   exchange logo stays); the filter labels never shorten, past that the rail wraps */
+@container ll (max-width: 1490px) { & .ll-symBtn .px { display: none; } }
+@container ll (max-width: 1400px) { & .ll-symBtn .ex { display: none; } }
+@container ll (max-width: 1320px) { & .ll-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } } /* four cards need ~1320px before their sub-lines clip */
+@container ll (max-width: 1100px) {
+  & .ll-grid { grid-template-columns: 1fr; } /* panels stack before the table columns get squeezed */
+  & .ll-relgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container ll (max-width: 760px) {
+  & .ll-rail h1 { flex-basis: 100%; }
+  & .ll-rail { row-gap: 8px; }
+  & .ll-card-h h2 .ll-eyebrow { display: none; } /* the footer names the source too */
+  /* phones: fixed columns; distance moves under the price (second line), leverage shows as "100x", no bar */
+  & .ll-levels { table-layout: fixed; }
+  & .ll-levels th.bar, & .ll-levels td.bar { display: none; }
+  & .ll-levels col.c-side { width: 70px; } & .ll-levels col.c-px { width: auto; } & .ll-levels col.c-dist { width: 0; } & .ll-levels col.c-lev { width: 66px; } & .ll-levels col.c-str { width: 72px; } & .ll-levels col:last-child { width: 0; }
+  & .ll-levels th.dist, & .ll-levels td.dist { padding: 0; font-size: 0; visibility: hidden; } /* zero-width column: removing the cells would shift the later ones */
+  & .ll-levels th, & .ll-levels td { padding-inline: 6px; font-size: 13.5px; }
+  & .ll-levels th { font-size: 13px; }
+  & .ll-levels td { height: 46px; }
+  & .ll-levels td.cur { height: 28px; font-size: 12.5px; }
+  & .ll-levels .dist-m { display: block; margin-top: 1px; font-size: 12px; font-weight: 400; line-height: 1.2; color: var(--glass-fg-3); }
+  & .ll-levels .txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  & .ll-levels .short { display: inline; }
+  & .ll-levels .ll-dot { margin-right: 5px; }
+  /* the ±% window tabs fill the row, items share it evenly */
+  & .ll-ph .ll-ph-tools, & .ll-ph .ll-ph-tools [data-role="container"], & .ll-ph .ll-ph-tools [data-role="Tabs"] { width: 100%; }
+  & .ll-ph .ll-ph-tools [data-role="Tab"] { flex: 1 1 0; min-width: 0; }
+  & .ll-ph .ll-ph-tools [data-role="label"] { justify-content: center; padding-inline: 2px; }
+  & .ll-ph .ll-ph-tools { margin-inline-start: 0; } /* wraps under the title on phones: start-aligned, not pushed right */
+  & .ll-ph, & .ll-pb { padding-inline: 14px; }
+}
+@container ll (max-width: 680px) { & .ll-kpis { grid-template-columns: 1fr; } }
+/* phones: folded to a 2 × 2 grid of label + value (no sub-lines, no turn badge) until "Show more" */
+@container ll (max-width: 640px) {
+  & .ll-kpis { gap: 8px; }
+  & .ll-kpis:not(.open) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  & .ll-kpis:not(.open) .ll-kpi { gap: 4px; padding: 10px 12px; }
+  & .ll-kpis:not(.open) .ll-kpi .l { font-size: 12px; }
+  & .ll-kpis:not(.open) .ll-kpi .v { font-size: 18px; line-height: 23px; }
+  & .ll-kpis:not(.open) .ll-kpi .v.tight { font-size: 15px; line-height: 23px; } /* a zone range: one size down, same line box */
+  & .ll-kpis:not(.open) .ll-kpi .s, & .ll-kpis:not(.open) .ll-kpi .tp { display: none; }
+  & .ll-kpi-more { display: inline-flex !important; grid-column: 1 / -1; justify-self: center; }
+}
+/* phone rail: title, then pair + filters + FAQ + colours, then the range on its own row; it scrolls with the page */
+@container ll (max-width: 640px) {
+  /* legend row as a tidy grid: legend across, the strength brush across, then Lines | Bubbles side by side */
+  & .ll-legend-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; padding: 12px 14px; }
+  & .ll-legend-row > .ll-legend, & .ll-legend-row > .ll-hist { grid-column: 1 / -1; }
+  & .ll-legend-row > .ll-spacer { display: none; }
+  & .ll-legend { gap: 6px 14px; }
+  & .ll-hist { width: 100%; }
+  & .ll-hist canvas { width: 100%; }
+  & .ll-range { min-width: 0; }
+  & .ll-range span { flex: none; }
+  & .ll-range input { flex: 1; width: auto; min-width: 0; }
+  & .ll-rail-slot { position: static; }
+  & .ll-rail > .ll-rail-range { order: 10; }
+}
+@container ll (max-width: 1100px) { & .ll-cchips { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* phones: related tools become a plain list (icon + name), the coins two per row */
+@container ll (max-width: 640px) {
+  & .ll-relgrid { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  & .ll-relcard { flex-direction: row; align-items: center; gap: 10px; min-height: 0; padding: 10px 12px; }
+  & .ll-relcard .rtop { flex: none; }
+  & .ll-relcard .tg, & .ll-relcard p, & .ll-relcard b .en { display: none; }
+  & .ll-relcard b { flex: 1; min-width: 0; font-size: 14.5px; }
+  & .ll-relcard::after { content: ""; flex: none; width: 7px; height: 7px; margin-right: 4px; border: solid var(--glass-fg-3); border-width: 1.6px 1.6px 0 0; transform: rotate(45deg); }
+  & .ll-cchips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  & .ll-cchip { height: auto; min-height: 44px; padding-block: 6px; white-space: normal; line-height: 1.3; }
+  & .ll-cchip > span:last-child { overflow: visible; }
+}
+@container ll (max-width: 600px) {
+  & .ll-menu { left: 0; width: calc(100vw - 32px); min-width: 0; max-height: 70vh; } /* the picker sits at the 16px page edge, so this spans the screen minus the gutters */
+}
+@container ll (max-width: 460px) { & .ll-kpi .v { font-size: 28px; } & .ll-kpi .v.tight { font-size: 24px; line-height: 30.8px; } }
+@container ll (max-width: 400px) {
+  & .ll-levels col.c-side { width: 62px; } & .ll-levels col.c-lev { width: 58px; } & .ll-levels col.c-str { width: 64px; }
+  & .ll-levels th, & .ll-levels td { padding-inline: 4px; font-size: 12.5px; }
+  & .ll-levels th { font-size: 12px; overflow: hidden; text-overflow: ellipsis; }
+}
+`,
+        L = [100, 50, 25],
+        S = ["lev.high", "lev.mid", "lev.low"],
+        z = ["--ll-lev100", "--ll-lev50", "--ll-lev25"],
+        I = ["3d", "7d", "30d"],
+        A = {
+          ex: "Binance",
+          sym: "BTCUSDT",
+          base: "BTC",
+          quote: "USDT",
+          inv: !1,
+          dp: 1,
+          exLogo: "https://cdn.coinglasscdn.com/static/exchanges/270.png",
+          coinLogo: "https://cdn.coinglasscdn.com/static/img/coins/bitcoin-BTC.png"
+        },
+        C = e => {
+          let t = String(Array.isArray(e) ? e[0] : e || "").trim().toUpperCase();
+          return /^[A-Z0-9]{1,20}$/.test(t) ? t : null
+        },
+        B = e => e === A.base ? A : {
+          ex: "Binance",
+          sym: e + "USDT",
+          base: e,
+          quote: "USDT",
+          inv: !1,
+          dp: null,
+          exLogo: A.exLogo,
+          coinLogo: ""
+        },
+        E = "liquidation-levels",
+        O = {
+          h1: 0,
+          h2: 1,
+          h3: 2
+        },
+        D = e => {
+          if (null == e || "" === e) return null;
+          let t = Number(e);
+          return Number.isInteger(t) ? t : null
+        };
+
+      function P(e, t) {
+        let l = 0,
+          i = e.length - 1;
+        if (!(i >= 0) || t < e[0]) return -1;
+        for (; l < i;) {
+          let a = l + i + 1 >> 1;
+          e[a] <= t ? l = a : i = a - 1
+        }
+        return l
+      }
+      class R {
+        constructor(e) {
+          let t = this.N = e.ts.length;
+          this.ts = e.ts, this.open = e.o, this.high = e.h, this.low = e.l, this.close = e.c, this.vol = e.v, this.ivMin = Math.max(1, Math.round((e.interval || 60) / 60));
+          let {
+            open: l,
+            high: i,
+            low: a,
+            close: s
+          } = this, r = 1 / 0, n = -1 / 0;
+          for (let e = 0; e < t; e++) a[e] > 0 && i[e] >= a[e] || (a[e] = i[e] = l[e] = s[e] = e ? s[e - 1] : 1), a[e] < r && (r = a[e]), i[e] > n && (n = i[e]);
+          this.gMin = .88 * r, this.gMax = 1.12 * n, this.dp = (this.gMax - this.gMin) / 520;
+          let o = e.levels.filter(e => Array.isArray(e) && e[0] >= 0 && e[0] < t && Number.isFinite(e[2]) && e[2] > 0 && Number.isFinite(e[3]) && e[3] > 0),
+            h = this.nSeg = o.length;
+          this.segS = new Int32Array(h), this.segE = new Int32Array(h), this.segRow = new Int16Array(h), this.segPx = new Float64Array(h), this.segSz = new Float32Array(h), this.segLev = new Uint8Array(h), this.segSide = new Uint8Array(h), this.segHit = new Uint8Array(h);
+          for (let e = 0; e < h; e++) {
+            let l = o[e],
+              i = l[1] >= l[0] && l[1] < t;
+            this.segS[e] = l[0], this.segE[e] = i ? l[1] : t - 1, this.segHit[e] = +!!i, this.segPx[e] = l[2], this.segRow[e] = this.rowOf(l[2]), this.segSz[e] = l[3], this.segLev[e] = Math.min(2, Math.max(0, 0 | l[4])), this.segSide[e] = +!!l[5]
+          }
+          let d = this.segSz;
+          this.segOrder = Int32Array.from({
+            length: h
+          }, (e, t) => t).sort((e, t) => d[t] - d[e]), this.GRAN_THR = h ? [0, d[this.segOrder[Math.floor((h - 1) * .5)]], d[this.segOrder[Math.floor((h - 1) * .2)]]] : [0, 0, 0];
+          let c = this.clld = new Float64Array(t);
+          for (let e = 0; e < h; e++) c[this.segS[e]] += 0 === this.segSide[e] ? d[e] : -d[e];
+          for (let e = 1; e < t; e++) c[e] += c[e - 1];
+          this.curPrice = s[t - 1], this.dayOpen = s[Math.max(0, t - 1 - this.minsToBars(1440))], this.marks = function(e, t, l) {
+            let i = [],
+              a = e => Math.max(1, Math.round(e / l)),
+              s = a(180),
+              r = a(180);
+            if (t < s + 2) return i;
+            let n = new Float64Array(t - s);
+            for (let l = s; l < t; l++) n[l - s] = Math.abs(e[l] - e[l - s]);
+            n.sort();
+            let o = 1 / 0,
+              h = -1 / 0;
+            for (let l = 0; l < t; l++) e[l] < o && (o = e[l]), e[l] > h && (h = e[l]);
+            let d = Math.max(4 * n[n.length >> 1], (h - o) * .1);
+            if (!(d > 0)) return i;
+            let c = [],
+              p = 0,
+              u = e[0],
+              g = e[0],
+              m = 0,
+              x = 0;
+            for (let l = 1; l < t; l++) {
+              let t = e[l];
+              t > u && (u = t, m = l), t < g && (g = t, x = l), p >= 0 && u - t >= d ? ((p > 0 || !c.length) && c.push({
+                i: m,
+                t: -1
+              }), p = -1, g = t, x = l) : p <= 0 && t - g >= d && ((p < 0 || !c.length) && c.push({
+                i: x,
+                t: 1
+              }), p = 1, u = t, m = l)
+            }
+            for (let e = 1; e < c.length;) c[e].i - c[e - 1].i < r ? c.splice(e - 1, 2) : e++;
+            for (let t = 0; t < c.length; t++) {
+              let l = c[t];
+              l.s = t ? Math.abs(e[l.i] - e[c[t - 1].i]) : d, i.push(l)
+            }
+            return i
+          }(c, t, this.ivMin), this.levOn = [!0, !0, !0], this.gran = 0, this.active = new Float64Array(520), this.activeLev = new Float64Array(2080), this.activeBelow = 0, this.activeAbove = 0, this.activeByLev = [0, 0, 0, 0, 0, 0], this.unit = 1, this.inclSorted = new Float32Array(0), this.rebuild(this.levOn, this.gran)
+        }
+        minsToBars(e) {
+          return Math.max(1, Math.round(e / this.ivMin))
+        }
+        rowOf(e) {
+          return Math.min(519, Math.max(0, Math.floor((e - this.gMin) / this.dp)))
+        }
+        priceOfRow(e) {
+          return this.gMin + (e + .5) * this.dp
+        }
+        segOn(e) {
+          return this.levOn[this.segLev[e]] && this.segSz[e] >= this.GRAN_THR[this.gran]
+        }
+        tsAt(e) {
+          let t = this.N,
+            l = Math.max(0, Math.min(t - 1, Math.round(e)));
+          return t ? this.ts[l] + (e - l) * this.ivMin * 6e4 : 0
+        }
+        rebuild(e, t) {
+          this.levOn = e.slice(0, 3), this.gran = t;
+          let {
+            active: l,
+            activeLev: i,
+            activeByLev: a,
+            segLev: s,
+            segRow: r,
+            segSz: n,
+            segHit: o,
+            segSide: h,
+            nSeg: d
+          } = this;
+          l.fill(0), i.fill(0), a.fill(0), this.activeBelow = this.activeAbove = 0;
+          let c = 0;
+          for (let e = 0; e < d; e++) this.segOn(e) && c++;
+          let p = new Float32Array(c);
+          c = 0;
+          for (let e = 0; e < d; e++) {
+            if (!this.segOn(e)) continue;
+            let t = s[e],
+              d = r[e],
+              u = n[e];
+            p[c++] = u, o[e] || (l[d] += u, i[4 * d + t] += u, 0 === h[e] ? this.activeBelow += u : this.activeAbove += u, a[2 * t + h[e]] += u)
+          }
+          p.sort(), this.inclSorted = p;
+          let u = 0;
+          for (let e = 0; e < 520; e++) l[e] > u && (u = l[e]);
+          this.unit = (u || 1) / 100, this.version = (this.version || 0) + 1
+        }
+        bucketOf(e) {
+          let t = this.inclSorted,
+            l = 0,
+            i = t.length;
+          for (; l < i;) {
+            let a = l + i >> 1;
+            t[a] < e ? l = a + 1 : i = a
+          }
+          return Math.min(7, Math.floor(8 * Math.pow(l / Math.max(1, t.length), 1.8)))
+        }
+        cellStrength(e, t) {
+          let l = 0;
+          for (let i = 0; i < this.nSeg; i++) this.segRow[i] === t && this.segS[i] <= e && this.segE[i] >= e && this.segOn(i) && (l += this.segSz[i]);
+          return l
+        }
+        keyLevels(e) {
+          let {
+            active: t,
+            activeLev: l,
+            curPrice: i
+          } = this, a = this.rowOf(i), s = [];
+          for (let e = 0; e < 520; e++) t[e] > 0 && s.push(e);
+          let r = this.rowOf(i * (1 - e / 100)),
+            n = this.rowOf(i * (1 + e / 100)),
+            o = s.filter(e => e > a && e <= n).sort((e, l) => t[l] - t[e]).slice(0, 5).sort((e, t) => e - t),
+            h = s.filter(e => e < a && e >= r).sort((e, l) => t[l] - t[e]).slice(0, 5).sort((e, t) => t - e),
+            d = Math.max(1, ...o.map(e => t[e]), ...h.map(e => t[e])),
+            c = (e, a) => {
+              let s = this.priceOfRow(e);
+              return {
+                r: e,
+                side: a,
+                p: s,
+                dist: (s - i) / i * 100,
+                lev: (e => {
+                  let t = 0;
+                  for (let i = 1; i < L.length; i++) l[4 * e + i] > l[4 * e + t] && (t = i);
+                  return t
+                })(e),
+                v: t[e],
+                w: t[e] / d
+              }
+            };
+          return {
+            above: o.reverse().map(e => c(e, 1)),
+            below: h.map(e => c(e, 0))
+          }
+        }
+        bands() {
+          let {
+            active: e,
+            curPrice: t
+          } = this, l = [];
+          for (let t = 0; t < 520; t++) e[t] > 0 && l.push(t);
+          let i = (e, t) => l.filter(l => l > e && l < t),
+            a = t => t.reduce((t, l) => t + e[l], 0),
+            s = [
+              [0, 1],
+              [1, 2],
+              [2, 3],
+              [3, 5],
+              [5, 10]
+            ].map(([e, l]) => ({
+              a: e,
+              b: l,
+              u: a(i(this.rowOf(t * (1 + e / 100)), this.rowOf(t * (1 + l / 100)) + 1)),
+              d: a(i(this.rowOf(t * (1 - l / 100)) - 1, this.rowOf(t * (1 - e / 100))))
+            }));
+          return {
+            list: s,
+            max: Math.max(1, ...s.map(e => e.u + e.d)),
+            totU: s.reduce((e, t) => e + t.u, 0),
+            totD: s.reduce((e, t) => e + t.d, 0)
+          }
+        }
+        levTiers() {
+          let {
+            activeByLev: e
+          } = this, t = L.map((t, l) => ({
+            k: l,
+            u: e[2 * l + 1],
+            d: e[2 * l]
+          }));
+          return {
+            list: t,
+            max: Math.max(1, ...t.map(e => e.u + e.d)),
+            above: this.activeAbove,
+            below: this.activeBelow
+          }
+        }
+        zones() {
+          let {
+            active: e,
+            activeLev: t,
+            curPrice: l,
+            dp: i
+          } = this, a = this.rowOf(l), s = Math.max(3, Math.round(.1 * l / i)), r = Math.max(0, a - s), n = Math.min(519, a + s), o = new Float64Array(520);
+          for (let t = r; t <= n; t++) o[t] = (2 * e[t] + (t > 0 ? e[t - 1] : 0) + (t < 519 ? e[t + 1] : 0)) / 4;
+          let h = 0;
+          for (let e = r; e <= n; e++) e !== a && o[e] > h && (h = o[e]);
+          if (!(h > 0)) return {
+            up: [],
+            dn: []
+          };
+          let d = new Uint8Array(520),
+            c = Math.max(3, Math.round(.012 * l / i)),
+            p = [];
+          for (let e = r; e <= n; e++) {
+            if (e === a || o[e] < .12 * h) continue;
+            let t = !0;
+            for (let l = Math.max(r, e - 3); l <= Math.min(n, e + 3) && t; l++)(o[l] > o[e] || o[l] === o[e] && l < e) && (t = !1);
+            t && p.push(e)
+          }
+          p.sort((e, t) => o[t] - o[e]);
+          let u = [];
+          for (let l of p) {
+            if (d[l]) continue;
+            let s = +(l > a),
+              h = [0, 0, 0],
+              p = .35 * o[l],
+              g = l,
+              m = l,
+              x = 0,
+              f = 0,
+              v = l => {
+                x += e[l], f += e[l] * this.priceOfRow(l);
+                for (let e = 0; e < 3; e++) h[e] += t[4 * l + e];
+                d[l] = 1
+              };
+            for (let e of (v(l), [-1, 1])) {
+              let t = l + e;
+              for (; t >= r && t <= n && t !== a && !d[t] && o[t] >= p && m - g < c;) v(t), e < 0 ? g = t : m = t, t += e
+            }
+            x > 0 && u.push({
+              lo: g,
+              hi: m,
+              total: x,
+              mix: h,
+              side: s,
+              pLo: this.gMin + g * i,
+              pHi: this.gMin + (m + 1) * i,
+              mid: f / x
+            })
+          }
+          let g = Math.max(...u.map(e => e.total)),
+            m = e => u.filter(t => t.side === e && t.total >= .15 * g).sort((e, t) => t.total - e.total).slice(0, 3).map(e => ({
+              ...e,
+              dist: (e.mid - l) / l * 100
+            }));
+          return {
+            up: m(1),
+            dn: m(0)
+          }
+        }
+        balance() {
+          let {
+            N: e,
+            close: t,
+            curPrice: l,
+            nSeg: i,
+            segE: a,
+            segPx: s,
+            segS: r,
+            segHit: n,
+            segSz: o
+          } = this;
+          if (!e) return null;
+          let h = Math.max(0, e - 1 - this.minsToBars(1440)),
+            d = Math.max(1, Math.floor((e - 1 - h) / 200)),
+            c = 1 / 0,
+            p = -1 / 0;
+          for (let l = h; l < e; l++) t[l] < c && (c = t[l]), t[l] > p && (p = t[l]);
+          let u = [];
+          for (let e = 0; e < i; e++) this.segOn(e) && a[e] >= h && s[e] >= .97 * c && s[e] <= 1.03 * p && u.push(e);
+          let g = (e, t) => {
+              let l = 0,
+                i = 0,
+                h = 1.03 * t,
+                d = .97 * t;
+              for (let c of u) {
+                if (r[c] > e || n[c] && a[c] <= e) continue;
+                let p = s[c];
+                p > t && p <= h ? l += o[c] : p < t && p >= d && (i += o[c])
+              }
+              return [l, i]
+            },
+            m = [];
+          for (let l = h; l < e - 1; l += d) {
+            let [e, i] = g(l, t[l]);
+            m.push({
+              i: l,
+              share: e + i > 0 ? e / (e + i) : .5
+            })
+          }
+          let [x, f] = g(e - 1, l);
+          m.push({
+            i: e - 1,
+            share: x + f > 0 ? x / (x + f) : .5
+          });
+          let v = x + f > 0 ? x / (x + f) * 100 : 50;
+          return {
+            pts: m,
+            u: x,
+            d: f,
+            pu: v,
+            pd: 100 - v,
+            delta: v - 100 * m[0].share
+          }
+        }
+        clldKpi() {
+          let {
+            clld: e,
+            N: t,
+            marks: l
+          } = this, i = e[t - 1];
+          return {
+            cv: i,
+            chg1h: i - e[Math.max(0, t - 1 - this.minsToBars(60))],
+            lastMark: l[l.length - 1] || null
+          }
+        }
+        histogram(e = 52) {
+          let {
+            inclSorted: t,
+            unit: l
+          } = this, i = t.length, a = Math.max(10, 10 * Math.ceil((i ? t[Math.floor((i - 1) * .995)] / l : 100) / 10)), s = new Float64Array(e), r = new Float32Array(e), n = 0;
+          for (let r = 0; r < i; r++) s[Math.min(e - 1, Math.floor(t[r] / l / a * e))] += t[r], n += t[r];
+          let o = 0;
+          for (let t = 0; t < e; t++) o += s[t], r[t] = n ? o / n : 0;
+          return {
+            bins: s,
+            cum: r,
+            top: a
+          }
+        }
+      }
+      var F = l(18499);
+      let W = e => (e < 10 ? "0" : "") + e;
+
+      function H(e, t) {
+        let l, i = (0, F.uE)(t || "en"),
+          a = () => e && e.unit || 1,
+          s = e && Number.isInteger(e.pxDp) ? e.pxDp : (l = e ? e.curPrice ?? 0 : 0) > 0 ? Math.min(10, Math.max(1, Math.ceil(-Math.log10(l)) + 3)) : 1;
+        return {
+          loc: i,
+          dp: s,
+          px: e => e.toLocaleString(i, {
+            minimumFractionDigits: s,
+            maximumFractionDigits: s
+          }),
+          I: e => (e / a()).toFixed(1),
+          I0: e => Math.round(e / a()).toLocaleString(i),
+          S: e => (e >= 0 ? "+" : "−") + Math.abs(Math.round(e / a())).toLocaleString(i),
+          pct: (e, t = 2) => (e >= 0 ? "+" : "") + e.toFixed(t) + "%",
+          time: (t, l) => {
+            let i = new Date(e ? e.tsAt(t) : 0),
+              a = W(i.getHours()) + ":" + W(i.getMinutes());
+            return l ? W(i.getMonth() + 1) + "-" + W(i.getDate()) + " " + a : a
+          }
+        }
+      }
+      let K = "liqLevelsPrefs",
+        $ = "liqLevelsColors",
+        U = {
+          ex: A.ex,
+          sym: A.sym,
+          meta: {
+            base: A.base,
+            quote: A.quote,
+            inv: A.inv,
+            dp: A.dp,
+            exLogo: A.exLogo,
+            coinLogo: A.coinLogo
+          },
+          tf: 0,
+          lev: [!0, !0, !0],
+          gran: 0,
+          colorBy: "side",
+          minI: 6,
+          maxI: 22,
+          lineK: .5,
+          bubK: 1,
+          candles: !0,
+          lvR: 2
+        },
+        V = e => "string" == typeof e && /^[A-Za-z0-9._-]{0,24}$/.test(e),
+        X = e => "" === e || "string" == typeof e && e.length < 300 && /^https:\/\/[^\s"'<>()]+$/.test(e),
+        G = e => {
+          try {
+            return JSON.parse(window.localStorage.getItem(e) || "null")
+          } catch (e) {
+            return null
+          }
+        },
+        Q = (e, t) => {
+          try {
+            window.localStorage.setItem(e, JSON.stringify(t))
+          } catch (e) {}
+        },
+        Z = 0,
+        Y = null,
+        J = () => {
+          Y && (Q(K, Y), Y = null), clearTimeout(Z), Z = 0
+        };
+      window.addEventListener("pagehide", J);
+      var ee = l(68635),
+        et = l(95284);
+      let el = new Map,
+        ei = new Map,
+        ea = (e, t, l) => e + "_" + t + "_" + l,
+        es = e => !!e && Date.now() - e.at < 6e4;
+      async function er(e, t, l) {
+        let i = await (0, ee.WUs)({
+          symbol: e + "_" + t,
+          limit: 4e3,
+          range: l
+        });
+        if (i && ("40001" == i.code || "20001" == i.code)) return null;
+        if (!i || "0" != i.code) throw Error(i && i.msg || "request failed");
+        return function(e) {
+          if (!e || !Array.isArray(e.prices) || !Array.isArray(e.data) || e.prices.length < 10) return null;
+          let t = e.prices,
+            l = t.length,
+            i = new Float64Array(l),
+            a = new Float64Array(l),
+            s = new Float64Array(l),
+            r = new Float64Array(l),
+            n = new Float64Array(l),
+            o = new Float64Array(l);
+          for (let e = 0; e < l; e++) {
+            let l = t[e];
+            i[e] = 1e3 * l[0], a[e] = +l[1], s[e] = +l[2], r[e] = +l[3], n[e] = +l[4], o[e] = +l[5] || 0
+          }
+          let h = e.data.map(e => {
+            let t = D(e.x),
+              l = D(e.endX);
+            return null === t && (t = e.beginDate ? P(i, 1e3 * e.beginDate) : -1), null === l && (l = e.endDate ? P(i, 1e3 * e.endDate) : -1), [t, l, +e.price, +e.size, O[e.level2] ?? 2, +(1 != +e.side)]
+          });
+          return {
+            ts: i,
+            o: a,
+            h: s,
+            l: r,
+            c: n,
+            v: o,
+            levels: h,
+            interval: l > 1 ? (i[1] - i[0]) / 1e3 : 60
+          }
+        }(i.data)
+      }
+
+      function en(e, t, l) {
+        let i = el.get(ea(e, t, l));
+        return es(i) ? i : null
+      }
+
+      function eo(e, t, l, i) {
+        let a = ea(e, t, l),
+          s = el.get(a);
+        return !i && es(s) ? Promise.resolve(s) : (ei.has(a) || ei.set(a, er(e, t, l).then(e => {
+          ei.delete(a);
+          let t = {
+            ds: e,
+            at: Date.now()
+          };
+          return e && el.set(a, t), t
+        }, e => {
+          throw ei.delete(a), e
+        })), ei.get(a))
+      }
+      let eh = 0,
+        ed = e => e.ex + "|" + e.sym,
+        ec = new Map;
+      async function ep(e) {
+        let t = e.trim().toLowerCase();
+        if (ec.has(t)) return ec.get(t);
+        let l = await (0, ee.t2D)({
+          keyword: e.trim()
+        });
+        if (!l || "0" != l.code) throw Error(l && l.msg || "request failed");
+        let i = new Set,
+          a = [];
+        for (let e of l.data || []) {
+          let t = function(e) {
+            if (!e || 1 !== e.type || !e.kLink) return null;
+            let t = e.kLink,
+              l = t.exName || e.exchangeName,
+              i = t.instrumentId || e.originalSymbol;
+            if (!l || !i) return null;
+            let a = t.baseAsset || e.symbol || "";
+            return {
+              ex: l,
+              sym: i,
+              base: a,
+              quote: t.quoteAsset || e.quoteCurrency || "",
+              inv: !!(t.settlementCurrency && a && t.settlementCurrency === a),
+              dp: Number.isInteger(t.pricePrecision) && t.pricePrecision >= 0 && t.pricePrecision <= 10 ? t.pricePrecision : null,
+              exLogo: e.exchangeLogo || "",
+              coinLogo: e.symbolLogo || ""
+            }
+          }(e);
+          t && !i.has(ed(t)) && (i.add(ed(t)), a.push(t))
+        }
+        return ec.set(t, a), a
+      }
+      let eu = null;
+      var eg = l(25636),
+        em = l(80029),
+        ex = l.n(em);
+      let ef = (...e) => e.filter(Boolean).join(" "),
+        ev = (e, ...t) => ef(...t, "compact" === e && ex().compact);
+
+      function eb({
+        size: e = "standard",
+        variant: t,
+        selected: l,
+        icon: a,
+        glyph: s,
+        className: r,
+        children: n,
+        ...o
+      }) {
+        return (0, i.jsx)(eg.$n, {
+          className: ev(e, ex().button, a && ex().icon, "primary" === t && ex().primary, "toggle" === t && l && ex().selected, r),
+          "aria-pressed": "toggle" === t ? !!l : void 0,
+          onlyIcon: a,
+          iconComp: a ? n : s,
+          ...o,
+          children: a ? null : n
+        })
+      }
+
+      function ew({
+        options: e,
+        value: t,
+        onChange: l,
+        size: a = "standard",
+        className: s
+      }) {
+        return (0, i.jsx)(eg.tU, {
+          variant: "segmented",
+          className: ev(a, ex().tabs, s),
+          selectedIndex: String(t),
+          onChange: i => {
+            let a = e.find(e => String(e.value) === String(i));
+            a && a.value !== t && l(a.value)
+          },
+          children: e.map(e => (0, i.jsx)(eg.oz, {
+            value: String(e.value),
+            label: e.label,
+            title: e.title,
+            "data-on": String(e.value) === String(t) || void 0
+          }, String(e.value)))
+        })
+      }
+
+      function ey({
+        checked: e,
+        onChange: t,
+        color: l,
+        title: a,
+        size: r = "compact",
+        children: n
+      }) {
+        let o = (0, s.useId)();
+        return (0, i.jsxs)("label", {
+          className: ef(ex().chip, "standard" === r && ex().chipStandard, !e && ex().chipOff),
+          title: a,
+          children: [(0, i.jsx)(eg.Sc, {
+            id: o,
+            checked: e,
+            onChange: e => t(e.target.checked),
+            rootProps: {
+              className: ex().checkbox
+            }
+          }), l ? (0, i.jsx)("span", {
+            className: ex().marker,
+            style: {
+              "--c": l
+            },
+            "aria-hidden": "true"
+          }) : null, n]
+        })
+      }
+      let ek = {
+          title: "Related tools",
+          sub: "Liquidation levels show where leveraged positions get wiped out; these tools test those prices against liquidation clusters, resting orders and taker flow.",
+          gLiq: "Liquidations",
+          gFlow: "Order flow",
+          n1: "Liquidation Heatmap",
+          d1: "Estimated liquidation intensity at each price, showing where liquidity is stacked.",
+          n2: "Liquidation Map",
+          d2: "Cumulative long and short liquidations above and below price.",
+          n3: "Liquidation Max Pain",
+          d3: "The price with the most liquidations and its 24h hit probability.",
+          n4: "Large Orders",
+          d4: "Bid and ask walls and big trades: are real orders resting near the levels?",
+          n5: "Aggregated Order Book",
+          d5: "Depth merged across exchanges: how much size sits near price.",
+          d6: "Cumulative taker buys minus sells: who is pushing price.",
+          coins: "Liquidation levels for other coins",
+          chip: "{{name}} ({{sym}}) Liquidation Levels"
+        },
+        ej = {
+          BTC: "Bitcoin",
+          ETH: "Ethereum",
+          SOL: "Solana",
+          HYPE: "Hyperliquid",
+          XRP: "XRP",
+          ZEC: "Zcash",
+          NEAR: "NEAR Protocol",
+          BNB: "BNB",
+          DOGE: "Dogecoin",
+          SUI: "Sui",
+          XAUT: "Tether Gold",
+          UNI: "Uniswap",
+          LINK: "Chainlink",
+          ENA: "Ethena",
+          LTC: "Litecoin",
+          AVAX: "Avalanche",
+          WLD: "Worldcoin",
+          ADA: "Cardano",
+          TAO: "Bittensor",
+          BCH: "Bitcoin Cash"
+        },
+        eN = {
+          "faq.title": "liquidation-levels.faq.title",
+          "qa.q20": "liquidation-levels.faq.q10",
+          "qa.svgShort": "liq-dashboard.shortLiq",
+          "qa.svgLong": "liq-dashboard.longLiq",
+          "qa.svgNow": "tb.price",
+          "qa.svgOpen": "assets.open",
+          "qa.gRead": "large-orderbook-statistics.guide.g1.h",
+          "qa.gTools": "large-orderbook-statistics.guide.g3.h",
+          "qa.gData": "large-orderbook-statistics.guide.g4.h",
+          "rel.title": "large-orderbook-statistics.rel.title",
+          "rel.gLiq": "large-orderbook-statistics.rel.group.liq",
+          "rel.gFlow": "large-orderbook-statistics.rel.group.flow",
+          "rel.n1": "nav.liqheatmap",
+          "rel.n2": "nav.liqmap",
+          "rel.n3": "liqmp.nav",
+          "rel.n4": "fund.large_order",
+          "rel.n5": "large-orderbook-statistics.rel.aggBook.name",
+          "coin.BTC": "symbol.btc",
+          "coin.ETH": "symbol.eth",
+          "coin.SOL": "symbol.sol",
+          "coin.XRP": "symbol.xrp",
+          "coin.NEAR": "symbol.near",
+          "coin.BNB": "large-orderbook-statistics.rel.coin.BNB",
+          "coin.DOGE": "symbol.doge",
+          "coin.SUI": "symbol.sui",
+          "coin.LINK": "symbol.link",
+          "coin.AVAX": "symbol.avax",
+          "coin.ADA": "symbol.ada",
+          "coin.BCH": "symbol.bch",
+          "faq.btn": "large-orderbook-statistics.faq.title",
+          "rail.filters": "filter.filter",
+          "kpi.more": "large-orderbook-statistics.side.more"
+        },
+        eM = {
+          qa: {
+            sub: "How to read the liquidation levels chart, what the lines, bubbles and panels mean, and where the data comes from.",
+            whatT: "What is a liquidation levels chart?",
+            what1: "Futures are traded with leverage. When price moves far enough against a position, the exchange closes it by force and the position is liquidated. The price that triggers this is the liquidation price, and where many positions share nearly the same liquidation price you get a liquidation level.",
+            what2: "The chart records these prices candle by candle. A batch of positions opened on a given candle draws a horizontal line from that candle, running right until price touches it. Lines above price are short liquidations, lines below are long liquidations, and the brighter the line, the more positions are estimated to be liquidated there.",
+            what3: "Traders watch it because liquidations turn into market orders. Once price runs into a dense cluster, forced closes speed the move up, and stops sitting just inside the cluster tend to fill at the worst price. The levels are estimated from open interest and common leverage settings; they are not resting orders.",
+            what4: "For example: BTC trades at 82,500 and the lines between 80,300 and 80,600 below are dense and bright. A wick drops to 80,250, those longs are liquidated into market sells and the drop accelerates. Once the wick recovers, all of those lines end at its tip, because that batch of liquidations has already happened.",
+            svgAria: "Liquidation levels example: short liquidation lines above price, long liquidation lines below swept by a wick",
+            svgShort: "Short liquidations",
+            svgLong: "Long liquidations",
+            svgSwept: "Swept, the line ends here",
+            svgNow: "Price",
+            svgOpen: "Open",
+            cap: "Watch where each line starts and where it ends: lines that stop at a wick were just swept, and lines still running right are the levels that still count.",
+            gRead: "Reading the chart",
+            gTools: "Tools",
+            gSignals: "Signals and judgement",
+            gData: "Data and controls",
+            q1: "What do the lines on a liquidation levels chart mean?",
+            a1: "<p>Each line is the estimated liquidation price of a batch of positions. It starts at the candle where those positions were opened and runs right until price touches it; at that point the positions count as liquidated and the line ends. Lines above price are short liquidations, lines below are long liquidations.</p><p>A brighter line means a larger estimated liquidation size. Only lines that are still running right, untouched, are live levels now.</p>",
+            q2: "What do the bubbles on the chart mean?",
+            a2: "<p>Bubbles mark the strongest levels in view. Each one sits on the candle where the positions were opened, and a bigger radius means more strength. Only the strongest bubble in each patch of the screen is kept, so the chart does not turn into a blur.</p><p>The “Bubbles” slider in the toolbar sets how many are drawn. The lines are not affected, and every level is still shown.</p>",
+            q3: "“By side” vs “By leverage”: what is the difference?",
+            a3: "<p>They are two ways to colour lines and bubbles. “By side” draws short liquidations above price in green and long liquidations below in red, which shows how much is stacked on each side.</p><p>“By leverage” colours by the leverage the positions were opened with: gold for high, purple for mid, blue for low, with the side given by whether a line sits above or below price. The profile on the right and the CLLD strip always use side colours.</p>",
+            q4: "How to read the open levels profile",
+            a4: "<p>It adds up, price by price, the levels that price has not touched yet. The longer the bar, the more positions are stacked at that price; bars above price are shorts and bars below are longs.</p><p>Levels that were already swept are left out, so it shows the risk that is still sitting there, which is more direct than reading old lines on the main chart.</p>",
+            q5: "Is liquidation strength a dollar amount?",
+            a5: "<p>No. Strength is a relative index: the strongest open level is set to 100 and everything else is scaled to it, so you can compare where more is stacked. It is not the actual liquidation amount, and several levels or candles added together can exceed 100.</p>",
+            q6: "How far from price are 100x, 50x and 25x liquidations?",
+            a6: "<p>The page estimates liquidation prices for three common leverage settings: high is about 100x, mid about 50x and low about 25x. The higher the leverage, the closer the liquidation price sits to the entry, roughly 1%, 2% and 4% away, which is why high-leverage lines hug the price.</p><p>The three leverage buttons in the header switch each tier on or off.</p>",
+            q7: "What does the hover card show?",
+            a7: "<p>The crosshair follows the pointer: the price-axis label is the price under the cursor and the time-axis label is that candle's time. The card lists the candle's open and close, high and low, how far the cursor price is from the last price, the strength at that price back then and the open strength left now, and CLLD at that time.</p><p>The solid label on the price axis is the last price; High and Low are the highest and lowest prices in view.</p>",
+            q8: "Tier 1 vs Tier 2 vs Tier 3: what is the difference?",
+            a8: "<p>Tiers split positions by size. Tier 1 shows every level, the finest view with the most noise; Tier 2 drops the smaller half; Tier 3 keeps only the largest fifth, with fewer lines that sit closer to where large players get liquidated.</p><p>The leverage buttons choose which leverage tiers are included and Tier filters by position size. Together they apply to the main chart, the profile and every panel, while CLLD always uses all data.</p>",
+            q9: "How to use the strength range filter",
+            a9: "<p>“Strength range” is a histogram of strength. Drag either handle to set the minimum and maximum, drag the middle to shift the window, and the main chart draws only the lines and bubbles inside it. The default of 6 to 22 hides the weakest noise and the few over-bright extremes.</p><p>It only affects the main chart; the profile, CLLD and the panels still use every level. The “Lines” slider sets line brightness, the “Bubbles” slider sets how many bubbles are drawn, and “Reset” brings back the full range.</p>",
+            q10: "3D vs 7D vs 30D: what is the difference?",
+            a10: "<p>This is the time range of the data, and the candle interval follows it: 3D uses 1-minute candles, 7D 3-minute candles and 30D 15-minute candles. A longer range shows more historical levels, with coarser candles.</p><p>The time windows behind the CLLD turning points are defined in minutes, so they convert to the matching number of candles when you switch range.</p>",
+            q11: "Can I change the chart colours?",
+            a11: "<p>Yes. Under “Colors” in the header you can pick the “Classic” or “High contrast” preset, or set your own colours for above, below, the three leverage tiers and up and down candles. The page adjusts each colour to a brightness that stays readable on the current background.</p><p>Day and night colours are saved separately, so each theme keeps its own, and the settings are stored in your browser.</p>",
+            q12: "What is a liquidation magnet zone?",
+            a12: "<p>Positions opened at similar prices with similar leverage produce a cluster of levels a few ticks apart. A magnet zone merges such a cluster into one price band and adds up its strength. The panel lists the 3 strongest per side within 10% of price, and the top cards show the nearest one.</p><p>Once price enters a zone, the forced closes inside it speed the move up, so stops are safer beyond the band. In backtesting, price reached a zone about as often as a random price the same distance away: it is a risk map, not a forecast.</p>",
+            q13: "How to read the key liquidation levels table",
+            a13: "<p>The table lists the strongest levels within a set distance of price, 5 above and 5 below, with the last price in the middle row. “Distance” is how far the level is from price, “Leverage” is the tier with the largest share at that price, and the bar shows relative strength.</p><p>The \xb11% to \xb18% buttons next to the title switch the range; the default is \xb12%.</p>",
+            q14: "What is CLLD (Cumulative Liquidation Levels Delta)?",
+            a14: "<p>CLLD stands for Cumulative Liquidation Levels Delta. On each candle, the new long liquidation levels minus the new short liquidation levels are added to a running total. A positive value means recent leverage has come mostly from longs and the stack below price is thicker; a negative value means shorts.</p><p>It moves together with price rather than ahead of it. The strip under the main chart, the “CLLD history” panel and the top card show the same curve.</p>",
+            q15: "What do the CLLD ▲ and ▼ turns mean?",
+            a15: "<p>▲ is a bullish turn: CLLD turns up from a trough as shorts stop piling in. ▼ is a bearish turn: CLLD rolls over from a peak as longs stop piling in. A turn only counts once the pullback is at least four times the recent swings and at least 3 hours after the previous turn, so it is confirmed with a delay.</p><p>In backtesting, the turns called the next few hours right about half the time. Read them as a change in who is adding leverage, not as buy or sell signals.</p>",
+            q16: "How to read the near-field balance",
+            a16: "<p>It compares the open strength within 3% above and below price. A heavier side above means a rally would be amplified by short liquidations; heavier below means a drop would be amplified by long liquidations. The small chart shows the share above over the last 24 hours, with 50% as balanced.</p><p>In backtesting, the tilt had no correlation with the next 4 to 12 hours. It tells you which side would be amplified, not which way price goes.</p>",
+            q17: "What do the distance and leverage tier panels show?",
+            a17: "<p>“Strength by distance” adds up open strength in bands of 0–1%, 1–2%, 2–3%, 3–5% and 5–10% from price, so you can see whether the risk sits close or far. “By leverage tier” totals the open strength above and below for high, mid and low leverage, so you can see which tier is stacking up.</p><p>Both count only untouched levels and follow the leverage buttons and the Tier setting.</p>",
+            q18: "Can you trade directly off liquidation levels?",
+            a18: "<p>Not recommended. The levels are estimated from Open Interest and a few fixed leverage settings, they ignore trend, news and real resting orders, and in backtesting price reached a level about as often as a random price the same distance away.</p><p>Use them to keep stops clear of dense clusters and to treat the opposite cluster as a target area, together with key levels and higher timeframes. None of this is investment advice.</p>",
+            q19: "Where does the liquidation data come from, and how often does it update?",
+            a19: "<p>The data comes from the futures markets of major exchanges and is updated live. Candles and prices are real exchange trades; liquidation prices are estimated from Open Interest (OI) and common leverage settings, so strength is an estimate.</p><p>The current candle and any new levels move with live trades. Closed candles and the levels they created no longer change, apart from ending when price touches them.</p>",
+            q20: "Which exchanges and pairs are supported?",
+            a20: "<p>Any perpetual contract in the site's futures pair list: Binance, OKX, Bybit, Hyperliquid, Gate, Bitget and more, USDT-margined or coin-margined (inverse). If the model has no liquidation levels for a pair, the chart shows an empty state instead.</p><p>The pair menu in the header searches by exchange or pair, for example eth or okx.</p>",
+            q21: "How to use the liquidation levels chart",
+            a21: "<p>Drag to pan, scroll to zoom, drag the price axis to scale it, drag the time axis to stretch time, and double-click to reset the view; pinch to zoom on touch screens. On the keyboard, ← and → pan, + and - zoom, and R resets the view.</p><p>Pair, time range, leverage, Tier, strength range, sliders and colours are all stored in your browser and kept the next time you open the page.</p>",
+            q22: "How is the liquidation price calculated?",
+            a22: "<p>A long is liquidated near entry \xd7 (1 − 1 \xf7 leverage) and a short near entry \xd7 (1 + 1 \xf7 leverage). Maintenance margin and fees pull the real price a little closer to the entry. A 100x long opened at 82,000, for example, is liquidated around 81,200.</p><p>The page cannot know each trader's leverage, so it estimates the three common settings separately. The levels and their strength are therefore estimates, not liquidation orders published by the exchanges.</p>"
+          },
+          rel: ek,
+          coin: ej,
+          kpi: {
+            less: "Show less"
+          }
+        };
+
+      function e_() {
+        let {
+          t: e
+        } = (0, r.Bd)(), {
+          t: t
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        });
+        return (l, i, a) => {
+          let s = l + "." + i;
+          return eN[s] ? e(eN[s], a) : t(s, {
+            ...a,
+            defaultValue: (eM[l] || {})[i]
+          })
+        }
+      }
+      let eT = ["Tier 1", "Tier 2", "Tier 3"].map((e, t) => ({
+          value: t,
+          label: e
+        })),
+        eq = (e, t) => {
+          if (!t) return e;
+          let l = e => e.sym.toLowerCase().includes(t) || (e.base || "").toLowerCase().includes(t);
+          return [...e.filter(l), ...e.filter(e => !l(e))]
+        };
+
+      function eL({
+        text: e,
+        query: t
+      }) {
+        let l = t ? e.toLowerCase().indexOf(t) : -1;
+        return l < 0 ? e : (0, i.jsxs)(i.Fragment, {
+          children: [e.slice(0, l), (0, i.jsx)("mark", {
+            children: e.slice(l, l + t.length)
+          }), e.slice(l + t.length)]
+        })
+      }
+
+      function eS({
+        logo: e,
+        base: t,
+        sm: l
+      }) {
+        let [a, r] = (0, s.useState)(!1);
+        return ((0, s.useEffect)(() => r(!1), [e]), e && !a) ? (0, i.jsx)("img", {
+          className: "ll-logo" + (l ? " sm" : ""),
+          src: e,
+          alt: "",
+          "aria-hidden": "true",
+          onError: () => r(!0)
+        }) : (0, i.jsx)("span", {
+          className: "ll-logo ll-coin-ph" + (l ? " sm" : ""),
+          "aria-hidden": "true",
+          children: (t || "?").slice(0, 1)
+        })
+      }
+
+      function ez({
+        pair: e,
+        price: t,
+        onSymbol: l,
+        compact: a
+      }) {
+        let {
+          t: n
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), [o, h] = (0, s.useState)(!1), [d, c] = (0, s.useState)(""), [p, u] = (0, s.useState)(null), [g, m] = (0, s.useState)(!1), [x, f] = (0, s.useState)(null), v = (0, s.useRef)(null), b = (0, s.useRef)(null), w = (0, s.useRef)(null), y = (0, s.useRef)(0), k = (0, s.useId)(), j = d.trim().toLowerCase(), N = eq(p || [], j), M = (e => {
+          let t = [];
+          for (let l of e) {
+            let e = t[t.length - 1];
+            e && e.ex === l.ex ? e.items.push(l) : t.push({
+              key: l.ex + "#" + t.length,
+              ex: l.ex,
+              logo: l.exLogo,
+              items: [l]
+            })
+          }
+          return t
+        })(N);
+        (0, s.useEffect)(() => {
+          if (!o) return;
+          let e = ++y.current,
+            t = ec.get(j);
+          if (m(!1), t) return void u(t);
+          u(null);
+          let l = setTimeout(async () => {
+            try {
+              let t = await ep(d);
+              e === y.current && u(t)
+            } catch (t) {
+              e === y.current && (u([]), m(!0))
+            }
+          }, 300 * !!j);
+          return () => clearTimeout(l)
+        }, [o, j]), (0, s.useEffect)(() => {
+          if (!p) return;
+          let t = p.find(t => t.ex === e.ex && t.sym === e.sym) || eq(p, j)[0];
+          f(t ? ed(t) : null)
+        }, [p]);
+        let _ = e => {
+            h(!1), e && b.current && b.current.focus()
+          },
+          T = e => {
+            _(!0), l(e)
+          },
+          q = (0, s.useRef)({});
+        return q.current = {
+          list: N,
+          hl: x,
+          choose: T,
+          close: _
+        }, (0, s.useEffect)(() => {
+          if (!o) return;
+          w.current && w.current.focus();
+          let e = e => {
+              let {
+                list: t,
+                hl: l,
+                choose: i,
+                close: a
+              } = q.current, s = t.findIndex(e => ed(e) === l);
+              if ("Escape" === e.key) e.preventDefault(), a(!0);
+              else if ("ArrowDown" === e.key) e.preventDefault(), t.length && f(ed(t[Math.min(t.length - 1, s + 1)]));
+              else if ("ArrowUp" === e.key) e.preventDefault(), t.length && f(ed(t[Math.max(0, s - 1)]));
+              else if ("Enter" === e.key) {
+                e.preventDefault();
+                let l = s >= 0 ? t[s] : t[0];
+                l && i(l)
+              }
+            },
+            t = e => {
+              v.current && !v.current.contains(e.target) && h(!1)
+            };
+          return document.addEventListener("keydown", e, !0), document.addEventListener("pointerdown", t), () => {
+            document.removeEventListener("keydown", e, !0), document.removeEventListener("pointerdown", t)
+          }
+        }, [o]), (0, s.useEffect)(() => {
+          if (!o || !x || !v.current) return;
+          let e = v.current.querySelector('[role="option"].hl');
+          e && e.scrollIntoView && e.scrollIntoView({
+            block: "nearest"
+          })
+        }, [x, o]), (0, i.jsxs)("div", {
+          className: "ll-sym" + (a ? " compact" : ""),
+          ref: v,
+          children: [(0, i.jsxs)("button", {
+            ref: b,
+            type: "button",
+            className: "ll-symBtn",
+            "aria-haspopup": "listbox",
+            "aria-expanded": o,
+            "aria-controls": k,
+            onClick: () => o ? _(!1) : void(c(""), h(!0)),
+            children: [(0, i.jsxs)("span", {
+              className: "ll-logos",
+              "aria-hidden": "true",
+              children: [e.exLogo ? (0, i.jsx)("img", {
+                className: "ll-logo",
+                src: e.exLogo,
+                alt: ""
+              }) : null, (0, i.jsx)(eS, {
+                logo: e.coinLogo,
+                base: e.base || e.sym
+              })]
+            }), (0, i.jsx)("span", {
+              className: "ex",
+              children: e.ex
+            }), (0, i.jsx)("b", {
+              children: e.sym
+            }), "string" == typeof t ? (0, i.jsx)("span", {
+              className: "px",
+              children: t
+            }) : null, (0, i.jsx)("span", {
+              className: "ll-caret",
+              "aria-hidden": "true"
+            })]
+          }), (0, i.jsxs)("div", {
+            className: "ll-menu",
+            id: k,
+            role: "listbox",
+            "aria-label": n("sym.aria"),
+            "aria-busy": null === p,
+            hidden: !o,
+            children: [(0, i.jsx)("div", {
+              className: "search",
+              children: (0, i.jsx)("input", {
+                ref: w,
+                type: "search",
+                value: d,
+                onChange: e => c(e.target.value),
+                placeholder: n("sym.search"),
+                "aria-label": n("sym.searchAria"),
+                autoComplete: "off",
+                spellCheck: !1
+              })
+            }), null === p ? (0, i.jsx)("div", {
+              className: "empty",
+              children: n("badge.loading")
+            }) : N.length ? null : (0, i.jsx)("div", {
+              className: "empty",
+              children: g ? n("err.load") : n("sym.empty")
+            }), M.map(t => (0, i.jsxs)(s.Fragment, {
+              children: [(0, i.jsxs)("div", {
+                className: "grp",
+                children: [t.logo ? (0, i.jsx)("img", {
+                  className: "ll-logo sm",
+                  src: t.logo,
+                  alt: "",
+                  "aria-hidden": "true"
+                }) : null, (0, i.jsx)("span", {
+                  children: (0, i.jsx)(eL, {
+                    text: t.ex,
+                    query: j
+                  })
+                })]
+              }), t.items.map(t => {
+                let l = ed(t);
+                return (0, i.jsxs)("button", {
+                  type: "button",
+                  role: "option",
+                  "aria-selected": t.ex === e.ex && t.sym === e.sym,
+                  className: x === l ? "hl" : void 0,
+                  onClick: () => T(t),
+                  children: [(0, i.jsx)(eS, {
+                    logo: t.coinLogo,
+                    base: t.base || t.sym
+                  }), (0, i.jsx)("span", {
+                    className: "nm",
+                    children: (0, i.jsx)(eL, {
+                      text: t.sym,
+                      query: j
+                    })
+                  }), (0, i.jsx)("small", {
+                    children: t.inv ? n("sym.invPerp") : n("sym.perp", {
+                      q: t.quote || "USDT"
+                    })
+                  }), (0, i.jsx)("span", {
+                    className: "chk",
+                    "aria-hidden": "true",
+                    children: "✓"
+                  })]
+                }, l)
+              })]
+            }, t.key))]
+          })]
+        })
+      }
+
+      function eI({
+        k: e,
+        name: t,
+        value: l,
+        effective: a,
+        onChange: n
+      }) {
+        let {
+          t: o
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), [h, d] = (0, s.useState)(l);
+        (0, s.useEffect)(() => d(l), [l]);
+        let c = a && l && a.toLowerCase() !== l.toLowerCase();
+        return (0, i.jsxs)("div", {
+          className: "ll-cp",
+          children: [(0, i.jsxs)("span", {
+            children: [t, (0, i.jsx)("small", {
+              children: c ? "→ " + a : ""
+            })]
+          }), (0, i.jsxs)("span", {
+            className: "hexw",
+            children: [(0, i.jsx)("input", {
+              className: "ll-hex",
+              value: h,
+              maxLength: 7,
+              spellCheck: !1,
+              autoComplete: "off",
+              "aria-label": t + " \xb7 " + o("pick.hex", {
+                defaultValue: "Hex color code"
+              }),
+              onChange: t => {
+                var l;
+                let i;
+                d(t.target.value), l = t.target.value.trim(), w(i = /^[0-9a-f]{6}$/i.test(l) ? "#" + l : l) && n(e, i.toLowerCase())
+              },
+              onBlur: () => d(l)
+            }), (0, i.jsx)("label", {
+              className: "ll-swb",
+              style: {
+                "--c": l
+              },
+              title: o("pick.open", {
+                defaultValue: "Pick a color"
+              }),
+              children: (0, i.jsx)("input", {
+                type: "color",
+                value: l,
+                "aria-label": t,
+                onChange: t => n(e, t.target.value)
+              })
+            })]
+          })]
+        })
+      }
+
+      function eA({
+        colorMode: e,
+        colorCfg: t,
+        effective: l,
+        onColorCfg: a
+      }) {
+        let {
+          t: n
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), [o, h] = (0, s.useState)(!1), d = (0, s.useRef)(null), c = (0, s.useId)(), p = "light" === e ? "light" : "dark", u = t || {}, m = {
+          ...f[p],
+          ...u[p] || {}
+        }, x = u.preset || {};
+        (0, s.useEffect)(() => {
+          if (!o) return;
+          let e = e => {
+              d.current && !d.current.contains(e.target) && h(!1)
+            },
+            t = e => {
+              "Escape" === e.key && h(!1)
+            };
+          return document.addEventListener("pointerdown", e), document.addEventListener("keydown", t), () => {
+            document.removeEventListener("pointerdown", e), document.removeEventListener("keydown", t)
+          }
+        }, [o]);
+        let w = (e, t) => a({
+          ...u,
+          [p]: {
+            ...m,
+            [e]: t
+          },
+          preset: {
+            ...x,
+            [p]: "custom"
+          }
+        });
+        return (0, i.jsxs)("div", {
+          className: "ll-pop-wrap",
+          ref: d,
+          children: [(0, i.jsx)(eb, {
+            icon: !0,
+            "aria-expanded": o,
+            "aria-controls": c,
+            "aria-label": n("colors.btn"),
+            title: n("colors.btn"),
+            onClick: () => h(e => !e),
+            children: (0, i.jsxs)("svg", {
+              className: "ll-ico",
+              viewBox: "0 0 16 16",
+              "aria-hidden": "true",
+              children: [(0, i.jsx)("circle", {
+                cx: "8",
+                cy: "8",
+                r: "6.2"
+              }), (0, i.jsx)("path", {
+                d: "M8 1.8a6.2 6.2 0 0 1 0 12.4z",
+                fill: "currentColor",
+                stroke: "none"
+              })]
+            })
+          }), (0, i.jsx)("div", {
+            className: "ll-pop",
+            id: c,
+            role: "dialog",
+            "aria-label": n("colors.aria"),
+            hidden: !o,
+            children: o ? (0, i.jsxs)(i.Fragment, {
+              children: [(0, i.jsxs)("div", {
+                className: "sec",
+                children: [(0, i.jsx)("h4", {
+                  children: n("colors.presets")
+                }), (0, i.jsx)("div", {
+                  className: "ll-presets",
+                  children: v.map(e => (0, i.jsxs)("button", {
+                    type: "button",
+                    className: "ll-preset",
+                    "aria-pressed": x[p] === e.id,
+                    onClick: () => a({
+                      ...u,
+                      [p]: {
+                        ...e[p]
+                      },
+                      preset: {
+                        ...x,
+                        [p]: e.id
+                      }
+                    }),
+                    children: [(0, i.jsx)("span", {
+                      className: "sw",
+                      "aria-hidden": "true",
+                      children: [e[p].above, e[p].below, e[p].lev100, e[p].lev50].map((e, t) => (0, i.jsx)("i", {
+                        style: {
+                          background: e
+                        }
+                      }, t))
+                    }), (0, i.jsx)("span", {
+                      className: "nm",
+                      children: n("preset." + e.id)
+                    })]
+                  }, e.id))
+                })]
+              }), (0, i.jsxs)("div", {
+                className: "sec",
+                children: [(0, i.jsxs)("div", {
+                  className: "row",
+                  children: [(0, i.jsx)("h4", {
+                    children: n("colors.custom")
+                  }), (0, i.jsx)(eb, {
+                    size: "compact",
+                    onClick: () => {
+                      let e = b();
+                      a({
+                        ...u,
+                        [p]: {
+                          ...e[p]
+                        },
+                        preset: {
+                          ...x,
+                          [p]: e.preset[p]
+                        }
+                      })
+                    },
+                    children: n("colors.reset")
+                  })]
+                }), g.map(([e, t]) => (0, i.jsx)(eI, {
+                  k: e,
+                  name: n(t),
+                  value: m[e],
+                  effective: l && l[e],
+                  onChange: w
+                }, e)), (0, i.jsxs)("div", {
+                  className: "note",
+                  children: [n("pick.hint", {
+                    defaultValue: "Click a swatch to open the color picker, or type a hex code."
+                  }), " ", n("colors.note")]
+                })]
+              })]
+            }) : null
+          })]
+        })
+      }
+      let eC = () => {
+        let e = document.getElementById("ll-faq");
+        if (!e) return;
+        let t = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        window.scrollTo({
+          top: e.getBoundingClientRect().top + window.scrollY - 72,
+          behavior: t ? "smooth" : "auto"
+        })
+      };
+
+      function eB({
+        size: e,
+        children: t
+      }) {
+        let l = e_(),
+          {
+            open: a,
+            setOpen: r,
+            wrapRef: n
+          } = function() {
+            let [e, t] = (0, s.useState)(!1), l = (0, s.useRef)(null);
+            return (0, s.useEffect)(() => {
+              if (!e) return;
+              let i = e => {
+                  l.current && !l.current.contains(e.target) && t(!1)
+                },
+                a = e => {
+                  "Escape" === e.key && t(!1)
+                };
+              return document.addEventListener("pointerdown", i), document.addEventListener("keydown", a), () => {
+                document.removeEventListener("pointerdown", i), document.removeEventListener("keydown", a)
+              }
+            }, [e]), {
+              open: e,
+              setOpen: t,
+              wrapRef: l
+            }
+          }(),
+          o = (0, s.useId)();
+        return (0, i.jsxs)("div", {
+          className: "ll-pop-wrap",
+          ref: n,
+          children: [(0, i.jsx)(eb, {
+            icon: !0,
+            size: e,
+            "aria-expanded": a,
+            "aria-controls": o,
+            "aria-label": l("rail", "filters"),
+            title: l("rail", "filters"),
+            onClick: () => r(e => !e),
+            children: (0, i.jsxs)("svg", {
+              className: "ll-ico",
+              viewBox: "0 0 16 16",
+              "aria-hidden": "true",
+              children: [(0, i.jsx)("path", {
+                d: "M2.5 4.5h7M12.5 4.5h1M2.5 11.5h2M7.5 11.5h6"
+              }), (0, i.jsx)("circle", {
+                cx: "11",
+                cy: "4.5",
+                r: "1.6"
+              }), (0, i.jsx)("circle", {
+                cx: "6",
+                cy: "11.5",
+                r: "1.6"
+              })]
+            })
+          }), (0, i.jsx)("div", {
+            className: "ll-pop ll-filter-pop",
+            id: o,
+            role: "dialog",
+            "aria-label": l("rail", "filters"),
+            hidden: !a,
+            children: t
+          })]
+        })
+      }
+
+      function eE({
+        pair: e,
+        price: t,
+        tf: l,
+        onSymbol: a,
+        onTf: n,
+        lev: o,
+        onToggleLev: h,
+        gran: d,
+        onGran: c,
+        colorMode: p,
+        colorCfg: u,
+        effective: g,
+        onColorCfg: m
+      }) {
+        let {
+          t: x
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), {
+          t: f
+        } = (0, r.Bd)("common"), v = e_(), b = (0, s.useRef)(null), [w, y] = (0, s.useState)(!1), [k, j] = (0, s.useState)(!1);
+        (0, s.useEffect)(() => {
+          let e = window.matchMedia("(max-width: 672px)"),
+            t = () => j(e.matches);
+          t(), e.addEventListener("change", t);
+          let l = b.current,
+            i = "u" < typeof IntersectionObserver ? null : new IntersectionObserver(([e]) => y(!e.isIntersecting && e.boundingClientRect.top < 0));
+          return i && l && i.observe(l), () => {
+            e.removeEventListener("change", t), i && i.disconnect()
+          }
+        }, []);
+        let N = e.base ? x("h1", {
+            symbol: e.base,
+            defaultValue: "{{symbol}} Liquidation Levels"
+          }) : f("nav.liquidationlevels"),
+          M = (e, t) => (0, i.jsx)(ew, {
+            size: e,
+            className: t,
+            ariaLabel: x("range.aria"),
+            value: l,
+            onChange: n,
+            options: I.map((e, t) => ({
+              value: t,
+              label: x("range." + e),
+              title: x("range.title")
+            }))
+          }),
+          _ = e => (0, i.jsx)("div", {
+            className: "ll-chips",
+            role: "group",
+            "aria-label": x("lev.aria"),
+            children: L.map((t, l) => (0, i.jsx)(ey, {
+              size: e,
+              checked: !!(o && o[l]),
+              onChange: () => h(l),
+              color: `var(${z[l]})`,
+              title: t + "x",
+              children: x(S[l])
+            }, t))
+          }),
+          T = e => (0, i.jsx)(ew, {
+            size: e,
+            ariaLabel: x("gran.aria"),
+            value: d,
+            onChange: c,
+            options: eT.map(e => ({
+              ...e,
+              title: x("gran.title")
+            }))
+          }),
+          q = (e, t) => (0, i.jsxs)(eB, {
+            size: t,
+            children: [e ? (0, i.jsxs)("div", {
+              className: "sec",
+              children: [(0, i.jsx)("h4", {
+                children: x("range.aria")
+              }), M("compact")]
+            }) : null, (0, i.jsxs)("div", {
+              className: "sec",
+              children: [(0, i.jsx)("h4", {
+                children: x("lev.aria")
+              }), _("compact")]
+            }), (0, i.jsxs)("div", {
+              className: "sec",
+              children: [(0, i.jsx)("h4", {
+                children: x("gran.aria")
+              }), T("compact")]
+            })]
+          });
+        return (0, i.jsxs)(i.Fragment, {
+          children: [k && w ? (0, i.jsx)("div", {
+            className: "ll-float-slot",
+            children: (0, i.jsxs)("div", {
+              className: "ll-rail ll-float",
+              children: [(0, i.jsx)("span", {
+                className: "ttl",
+                children: N
+              }), (0, i.jsx)(ez, {
+                pair: e,
+                onSymbol: a,
+                compact: !0
+              }), (0, i.jsx)("span", {
+                className: "ll-spacer"
+              }), q(!0, "compact")]
+            })
+          }) : null, (0, i.jsx)("div", {
+            className: "ll-rail-slot",
+            children: (0, i.jsxs)("header", {
+              ref: b,
+              className: "ll-rail",
+              children: [(0, i.jsx)("h1", {
+                children: N
+              }), (0, i.jsx)(ez, {
+                pair: e,
+                price: t,
+                onSymbol: a
+              }), M("standard", "ll-rail-range"), k ? q(!1) : (0, i.jsxs)(i.Fragment, {
+                children: [_("standard"), T("standard")]
+              }), (0, i.jsx)("span", {
+                className: "ll-spacer"
+              }), (0, i.jsx)(eb, {
+                icon: !0,
+                "aria-label": v("faq", "btn"),
+                title: x("faq.btnTitle", {
+                  defaultValue: "FAQ (bottom of the page)"
+                }),
+                onClick: eC,
+                children: (0, i.jsxs)("svg", {
+                  className: "ll-ico",
+                  viewBox: "0 0 16 16",
+                  "aria-hidden": "true",
+                  children: [(0, i.jsx)("circle", {
+                    cx: "8",
+                    cy: "8",
+                    r: "6.2"
+                  }), (0, i.jsx)("path", {
+                    d: "M6.2 6.3a1.9 1.9 0 0 1 3.7.5c0 1.3-1.9 1.6-1.9 2.8"
+                  }), (0, i.jsx)("circle", {
+                    cx: "8",
+                    cy: "11.6",
+                    r: ".7",
+                    fill: "currentColor",
+                    stroke: "none"
+                  })]
+                })
+              }), (0, i.jsx)(eA, {
+                colorMode: p,
+                colorCfg: u,
+                effective: g,
+                onColorCfg: m
+              })]
+            })
+          })]
+        })
+      }
+
+      function eO({
+        label: e,
+        color: t,
+        list: l,
+        ready: a,
+        fmt: s
+      }) {
+        let {
+          t: n
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), o = a && l && l.length ? l.reduce((e, t) => Math.abs(t.dist) < Math.abs(e.dist) ? t : e) : null, h = o ? s.px(o.pLo) + " – " + s.px(o.pHi) : "—";
+        return (0, i.jsxs)("div", {
+          className: "ll-kpi",
+          children: [(0, i.jsxs)("div", {
+            className: "l",
+            children: [(0, i.jsx)("span", {
+              className: "ll-dot",
+              style: {
+                "--c": t
+              }
+            }), (0, i.jsx)("span", {
+              children: e
+            })]
+          }), (0, i.jsx)("div", {
+            className: "v" + (h.length > 17 ? " tight" : ""),
+            children: h
+          }), (0, i.jsx)("div", {
+            className: "s",
+            children: o ? s.pct(o.dist) + " \xb7 " + n("kpi.strength") + " " + s.I0(o.total) : a ? n("kpi.noZone") : "—"
+          })]
+        })
+      }
+
+      function eD({
+        model: e,
+        zones: t,
+        fmt: l
+      }) {
+        let {
+          t: a
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), n = !!(e && l), o = n ? (e.curPrice - e.dayOpen) / e.dayOpen * 100 : 0, h = n ? e.clldKpi() : null, d = h && h.lastMark, [c, p] = (0, s.useState)(!1), u = e_();
+        return (0, i.jsxs)("section", {
+          className: "ll-kpis" + (c ? " open" : ""),
+          children: [(0, i.jsxs)("div", {
+            className: "ll-kpi",
+            children: [(0, i.jsxs)("div", {
+              className: "l",
+              children: [(0, i.jsx)("span", {
+                className: "ll-live"
+              }), (0, i.jsx)("span", {
+                children: a("kpi.price")
+              })]
+            }), (0, i.jsx)("div", {
+              className: "v price",
+              children: n ? l.px(e.curPrice) : "—"
+            }), (0, i.jsx)("div", {
+              className: "s",
+              children: n && Number.isFinite(o) ? (0, i.jsxs)(i.Fragment, {
+                children: [(0, i.jsx)("span", {
+                  className: o >= 0 ? "ll-up" : "ll-dn",
+                  children: l.pct(o)
+                }), " ", a("kpi.24h")]
+              }) : "—"
+            })]
+          }), (0, i.jsx)(eO, {
+            label: a("kpi.upZone"),
+            color: "var(--ll-above)",
+            list: t && t.up,
+            ready: n && !!t,
+            fmt: l
+          }), (0, i.jsx)(eO, {
+            label: a("kpi.dnZone"),
+            color: "var(--ll-below)",
+            list: t && t.dn,
+            ready: n && !!t,
+            fmt: l
+          }), (0, i.jsxs)("div", {
+            className: "ll-kpi",
+            children: [(0, i.jsx)("div", {
+              className: "l",
+              children: a("kpi.clld")
+            }), (0, i.jsxs)("div", {
+              className: "vrow",
+              children: [(0, i.jsx)("div", {
+                className: "v" + (h ? h.cv >= 0 ? " ll-be" : " ll-ab" : ""),
+                children: h ? l.S(h.cv) : "—"
+              }), d ? (0, i.jsxs)("div", {
+                className: "tp",
+                title: a("kpi.lastTurn") + " " + a(d.t > 0 ? "turn.up" : "turn.dn") + " " + l.time(d.i, !0),
+                children: [(0, i.jsx)("b", {
+                  className: d.t > 0 ? "ll-bull" : "ll-bear",
+                  children: a(d.t > 0 ? "mini.turnUp" : "mini.turnDn")
+                }), (0, i.jsx)("span", {
+                  children: l.time(d.i, !0)
+                })]
+              }) : null]
+            }), (0, i.jsx)("div", {
+              className: "s",
+              children: h ? a(h.cv >= 0 ? "kpi.moreLong" : "kpi.moreShort") + " \xb7 " + a("kpi.chg1h") + " " + l.S(h.chg1h) : a("kpi.clldHint")
+            })]
+          }), (0, i.jsxs)(eb, {
+            size: "compact",
+            className: "ll-kpi-more",
+            "aria-expanded": c,
+            onClick: () => p(e => !e),
+            children: [u("kpi", c ? "less" : "more"), (0, i.jsx)("span", {
+              className: "ll-chev",
+              "aria-hidden": "true"
+            })]
+          })]
+        })
+      }
+      var eP = l(19308),
+        eR = l(371);
+
+      function eF(e, t, l, i, a, s, r = !0) {
+        e.beginPath(), a > 0 ? (e.moveTo(l, i + 4), e.lineTo(l - s, i + 4 + 1.6 * s), e.lineTo(l + s, i + 4 + 1.6 * s)) : (e.moveTo(l, i - 4), e.lineTo(l - s, i - 4 - 1.6 * s), e.lineTo(l + s, i - 4 - 1.6 * s)), e.closePath();
+        let n = a > 0 ? t.bull : t.bear;
+        !1 === r ? (e.fillStyle = t.surface, e.fill(), e.lineWidth = 1.5, e.strokeStyle = n) : (e.fillStyle = n, e.fill(), e.lineWidth = 1, e.strokeStyle = t.surface), e.stroke(), e.lineWidth = 1
+      }
+      class eW extends eP.Ay {
+        constructor(e) {
+          super(e), this.T = _("dark").T, this.fmt = H(null), this.fmtAuto = !0, this.opt = {
+            lineK: .5,
+            bubK: 1,
+            showCandles: !0,
+            colorBy: "side",
+            minI: 6,
+            maxI: 22
+          }, this.clldMax = 0, this.bub = null, this.bubKey = ""
+        }
+        setModel(e, t) {
+          super.setModel(e, t), this.fmtAuto && (this.fmt = H(this.model))
+        }
+        setText(e, t) {
+          t && (this.fmtAuto = !1), super.setText(e, t)
+        }
+        setOptions(e) {
+          if (!e) return;
+          let t = this.opt;
+          for (let l of ["lineK", "bubK", "showCandles", "colorBy", "minI"]) void 0 !== e[l] && (t[l] = e[l]);
+          void 0 !== e.maxI && (t.maxI = e.maxI), this.showCandles = t.showCandles, this.baseDirty = !0, this.schedule()
+        }
+        geometry(e) {
+          return e < 700 ? {
+            rightW: 70,
+            axisW: 64,
+            bottomH: 60,
+            taxH: 24
+          } : {
+            rightW: 120,
+            axisW: 100,
+            bottomH: 90,
+            taxH: 24
+          }
+        }
+        autoTarget(e, t, l, i) {
+          let a = this.model.curPrice;
+          return super.autoTarget(Math.min(e, .975 * a), Math.max(t, 1.025 * a), l, i)
+        }
+        scaleExtras(e, t, l) {
+          let i = this.model.clld,
+            a = 1e-9;
+          for (let l = e; l <= t; l++) {
+            let e = Math.abs(i[l]);
+            e > a && (a = e)
+          }
+          this.clldMax = this.clldMax > 0 ? l(this.clldMax, a, .002 * a) : a
+        }
+        _groups() {
+          let e = this.T,
+            t = "side" === this.opt.colorBy,
+            l = this.model;
+          return {
+            G: t ? 2 : 3,
+            grpOf: e => t ? l.segSide[e] : l.segLev[e],
+            grpColor: l => t ? 0 === l ? e.below : e.above : e.lev[l]
+          }
+        }
+        drawUnder(e, t) {
+          let l = this.model,
+            i = this.T,
+            a = this.view,
+            s = this.opt,
+            {
+              plotW: r,
+              plotH: n,
+              c0: o,
+              c1: h
+            } = t;
+          if (!(s.lineK > 0)) return;
+          let {
+            nSeg: d,
+            segS: c,
+            segE: p,
+            segPx: u,
+            segSz: g,
+            dp: m
+          } = l, {
+            G: x,
+            grpOf: f,
+            grpColor: v
+          } = this._groups(), b = s.minI * l.unit, w = null == s.maxI ? 1 / 0 : s.maxI * l.unit, y = e => this.xOf(e), k = e => this.yOf(e), j = [];
+          for (let e = 0; e < x; e++) {
+            j[e] = [];
+            for (let t = 0; t < 8; t++) j[e][t] = new Path2D
+          }
+          let N = n / (a.pTop - a.pBot) * m,
+            M = Math.min(1, Math.max(.7, a.barW / 4)) * i.mark,
+            _ = +(a.barW < 1.5);
+          for (let e = 0; e < d; e++) {
+            if (!l.segOn(e) || g[e] < b || g[e] > w || p[e] < o || c[e] > h) continue;
+            let t = u[e];
+            if (t < a.pBot || t > a.pTop) continue;
+            let i = l.bucketOf(g[e]);
+            if (i < _) continue;
+            let s = Math.max(-2, y(c[e])),
+              n = Math.min(r + 2, y(p[e] + 1)),
+              d = i >= 6 ? Math.max(2, Math.min(3, N)) : i >= 4 ? 1.5 : 1;
+            j[f(e)][i].rect(s, k(t) - d / 2, Math.max(1, n - s), d)
+          }
+          for (let t = 0; t < x; t++) {
+            e.fillStyle = v(t);
+            for (let l = _; l < 8; l++) e.globalAlpha = Math.min(1, (.1 + .9 * Math.pow(l / 7, 1.3)) * s.lineK * 1.5 * M), e.fill(j[t][l])
+          }
+          e.globalAlpha = Math.min(1, .55 * s.lineK * M), e.fillStyle = i.ink;
+          for (let t = 0; t < x; t++) e.fill(j[t][7]);
+          e.globalAlpha = 1
+        }
+        drawAbove(e, t) {
+          let l = this.T,
+            i = this.opt,
+            {
+              plotW: a,
+              plotH: s
+            } = t;
+          if (!(i.bubK > 0)) return;
+          let {
+            G: r,
+            grpOf: n,
+            grpColor: o
+          } = this._groups(), h = [], d = [];
+          for (let e = 0; e < r; e++) h[e] = new Path2D, d[e] = new Path2D;
+          let c = this._pickBubbles(),
+            p = 5 + 18 * i.bubK,
+            u = Math.max(1e-9, c.vMax - c.vMin);
+          for (let e = 0; e < c.n; e++) {
+            let t = this.xOf(c.i[e] + .5);
+            if (t < -p || t > a + p) continue;
+            let l = this.yOf(c.p[e]);
+            if (l < -p || l > s + p) continue;
+            let i = 2.5 + Math.pow((c.v[e] - c.vMin) / u, 1.4) * (p - 2.5),
+              r = n(c.s[e]);
+            h[r].moveTo(t + i, l), h[r].arc(t, l, i, 0, 6.2832), d[r].moveTo(t + 1.6, l), d[r].arc(t, l, 1.6, 0, 6.2832)
+          }
+          for (let t = 0; t < r; t++) {
+            let i = o(t);
+            e.fillStyle = i, e.globalAlpha = .18 * l.mark, e.fill(h[t]), e.strokeStyle = i, e.lineWidth = 3, e.globalAlpha = .28 * l.mark, e.stroke(h[t]), e.lineWidth = 1.25, e.globalAlpha = l.mark, e.stroke(h[t]), e.fillStyle = l.ink, e.globalAlpha = .9, e.fill(d[t])
+          }
+          e.globalAlpha = 1, e.lineWidth = 1
+        }
+        drawOutside(e, t) {
+          let l = this.model,
+            i = this.T,
+            a = this.t,
+            s = this.fmt,
+            r = this.view,
+            {
+              W: n,
+              plotW: o,
+              plotH: h,
+              rightW: d,
+              bottomH: c,
+              c0: p,
+              c1: u
+            } = t,
+            {
+              N: g,
+              active: m,
+              clld: x,
+              marks: f,
+              dp: v,
+              gMin: b,
+              curPrice: w
+            } = l,
+            y = e => this.xOf(e),
+            k = e => this.yOf(e),
+            j = r.pTop - r.pBot,
+            N = Math.max(0, l.rowOf(r.pBot)),
+            M = Math.min(519, l.rowOf(r.pTop)),
+            _ = 1e-9;
+          for (let e = N; e <= M; e++) m[e] > _ && (_ = m[e]);
+          e.save(), e.beginPath(), e.rect(o, 0, d, h), e.clip();
+          let T = h / j * v,
+            q = new Path2D,
+            L = new Path2D,
+            S = l.rowOf(w),
+            z = +(T > 3);
+          for (let e = N; e <= M; e++) {
+            let t = m[e];
+            if (t <= 0) continue;
+            let l = k(b + (e + 1) * v),
+              i = Math.max(1, T - z);
+            (e >= S ? L : q).rect(o + 1, l + z / 2, t / _ * (d - 8), i)
+          }
+          e.globalAlpha = .8, e.fillStyle = i.below, e.fill(q), e.fillStyle = i.above, e.fill(L), e.globalAlpha = 1, e.restore();
+          let I = h + c / 2,
+            A = c / 2 - 8;
+          e.strokeStyle = i.line, e.beginPath(), e.moveTo(0, h + .5), e.lineTo(n, h + .5), e.moveTo(0, Math.round(I) + .5), e.lineTo(o, Math.round(I) + .5), e.stroke();
+          let C = this.clldMax || 1e-9,
+            B = Math.max(1, Math.floor(.7 / r.barW)),
+            E = p - p % B,
+            O = e => I - e / C * A;
+          for (let t of (e.save(), e.beginPath(), e.rect(0, h, o, c), e.clip(), [1, -1])) {
+            e.beginPath(), e.moveTo(y(p), I);
+            for (let l = E; l <= u; l += B) e.lineTo(y(l + .5), O(t * Math.max(0, t * x[l])));
+            e.lineTo(y(u + 1), I), e.closePath(), e.fillStyle = t > 0 ? i.below : i.above, e.globalAlpha = .28 * i.mark, e.fill()
+          }
+          e.beginPath();
+          for (let t = E; t <= u; t += B) {
+            let l = y(t + .5),
+              i = O(x[t]);
+            t === E ? e.moveTo(l, i) : e.lineTo(l, i)
+          }
+          for (let t of (e.globalAlpha = 1, e.lineWidth = 1.25, e.strokeStyle = i.ink2, e.stroke(), e.lineWidth = 1, f)) t.i >= p && t.i <= u && eF(e, i, y(t.i + .5), O(x[t.i]), t.t, 5.5, !0);
+          e.restore(), this.caption(e, a("cap.clld") + " " + s.S(x[Math.min(g - 1, u)]), 8, h + 6, "left")
+        }
+        _pickBubbles() {
+          let e = this.model,
+            t = this.view,
+            l = this.opt,
+            i = this.geo,
+            a = Math.pow(1.25, Math.round(Math.log(14 * (t.pTop - t.pBot) / i.plotH) / Math.log(1.25))),
+            s = [this.modelId, e.version, t.barW, a, l.bubK, l.minI, l.maxI, i.plotW].join("|");
+          if (this.bub && s === this.bubKey) return this.bub;
+          let {
+            nSeg: r,
+            segOrder: n,
+            segSz: o,
+            segS: h,
+            segPx: d
+          } = e, c = l.minI * e.unit, p = null == l.maxI ? 1 / 0 : l.maxI * e.unit, u = Math.round((12 + 110 * l.bubK) * i.plotW / 1e3), g = Math.max(u, Math.round(u * e.N * t.barW / Math.max(1, i.plotW))), m = new Set, x = [], f = [], v = [], b = [];
+          for (let l = 0; l < r && x.length < g; l++) {
+            let i = n[l];
+            if (!e.segOn(i) || o[i] > p) continue;
+            if (o[i] < c) break;
+            let s = 1e7 * Math.floor((h[i] + .5) * t.barW / 14) + Math.floor(d[i] / a);
+            m.has(s) || (m.add(s), x.push(h[i]), f.push(d[i]), v.push(Math.sqrt(o[i])), b.push(i))
+          }
+          return this.bubKey = s, this.bub = {
+            n: x.length,
+            i: x,
+            p: f,
+            v: v,
+            s: b,
+            vMax: v[0] || 1,
+            vMin: v[v.length - 1] || 0
+          }, this.bub
+        }
+        updateTip(e, t) {
+          if (!this.tip) return !1;
+          let l = this.model,
+            i = this.t,
+            a = this.fmt,
+            s = this.mouse,
+            {
+              open: r,
+              high: n,
+              low: o,
+              close: h,
+              active: d,
+              clld: c,
+              curPrice: p
+            } = l,
+            u = this.pOf(Math.min(t.plotH, s.y)),
+            g = l.rowOf(u),
+            m = (520 * e + g) * 4096 + (4095 & Math.round(s.y / 3));
+          if (m !== this.tipKey) {
+            this.tipKey = m;
+            let t = l.cellStrength(e, g),
+              s = d[g],
+              x = (u - p) / p * 100,
+              f = (h[e] - r[e]) / r[e] * 100,
+              v = (e, t, l) => `<div class="row"><span>${(0,eP.UQ)(i(e))}</span><b${l?` class="${l}"`:""}>${t}</b></div>`;
+            this.setTipHtml(`<div class="t">${(0,eP.UQ)(a.time(e,!0))}</div>` + v("tip.oc", `${a.px(r[e])} / <span class="${f>=0?"ll-up":"ll-dn"}">${a.px(h[e])}</span>`) + v("tip.hl", `${a.px(n[e])} / ${a.px(o[e])}`) + v("tip.cursor", `${a.px(u)} <span class="${x>=0?"ll-ab":"ll-be"}">${x>=0?"+":""}${x.toFixed(2)}%</span>`) + v("tip.cellStrength", a.I(t)) + v("tip.openStrength", s > 0 ? a.I(s) : "—") + v("cap.clld", a.S(c[e]), c[e] >= 0 ? "ll-be" : "ll-ab"))
+          }
+          return this.placeTip(), !0
+        }
+      }
+      let eH = () => ({
+        bins: new Float64Array(52),
+        cum: new Float32Array(52),
+        top: 100
+      });
+      class eK {
+        constructor(e, {
+          onChange: t,
+          onCommit: l
+        } = {}) {
+          this.canvas = e, this.ctx = e.getContext("2d"), this.onChange = t, this.onCommit = l, this.hist = eH(), this.minI = 0, this.maxI = null, this.T = null;
+          let i = e.getBoundingClientRect();
+          this.w = Math.round(i.width) || 210, this.h = Math.round(i.height) || 30, this.grab = null, this.grabOff = 0, this.grabW = 0, this._down = t => {
+            this.grab = this._zoneAt(t.offsetX), this.grabOff = this._xToI(t.offsetX) - this.minI, this.grabW = this._hiI() - this.minI;
+            try {
+              e.setPointerCapture(t.pointerId)
+            } catch (e) {}
+            this._move(t)
+          }, this._move = t => {
+            if (!this.grab) {
+              e.style.cursor = "mid" === this._zoneAt(t.offsetX) ? "grab" : "ew-resize";
+              return
+            }
+            let l = this.hist.top,
+              i = Math.round(10 * this._xToI(t.offsetX)) / 10;
+            if ("lo" === this.grab) this.minI = Math.min(i, this._hiI());
+            else if ("hi" === this.grab) this.maxI = i >= l ? null : Math.max(i, this.minI);
+            else {
+              let t = Math.round((i - this.grabOff) * 10) / 10;
+              t = Math.max(0, Math.min(l - this.grabW, t)), this.minI = t;
+              let a = Math.round((t + this.grabW) * 10) / 10;
+              this.maxI = a >= l ? null : a, e.style.cursor = "grabbing"
+            }
+            this._draw(), this.onChange && this.onChange(this.minI, this.maxI)
+          }, this._end = () => {
+            let t = this.grab;
+            this.grab = null, e.style.cursor = "", t && this.onCommit && this.onCommit(this.minI, this.maxI)
+          }, e.addEventListener("pointerdown", this._down), e.addEventListener("pointermove", this._move), e.addEventListener("pointerup", this._end), e.addEventListener("pointercancel", this._end), this._unobserve = (0, eR.km)(e, (e, t) => {
+            this.w = e || 210, this.h = t || 30, this._draw()
+          }), this._watchDpr()
+        }
+        _watchDpr() {
+          if ("function" != typeof window.matchMedia) return;
+          let e = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`),
+            t = () => {
+              this._unwatchDpr(), this.destroyed || (this._draw(), this._watchDpr())
+            };
+          e.addEventListener ? e.addEventListener("change", t) : e.addListener && e.addListener(t), this.dprMq = e, this.dprH = t
+        }
+        _unwatchDpr() {
+          let e = this.dprMq,
+            t = this.dprH;
+          e && (e.removeEventListener ? e.removeEventListener("change", t) : e.removeListener && e.removeListener(t), this.dprMq = this.dprH = null)
+        }
+        setData(e) {
+          this.hist = e && e.cum ? e : eH(), this.minI > this.hist.top && (this.minI = 0, this.onChange && this.onChange(this.minI, this.maxI)), this._draw()
+        }
+        setRange(e, t) {
+          this.grab || (this.minI = Number.isFinite(e) ? Math.max(0, e) : 0, this.maxI = Number.isFinite(t) ? t : null, this._draw())
+        }
+        setTheme(e) {
+          this.T = e, this._draw()
+        }
+        destroy() {
+          let e = this.canvas;
+          e.removeEventListener("pointerdown", this._down), e.removeEventListener("pointermove", this._move), e.removeEventListener("pointerup", this._end), e.removeEventListener("pointercancel", this._end), this._unobserve(), this._unwatchDpr(), this.destroyed = !0, this.onChange = this.onCommit = null
+        }
+        _xToI(e) {
+          let t = this.hist.top;
+          return Math.max(0, Math.min(t, e / this.w * t))
+        }
+        _hiI() {
+          let e = this.hist.top;
+          return null == this.maxI ? e : Math.min(e, this.maxI)
+        }
+        _zoneAt(e) {
+          let t = this.w,
+            l = this.hist.top,
+            i = this.minI / l * t,
+            a = this._hiI() / l * t;
+          return 7 >= Math.abs(e - i) ? "lo" : 7 >= Math.abs(e - a) ? "hi" : e > i && e < a ? "mid" : e < i ? "lo" : "hi"
+        }
+        _draw() {
+          let {
+            canvas: e,
+            ctx: t,
+            T: l
+          } = this, i = this.w, a = this.h;
+          if (!l || !i || !a) return;
+          (0, eR.iq)(e, t, i, a), t.clearRect(0, 0, i, a);
+          let {
+            cum: s,
+            top: r
+          } = this.hist, n = s.length, o = this.minI / r * i, h = Math.min(r, null == this.maxI ? r : this.maxI) / r * i, d = i / n;
+          t.fillStyle = l.selSoft, t.fillRect(o, 0, h - o, a);
+          for (let e = 0; e < n; e++) {
+            let i = s[e];
+            if (!i) continue;
+            let r = Math.max(1, i * (a - 6)),
+              n = e * d,
+              c = n + d / 2 >= o && n + d / 2 <= h;
+            t.fillStyle = c ? l.selMark : l.ink3, t.globalAlpha = c ? .95 : .35, t.fillRect(n + .5, a - 3 - r, Math.max(1, d - 1), r)
+          }
+          for (let e of (t.globalAlpha = 1, [o, h])) {
+            let s = Math.max(1.5, Math.min(i - 1.5, e));
+            t.fillStyle = l.selMark, t.fillRect(s - 1.5, 2, 3, a - 4), t.fillStyle = l.surface, t.fillRect(s - .5, a / 2 - 3, 1, 6)
+          }
+        }
+      }
+      var e$ = l(69892),
+        eU = l(3226);
+      let eV = e => {
+        if (window.matchMedia("(max-width: 672px)").matches) return Math.round(Math.max(360, Math.min(600, window.innerHeight - 45 - 24)));
+        let t = e.getBoundingClientRect().top + window.scrollY;
+        return Math.round(Math.max(680, Math.min(920, window.innerHeight - t - 120)))
+      };
+
+      function eX({
+        ex: e,
+        sym: t,
+        tf: l,
+        model: a,
+        aggVersion: n,
+        keepView: o,
+        hist: h,
+        fmt: d,
+        theme: c,
+        font: p,
+        options: u,
+        onOptions: g,
+        onRange: m,
+        status: x,
+        showLoader: f,
+        onRetry: v
+      }) {
+        let {
+          t: b
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), w = (0, s.useRef)(null), y = (0, s.useRef)(null), k = (0, s.useRef)(null), j = (0, s.useRef)(null), N = (0, s.useRef)(null), M = (0, s.useRef)(null), _ = (0, s.useRef)(null), T = (0, s.useRef)(m);
+        T.current = m;
+        let [q, L] = (0, s.useState)(null), {
+          lineK: S,
+          bubK: z,
+          showCandles: A,
+          colorBy: C,
+          minI: B,
+          maxI: O
+        } = u;
+        (0, s.useEffect)(() => {
+          let e, t = M.current = new eW({
+              stage: w.current,
+              base: y.current,
+              over: k.current,
+              tip: j.current
+            }),
+            l = _.current = new eK(N.current, {
+              onChange: (e, t) => T.current(e, t, !1),
+              onCommit: (e, t) => T.current(e, t, !0)
+            }),
+            i = () => {
+              clearTimeout(e), e = setTimeout(() => w.current && L(eV(w.current)), 80)
+            };
+          w.current && L(eV(w.current)), window.addEventListener("resize", i);
+          let a = null;
+          if ("u" > typeof ResizeObserver) {
+            a = new ResizeObserver(i);
+            let e = w.current?.closest(".ll-card");
+            if (e) {
+              for (let t of e.querySelectorAll(".ll-card-h, .ll-legend-row")) a.observe(t);
+              for (let t = e.previousElementSibling; t; t = t.previousElementSibling) a.observe(t)
+            }
+          }
+          return () => {
+            clearTimeout(e), window.removeEventListener("resize", i), a && a.disconnect(), t.destroy(), l.destroy(), M.current = _.current = null
+          }
+        }, []), (0, s.useEffect)(() => {
+          M.current.setTheme(c.T, p.family), _.current.setTheme(c.T)
+        }, [c, p]), (0, s.useEffect)(() => {
+          M.current.setText(b, d)
+        }, [b, d]), (0, s.useEffect)(() => {
+          M.current.setModel(a, {
+            keepView: o
+          })
+        }, [a]), (0, s.useEffect)(() => {
+          M.current.invalidate(), _.current.setData(h)
+        }, [n, h]), (0, s.useEffect)(() => {
+          M.current.setOptions({
+            lineK: S,
+            bubK: z,
+            showCandles: A,
+            colorBy: C,
+            minI: B,
+            maxI: O
+          }), _.current.setRange(B, O)
+        }, [S, z, A, C, B, O]);
+        let D = "loading" === x ? b("badge.loading") : b("badge.live", {
+          defaultValue: "Live"
+        }) + " \xb7 " + b("range." + (I[l] || I[0]));
+        return (0, i.jsxs)("section", {
+          className: "ll-card",
+          children: [(0, i.jsxs)("div", {
+            className: "ll-card-h",
+            children: [(0, i.jsxs)("h2", {
+              children: [(0, i.jsx)("span", {
+                className: "ttl",
+                children: b("chart.title", {
+                  ex: e,
+                  sym: t
+                })
+              }), (0, i.jsx)("span", {
+                className: "ll-eyebrow",
+                children: D
+              })]
+            }), (0, i.jsx)("span", {
+              className: "ll-spacer"
+            }), (0, i.jsx)(ew, {
+              size: "compact",
+              ariaLabel: b("colorBy.aria"),
+              value: C,
+              onChange: e => g({
+                colorBy: e
+              }),
+              options: ["side", "lev"].map(e => ({
+                value: e,
+                label: b("colorBy." + e),
+                title: b("colorBy.title")
+              }))
+            }), (0, i.jsx)(eb, {
+              size: "compact",
+              variant: "toggle",
+              selected: A,
+              onClick: () => g({
+                showCandles: !A
+              }),
+              children: b("tool.candles")
+            }), (0, i.jsx)(eb, {
+              size: "compact",
+              icon: !0,
+              "aria-label": b("tool.reset"),
+              title: b("tool.reset"),
+              onClick: () => M.current && M.current.resetView(),
+              children: (0, i.jsx)(eU.fNY, {})
+            })]
+          }), (0, i.jsxs)("div", {
+            className: "ll-legend-row",
+            children: ["side" === C ? (0, i.jsxs)("div", {
+              className: "ll-legend",
+              children: [(0, i.jsxs)("span", {
+                style: {
+                  "--c": "var(--ll-above)"
+                },
+                children: [(0, i.jsx)("i", {}), " ", (0, i.jsx)("span", {
+                  children: b("legend.above")
+                })]
+              }), (0, i.jsxs)("span", {
+                style: {
+                  "--c": "var(--ll-below)"
+                },
+                children: [(0, i.jsx)("i", {}), " ", (0, i.jsx)("span", {
+                  children: b("legend.below")
+                })]
+              }), (0, i.jsx)("span", {
+                children: b("legend.strength")
+              })]
+            }) : (0, i.jsxs)("div", {
+              className: "ll-legend",
+              children: [(0, i.jsxs)("span", {
+                style: {
+                  "--c": "var(--ll-lev100)"
+                },
+                children: [(0, i.jsx)("i", {}), " ", (0, i.jsx)("span", {
+                  children: b("lev.high")
+                })]
+              }), (0, i.jsxs)("span", {
+                style: {
+                  "--c": "var(--ll-lev50)"
+                },
+                children: [(0, i.jsx)("i", {}), " ", (0, i.jsx)("span", {
+                  children: b("lev.mid")
+                })]
+              }), (0, i.jsxs)("span", {
+                style: {
+                  "--c": "var(--ll-lev25)"
+                },
+                children: [(0, i.jsx)("i", {}), " ", (0, i.jsx)("span", {
+                  children: b("lev.low")
+                })]
+              }), (0, i.jsx)("span", {
+                children: b("legend.levNote")
+              })]
+            }), (0, i.jsx)("span", {
+              className: "ll-spacer"
+            }), (0, i.jsxs)("div", {
+              className: "ll-hist",
+              title: b("hist.title"),
+              children: [(0, i.jsxs)("div", {
+                className: "hh",
+                children: [(0, i.jsx)("span", {
+                  children: b("hist.label")
+                }), (0, i.jsx)("button", {
+                  type: "button",
+                  onClick: () => m(0, null, !0),
+                  children: b("hist.reset")
+                })]
+              }), (0, i.jsx)("canvas", {
+                ref: N,
+                role: "slider",
+                "aria-label": b("hist.aria"),
+                "aria-valuemin": 0,
+                "aria-valuenow": B
+              }), (0, i.jsxs)("div", {
+                className: "hv",
+                dir: "ltr",
+                children: [(0, i.jsx)("span", {
+                  children: B > 0 ? "≥ " + B.toFixed(1) : "0"
+                }), (0, i.jsx)("span", {
+                  children: null == O ? b("hist.all") : "≤ " + O.toFixed(1)
+                })]
+              })]
+            }), (0, i.jsxs)("label", {
+              className: "ll-range",
+              children: [(0, i.jsx)("span", {
+                children: b("tool.lines")
+              }), (0, i.jsx)("input", {
+                type: "range",
+                dir: "ltr",
+                min: "0",
+                max: "1",
+                step: "0.05",
+                value: S,
+                style: {
+                  "--p": 100 * S + "%"
+                },
+                "aria-label": b("tool.linesAria"),
+                onChange: e => g({
+                  lineK: +e.target.value
+                })
+              })]
+            }), (0, i.jsxs)("label", {
+              className: "ll-range",
+              children: [(0, i.jsx)("span", {
+                children: b("tool.bubbles")
+              }), (0, i.jsx)("input", {
+                type: "range",
+                dir: "ltr",
+                min: "0",
+                max: "1",
+                step: "0.05",
+                value: z,
+                style: {
+                  "--p": 100 * z + "%"
+                },
+                "aria-label": b("tool.bubblesAria"),
+                onChange: e => g({
+                  bubK: +e.target.value
+                })
+              })]
+            })]
+          }), (0, i.jsxs)("div", {
+            className: "ll-stage" + (f ? " loading" : "") + ("error" === x ? " error" : ""),
+            ref: w,
+            dir: "ltr",
+            tabIndex: -1,
+            style: q ? {
+              height: q + "px"
+            } : void 0,
+            children: [(0, i.jsx)("canvas", {
+              ref: y
+            }), (0, i.jsx)("canvas", {
+              ref: k
+            }), a ? (0, i.jsx)("span", {
+              className: "ll-watermark",
+              "aria-hidden": "true",
+              children: (0, i.jsx)(e$.A, {})
+            }) : null, (0, i.jsx)("div", {
+              className: "ll-tip",
+              ref: j
+            }), f ? (0, i.jsx)("div", {
+              className: "ll-overlay",
+              "aria-live": "polite",
+              children: (0, i.jsxs)("div", {
+                className: "box",
+                children: [(0, i.jsx)("span", {
+                  className: "ll-spin",
+                  "aria-hidden": "true"
+                }), (0, i.jsx)("span", {
+                  children: b("badge.loading")
+                })]
+              })
+            }) : "error" === x ? (0, i.jsx)("div", {
+              className: "ll-overlay",
+              role: "alert",
+              children: (0, i.jsxs)("div", {
+                className: "box",
+                children: [(0, i.jsx)("span", {
+                  children: b("err.load")
+                }), (0, i.jsx)(eb, {
+                  size: "compact",
+                  onClick: v,
+                  children: b("err.retry")
+                })]
+              })
+            }) : "empty" === x ? (0, i.jsx)("div", {
+              className: "ll-overlay",
+              children: (0, i.jsx)("div", {
+                className: "box",
+                children: (0, i.jsx)("span", {
+                  children: b("err.empty")
+                })
+              })
+            }) : null]
+          })]
+        })
+      }
+      let eG = [1, 2, 3, 4, 5, 6, 7, 8].map(e => ({
+          value: e,
+          label: "\xb1" + e + "%"
+        })),
+        eQ = ["side", "px", "dist", "lev", "str"];
+
+      function eZ({
+        x: e,
+        fmt: t
+      }) {
+        let {
+          t: l
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), a = e.side ? "var(--ll-above)" : "var(--ll-below)";
+        return (0, i.jsxs)("tr", {
+          children: [(0, i.jsxs)("td", {
+            children: [(0, i.jsx)("span", {
+              className: "ll-dot",
+              style: {
+                "--c": a
+              }
+            }), l(e.side ? "side.above" : "side.below")]
+          }), (0, i.jsxs)("td", {
+            className: "r",
+            children: [t.px(e.p), (0, i.jsx)("span", {
+              className: "dist-m",
+              "aria-hidden": "true",
+              children: t.pct(e.dist)
+            })]
+          }), (0, i.jsx)("td", {
+            className: "r muted dist",
+            children: t.pct(e.dist)
+          }), (0, i.jsxs)("td", {
+            className: "r muted",
+            title: L[e.lev] + "x",
+            children: [(0, i.jsx)("span", {
+              className: "ll-dot",
+              style: {
+                "--c": `var(${z[e.lev]})`
+              }
+            }), (0, i.jsx)("span", {
+              className: "txt",
+              children: l(S[e.lev])
+            }), (0, i.jsxs)("span", {
+              className: "short",
+              "aria-hidden": "true",
+              children: [L[e.lev], "x"]
+            })]
+          }), (0, i.jsx)("td", {
+            className: "r",
+            children: t.I(e.v)
+          }), (0, i.jsx)("td", {
+            className: "bar",
+            children: (0, i.jsx)("div", {
+              className: "ll-track",
+              style: {
+                "--c": a
+              },
+              children: (0, i.jsx)("i", {
+                style: {
+                  width: (100 * e.w).toFixed(1) + "%"
+                }
+              })
+            })
+          })]
+        })
+      }
+
+      function eY({
+        data: e,
+        curPrice: t,
+        lvR: l,
+        onLvR: a,
+        fmt: s
+      }) {
+        let {
+          t: n
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), o = !!(e && s), h = (e, t) => o && e && e.length ? e.map(e => (0, i.jsx)(eZ, {
+          x: e,
+          fmt: s
+        }, t + e.r)) : (0, i.jsx)("tr", {
+          children: (0, i.jsx)("td", {
+            className: "empty",
+            colSpan: 6,
+            children: o ? n("levels.empty", {
+              r: l
+            }) : "—"
+          })
+        }, t), d = o && t > 0 ? s.px(t) : "—";
+        return (0, i.jsxs)("div", {
+          className: "ll-panel",
+          children: [(0, i.jsxs)("div", {
+            className: "ll-ph",
+            children: [(0, i.jsx)("h3", {
+              children: n("panel.levels")
+            }), (0, i.jsx)("small", {
+              children: n("panel.levelsSub", {
+                r: l
+              })
+            }), (0, i.jsx)(ew, {
+              className: "ll-ph-tools",
+              ariaLabel: n("th.dist"),
+              value: l,
+              onChange: a,
+              options: eG
+            })]
+          }), (0, i.jsx)("div", {
+            className: "ll-pb",
+            children: (0, i.jsxs)("table", {
+              className: "ll-table ll-levels",
+              children: [(0, i.jsxs)("colgroup", {
+                children: [eQ.map(e => (0, i.jsx)("col", {
+                  className: "c-" + e
+                }, e)), (0, i.jsx)("col", {})]
+              }), (0, i.jsx)("thead", {
+                children: (0, i.jsxs)("tr", {
+                  children: [(0, i.jsx)("th", {
+                    children: n("th.side")
+                  }), (0, i.jsx)("th", {
+                    className: "r",
+                    children: n("th.price")
+                  }), (0, i.jsx)("th", {
+                    className: "r dist",
+                    children: n("th.dist")
+                  }), (0, i.jsx)("th", {
+                    className: "r",
+                    children: n("th.lev")
+                  }), (0, i.jsx)("th", {
+                    className: "r",
+                    children: n("th.strength")
+                  }), (0, i.jsx)("th", {
+                    className: "bar"
+                  })]
+                })
+              }), (0, i.jsxs)("tbody", {
+                children: [h(e && e.above, "a"), (0, i.jsx)("tr", {
+                  children: (0, i.jsx)("td", {
+                    className: "cur",
+                    colSpan: 6,
+                    children: n("levels.cur", {
+                      px: d
+                    })
+                  })
+                }, "cur"), h(e && e.below, "b")]
+              })]
+            })
+          })]
+        })
+      }
+      class eJ {
+        constructor(e) {
+          this.canvas = e, this.ctx = e.getContext("2d"), this.model = null, this.T = null, this.font = eR.Zn, this.t = e => e, this.fmt = null;
+          let t = e.getBoundingClientRect();
+          this.w = Math.round(t.width), this.h = Math.round(t.height), this.hover = -1, this.padL = 48, this.raf = 0, this._move = e => {
+            let t = this.model;
+            if (!t) return;
+            let l = t.N,
+              i = this.w - this.padL - 6,
+              a = Math.round((e.offsetX - this.padL) / Math.max(1, i) * (l - 1)),
+              s = a >= 0 && a < l ? a : -1;
+            s !== this.hover && (this.hover = s, this.invalidate())
+          }, this._leave = () => {
+            -1 !== this.hover && (this.hover = -1, this.invalidate())
+          }, e.addEventListener("pointermove", this._move), e.addEventListener("pointerleave", this._leave), this._unobserve = (0, eR.km)(e, (e, t) => {
+            this.w = e, this.h = t, this.invalidate()
+          }), this._unfonts = (0, eR.m3)(() => this.invalidate())
+        }
+        setModel(e) {
+          this.model = e || null, (!this.model || this.hover >= this.model.N) && (this.hover = -1), this.invalidate()
+        }
+        setTheme(e, t) {
+          this.T = e, t && (this.font = t), this.invalidate()
+        }
+        setText(e, t) {
+          e && (this.t = e), this.fmt = t || null, this.invalidate()
+        }
+        invalidate() {
+          this.raf || this.destroyed || (this.raf = requestAnimationFrame(() => {
+            this.raf = 0, this._draw()
+          }))
+        }
+        destroy() {
+          this.destroyed = !0, this.raf && cancelAnimationFrame(this.raf), this.raf = 0, this.canvas.removeEventListener("pointermove", this._move), this.canvas.removeEventListener("pointerleave", this._leave), this._unobserve(), this._unfonts()
+        }
+        _draw() {
+          let {
+            canvas: e,
+            ctx: t,
+            model: l,
+            T: i,
+            fmt: a,
+            t: s
+          } = this, r = this.w, n = this.h;
+          if (!r || !n || ((0, eR.iq)(e, t, r, n), t.clearRect(0, 0, r, n), !l || !i || !a || !(l.N >= 2))) return;
+          let {
+            N: o,
+            close: h,
+            clld: d,
+            marks: c
+          } = l, p = e => e + " " + this.font, u = 1 / 0, g = -1 / 0;
+          for (let e = 0; e < o; e++) h[e] < u && (u = h[e]), h[e] > g && (g = h[e]);
+          let m = 0,
+            x = 0;
+          for (let e = 0; e < o; e++) d[e] < m && (m = d[e]), d[e] > x && (x = d[e]);
+          t.font = p("500 11px");
+          let f = Math.ceil(Math.max(44, ...[a.px(g), a.px(u), a.S(x), a.S(m)].map(e => t.measureText(e).width)) + 8),
+            v = r - f - 6;
+          this.padL = f;
+          let b = Math.round((n - 16 - 8) * .3),
+            w = n - 16 - 8 - b - 14,
+            y = 8 + b + 14,
+            k = e => f + e / (o - 1) * v,
+            j = Math.max(1, Math.floor(o / v)),
+            N = e => 8 + (g - e) / Math.max(1e-9, g - u) * b;
+          t.strokeStyle = i.grid, t.beginPath(), t.moveTo(f, 8 + b + .5), t.lineTo(r - 6, 8 + b + .5), t.stroke(), t.beginPath();
+          for (let e = 0; e < o; e += j) {
+            let l = k(e),
+              i = N(h[e]);
+            0 === e ? t.moveTo(l, i) : t.lineTo(l, i)
+          }
+          t.lineTo(k(o - 1), N(h[o - 1])), t.strokeStyle = i.up, t.lineWidth = 1.25, t.stroke(), t.lineTo(k(o - 1), 8 + b), t.lineTo(k(0), 8 + b), t.closePath(), t.fillStyle = i.up, t.globalAlpha = .1 * i.mark, t.fill(), t.globalAlpha = 1, t.lineWidth = 1, t.fillStyle = i.ink2, t.font = p("500 11px"), t.textAlign = "right", t.textBaseline = "middle", t.fillText(a.px(g), f - 4, 12), t.fillText(a.px(u), f - 4, 8 + b - 4), t.textAlign = "left", t.font = p("600 11px"), t.fillStyle = i.ink3, t.fillText(s("mini.priceStrip"), f + 4, 14);
+          let M = (x - m) * .08 || 1,
+            _ = x + M,
+            T = m - M,
+            q = e => y + (_ - e) / (_ - T) * w,
+            L = q(0);
+          t.strokeStyle = i.grid, t.beginPath();
+          for (let e = 0; e <= 2; e++) {
+            let l = Math.round(y + w * e / 2) + .5;
+            t.moveTo(f, l), t.lineTo(r - 6, l)
+          }
+          for (let e of (t.stroke(), [1, -1])) {
+            t.beginPath(), t.moveTo(k(0), L);
+            for (let l = 0; l < o; l += j) t.lineTo(k(l), q(e * Math.max(0, e * d[l])));
+            t.lineTo(k(o - 1), L), t.closePath(), t.fillStyle = e > 0 ? i.below : i.above, t.globalAlpha = .28 * i.mark, t.fill()
+          }
+          t.globalAlpha = 1, t.beginPath();
+          for (let e = 0; e < o; e += j) {
+            let l = k(e),
+              i = q(d[e]);
+            0 === e ? t.moveTo(l, i) : t.lineTo(l, i)
+          }
+          for (let e of (t.strokeStyle = i.ink2, t.lineWidth = 1.25, t.stroke(), t.lineWidth = 1, t.strokeStyle = i.line, t.beginPath(), t.moveTo(f, Math.round(L) + .5), t.lineTo(r - 6, Math.round(L) + .5), t.stroke(), c)) eF(t, i, k(e.i), q(d[e.i]), e.t, 6);
+          if (t.fillStyle = i.ink2, t.font = p("500 11px"), t.textAlign = "right", t.textBaseline = "middle", x > 0 && t.fillText(a.S(x), f - 4, y), m < 0 && t.fillText(a.S(m), f - 4, y + w), L > y + 12 && L < y + w - 12 ? t.fillText("0", f - 4, L) : x <= 0 ? t.fillText("0", f - 4, y) : t.fillText("0", f - 4, y + w), t.textAlign = "left", t.fillText(a.time(0, !0), f, n - 6), t.textAlign = "right", t.fillText(a.time(o - 1, !0), r - 6, n - 6), this.hover >= 0 && this.hover < o) {
+            let e = this.hover,
+              n = k(e),
+              o = q(d[e]);
+            t.save(), t.setLineDash([3, 3]), t.strokeStyle = i.cross, t.beginPath(), t.moveTo(Math.round(n) + .5, 8), t.lineTo(Math.round(n) + .5, y + w), t.stroke(), t.restore(), t.beginPath(), t.arc(n, N(h[e]), 3, 0, 6.2832), t.fillStyle = i.up, t.fill(), t.lineWidth = 1.5, t.strokeStyle = i.surface, t.stroke(), t.beginPath(), t.arc(n, o, 3.5, 0, 6.2832), t.fillStyle = i.ink, t.fill(), t.lineWidth = 1.5, t.strokeStyle = i.surface, t.stroke(), t.lineWidth = 1;
+            let u = Math.max(2, l.minsToBars(10)),
+              g = c.find(t => Math.abs(t.i - e) <= u),
+              m = [
+                [s("cap.clld"), a.S(d[e])],
+                [s("mini.chg1h"), a.S(d[e] - d[Math.max(0, e - l.minsToBars(60))])],
+                [s("mini.price"), a.px(h[e])]
+              ];
+            g && m.push([s(g.t > 0 ? "mini.turnUp" : "mini.turnDn"), a.time(g.i, !1) + " \xb7 " + s("mini.swing", {
+              v: a.I0(g.s)
+            })]), t.font = p("500 10.5px");
+            let x = Math.min(r - 20, Math.max(g ? 196 : 150, ...m.map(([e, l]) => t.measureText(e).width + t.measureText(l).width + 28))),
+              f = 16 + 15 * m.length + 6,
+              v = n + 12 + x > r - 6 ? n - 12 - x : n + 12,
+              b = Math.max(8, Math.min(y + w - f, o - f / 2));
+            t.fillStyle = i.surface, t.globalAlpha = .95, t.fillRect(v, b, x, f), t.globalAlpha = 1, t.strokeStyle = i.lineStrong, t.strokeRect(v + .5, b + .5, x - 1, f - 1), t.textBaseline = "middle", t.textAlign = "left", t.fillStyle = i.ink3, t.fillText(a.time(e, !0), v + 8, b + 11), m.forEach(([e, l], a) => {
+              let s = b + 16 + 11 + 15 * a;
+              t.textAlign = "left", t.fillStyle = g && 3 === a ? g.t > 0 ? i.up : i.dn : i.ink2, t.fillText(e, v + 8, s), t.textAlign = "right", t.fillStyle = i.ink, t.fillText(l, v + x - 8, s)
+            })
+          }
+          t.textBaseline = "alphabetic"
+        }
+      }
+
+      function e0({
+        model: e,
+        theme: t,
+        font: l,
+        fmt: a
+      }) {
+        let {
+          t: n
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), o = (0, s.useRef)(null), h = (0, s.useRef)(null);
+        (0, s.useEffect)(() => {
+          let e = h.current = new eJ(o.current);
+          return () => {
+            e.destroy(), h.current = null
+          }
+        }, []), (0, s.useEffect)(() => {
+          h.current.setTheme(t.T, l.family)
+        }, [t, l]), (0, s.useEffect)(() => {
+          h.current.setText(n, a)
+        }, [n, a]), (0, s.useEffect)(() => {
+          h.current.setModel(e)
+        }, [e]);
+        let d = e ? e.marks : [],
+          c = d.filter(e => e.t > 0).length,
+          p = d.length - c,
+          u = d.slice(-4).reverse();
+        return (0, i.jsxs)("div", {
+          className: "ll-panel",
+          children: [(0, i.jsxs)("div", {
+            className: "ll-ph",
+            children: [(0, i.jsx)("h3", {
+              children: n("panel.clld")
+            }), (0, i.jsx)("small", {
+              children: n("panel.clldSub")
+            })]
+          }), (0, i.jsxs)("div", {
+            className: "ll-pb",
+            children: [(0, i.jsx)("div", {
+              className: "ll-ts",
+              children: e ? d.length ? (0, i.jsxs)(i.Fragment, {
+                children: [(0, i.jsxs)("div", {
+                  className: "ll-turns",
+                  children: [(0, i.jsx)("b", {
+                    children: n("mini.recent")
+                  }), u.map(e => (0, i.jsxs)("span", {
+                    className: e.t > 0 ? "ll-bull" : "ll-bear",
+                    children: [e.t > 0 ? n("mini.turnUp") : n("mini.turnDn"), " ", (0, i.jsx)("i", {
+                      children: a.time(e.i, !0)
+                    })]
+                  }, e.i))]
+                }), (0, i.jsx)("div", {
+                  className: "ll-ts-note",
+                  children: n("mini.sentNote")
+                })]
+              }) : (0, i.jsx)("span", {
+                className: "muted",
+                children: n("stats.none")
+              }) : (0, i.jsx)("span", {
+                className: "muted",
+                children: "—"
+              })
+            }), (0, i.jsx)("canvas", {
+              className: "ll-mini",
+              ref: o
+            }), (0, i.jsxs)("div", {
+              className: "ll-mini-legend",
+              "aria-live": "polite",
+              children: [(0, i.jsx)("span", {
+                className: "ll-bull",
+                children: n("mini.upMarks", {
+                  n: e ? c : "—"
+                })
+              }), (0, i.jsx)("span", {
+                className: "ll-bear",
+                children: n("mini.dnMarks", {
+                  n: e ? p : "—"
+                })
+              })]
+            })]
+          })]
+        })
+      }
+      let e1 = [
+          [0, 1],
+          [1, 2],
+          [2, 3],
+          [3, 5],
+          [5, 10]
+        ],
+        e2 = (e, t) => (e > 0 && t > 0 ? (e / t * 100).toFixed(1) : 0) + "%";
+
+      function e5({
+        label: e,
+        u: t,
+        d: l,
+        max: a,
+        fmt: s
+      }) {
+        let r = null != t && null != l && !!s;
+        return (0, i.jsxs)("div", {
+          className: "ll-hb",
+          children: [(0, i.jsx)("span", {
+            className: "lb",
+            children: e
+          }), (0, i.jsxs)("div", {
+            className: "tr",
+            children: [(0, i.jsx)("i", {
+              className: "a",
+              style: {
+                width: r ? e2(t, a) : "0%"
+              }
+            }), (0, i.jsx)("i", {
+              className: "b",
+              style: {
+                width: r ? e2(l, a) : "0%"
+              }
+            })]
+          }), (0, i.jsx)("span", {
+            className: "va ll-ab",
+            children: r ? s.I0(t) : "—"
+          }), (0, i.jsx)("span", {
+            className: "sep",
+            children: "\xb7"
+          }), (0, i.jsx)("span", {
+            className: "vb ll-be",
+            children: r ? s.I0(l) : "—"
+          })]
+        })
+      }
+
+      function e3({
+        data: e,
+        fmt: t
+      }) {
+        let {
+          t: l
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), a = !!(e && t), s = a ? e.list : e1.map(([e, t]) => ({
+          a: e,
+          b: t,
+          u: null,
+          d: null
+        }));
+        return (0, i.jsxs)("div", {
+          className: "ll-panel",
+          children: [(0, i.jsxs)("div", {
+            className: "ll-ph",
+            children: [(0, i.jsx)("h3", {
+              children: l("panel.bands")
+            }), (0, i.jsx)("small", {
+              children: l("panel.bandsSub")
+            })]
+          }), (0, i.jsxs)("div", {
+            className: "ll-pb",
+            children: [(0, i.jsxs)("div", {
+              className: "ll-lsum",
+              children: [(0, i.jsxs)("span", {
+                children: [(0, i.jsx)("span", {
+                  children: l("bands.above")
+                }), " ", (0, i.jsx)("b", {
+                  children: a ? t.I0(e.totU) : "—"
+                })]
+              }), (0, i.jsxs)("span", {
+                children: [(0, i.jsx)("span", {
+                  children: l("bands.below")
+                }), " ", (0, i.jsx)("b", {
+                  children: a ? t.I0(e.totD) : "—"
+                })]
+              })]
+            }), (0, i.jsx)("div", {
+              className: "ll-hbars",
+              children: s.map(l => (0, i.jsx)(e5, {
+                label: (0, i.jsxs)("span", {
+                  className: "ll-num",
+                  children: [l.a, "–", l.b, "%"]
+                }),
+                u: l.u,
+                d: l.d,
+                max: a ? e.max : 1,
+                fmt: t
+              }, l.a + "-" + l.b))
+            })]
+          })]
+        })
+      }
+
+      function e6({
+        data: e,
+        fmt: t
+      }) {
+        let {
+          t: l
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), a = !!(e && t), s = a ? e.list : L.map((e, t) => ({
+          k: t,
+          u: null,
+          d: null
+        }));
+        return (0, i.jsxs)("div", {
+          className: "ll-panel",
+          children: [(0, i.jsxs)("div", {
+            className: "ll-ph",
+            children: [(0, i.jsx)("h3", {
+              children: l("panel.lev")
+            }), (0, i.jsx)("small", {
+              children: l("panel.levSub")
+            })]
+          }), (0, i.jsxs)("div", {
+            className: "ll-pb",
+            children: [(0, i.jsxs)("div", {
+              className: "ll-lsum",
+              children: [(0, i.jsxs)("span", {
+                children: [(0, i.jsx)("span", {
+                  children: l("bands.above")
+                }), " ", (0, i.jsx)("b", {
+                  children: a ? t.I0(e.above) : "—"
+                })]
+              }), (0, i.jsxs)("span", {
+                children: [(0, i.jsx)("span", {
+                  children: l("bands.below")
+                }), " ", (0, i.jsx)("b", {
+                  children: a ? t.I0(e.below) : "—"
+                })]
+              }), (0, i.jsxs)("span", {
+                children: [(0, i.jsx)("span", {
+                  children: l("lev.total")
+                }), " ", (0, i.jsx)("b", {
+                  children: a ? t.I0(e.above + e.below) : "—"
+                })]
+              })]
+            }), (0, i.jsx)("div", {
+              className: "ll-hbars",
+              children: s.map(s => (0, i.jsx)(e5, {
+                label: (0, i.jsxs)(i.Fragment, {
+                  children: [(0, i.jsx)("span", {
+                    className: "ll-dot",
+                    style: {
+                      "--c": `var(${z[s.k]})`
+                    }
+                  }), l(S[s.k])]
+                }),
+                u: s.u,
+                d: s.d,
+                max: a ? e.max : 1,
+                fmt: t
+              }, s.k))
+            })]
+          })]
+        })
+      }
+
+      function e4({
+        z: e,
+        i: t,
+        curPrice: l,
+        fmt: a
+      }) {
+        let {
+          t: s
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), n = t => e.mix[t] / e.total * 100, o = Number.isFinite(l) && l > 0 ? ((e.pHi - e.pLo) / l * 100).toFixed(2) + "%" : "—";
+        return (0, i.jsxs)("div", {
+          className: "ll-zone",
+          children: [(0, i.jsx)("span", {
+            className: "rk",
+            children: t + 1
+          }), (0, i.jsxs)("span", {
+            className: "rg",
+            children: [a.px(e.pLo), " – ", a.px(e.pHi)]
+          }), (0, i.jsx)("span", {
+            className: "ds " + (e.side ? "ll-ab" : "ll-be"),
+            children: a.pct(e.dist)
+          }), (0, i.jsxs)("span", {
+            className: "st",
+            children: [(0, i.jsx)("span", {
+              className: "tot",
+              children: a.I0(e.total)
+            }), (0, i.jsx)("span", {
+              className: "mix",
+              title: L.map((e, t) => s(S[t]) + " " + Math.round(n(t)) + "%").join(" \xb7 "),
+              children: L.map((e, t) => (0, i.jsx)("i", {
+                style: {
+                  width: n(t).toFixed(1) + "%",
+                  background: `var(${z[t]})`
+                }
+              }, e))
+            }), (0, i.jsx)("span", {
+              children: s("zones.width", {
+                w: o
+              })
+            })]
+          })]
+        })
+      }
+
+      function e8({
+        i: e,
+        text: t
+      }) {
+        return (0, i.jsxs)("div", {
+          className: "ll-zone empty",
+          children: [(0, i.jsx)("span", {
+            className: "rk",
+            children: e + 1
+          }), (0, i.jsx)("span", {
+            className: "rg",
+            children: "—"
+          }), (0, i.jsx)("span", {
+            className: "ds"
+          }), (0, i.jsx)("span", {
+            className: "st",
+            children: (0, i.jsx)("span", {
+              children: t
+            })
+          })]
+        })
+      }
+
+      function e7({
+        zones: e,
+        curPrice: t,
+        fmt: l
+      }) {
+        let {
+          t: a
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), s = !!(e && l), n = (e, r, n) => (0, i.jsxs)("div", {
+          children: [(0, i.jsxs)("h4", {
+            children: [(0, i.jsx)("span", {
+              className: "ll-dot",
+              style: {
+                "--c": n
+              }
+            }), a(r)]
+          }), [0, 1, 2].map(r => s && e && e[r] ? (0, i.jsx)(e4, {
+            z: e[r],
+            i: r,
+            curPrice: t,
+            fmt: l
+          }, r) : (0, i.jsx)(e8, {
+            i: r,
+            text: s ? a("zones.none") : "—"
+          }, r))]
+        });
+        return (0, i.jsxs)("div", {
+          className: "ll-panel",
+          children: [(0, i.jsxs)("div", {
+            className: "ll-ph",
+            children: [(0, i.jsx)("h3", {
+              children: a("panel.zones")
+            }), (0, i.jsx)("small", {
+              children: a("panel.zonesSub")
+            })]
+          }), (0, i.jsx)("div", {
+            className: "ll-pb",
+            children: (0, i.jsxs)("div", {
+              className: "ll-zones",
+              children: [n(e && e.up, "zones.above", "var(--ll-above)"), n(e && e.dn, "zones.below", "var(--ll-below)")]
+            })
+          })]
+        })
+      }
+      class e9 {
+        constructor(e) {
+          this.canvas = e, this.ctx = e.getContext("2d"), this.pts = [], this.fmt = null, this.T = null, this.font = eR.Zn, this._unobserve = (0, eR.km)(e, () => this._draw()), this._unfonts = (0, eR.m3)(() => this._draw())
+        }
+        setData(e, t) {
+          this.pts = e && Array.isArray(e.pts) ? e.pts : [], t && (this.fmt = t), this._draw()
+        }
+        setTheme(e, t) {
+          this.T = e, t && (this.font = t), this._draw()
+        }
+        destroy() {
+          this.destroyed = !0, this._unobserve(), this._unfonts()
+        }
+        _draw() {
+          if (this.destroyed) return;
+          let {
+            canvas: e,
+            ctx: t,
+            pts: l,
+            T: i,
+            fmt: a
+          } = this, s = e.getBoundingClientRect(), r = Math.round(s.width), n = Math.round(s.height);
+          if (!r || !n || ((0, eR.iq)(e, t, r, n), t.clearRect(0, 0, r, n), !l.length || !i || !a)) return;
+          let o = r - 34 - 6,
+            h = n - 16 - 6,
+            d = l[0].i,
+            c = l[l.length - 1].i,
+            p = e => 34 + (e - d) / Math.max(1, c - d) * o,
+            u = e => 6 + (1 - e) * h,
+            g = u(.5);
+          for (let e of (t.strokeStyle = i.grid, t.beginPath(), [0, 1])) t.moveTo(34, Math.round(u(e)) + .5), t.lineTo(r - 6, Math.round(u(e)) + .5);
+          for (let e of (t.stroke(), [1, -1])) {
+            for (let i of (t.beginPath(), t.moveTo(p(d), g), l)) t.lineTo(p(i.i), e > 0 ? Math.min(g, u(i.share)) : Math.max(g, u(i.share)));
+            t.lineTo(p(c), g), t.closePath(), t.fillStyle = e > 0 ? i.above : i.below, t.globalAlpha = .28 * i.mark, t.fill()
+          }
+          t.globalAlpha = 1, t.beginPath(), l.forEach((e, l) => {
+            l ? t.lineTo(p(e.i), u(e.share)) : t.moveTo(p(e.i), u(e.share))
+          }), t.strokeStyle = i.ink2, t.lineWidth = 1.25, t.stroke(), t.lineWidth = 1, t.save(), t.setLineDash([3, 3]), t.strokeStyle = i.cross, t.beginPath(), t.moveTo(34, Math.round(g) + .5), t.lineTo(r - 6, Math.round(g) + .5), t.stroke(), t.restore();
+          let m = l[l.length - 1];
+          t.beginPath(), t.arc(p(m.i), u(m.share), 3, 0, 6.2832), t.fillStyle = i.selMark, t.fill(), t.fillStyle = i.ink2, t.font = "500 11px " + this.font, t.textAlign = "right", t.textBaseline = "middle", t.fillText("100%", 30, u(1)), t.fillText("50%", 30, g), t.fillText("0%", 30, u(0)), t.textAlign = "left", t.fillText(a.time(d, !0), 34, n - 6), t.textAlign = "right", t.fillText(a.time(c, !0), r - 6, n - 6), t.textBaseline = "alphabetic"
+        }
+      }
+
+      function te({
+        bal: e,
+        theme: t,
+        font: l,
+        fmt: a
+      }) {
+        let {
+          t: n
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), o = (0, s.useRef)(null), h = (0, s.useRef)(null);
+        (0, s.useEffect)(() => {
+          let e = h.current = new e9(o.current);
+          return () => {
+            e.destroy(), h.current = null
+          }
+        }, []), (0, s.useEffect)(() => {
+          h.current.setTheme(t.T, l.family)
+        }, [t, l]), (0, s.useEffect)(() => {
+          h.current.setData(e, a)
+        }, [e, a]);
+        let d = "";
+        return e && (d = n(5 > Math.abs(e.pu - 50) ? "bal.even" : e.pu > 50 ? "bal.readUp" : "bal.readDn") + " \xb7 " + n("bal.chg24", {
+          v: (e.delta >= 0 ? "+" : "") + e.delta.toFixed(0)
+        })), (0, i.jsxs)("div", {
+          className: "ll-panel",
+          children: [(0, i.jsxs)("div", {
+            className: "ll-ph",
+            children: [(0, i.jsx)("h3", {
+              children: n("panel.bal")
+            }), (0, i.jsx)("small", {
+              children: n("panel.balSub")
+            })]
+          }), (0, i.jsxs)("div", {
+            className: "ll-pb ll-bal",
+            children: [(0, i.jsxs)("div", {
+              className: "lbls",
+              children: [(0, i.jsx)("span", {
+                className: "ll-be",
+                children: e ? n("bal.below", {
+                  p: e.pd.toFixed(0)
+                }) + " \xb7 " + a.I0(e.d) : "—"
+              }), (0, i.jsx)("span", {
+                className: "ll-ab",
+                children: e ? n("bal.above", {
+                  p: e.pu.toFixed(0)
+                }) + " \xb7 " + a.I0(e.u) : "—"
+              })]
+            }), (0, i.jsxs)("div", {
+              className: "bar",
+              children: [(0, i.jsx)("i", {
+                className: "b",
+                style: {
+                  width: (e ? e.pd : 50).toFixed(1) + "%"
+                }
+              }), (0, i.jsx)("i", {
+                className: "a",
+                style: {
+                  width: (e ? e.pu : 50).toFixed(1) + "%"
+                }
+              })]
+            }), (0, i.jsx)("div", {
+              className: "read",
+              children: d
+            }), (0, i.jsxs)("div", {
+              className: "cap",
+              children: [(0, i.jsx)("span", {
+                children: n("bal.hist")
+              }), (0, i.jsx)("span", {
+                children: n("bal.mid")
+              })]
+            }), (0, i.jsx)("canvas", {
+              ref: o
+            })]
+          })]
+        })
+      }
+      var tt = l(82203),
+        tl = l.n(tt);
+      let ti = (0, i.jsx)("svg", {
+          viewBox: "0 0 16 16",
+          "aria-hidden": "true",
+          children: (0, i.jsx)("path", {
+            d: "M9 1.8 3.5 9h4l-1 5.2L12.5 7h-4z"
+          })
+        }),
+        ta = (0, i.jsx)("svg", {
+          viewBox: "0 0 16 16",
+          "aria-hidden": "true",
+          children: (0, i.jsx)("path", {
+            d: "M3 13V8M6.5 13V4M10 13V6.5M13.5 13V2.5"
+          })
+        }),
+        ts = [
+          [1, "/pro/futures/LiquidationHeatMap", "gLiq", ti],
+          [2, "/pro/futures/LiquidationMap", "gLiq", ti],
+          [3, "/liquidation-maxpain", "gLiq", ti],
+          [4, (0, d.sQ)("largeOrders"), "gFlow", ta],
+          [5, "/mergev2/BTC-USDT", "gFlow", ta],
+          [6, (0, d.sQ)("cvd"), "gFlow", ta]
+        ],
+        tr = ["BTC", "ETH", "SOL", "HYPE", "XRP", "ZEC", "NEAR", "BNB", "DOGE", "SUI", "XAUT", "UNI", "LINK", "ENA", "LTC", "AVAX", "WLD", "ADA", "TAO", "BCH"];
+
+      function tn({
+        pair: e,
+        onSymbol: t
+      }) {
+        let l = e_(),
+          [a, r] = (0, s.useState)([]),
+          [n, o] = (0, s.useState)({});
+        (0, s.useEffect)(() => {
+          ep("").then(r, () => {}), (!eu && (eu = et.ud.get("/api/v2/support/symbol").then(e => {
+            let t = {};
+            for (let l of Array.isArray(e && e.data) ? e.data : []) l && l.symbol && /^https:\/\//.test(l.coinLogo || "") && (t[l.symbol] = l.coinLogo);
+            return t
+          }).catch(e => {
+            throw eu = null, e
+          })), eu).then(o, () => {})
+        }, []);
+        let h = e.base || "";
+        return (0, i.jsxs)("section", {
+          className: "ll-rel",
+          "aria-labelledby": "ll-rel-t",
+          children: [(0, i.jsxs)("div", {
+            className: "ll-sh",
+            children: [(0, i.jsx)("h2", {
+              id: "ll-rel-t",
+              children: l("rel", "title")
+            }), (0, i.jsx)("p", {
+              children: l("rel", "sub")
+            })]
+          }), (0, i.jsx)("nav", {
+            className: "ll-relgrid",
+            "aria-label": l("rel", "title"),
+            children: ts.map(([e, t, a, s]) => {
+              let r = 6 === e ? "CVD" : l("rel", "n" + e),
+                n = 6 === e ? "Cumulative Volume Delta" : ek["n" + e],
+                o = (0, i.jsxs)(i.Fragment, {
+                  children: [(0, i.jsxs)("span", {
+                    className: "rtop",
+                    children: [(0, i.jsx)("span", {
+                      className: "rico",
+                      children: s
+                    }), (0, i.jsx)("span", {
+                      className: "tg",
+                      children: l("rel", a)
+                    })]
+                  }), (0, i.jsxs)("b", {
+                    children: [(0, i.jsx)("span", {
+                      children: r
+                    }), r.trim().toLowerCase() !== n.toLowerCase() ? (0, i.jsx)("span", {
+                      className: "en",
+                      children: n
+                    }) : null]
+                  }), (0, i.jsx)("p", {
+                    children: l("rel", "d" + e)
+                  })]
+                });
+              return (0, i.jsx)(tl(), {
+                href: t,
+                prefetch: !1,
+                className: "ll-relcard",
+                children: o
+              }, e)
+            })
+          }), (0, i.jsxs)("div", {
+            className: "ll-relcoins",
+            children: [(0, i.jsx)("h3", {
+              id: "ll-rc-t",
+              children: l("rel", "coins")
+            }), (0, i.jsx)("nav", {
+              className: "ll-cchips",
+              "aria-labelledby": "ll-rc-t",
+              children: tr.map(s => {
+                let r = n[s] || a.find(e => e.base === s && e.coinLogo)?.coinLogo,
+                  o = l("rel", "chip", {
+                    name: l("coin", s),
+                    sym: s
+                  });
+                return (0, i.jsxs)(tl(), {
+                  className: "ll-cchip",
+                  href: (0, d.sQ)("liqLevels", s),
+                  prefetch: !1,
+                  scroll: !1,
+                  title: o,
+                  "aria-current": s === h ? "page" : void 0,
+                  onClick: s === h ? e => e.preventDefault() : l => {
+                    if (!l.metaKey && !l.ctrlKey && !l.shiftKey && !l.altKey && 0 === l.button) {
+                      let i;
+                      l.preventDefault(), t((i = a.filter(e => e.base === s)).find(t => t.ex === e.ex) || i.find(e => "Binance" === e.ex && "USDT" === e.quote) || i.find(e => "Binance" === e.ex) || {
+                        ex: "Binance",
+                        sym: s + "USDT",
+                        base: s,
+                        quote: "USDT",
+                        inv: !1,
+                        dp: null,
+                        exLogo: "",
+                        coinLogo: ""
+                      }), window.scrollTo({
+                        top: 0,
+                        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
+                      })
+                    }
+                  },
+                  children: [(0, i.jsx)(eS, {
+                    logo: r,
+                    base: s
+                  }), (0, i.jsx)("span", {
+                    children: o
+                  })]
+                }, s)
+              })
+            })]
+          })]
+        })
+      }
+      var to = l(98114),
+        th = l(12549),
+        td = l.n(th);
+      let tc = [
+          [
+            ["gRead", [1, 2, 3, 4, 5, 6, 22, 7]],
+            ["gTools", [8, 9]]
+          ],
+          [
+            ["gSignals", [12, 13, 14, 15, 16, 17, 18]],
+            ["gData", [19, 20, 21, 10, 11]]
+          ]
+        ],
+        tp = [81800, 82050, 82300, 82200, 82600, 82900, 83100, 82950, 83150, 83e3, 82700, 82500, 82650, 82400, 82200, 82100, 81700, 81950, 82200, 82150, 82400, 82350, 82600, 82500],
+        tu = [
+          [83950, 8, null, 1.4, .55, "a"],
+          [83750, 6, null, 2.4, .95, "a"],
+          [83450, 11, null, 1.8, .75, "a"],
+          [80400, 4, 16, 2.4, .95, "b"],
+          [80550, 7, 16, 2, .85, "b"],
+          [80900, 10, 16, 1.4, .6, "b"],
+          [81150, 19, null, 1.8, .75, "b"]
+        ],
+        tg = [
+          [83950, 18, "a"],
+          [83750, 46, "a"],
+          [83450, 30, "a"],
+          [81150, 28, "b"]
+        ],
+        tm = e => 16 + (84200 - e) * .05;
+
+      function tx({
+        qa: e,
+        locale: t
+      }) {
+        let l = e => e.toLocaleString((0, F.uE)(t)),
+          a = 81600,
+          s = tp.map((e, t) => {
+            let l = e >= a ? "up" : "dn",
+              s = Math.max(a, e) + (16 === t ? 60 : 90),
+              r = 16 === t ? 80250 : Math.min(a, e) - 90,
+              n = 21.75 + 15.5 * t,
+              o = tm(Math.max(a, e)),
+              h = Math.max(1, tm(Math.min(a, e)) - o);
+            return a = e, (0, i.jsxs)("g", {
+              className: td()[l],
+              children: [(0, i.jsx)("line", {
+                className: td().wk,
+                x1: n,
+                x2: n,
+                y1: tm(s),
+                y2: tm(r)
+              }), (0, i.jsx)("rect", {
+                x: n - 4.5,
+                y: o,
+                width: "9",
+                height: h
+              })]
+            }, t)
+          }),
+          r = tm(82500);
+        return (0, i.jsxs)("svg", {
+          className: td().svg,
+          viewBox: "0 0 520 262",
+          role: "img",
+          "aria-label": e("svgAria"),
+          children: [
+            [84e3, 83e3, 82e3, 81e3, 8e4].map(e => (0, i.jsxs)("g", {
+              children: [(0, i.jsx)("line", {
+                className: td().g,
+                x1: "10",
+                x2: "452",
+                y1: tm(e),
+                y2: tm(e)
+              }), (0, i.jsx)("text", {
+                className: td().ax,
+                x: "514",
+                y: tm(e) + 4,
+                textAnchor: "end",
+                children: l(e)
+              })]
+            }, e)), tu.map(([e, t, l, a, s, r]) => {
+              let n = tm(e),
+                o = null == l ? 392 : 21.75 + 15.5 * l;
+              return (0, i.jsxs)("g", {
+                children: [(0, i.jsx)("line", {
+                  className: td()["c" + r],
+                  x1: 21.75 + 15.5 * t,
+                  x2: o,
+                  y1: n,
+                  y2: n,
+                  strokeWidth: a,
+                  strokeOpacity: s
+                }), null != l ? (0, i.jsx)("circle", {
+                  className: td()["t" + r],
+                  cx: o,
+                  cy: n,
+                  r: "2.2"
+                }) : null]
+              }, e)
+            }), s, tg.map(([e, t, l]) => (0, i.jsx)("rect", {
+              className: td()["t" + l],
+              x: "398",
+              y: tm(e) - 2,
+              width: t,
+              height: "4",
+              opacity: ".8"
+            }, e)), (0, i.jsx)("text", {
+              className: td().ax,
+              x: "422",
+              y: "14",
+              textAnchor: "middle",
+              children: e("svgOpen")
+            }), (0, i.jsx)("line", {
+              className: td().now,
+              x1: "10",
+              x2: "452",
+              y1: r,
+              y2: r
+            }), (0, i.jsx)("text", {
+              className: td().ax,
+              x: "452",
+              y: r - 5,
+              textAnchor: "end",
+              children: e("svgNow")
+            }), (0, i.jsx)("rect", {
+              className: td().ptag,
+              x: "456",
+              y: r - 9,
+              width: "60",
+              height: "18",
+              rx: "3"
+            }), (0, i.jsx)("text", {
+              className: td().ptxt,
+              x: "486",
+              y: r + 4,
+              textAnchor: "middle",
+              children: l(82500)
+            }), (0, i.jsx)("text", {
+              className: `${td().lab} ${td().ta}`,
+              x: "12",
+              y: "21",
+              children: e("svgShort")
+            }), (0, i.jsx)("text", {
+              className: `${td().lab} ${td().tb}`,
+              x: "12",
+              y: "222",
+              children: e("svgLong")
+            }), (0, i.jsx)("path", {
+              className: td().lead,
+              d: "M266 243 L269.75 210"
+            }), (0, i.jsx)("text", {
+              className: td().note,
+              x: "262",
+              y: "252",
+              textAnchor: "end",
+              children: e("svgSwept")
+            })
+          ]
+        })
+      }
+
+      function tf() {
+        let e, {
+            i18n: t
+          } = (0, r.Bd)(E, {
+            keyPrefix: E
+          }),
+          l = (e = e_(), t => "title" === t ? e("faq", "title") : e("qa", t)),
+          a = t.language,
+          n = (0, s.useMemo)(() => ({
+            title: l("title"),
+            sub: l("sub"),
+            hero: {
+              title: l("whatT"),
+              paragraphs: [1, 2, 3, 4].map(e => l("what" + e)),
+              figure: (0, i.jsx)(tx, {
+                qa: l,
+                locale: a
+              }),
+              caption: l("cap")
+            },
+            groups: tc.flatMap((e, t) => e.map(([e, i]) => ({
+              id: e,
+              title: l(e),
+              col: t,
+              items: i.map(e => ({
+                id: String(e),
+                q: l("q" + e),
+                html: l("a" + e)
+              }))
+            })))
+          }), [a]);
+        return (0, i.jsx)(to.A, {
+          id: "ll-faq",
+          className: td().root,
+          ...n
+        })
+      }
+      let tv = (e, t) => ({
+        ...e,
+        ex: t.ex,
+        sym: t.sym,
+        meta: {
+          base: t.base,
+          quote: t.quote,
+          inv: t.inv,
+          dp: t.dp,
+          exLogo: t.exLogo,
+          coinLogo: t.coinLogo
+        }
+      });
+
+      function tb({
+        symbol: e
+      }) {
+        let {
+          t,
+          i18n: l
+        } = (0, r.Bd)(E, {
+          keyPrefix: E
+        }), a = e_(), {
+          mode: c,
+          systemMode: u
+        } = (0, n.Ut)(), m = ("system" === c ? u : c) === "light" ? "light" : "dark", [x, f] = (0, s.useState)(!1), y = (0, o.useRouter)(), [k, j] = (0, s.useState)(() => e ? tv(U, B(e)) : U), [N, M] = (0, s.useState)(b);
+        (0, s.useEffect)(() => {
+          let t = function() {
+            let e, t, l = {
+                ...U,
+                lev: U.lev.slice(),
+                meta: {
+                  ...U.meta
+                }
+              },
+              i = G(K);
+            if (!i || 1 !== i.v) return l;
+            if ("string" == typeof(e = i.ex) && /^[A-Za-z0-9. _-]{1,32}$/.test(e) && "string" == typeof(t = i.sym) && /^[A-Za-z0-9.:_-]{1,48}$/.test(t)) {
+              l.ex = i.ex, l.sym = i.sym;
+              let e = i.meta || (i.ex === A.ex && i.sym === A.sym ? U.meta : {});
+              l.meta = {
+                base: V(e.base) ? e.base : "",
+                quote: V(e.quote) ? e.quote : "",
+                inv: !0 === e.inv,
+                dp: Number.isInteger(e.dp) && e.dp >= 0 && e.dp <= 10 ? e.dp : null,
+                exLogo: X(e.exLogo) ? e.exLogo : "",
+                coinLogo: X(e.coinLogo) ? e.coinLogo : ""
+              }, l.meta.coinLogo || i.ex !== A.ex || i.sym !== A.sym || (l.meta.coinLogo = A.coinLogo)
+            }
+            return Number.isInteger(i.tf) && (l.tf = Math.max(0, Math.min(2, i.tf))), Array.isArray(i.lev) && 3 === i.lev.length && i.lev.some(Boolean) && (l.lev = i.lev.map(Boolean)), [0, 1, 2].includes(i.gran) && (l.gran = i.gran), ("side" === i.colorBy || "lev" === i.colorBy) && (l.colorBy = i.colorBy), Number.isFinite(i.minI) && (l.minI = Math.max(0, i.minI)), l.maxI = Number.isFinite(i.maxI) ? i.maxI : null === i.maxI ? null : l.maxI, null != l.maxI && l.maxI < l.minI && (l.minI = 0, l.maxI = null), Number.isFinite(i.lineK) && (l.lineK = Math.max(0, Math.min(1, i.lineK))), Number.isFinite(i.bubK) && (l.bubK = Math.max(0, Math.min(1, i.bubK))), "boolean" == typeof i.candles && (l.candles = i.candles), [1, 2, 3, 4, 5, 6, 7, 8].includes(i.lvR) && (l.lvR = i.lvR), l
+          }();
+          j(e && t.meta.base !== e ? tv(t, B(e)) : t), M(function() {
+            let e = b(),
+              t = G($);
+            if (t && "object" == typeof t && 2 === t.v)
+              for (let l of p) {
+                if (t[l] && "object" == typeof t[l])
+                  for (let [i] of g) w(t[l][i]) && (e[l][i] = t[l][i]);
+                t.preset && "string" == typeof t.preset[l] && ("custom" === t.preset[l] || v.some(e => e.id === t.preset[l])) && (e.preset[l] = t.preset[l])
+              }
+            return e
+          }()), f(!0)
+        }, []), (0, s.useEffect)(() => {
+          x && function(e) {
+            let {
+              ex: t,
+              sym: l,
+              meta: i,
+              tf: a,
+              lev: s,
+              gran: r,
+              colorBy: n,
+              minI: o,
+              maxI: h,
+              lineK: d,
+              bubK: c,
+              candles: p,
+              lvR: u
+            } = e;
+            Y = {
+              v: 1,
+              ex: t,
+              sym: l,
+              meta: i,
+              tf: a,
+              lev: s,
+              gran: r,
+              colorBy: n,
+              minI: o,
+              maxI: h,
+              lineK: d,
+              bubK: c,
+              candles: p,
+              lvR: u
+            }, clearTimeout(Z), Z = setTimeout(J, 250)
+          }(k)
+        }, [k, x]), (0, s.useEffect)(() => {
+          x && Q($, {
+            ...N,
+            v: 2
+          })
+        }, [N, x]);
+        let T = (0, s.useCallback)(e => j(t => ({
+            ...t,
+            ...e
+          })), []),
+          L = (0, s.useRef)(k);
+        L.current = k;
+        let S = (0, s.useRef)(null),
+          [z, O] = (0, s.useState)({
+            family: "Arial, sans-serif",
+            tick: 0
+          });
+        (0, s.useEffect)(() => {
+          let e = () => O(e => ({
+            family: S.current && getComputedStyle(S.current).fontFamily || e.family,
+            tick: e.tick + 1
+          }));
+          e(), document.fonts && document.fonts.ready && document.fonts.ready.then(() => S.current && e())
+        }, []);
+        let [D, P] = (0, s.useState)(null), [F, W] = (0, s.useState)("loading"), [ee, et] = (0, s.useState)(!1), ei = (0, s.useRef)(F);
+        ei.current = F;
+        let es = (0, s.useRef)(D);
+        es.current = D;
+        let er = (0, s.useRef)(0),
+          ed = (0, s.useCallback)(async e => {
+            let t, {
+                ex: l,
+                sym: i,
+                tf: a,
+                meta: s
+              } = L.current,
+              r = I[a] || I[0],
+              n = s && Number.isInteger(s.dp) ? s.dp : null,
+              o = ++er.current,
+              h = () => es.current && es.current.ds,
+              d = !e && en(l, i, r),
+              c = !e && !d && (el.get(ea(l, i, r)) || null);
+            c ? (c.ds !== h() && P({
+              ds: c.ds,
+              keepView: !1,
+              dp: n
+            }), W("ready")) : d || e || (W("loading"), t = setTimeout(() => o === er.current && et(!0), 250));
+            try {
+              let t = d || await eo(l, i, r, e);
+              if (o !== er.current) return;
+              t.ds ? (t.ds !== h() && P({
+                ds: t.ds,
+                keepView: !!e || !!c,
+                dp: n
+              }), W("ready")) : e || c || (P(null), W("empty"))
+            } catch (t) {
+              if (o !== er.current) return;
+              e || c || (P(null), W("error"))
+            } finally {
+              clearTimeout(t), o === er.current && et(!1)
+            }
+            e || (clearTimeout(eh), eh = setTimeout(async () => {
+              for (let e of I)
+                if (!(e === r || en(l, i, e))) try {
+                  await eo(l, i, e)
+                } catch (e) {}
+            }, 1200))
+          }, []);
+        (0, s.useEffect)(() => {
+          x && ed(!1)
+        }, [x, k.ex, k.sym, k.tf, ed]), (0, s.useEffect)(() => {
+          let e = setInterval(() => {
+            document.hidden || "ready" !== ei.current || ed(!0)
+          }, 6e4);
+          return () => {
+            clearInterval(e), clearTimeout(eh)
+          }
+        }, [ed]);
+        let ec = (0, s.useMemo)(() => {
+            if (!D) return null;
+            let e = new R(D.ds);
+            return e.pxDp = D.dp, e
+          }, [D]),
+          eu = (0, s.useMemo)(() => ec ? (ec.rebuild(k.lev, k.gran), ec.version) : 0, [ec, k.lev, k.gran]),
+          eg = (0, s.useMemo)(() => H(ec, l.language), [ec, l.language, eu]),
+          em = (0, s.useMemo)(() => ec ? ec.histogram() : null, [ec, eu]),
+          ex = (0, s.useMemo)(() => ({
+            model: ec,
+            agg: eu
+          }), [ec, eu]),
+          {
+            model: ef,
+            agg: ev
+          } = (0, s.useDeferredValue)(ex),
+          eb = (0, s.useMemo)(() => H(ef, l.language), [ef, l.language, ev]),
+          ew = (0, s.useMemo)(() => ef ? ef.zones() : null, [ef, ev]),
+          ey = (0, s.useMemo)(() => ef ? ef.keyLevels(k.lvR) : null, [ef, ev, k.lvR]),
+          ek = (0, s.useMemo)(() => ef ? ef.bands() : null, [ef, ev]),
+          eN = (0, s.useMemo)(() => ef ? ef.levTiers() : null, [ef, ev]),
+          eM = (0, s.useMemo)(() => ef ? ef.balance() : null, [ef, ev]);
+        (0, s.useEffect)(() => {
+          em && k.minI > em.top && T({
+            minI: 0
+          })
+        }, [em]);
+        let eT = (0, s.useMemo)(() => _(m, N), [m, N]),
+          eq = (0, s.useCallback)(e => {
+            let t = L.current.lev.slice();
+            t[e] = !t[e], t.some(Boolean) && T({
+              lev: t
+            })
+          }, [T]),
+          eL = (0, s.useCallback)(({
+            showCandles: e,
+            ...t
+          }) => T(void 0 === e ? t : {
+            ...t,
+            candles: e
+          }), [T]),
+          eS = (0, s.useCallback)((e, t) => T({
+            minI: e,
+            maxI: t
+          }), [T]);
+        (0, s.useEffect)(() => {
+          if (!x || k.meta.coinLogo) return;
+          let e = !1,
+            {
+              ex: t,
+              sym: l,
+              meta: i
+            } = L.current;
+          return ep(i.base || l).then(i => {
+            let a = !e && i.find(e => e.ex === t && e.sym === l),
+              s = L.current;
+            a && a.coinLogo && s.ex === t && s.sym === l && T({
+              meta: {
+                ...s.meta,
+                coinLogo: a.coinLogo,
+                exLogo: s.meta.exLogo || a.exLogo
+              }
+            })
+          }).catch(() => {}), () => {
+            e = !0
+          }
+        }, [x, k.ex, k.sym]);
+        let ez = (0, s.useCallback)(e => j(t => tv(t, e)), []),
+          eI = C(y.query.symbol);
+        (0, s.useEffect)(() => {
+          x && eI && eI !== L.current.meta.base && j(e => tv(e, B(eI)))
+        }, [x, eI]), (0, s.useEffect)(() => {
+          let e = k.meta.base;
+          if (!x || !e || e === C(y.query.symbol)) return;
+          let {
+            symbol: t,
+            ...l
+          } = y.query;
+          y.replace((0, d.sQ)("liqLevels", e, l), void 0, {
+            shallow: !0,
+            scroll: !1
+          })
+        }, [x, k.meta.base]);
+        let eA = (0, s.useMemo)(() => ({
+            lineK: k.lineK,
+            bubK: k.bubK,
+            showCandles: k.candles,
+            colorBy: k.colorBy,
+            minI: k.minI,
+            maxI: k.maxI
+          }), [k.lineK, k.bubK, k.candles, k.colorBy, k.minI, k.maxI]),
+          {
+            ex: eC,
+            sym: eB
+          } = k,
+          eO = (0, s.useMemo)(() => ({
+            ex: eC,
+            sym: eB,
+            ...k.meta
+          }), [eC, eB, k.meta]),
+          eP = eO.base || "",
+          eR = ej[eP] ? a("coin", eP) : eP,
+          eF = eP && "BTC" !== eP ? {
+            title: t("tCoin", {
+              name: eR,
+              defaultValue: "{{name}} Liquidation Levels, Liquidation Levels Lines, Liquidation Price | CoinGlass"
+            }),
+            d: t("dCoin", {
+              coin: eR === eP ? eP : eR + " (" + eP + ")",
+              defaultValue: "View the {{coin}} Liquidation Levels Indicator on CoinGlass to identify potential price levels where large-scale liquidations may occur. By analyzing high-leverage long and short position clusters, this indicator helps traders identify key support and resistance areas, manage risk with informed stop-loss levels, and gain insights into market sentiment and potential volatility zones."
+            })
+          } : {
+            title: t("t"),
+            d: t("d")
+          },
+          eW = ec ? ec.curPrice : 0,
+          eH = ef ? ef.curPrice : 0;
+        return (0, i.jsxs)(q, {
+          ref: S,
+          style: x ? eT.vars : void 0,
+          children: [(0, i.jsx)(h.A, {
+            raw: !0,
+            title: eF.title,
+            d: eF.d
+          }), (0, i.jsx)(eE, {
+            pair: eO,
+            price: ec ? eg.px(eW) : null,
+            tf: k.tf,
+            onTf: e => T({
+              tf: e
+            }),
+            onSymbol: ez,
+            lev: k.lev,
+            onToggleLev: eq,
+            gran: k.gran,
+            onGran: e => T({
+              gran: e
+            }),
+            colorMode: m,
+            colorCfg: N,
+            effective: eT.effective,
+            onColorCfg: M
+          }), (0, i.jsx)(eD, {
+            model: ef,
+            zones: ew,
+            fmt: eb
+          }), (0, i.jsx)(eX, {
+            ex: eC,
+            sym: eB,
+            tf: k.tf,
+            model: ec,
+            aggVersion: eu,
+            keepView: !!D && D.keepView,
+            hist: em,
+            fmt: eg,
+            theme: eT,
+            font: z,
+            options: eA,
+            onOptions: eL,
+            onRange: eS,
+            status: F,
+            showLoader: ee,
+            onRetry: () => ed(!1)
+          }), (0, i.jsxs)("section", {
+            className: "ll-grid",
+            children: [(0, i.jsx)(eY, {
+              data: ey,
+              curPrice: eH,
+              lvR: k.lvR,
+              onLvR: e => T({
+                lvR: e
+              }),
+              fmt: eb
+            }), (0, i.jsx)(e0, {
+              model: ef,
+              theme: eT,
+              font: z,
+              fmt: eb
+            }), (0, i.jsx)(e3, {
+              data: ek,
+              fmt: eb
+            }), (0, i.jsx)(e6, {
+              data: eN,
+              fmt: eb
+            })]
+          }), (0, i.jsxs)("section", {
+            className: "ll-grid",
+            children: [(0, i.jsx)(e7, {
+              zones: ew,
+              curPrice: eH,
+              fmt: eb
+            }), (0, i.jsx)(te, {
+              bal: eM,
+              theme: eT,
+              font: z,
+              fmt: eb
+            })]
+          }), (0, i.jsx)(tn, {
+            pair: eO,
+            onSymbol: ez
+          }), (0, i.jsx)(tf, {})]
+        })
+      }
+      var tw = !0;
+
+      function ty({
+        symbol: e
+      }) {
+        return (0, i.jsx)(tb, {
+          symbol: e
+        })
+      }
+      ty.getLayout = function(e) {
+        return (0, i.jsx)(a.A, {
+          children: e
+        })
+      }
+    },
+    98114: (e, t, l) => {
+      "use strict";
+      l.d(t, {
+        A: () => d
+      });
+      var i = l(6029),
+        a = l(55729),
+        s = l(42920),
+        r = l.n(s);
+      let n = (...e) => e.filter(Boolean).join(" ");
+
+      function o({
+        hero: e
+      }) {
+        let {
+          title: t,
+          paragraphs: l = [],
+          figure: a = null,
+          caption: s = null
+        } = e;
+        return (0, i.jsxs)("article", {
+          className: n(r().card, r().hero, !a && r().heroOnly),
+          children: [(0, i.jsxs)("div", {
+            className: r().text,
+            children: [(0, i.jsx)("h3", {
+              className: r().h3,
+              children: t
+            }), l.map((e, t) => (0, i.jsx)("p", {
+              className: r().p,
+              children: e
+            }, t))]
+          }), a ? (0, i.jsxs)("figure", {
+            className: r().figure,
+            children: [a, s ? (0, i.jsx)("figcaption", {
+              className: r().cap,
+              children: s
+            }) : null]
+          }) : null]
+        })
+      }
+
+      function h({
+        groups: e,
+        name: t,
+        domId: l,
+        defaultOpen: a,
+        onToggle: s
+      }) {
+        return (0, i.jsx)("div", {
+          className: r().col,
+          children: e.map(e => (0, i.jsxs)("div", {
+            children: [(0, i.jsx)("h3", {
+              className: r().gh,
+              children: e.title
+            }), e.items.map(e => (0, i.jsxs)("details", {
+              id: l(e.id),
+              name: t,
+              className: r().item,
+              "data-q": e.id,
+              open: e.id === a || void 0,
+              onToggle: s,
+              children: [(0, i.jsx)("summary", {
+                className: r().q,
+                children: (0, i.jsx)("span", {
+                  className: r().qText,
+                  children: e.q
+                })
+              }), null != e.html ? (0, i.jsx)("div", {
+                className: r().a,
+                dangerouslySetInnerHTML: {
+                  __html: e.html
+                }
+              }) : (0, i.jsx)("div", {
+                className: r().a,
+                children: e.a.map((e, t) => (0, i.jsx)("p", {
+                  children: e
+                }, t))
+              })]
+            }, e.id))]
+          }, e.id ?? e.title))
+        })
+      }
+      let d = (0, a.memo)(function({
+        id: e,
+        title: t,
+        sub: l = null,
+        hero: s = null,
+        groups: d,
+        notice: c = null,
+        domId: p = null,
+        defaultOpen: u,
+        jsonLd: g = !1,
+        scrollMarginTop: m = 72,
+        className: x,
+        children: f = null
+      }) {
+        let v = (0, a.useRef)(null),
+          b = p ?? (t => `${e}-${t}`),
+          w = void 0 === u ? d[0]?.items[0]?.id : u,
+          y = [0, 1].map(e => d.filter(t => (t.col ?? 0) === e)).filter(e => e.length),
+          k = (0, a.useCallback)(e => {
+            let t = e.currentTarget;
+            t.open && v.current?.querySelectorAll("details[open]").forEach(e => {
+              e !== t && (e.open = !1)
+            })
+          }, []);
+        return (0, i.jsxs)("section", {
+          ref: v,
+          id: e,
+          className: n(r().root, x),
+          style: {
+            "--faq-scroll-margin-top": `${m}px`
+          },
+          "aria-labelledby": `${e}-title`,
+          children: [(0, i.jsxs)("div", {
+            className: r().head,
+            children: [(0, i.jsx)("h2", {
+              id: `${e}-title`,
+              className: r().h2,
+              tabIndex: -1,
+              children: t
+            }), l ? (0, i.jsx)("p", {
+              className: r().sub,
+              children: l
+            }) : null]
+          }), c, s ? (0, i.jsx)(o, {
+            hero: s
+          }) : null, (0, i.jsx)("div", {
+            className: n(r().grid, y.length < 2 && r().single),
+            children: y.map((t, l) => (0, i.jsx)("div", {
+              className: r().card,
+              children: (0, i.jsx)(h, {
+                groups: t,
+                name: `${e}-q`,
+                domId: b,
+                defaultOpen: w,
+                onToggle: k
+              })
+            }, l))
+          }), f, g ? (0, i.jsx)("script", {
+            type: "application/ld+json",
+            dangerouslySetInnerHTML: {
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: d.flatMap(e => e.items.map(e => ({
+                  "@type": "Question",
+                  name: e.q,
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: e.html ?? e.a.join("\n\n")
+                  }
+                })))
+              }).replace(/</g, "\\u003c")
+            }
+          }) : null]
+        })
+      })
+    }
+  },
+  e => {
+    e.O(0, [47532, 4958, 15789, 45474, 36501, 34790, 88185, 38370, 16301, 69897, 84023, 12985, 62256, 55394, 25727, 89831, 28906, 73305, 3986, 90636, 46593, 38792], () => e(e.s = 26441)), _N_E = e.O()
+  }
+]);

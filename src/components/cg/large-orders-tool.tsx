@@ -36,8 +36,8 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
   const [selected, setSelected] = useState<LtoOrder | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const klineQ = usePolling<KlinePayload>(`/api/cg/kline?type=kline&interval=m15&limit=300&symbol=Binance_${sym}USDT`, 60_000);
-  const ltoQ = usePolling<LtoPayload>(`/api/cg/lto?symbol=${sym}&minVolUsd=${minVolUsd}`, 45_000);
+  const klineQ = usePolling<KlinePayload>(`/api/cg/kline?type=kline&interval=m15&limit=300&symbol=Binance_${sym}USDT`, 30_000);
+  const ltoQ = usePolling<LtoPayload>(`/api/cg/lto?symbol=${sym}&minVolUsd=${minVolUsd}`, 20_000);
 
   // symbol switched: drop the detail selection so a stale BTC order can
   // never render under the new symbol's unit labels

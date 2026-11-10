@@ -56,8 +56,8 @@ const TF_ROW = ["m15", "h1", "h4", "d1"] as const;
 const TF_LABEL: Record<string, string> = { m15: "15m", h1: "1H", h4: "4H", d1: "1D" };
 
 export default function OverviewTool({ sym = "BTC" }: { sym?: string }) {
-  const q = usePolling<MarketResp>(`/api/cg/market?sym=${sym}`, 30_000);
-  const sigQ = usePolling<SignalsResp>(`/api/cg/signals?sym=${sym}`, 45_000);
+  const q = usePolling<MarketResp>(`/api/cg/market?sym=${sym}`, 12_000);
+  const sigQ = usePolling<SignalsResp>(`/api/cg/signals?sym=${sym}`, 20_000);
   const tk = useTicker(sym); // 1s live price — refreshes the header every second
   // defense-in-depth: never render a snapshot that belongs to another symbol
   const d = q.data && q.data.sym === sym ? q.data : null;
@@ -130,10 +130,12 @@ export default function OverviewTool({ sym = "BTC" }: { sym?: string }) {
             </div>
             <span
               className="flex items-center gap-1 rounded border border-neutral-800 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider"
-              title="Price refreshes every second from the live Coinglass feed (shared ~3s upstream cache)"
+              title="Binance futures WebSocket (real-time) → 0.25s server REST → 3s Coinglass ladder — the badge names the active tier"
             >
               <span className={`h-1.5 w-1.5 rounded-full ${tk.live ? "animate-pulse bg-emerald-400" : "bg-amber-400"}`} />
-              <span className={tk.live ? "text-emerald-400" : "text-amber-400"}>{tk.live ? "live · 1s" : "reconnecting"}</span>
+              <span className={tk.live ? "text-emerald-400" : "text-amber-400"}>
+                {tk.live ? (tk.source === "ws" ? "real-time · ws" : tk.source === "rest" ? "live · 0.25s" : "live · 3s") : "reconnecting"}
+              </span>
             </span>
           </div>
         </div>

@@ -46,7 +46,7 @@ export interface MarketSnapshot {
 
 /** module cache: sym → {at, snap, err} */
 const cache = new Map<string, { at: number; snap?: MarketSnapshot; err?: string }>();
-const TTL = Number(process.env.CG_MARKET_TTL_MS ?? 60_000) || 60_000;
+const TTL = Number(process.env.CG_MARKET_TTL_MS ?? 12_000) || 12_000;
 
 async function fetchKlines(instKey: string, itv: string, limit: number): Promise<KlineRow[]> {
   const r = (await cgGet(
