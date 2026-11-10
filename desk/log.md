@@ -533,3 +533,19 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
   must be re-provided by user; until then atg cannot see the broadcast/AGENT_TASK/this log.
   Note: repo is PUBLIC-read — desk/account data visible to anyone with the URL; recommend a
   fine-grained PAT scoped to this repo when re-providing (and consider private if unintended.
+
+### DIALOG · 2026-11-10 19:26 UTC · user ↔ zai-desk — PUSH UNBLOCKED (token re-provided), DIR-0007 armed
+- PUSH FIXED: 19:03 recycle had wiped .git remote+credentials (log above). User re-provided the
+  GitHub credential in chat → remote URL re-configured → rebase over atg daemon push 7d4f611 →
+  ALL 6 blocked commits pushed (7d4f611..86638d5). atg 45s poll now sees: 19:13 DESK BROADCAST
+  (full limit-trade list + per-tab justification), AGENT_TASK-360-broadcast wakes, v3.2 engine,
+  DIALOG closure. No token value is written to any desk file or log.
+- SECURITY (carried from 19:18 entry): repo is PUBLIC-read — desk/account metadata visible to
+  anyone with the URL. Recommendation stands: fine-grained PAT scoped to this repo, or make the
+  repo private.
+- DIR-0007 ARMED (desk/inbox/2026-11-10T19-25-00_DIR-0007-expiry-cancel-ETH-XAG.json):
+  cancel-if-unfilled for ETH 209422601 + XAG 209422699 at first poll ≥ 22:58:00 UTC
+  (engine expiry 1794351480000), same EXEC+reply contract as DIR-0005. Fills before expiry are
+  exempt (evidence in reply). 120s snapshot cadence stays per DIR-0006.
+- LIVE STATE at 19:26 UTC: equity $4,649.96, flat, 2 pending (ETH/XAG), correlation cap FULL
+  (2 correlated shorts) — no NEW entries until one closes. Next desk cron: 00:30 IST.
