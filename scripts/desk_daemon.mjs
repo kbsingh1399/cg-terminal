@@ -109,24 +109,28 @@ async function gitSync() {
 }
 
 // ---------------- notifications / wake ----------------
+function spawnDetached(cmd, args = []) {
+  try {
+    const c = args.length
+      ? spawn(cmd, args, { detached: true, stdio: "ignore" })
+      : spawn(cmd, { shell: true, detached: true, stdio: "ignore" });
+    c.on("error", () => {}); // async spawn errors must not crash the daemon
+    c.unref();
+  } catch { /* best effort */ }
+}
 function notify(title, text) {
   if (cfg.notify_cmd === "") return;
-  try {
-    if (cfg.notify_cmd && cfg.notify_cmd !== "auto") {
-      spawn(`${cfg.notify_cmd} "${title}: ${text}"`, { shell: true, detached: true, stdio: "ignore" }).unref();
-    } else if (process.platform === "win32") {
-      spawn(`msg * "${title}: ${text}"`, { shell: true, detached: true, stdio: "ignore" }).unref();
-    } else {
-      spawn("notify-send", [title, text], { detached: true, stdio: "ignore" }).unref();
-    }
-  } catch { /* best effort */ }
+  if (cfg.notify_cmd && cfg.notify_cmd !== "auto") {
+    spawnDetached(`${cfg.notify_cmd} "${title}: ${text}"`);
+  } else if (process.platform === "win32") {
+    spawnDetached(`msg * "${title}: ${text}"`);
+  } else {
+    spawnDetached("notify-send", [title, text]);
+  }
 }
 function fireWake(text) {
   if (!cfg.wake_cmd) return;
-  try {
-    const cmd = cfg.wake_cmd.replace("{msg}", () => text);
-    spawn(cmd, { shell: true, detached: true, stdio: "ignore" }).unref();
-  } catch { /* best effort */ }
+  spawnDetached(cfg.wake_cmd.replace("{msg}", () => text));
 }
 
 // ---------------- WAKE.md beacon (daemon appends, agent clears) ----------------
