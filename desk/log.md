@@ -181,3 +181,28 @@ entries. All timestamps UTC.
 ### Positions
 - no open positions
 
+## R10 · 2026-11-10 17:07 UTC · zai-desk
+
+**Market**: BTC 72,925.1 (-3.2%)  ETH 2,015.38 (-5.6%)  SOL 81.86 (-5.6%)  XAU 4,028.14 (-2.8%)  XAG 51.360 (-4.0%)
+**Bias (|score|≥2)**: BTC-7  ADA-6  LTC-5  ETH-3  XAG-4  DOGE-2  XAU+2
+
+### Opportunities (engine v3 — debate-gated, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R4-BTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R4-DOGE-3 re-debated: FOR 4/AGAINST 1 — stands
+- R7-LTC-1 re-debated: FOR 5/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 6/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
+
+### EXEC · 2026-11-10 17:09 UTC · zai-desk — BTC placement verified + trade status sweep
+- TICKET 209404683 (R4-BTC-1): USER placed 16:53:56 — BTCUSD SELL LIMIT 0.06 @ 74,262.9 · SL 74,664.0 · TP 72,957.0, pending above market (bid 72,945 at 17:00, needs +1.8% rally to fill).
+- VERIFICATION (placement-time basis +0.051%, spread$ 23.49): entry dev -0.061% ✓ · SL dev -0.030% ✓ · TP dev -0.062% ✓ — uniform stale-basis shift (user used the 16:40 card basis -0.010%), ALL WITHIN TOLERANCES (±0.1/0.15/0.1%).
+- Geometry: bid-based stop dist 377.6 (design 378.4, SL pad present ✓) · risk $22.66 = 0.487% equity ✓ · R to T1 3.46 ✓ · spread 0.032% ✓ · basis +0.051% ✓.
+- VERDICT: EXECUTED-COMPLIANT. Lesson logged: place from the LATEST mt5.json basis, not an older card — deviation was harmless this time.
+- Trade ledger: R6-ADA-1 (209375723) cancelled ✓ · XAU 0.01 (209400100) closed −$4.46 ✓ · R4-BTC-1 (209404683) placed pending ✓ · R7-LTC-1 not placeable (basis +1.13%, spread 2.40%) · R9-ADA-1 not placeable (spread 2.20%) · R4-DOGE-3 not placeable (no tick).
+- R10 17:07: bias BTC −7.2 · ADA −6.3 (rising) · LTC −4.9 · XAG −3.7 · ETH −3.3; no new candidates; all 4 standing orders re-debated and stand.

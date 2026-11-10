@@ -13,32 +13,26 @@
 The USER now places trades manually at MT5. atg-exec's market-side role = VERIFY every
 placement against the desk card (reply contract below). zai-desk runs rounds + arbitration.
 
-## 16:49 UTC — R8 DESK BRIEF (round run 16:46, engine v3)
-Bias: BTC −7.2 · LTC −7.1 · ADA −3.8 · XAG −3.3 · AVAX/BNB −2.7 · ETH −2.1 · DOGE −2.0 · XAU +2.0.
-No new order passed the gates. Standing orders re-debated: R4-BTC-1 6/1 · R7-LTC-1 6/0 · R4-DOGE-3 4/1.
+## 17:09 UTC — R9/R10 STATUS: BTC PLACED & VERIFIED — desk sweep done
+R9 17:01 (run LOCALLY by atg desk — engine healthy again): NEW R9-ADA-1 ADA SHORT (R 3.0, debate 5/0,
+T1 long-liq magnet str 92 @ 0.1702). R10 17:07 (zai): bias BTC −7.2 · ADA −6.3 · LTC −4.9 · XAG −3.7 ·
+ETH −3.3 — no new candidates; all 4 standing orders re-debated and stand.
 
-1. **VERIFY-TASK (when user places BTC)** — R4-BTC-1 BTC SHORT is the only broker-compliant trade.
-   Card REFRESHED 16:53 (basis +0.051%, spread 0.032%, spread$ 23.5): SELL LIMIT 0.06 lots ·
-   entry 74,308.1 · SL 74,710.2 (ask-trigger, spread-padded; structural stop = perp 74,648.7) ·
-   TP 73,001.9 · risk $22.72 = 0.49% equity · expires 18:53 UTC.
-   BASIS-DRIFT RULE (verification must use it, not frozen numbers): at click time take the
-   LATEST mt5.json BTCUSD.basisPct and compute mt5Level = perpLevel × (1 + basisPct/100)
-   for entry/TP, SL = stop×factor + current spread$ (ask-trigger pad). Perp levels: entry
-   74,270.3 · stop 74,648.7 · T1 72,964.8. A ±0.05% basis swing moves levels ~$37 — verify
-   against the placement-time basis, not this card. When the ticket appears in mt5.json orders[]:
-   re-derive ALL levels + lots yourself, check entry/SL/TP translation & spread rule, then write
-   desk/outbox/VERIFY-R4-BTC-1.reply.md (VERDICT/CHECKS/REASONING/EVIDENCE) + state.json → placed.
-   Tolerances: entry/TP within 0.1% of recomputed, SL within 0.15%, lots ±0.01.
-2. **DO NOT place LTC** — R7-LTC-1 is perp-valid (6/0) but broker-blocked: LTCUSD basis +0.841%
-   (> 0.5%) AND spread 2.40% (> 0.15%) at 16:40. Same pathology as ADA. Re-check each round.
-3. **DO NOT place DOGE** — DOGEUSD still no tick (broker symbol unknown; DIR-0003 open). Expires 18:53.
-4. ✅ **XAUUSD BUY 0.01 @ 4022.68 CLOSED by user ~16:52** (realized −$4.46, balance 4,654.42 →
-   4,649.96). Account flat, margin 0. Quick exit after the naked-position flag = good discipline.
-   Log an EXEC entry recording this close when you next sync.
+1. ✅ **BTC PLACED — ticket 209404683** (16:53:56, SELL LIMIT 0.06 @ 74,262.9 · SL 74,664.0 ·
+   TP 72,957.0). DESK VERDICT: EXECUTED-COMPLIANT — entry dev −0.061% / SL −0.030% / TP −0.062%
+   vs placement-time basis +0.051% (uniform stale-basis shift, all within tolerances ±0.1/0.15/0.1);
+   stop dist 377.6 vs design 378.4 (pad present) · risk $22.66 = 0.487% ✓ · R 3.46 ✓.
+   YOUR JOB: run your OWN independent verification per the reply contract (re-derive, don't trust
+   the desk math) → desk/outbox/VERIFY-R4-BTC-1.reply.md. Then WATCH the ticket: if filled, log
+   fill + monitor SL/TP; if expired unfilled at 18:53, state.json → expired + EXEC entry.
+2. **DO NOT place ADA** — R9-ADA-1 is perp-strong (str-92 magnet target, debate 6/0 after R10) but
+   ADAUSD spread 2.2016% at 17:00 = 13× over the 0.15% rule → instant stop-out pathology. Re-check each round.
+3. **DO NOT place LTC / DOGE** — LTC basis +1.134% & spread 2.40% (worse); DOGE no tick (DIR-0003 open).
+4. ✅ **XAUUSD close recorded** (−$4.46 realized, account flat). No desk follow-up needed.
 
-## Resolved / bookkeeping
-- DIR-0001 (cancel ADA 209375723): DONE — orders[] empty at 16:40, no ADA position. state.json → cancelled.
-- DIR-0002 (execute BTC): SUPERSEDED by role split above — verify, don't execute. Reply still welcome.
+## Bookkeeping
+- DIR-0001 (cancel ADA 209375723): DONE ✓. DIR-0002 (execute BTC): superseded by role split — DONE via user manual placement ✓.
+- Ledger: R6-ADA-1 cancelled · XAU closed −$4.46 · R4-BTC-1 placed pending (209404683) · LTC/ADA/DOGE blocked.
 
 ## Still open
 - **DIR-0003 · INVESTIGATE** — find tradeable names for DOGEUSD/AVAXUSD/BNBUSD/LINKUSD/SOLUSD
@@ -46,7 +40,6 @@ No new order passed the gates. Standing orders re-debated: R4-BTC-1 6/1 · R7-LT
   Reply: desk/outbox/2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md
 
 ## User-decision items (zai escalation)
-- XAU long: add SL 3,999.4? (naked 0.01 lot currently, −$1.54 floating)
 - Autonomy is level 1 (REASON-EXECUTE). Say "autonomy 2" to let risk-reducing acts run without directives.
 - `wake_cmd` still empty — daemon can toast but cannot launch the agent; set it in desk/daemon.json if a CLI/URL trigger exists.
 
