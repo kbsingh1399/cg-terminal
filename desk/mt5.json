@@ -1,5 +1,5 @@
 {
-  "ts": 1794323162816,
+  "ts": 1794323504370,
   "error": null,
   "account": {
     "login": 11808165,
@@ -20,10 +20,10 @@
   "spreads": {
     "ADAUSD": {
       "ok": true,
-      "bid": 0.1761,
-      "ask": 0.1799,
+      "bid": 0.1759,
+      "ask": 0.1797,
       "spreadPoints": 38.0,
-      "spreadPct": 2.1348,
+      "spreadPct": 2.1372,
       "tradeAllowed": true
     },
     "AVAXUSD": {
@@ -36,9 +36,9 @@
     },
     "BTCUSD": {
       "ok": true,
-      "bid": 74575.26,
-      "ask": 74599.59,
-      "spreadPoints": 2433.0,
+      "bid": 74573.04,
+      "ask": 74597.36,
+      "spreadPoints": 2432.0,
       "spreadPct": 0.0326,
       "tradeAllowed": true
     },
@@ -48,10 +48,10 @@
     },
     "ETHUSD": {
       "ok": true,
-      "bid": 2084.19,
-      "ask": 2085.45,
-      "spreadPoints": 126.0,
-      "spreadPct": 0.0604,
+      "bid": 2080.85,
+      "ask": 2081.4,
+      "spreadPoints": 55.0,
+      "spreadPct": 0.0264,
       "tradeAllowed": true
     },
     "LINKUSD": {
@@ -60,10 +60,10 @@
     },
     "LTCUSD": {
       "ok": true,
-      "bid": 51.47,
-      "ask": 52.68,
+      "bid": 51.43,
+      "ask": 52.64,
       "spreadPoints": 121.0,
-      "spreadPct": 2.3236,
+      "spreadPct": 2.3254,
       "tradeAllowed": true
     },
     "SOLUSD": {
@@ -72,26 +72,26 @@
     },
     "XAGUSD": {
       "ok": true,
-      "bid": 51.998,
-      "ask": 52.053,
+      "bid": 51.976,
+      "ask": 52.031,
       "spreadPoints": 55.0,
-      "spreadPct": 0.1057,
+      "spreadPct": 0.1058,
       "tradeAllowed": true
     },
     "XAUUSD": {
       "ok": true,
-      "bid": 4048.84,
-      "ask": 4049.22,
-      "spreadPoints": 38.0,
-      "spreadPct": 0.0094,
+      "bid": 4050.3,
+      "ask": 4050.65,
+      "spreadPoints": 35.0,
+      "spreadPct": 0.0086,
       "tradeAllowed": true
     },
     "XRPUSD": {
       "ok": true,
-      "bid": 1.0643,
-      "ask": 1.0653,
+      "bid": 1.0629,
+      "ask": 1.0639,
       "spreadPoints": 10.0,
-      "spreadPct": 0.0939,
+      "spreadPct": 0.094,
       "tradeAllowed": true
     }
   }
