@@ -234,3 +234,17 @@ ROLLBACK (if build fails): `git revert <assets.ts commit> && npm run build && re
 
 ## 2026-11-10 21:09 UTC — agent task from zai-desk
 - 360° classic deepscan finished 20261110-2108 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2108.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): none. PARKED: none. CLASSIC: 62/77 online (watchlist-only, engine v4 pending). All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 21:14 UTC — agent task from zai-desk
+- DIRECTIVE DIR-0009 · kind EXECUTE+VERIFY+REPORT · priority normal · no market risk · supersedes the pending parts of DIR-0008 (its feed-verify logic is included here)
+CONTEXT: Full-universe expansion shipped (commits fc6d300..f87f318): perp registry 16 assets (XPT+USO added; USO rides an OKX lead), NEW /api/cg/classic route serving the 77-instrument classic universe (Yahoo v8), symbol_map now 17 entries (+XPT:XPTUSD, USO:USOUSD, UKO:UKOUSD).
+TASKS:
+1. git pull (if pull fails or a rebase is in progress: `git rebase --abort && git pull --rebase origin main`).
+2. CONFIG-CHECK: desk/state.json config.symbol_map = 17 entries incl XPT:XPTUSD, USO:USOUSD, UKO:UKOUSD (report to desk/log.md; do NOT edit config — desk owns the write; if the file contains conflict markers, STOP and report — a repair script pattern exists at scripts/repair_state_json.py).
+3. SYMBOLS DUMP (reconciliation evidence): dump FULL mt5.symbols_get() (name, bid, ask, visible, path) to desk/outbox/DIR-0009-symbols-dump.txt. Reconcile: registry has 43 FX vs FN site 46 vs user audit 48; FN site omits VIX; equities 20 listed vs 19 scanned (SPCX excluded pending spec check). List the delta symbols explicitly.
+4. FEED VERIFY: after one push cycle (~45s+), confirm XPTUSD / USOUSD / UKOUSD spread keys appear in desk/mt5.json with live bid/ask. If absent ~10 min after your pull: mt5.symbols_get('*XPT*') / ('*USO*') / ('*UKO*') and report the exact broker names.
+5. SPECS: report XPTUSD/USOUSD/UKOUSD contract specs (volumeMin, volumeStep, contractSize, tickValue, tickSize, digits) for broker-gate calibration — the desk sizing reads them live but the desk wants them on record for the mass/min-lot gates.
+6. TERMINAL REBUILD (Windows box): `npm ci` (only if lockfile changed) → `npm run build` → restart → verify ON THAT BOX: `curl localhost:3000/api/cg/assets` = 16 assets · `curl 'localhost:3000/api/cg/classic?list=1'` = 77 · `curl 'localhost:3000/api/cg/market?sym=USO'` = 200 (OKX-lead price) · `curl 'localhost:3000/api/cg/fp?sym=USO&itv=m15&limit=5'` = ok with venues [okx-perp,...] missing [binance-perp, bybit-perp].
+7. STATE.JSON RACE HARDENING (your side, per multi-agent review G4 — 2nd corruption occurred today): (a) make desk_round.py's state.json write ATOMIC (write to state.json.tmp then os.replace); (b) NEVER commit a state.json containing conflict markers — if a pull/rebase leaves markers, abort the rebase and re-pull instead. Report both changes in your reply.
+8. Note: ETH ticket 209422601 + XAG ticket 209422699 remain manage-only (DIR-0007 expiry-cancel ~22:58 UTC still armed). No new orders from this directive.
+9. Reply outputs to desk/outbox/ as DIR-0009 reply. Rollback (if build fails): `git revert <registry commits> && npm run build && restart` — do not hand-edit built output.
