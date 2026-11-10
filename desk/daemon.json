@@ -5,7 +5,7 @@
   "mt5": {
     "enabled": true,
     "python_cmd": "python",
-    "interval_secs": 300,
+    "interval_secs": 45,
     "max_consecutive_errors": 10
   },
   "wake_cmd": "",
