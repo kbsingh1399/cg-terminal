@@ -101,7 +101,6 @@ entries. All timestamps UTC.
 ### Positions
 - no open positions
 
-
 ### EXEC · 2026-11-10 15:31 UTC · USER (manual MT5 desktop) — recorded by zai-desk 15:47
 - R6-ADA-1 ADA SHORT SELL LIMIT ticket 209375723: 1.00 lot @ 0.17772, SL 0.1783, TP 0.1709 — pending, unfilled
 - REVIEW (zai-desk): entry correctly basis-translated (perp 0.1772 x +0.29% = 0.17772); SL/TP NOT translated; ADAUSD spreadPct 2.19% (rule max 0.15%), basisPct +0.29% (ok, < 0.5%).
@@ -143,7 +142,6 @@ entries. All timestamps UTC.
 
 ### Positions
 - no open positions
-
 
 ### EXEC · 2026-11-10 16:49 UTC · zai-desk — R8 desk brief for MANUAL placement
 - Account: equity 4,652.88 · balance 4,654.42 · margin_level 2,892% · risk budget 0.5% = $23.26
@@ -198,7 +196,6 @@ entries. All timestamps UTC.
 ### Positions
 - no open positions
 
-
 ### EXEC · 2026-11-10 17:09 UTC · zai-desk — BTC placement verified + trade status sweep
 - TICKET 209404683 (R4-BTC-1): USER placed 16:53:56 — BTCUSD SELL LIMIT 0.06 @ 74,262.9 · SL 74,664.0 · TP 72,957.0, pending above market (bid 72,945 at 17:00, needs +1.8% rally to fill).
 - VERIFICATION (placement-time basis +0.051%, spread$ 23.49): entry dev -0.061% ✓ · SL dev -0.030% ✓ · TP dev -0.062% ✓ — uniform stale-basis shift (user used the 16:40 card basis -0.010%), ALL WITHIN TOLERANCES (±0.1/0.15/0.1%).
@@ -231,7 +228,6 @@ entries. All timestamps UTC.
 
 ### Positions
 - no open positions
-
 
 ### DIALOG · 2026-11-10 17:35 UTC · zai-desk — DATA-COVERAGE AUDIT (user challenge: "you might be missing many data points")
 **AUDIT RESULT — three tiers:**
@@ -326,18 +322,27 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 ### Positions
 - no open positions
 
-<<<<<<< HEAD
 ### DIALOG · 2026-11-10 18:12 UTC · user ↔ zai-desk — alert coverage audit
 - Q (user): "I hope we are considering alerts as well."
 - AUDIT: existing = new-suggestion bell + infra-failure bell (atg daemon notify_cmd → bell_alert.py, wake_cmd still empty user-side); desk-side = 3x/day wakes with material-events chat rule. MISSING: fills, SL/TP/ladder level crossings, broker normalization, directive replies — all silent between desk wakes.
 - BUILT: desk/alerts.json v1 — 10 events (A1 fill BTC 209404683 + ladder arming; A2 SL-proximity 74,500; A3 LADDER TRIGGER 72,957 close 0.03 + SL→breakeven; A4 TP proximity 72,550; A5 position close capture; A6 expiry 18:53:42 → DIR-0005; A7-A9 ADA/LTC/DOGE broker normalization; A10 outbox replies).
 - DIR-0006 sent to atg: daemon event-diff + level-crossing + oneShot armed-state (desk/alerts.local.json, desk-owned alerts.json untouched) + 120s snapshot cadence while position open + optional Telegram. Test-fire evidence required in reply.
 - USER-SIDE (recommended, 30 seconds, only truly instant channel): MT5 Tools → Options → Notifications → enable push + install MT5 Mobile with MetaQuotes ID — then set native alerts at 74,500 / 72,957 / 72,550. Works even if both agents are down; phone push on any fill/SL/TP execution.
-=======
 
 ### EXEC · 2026-11-10 18:18 UTC · atg-exec — Directive DIR-0004 Executed (Funding & OI Endpoints Live)
 - Endpoints delivered on local terminal: `/api/cg/funding` (venue rates + 8h aggregate + quote series) and `/api/cg/oi` (venue breakdown + 1h/4h/24h deltas + series).
 - Rebuilt Next.js standalone server and verified via live curl tests (`200 OK`).
 - Wired into daemon snapshot: `scripts/mt5_report.py` now fetches and embeds `positioning` for top-6 assets (`BTC`, `ETH`, `SOL`, `BNB`, `DOGE`, `XAU`) directly into `desk/mt5.json` and writes `desk/positioning.json`.
 - Full verification and curl evidence written to `desk/outbox/2026-11-10T17-36-00_DIR-0004-funding-oi-endpoints.reply.md`.
->>>>>>> 61cfed3 (desk(daemon): 2026-11-10T18:18 — inbox/outbox/mt5/wake sync)
+
+### DEEPSCAN · 2026-11-10 18:27 UTC · zai-desk — 360° on-demand deep analysis
+- BTC: desk/deepscan/BTC-20261110-1827.md
+- ETH: desk/deepscan/ETH-20261110-1827.md
+
+### DIALOG · 2026-11-10 18:30 UTC · user ↔ zai-desk — playbook audit + 360° deep-analysis layer
+- Q (user): "Are you following trade formulation playbook and does it even need upgradation... you don't do a 360 degree deep analysis on each asset and on each data point along with recent candle history (use footprint analysis)... give me small prompt"
+- PLAYBOOK AUDIT: AGENTS.md §4 institutional playbook IS embedded in engine build_order (bias 2-of-3: signal+h4/d1 EMA+VWAP · entries at zones/POC/VWAP bands · data-driven structural stops · cluster/VAH/VAL/wall targets · R≥2 vs playbook's 1.5). Verdict: followed, no upgrade needed there.
+- USER IS RIGHT on depth: (1) /api/cg/fp serves 300 m15 bars of TRUE per-level footprint (buy/sell volume per price, 4 venues) — engine consumed only aggregate bull/bear COUNTS; (2) no candle-history forensics anywhere; (3) rounds are a 12-asset screen, not per-asset deep dives; (4) funding/OI (Tier-3 gap) now live via DIR-0004 but not yet in any analysis.
+- BUILT: scripts/desk_deepscan.py — on-demand 360° per-asset report, 8 sections, 8-dimension synthesis scorecard (bias/h4/d1/CVD/footprintΔ24h/signals/funding/OI×price) with playbook verdict (bias + attack zone + magnet targets) or explicit NO-TRADE. Includes absorption/exhaustion detection, Δ-divergence, bar-POC migration, squeeze-fuel ratio, whale walls, stopmap heat, broker tradeability, live exposure. Evidence: desk/deepscan/BTC-20261110-1828.md (BTC: 7×SHORT vs 1×LONG — OI×price dissents: price↓+OI↑24h = fresh shorts, squeeze fuel).
+- USER PROMPT (chat triggers, also documented in WAKEUP.md): `360 <SYM>` / `360 top` / `360 all`.
+- NEXT (v3.3 candidate): fold a fast fp-derived vote (net Δ24h + absorption flag) + funding gate into the 15-min round engine; deepscan remains the on-demand full-forensics layer.
