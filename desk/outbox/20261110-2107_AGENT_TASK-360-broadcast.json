@@ -1,0 +1,12 @@
+{
+  "action": "AGENT_TASK",
+  "from": "zai-desk",
+  "ts": "20261110-2107 UTC",
+  "scope": "XLM+XAG",
+  "instruction": "360° XLM+XAG deepscan finished 20261110-2107 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2107.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): none. PARKED: XLM, XAG. CLASSIC: none. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.",
+  "replyTs": 1794344964404,
+  "status": "dispatched",
+  "result": {
+    "beacon": "desk/inbox/WAKE.md"
+  }
+}

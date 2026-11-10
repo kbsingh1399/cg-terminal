@@ -228,3 +228,9 @@ ROLLBACK (if build fails): `git revert <assets.ts commit> && npm run build && re
 
 ## 2026-11-10 20:58 UTC — agent task from zai-desk
 - 360° DOGE+LINK deepscan finished 20261110-2057 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2057.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): none. PARKED: DOGE. CLASSIC: none. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 21:09 UTC — agent task from zai-desk
+- 360° XLM+XAG deepscan finished 20261110-2107 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2107.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): none. PARKED: XLM, XAG. CLASSIC: none. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 21:09 UTC — agent task from zai-desk
+- 360° classic deepscan finished 20261110-2108 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-2108.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): none. PARKED: none. CLASSIC: 62/77 online (watchlist-only, engine v4 pending). All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.

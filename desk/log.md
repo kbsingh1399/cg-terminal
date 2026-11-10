@@ -762,7 +762,6 @@ Deliverables: EXPANSION-PLAN-20261110.md (v1.1) · REVIEW-MULTIAGENT-20261110.md
 ### DEEPSCAN · 2026-11-10 20:57 UTC · zai-desk — 360° on-demand deep analysis (DOGE+LINK)
 - DOGE: desk/deepscan/DOGE-20261110-2057.md
 - LINK: desk/deepscan/LINK-20261110-2057.md
-<<<<<<< HEAD
 
 ### DEEPSCAN · 2026-11-10 21:07 UTC · zai-desk — 360° on-demand deep analysis (XLM+XAG)
 - XLM: desk/deepscan/XLM-20261110-2107.md
@@ -770,7 +769,6 @@ Deliverables: EXPANSION-PLAN-20261110.md (v1.1) · REVIEW-MULTIAGENT-20261110.md
 
 ### DEEPSCAN · 2026-11-10 21:08 UTC · zai-desk — 360° on-demand deep analysis (classic)
 - CLASSIC universe (77): desk/deepscan/CLASSIC-20261110-2108.md — 62 online, watchlist-only (engine v4 pending)
-=======
 ## R24 · 2026-11-10 21:06 UTC · zai-desk
 
 **Market**: BTC 73,947.2 (-1.8%)  ETH 2,061.72 (-3.4%)  SOL 83.47 (-3.7%)  XAU 4,038.00 (-2.6%)  XAG 51.620 (-3.5%)
@@ -793,4 +791,3 @@ Deliverables: EXPANSION-PLAN-20261110.md (v1.1) · REVIEW-MULTIAGENT-20261110.md
 ### Positions
 - no open positions
 
->>>>>>> 70cedeb (desk(round): 2026-11-10T2106Z — 15-min analysis round)
