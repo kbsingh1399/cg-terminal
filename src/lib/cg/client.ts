@@ -55,7 +55,15 @@ export async function cgGet(pathAndQuery: string, ttlMs = 15_000, host: string =
   if (hit && Date.now() - hit.at < ttlMs) return hit.data;
 
   const cacheTs = String(Date.now());
-  const resp = await rawGet(url, cacheTs);
+  let resp = await rawGet(url, cacheTs);
+  // rate-limited: honor Retry-After (fallback 5 s) and retry once — a burst
+  // of 429s must back off, not hammer upstream in a hot retry loop
+  if (resp.status === 429) {
+    const ra = Number(resp.headers["retry-after"]);
+    const waitMs = Math.min(Math.max(Number.isFinite(ra) && ra > 0 ? ra * 1000 : 5_000, 1_000), 30_000);
+    await new Promise((r) => setTimeout(r, waitMs));
+    resp = await rawGet(url, String(Date.now()));
+  }
   if (resp.status !== 200) {
     // stale cache better than an error for soft-failing cached endpoints
     const stale = cache.get(url);

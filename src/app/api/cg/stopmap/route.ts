@@ -3,6 +3,7 @@ import { cgGet } from "@/lib/cg/client";
 import { makeObeToken } from "@/lib/cg/crypto";
 import { buildStopModel, type LiqHeatmapPayload, type StopModel } from "@/lib/cg/liq-heatmap";
 import { isAsset } from "@/lib/cg/assets";
+import { BoundedMap } from "@/lib/cg/bounded";
 
 export const dynamic = "force-dynamic";
 
@@ -21,8 +22,9 @@ export const dynamic = "force-dynamic";
  */
 
 /** module-level cache keyed by sym|endTime — the `data` token changes every
- * call, so cgGet's URL-keyed cache would never hit; cache the parsed model. */
-const cache = new Map<string, { at: number; body: unknown }>();
+ * call, so cgGet's URL-keyed cache would never hit; cache the parsed model.
+ * BOUNDED (the engine pages history here — varying endTime must not grow it). */
+const cache = new BoundedMap<{ at: number; body: unknown }>(16);
 
 async function loadStopmap(sym: string, endTime: number | undefined, ttlMs = 30_000) {
   const ck = `${sym}|${endTime ?? ""}`;
@@ -63,7 +65,20 @@ export async function GET(req: NextRequest) {
   }
   const REF_SYMBOL = `Binance_${sym}USDT`;
   const endTimeRaw = Number(sp.get("endTime") ?? 0);
-  const endTime = Number.isFinite(endTimeRaw) && endTimeRaw > 0 ? Math.floor(endTimeRaw) : undefined;
+  if (Number.isFinite(endTimeRaw) && endTimeRaw !== 0 && !(endTimeRaw > 0)) {
+    return NextResponse.json({ ok: false, error: "endTime must be a positive unix-seconds value" }, { status: 400 });
+  }
+  // anonymous heatmap history reaches back ~30 days — reject anything else
+  // (also keeps the cache key from being used as a memory-growth primitive)
+  const MAX_LOOKBACK_S = 30 * 86_400;
+  let endTime: number | undefined;
+  if (Number.isFinite(endTimeRaw) && endTimeRaw > 0) {
+    const nowS = Math.floor(Date.now() / 1000);
+    if (endTimeRaw > nowS + 300 || endTimeRaw < nowS - MAX_LOOKBACK_S) {
+      return NextResponse.json({ ok: false, error: `endTime out of range (max ${MAX_LOOKBACK_S / 86_400} days back)` }, { status: 400 });
+    }
+    endTime = Math.floor(endTimeRaw);
+  }
 
   try {
     const payload = (await loadStopmap(sym, endTime)) as LiqHeatmapPayload & { code?: string; msg?: string };

@@ -9,6 +9,7 @@
  */
 
 import { cgGet } from "./client";
+import { BoundedMap } from "./bounded";
 import { fpFromBuckets, mergeFp, type Fp, type FpBar } from "./cg-signals";
 import { fpVenues } from "./assets";
 
@@ -47,8 +48,10 @@ export interface FpLoadResult {
   updatedAt: number;
 }
 
-/** module-level snapshot cache: (sym|itv|limit|oi) → {at, result} */
-const snapCache = new Map<string, { at: number; res: FpLoadResult }>();
+/** module-level snapshot cache: (sym|itv|limit|oi) → {at, result}.
+ * BOUNDED: callers validate sym + clamp limit, and the real working set is a
+ * handful of combos — but a varying param must never grow server memory. */
+const snapCache = new BoundedMap<{ at: number; res: FpLoadResult }>(24);
 
 export async function loadFpBars(
   symRaw: string,
@@ -65,6 +68,11 @@ export async function loadFpBars(
   if (!INTERVALS.has(itv)) throw new Error(`bad interval ${itv}`);
   const keys = fpVenues(sym).map((v) => ({ ...v }));
   const lead = keys[0];
+  // per-venue kline is needed only when a venue prices in a DIFFERENT unit than
+  // the lead (USD-margined Hyperliquid vs USDT-margined Binance/OKX/Bybit):
+  // same-unit venues share the lead's price scale, so buckets merge directly.
+  // Metals (XAU/XAG: Binance+OKX+Bybit, all USDT-margined) intentionally take
+  // this path — same as OKX/Bybit for crypto alts — no shift is required.
   const needKline = (v: (typeof keys)[number]) => v === lead || v.usd !== lead.usd;
 
   const flowP = keys.map((v) =>

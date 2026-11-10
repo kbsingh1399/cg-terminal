@@ -9,6 +9,7 @@ import {
 } from "@/lib/cg/book-walls";
 import type { KlineRow } from "@/lib/cg/types";
 import { aggVenues, isAsset } from "@/lib/cg/assets";
+import { BoundedMap } from "@/lib/cg/bounded";
 
 export const dynamic = "force-dynamic";
 
@@ -39,8 +40,9 @@ const STEP_MS: Record<string, number> = {
 /** accept both "m15" (app convention) and "15m" (page convention) */
 const NORMALIZE: Record<string, string> = { m1: "1m", m5: "5m", m15: "15m", h1: "1h", h4: "4h", d1: "1d" };
 
-/** module-level cache per (market, interval, limit, band) — streams are heavy */
-const cache = new Map<string, { at: number; body: unknown }>();
+/** module-level cache per (sym, market, interval, limit, band, endTime) — streams
+ *  are heavy. BOUNDED: a varying query param must never grow server memory. */
+const cache = new BoundedMap<{ at: number; body: unknown }>(24);
 
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
@@ -56,7 +58,21 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(Math.max(Number(sp.get("limit") ?? 150) || 150, 30), 300);
   const band = [0.5, 1, 2, 5].includes(Number(sp.get("band"))) ? Number(sp.get("band")) : 5;
   const endTimeRaw = Number(sp.get("endTime") ?? 0);
-  const endTime = Number.isFinite(endTimeRaw) && endTimeRaw > 0 ? Math.floor(endTimeRaw) : undefined;
+  if (Number.isFinite(endTimeRaw) && endTimeRaw !== 0 && !(endTimeRaw > 0)) {
+    return NextResponse.json({ ok: false, error: "endTime must be a positive unix-seconds value" }, { status: 400 });
+  }
+  // history windows only: heatmap history reaches back ~30 days on the
+  // anonymous API — reject anything outside it (also keeps the cache key
+  // from being used as a memory-growth primitive)
+  const MAX_LOOKBACK_S = 30 * 86_400;
+  let endTime: number | undefined;
+  if (Number.isFinite(endTimeRaw) && endTimeRaw > 0) {
+    const nowS = Math.floor(Date.now() / 1000);
+    if (endTimeRaw > nowS + 300 || endTimeRaw < nowS - MAX_LOOKBACK_S) {
+      return NextResponse.json({ ok: false, error: `endTime out of range (max ${MAX_LOOKBACK_S / 86_400} days back)` }, { status: 400 });
+    }
+    endTime = Math.floor(endTimeRaw);
+  }
 
   const key = `${sym}|${market}|${interval}|${limit}|${band}|${endTime ?? "now"}`;
   const hit = cache.get(key);

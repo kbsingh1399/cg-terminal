@@ -39,7 +39,7 @@ interface BusState {
   nextId: number;
   items: CgNotification[];
   subs: Set<(n: CgNotification) => void>;
-  /** recent emit keys for 10-min dedup (asset|source|kind|barTs|price) */
+  /** recent emit keys for 30-min dedup (asset|source|kind|barTs|barType|price) */
   seen: Map<string, number>;
 }
 
@@ -70,10 +70,16 @@ function loadFromDisk() {
   }
 }
 
-/** Emit a notification (deduped per asset|source|kind|barTs within 30 min). */
+/**
+ * Emit a notification, deduped per asset|source|kind|barTs|barType|price within
+ * 30 min. `price` is part of the key on purpose: whale walls and sweep setups
+ * carry no barTs, so without it every distinct wall/cluster at a different
+ * price would collapse into one event and be silently dropped.
+ */
 export function emit(n: Omit<CgNotification, "id">): CgNotification | null {
   loadFromDisk();
-  const dedupKey = `${n.asset}|${n.source}|${n.kind}|${n.barTs ?? ""}|${n.barType ?? ""}`;
+  const priceKey = n.price != null && Number.isFinite(n.price) ? n.price.toPrecision(6) : "";
+  const dedupKey = `${n.asset}|${n.source}|${n.kind}|${n.barTs ?? ""}|${n.barType ?? ""}|${priceKey}`;
   const prev = bus.seen.get(dedupKey);
   if (prev && Date.now() - prev < 30 * 60_000) return null;
   bus.seen.set(dedupKey, Date.now());

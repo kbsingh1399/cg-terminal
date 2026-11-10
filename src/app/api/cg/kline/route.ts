@@ -14,15 +14,20 @@ export async function GET(req: NextRequest) {
   const interval = sp.get("interval") ?? "m15";
   const limit = Math.min(Number(sp.get("limit") ?? 300) || 300, 2880);
   const symbol = sp.get("symbol") ?? "Binance_BTCUSDT";
+  // instrument keys are `Exchange_SYMBOLQUOTE` — validate the shape so the
+  // param can't be used to probe arbitrary upstream paths
+  if (!/^[A-Za-z0-9_-]{3,48}$/.test(symbol)) {
+    return NextResponse.json({ ok: false, error: `invalid symbol ${symbol}` }, { status: 400 });
+  }
   try {
     const rows = (await cgGet(
       `/api/v2/kline?symbol=${encodeURIComponent(`${symbol}#${type}`)}&interval=${interval}&minLimit=false&limit=${limit}`,
       15_000
     )) as KlineRow[] | OiKlineRow[] | null;
     if (!Array.isArray(rows)) {
-      return NextResponse.json({ ok: true, interval, rows: [] });
+      return NextResponse.json({ ok: true, symbol, interval, rows: [] });
     }
-    return NextResponse.json({ ok: true, interval, type, rows });
+    return NextResponse.json({ ok: true, symbol, interval, type, rows });
   } catch (e) {
     return NextResponse.json({ ok: false, error: e instanceof Error ? e.message : "fetch failed" }, { status: 502 });
   }

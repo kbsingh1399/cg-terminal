@@ -67,6 +67,7 @@ export function usePolling<T>(url: string | null, intervalMs: number) {
 
 export interface KlinePayload {
   ok: boolean;
+  symbol?: string; // instrument key echoed by the route (payload guard)
   interval: string;
   rows: KlineRow[];
 }

@@ -80,8 +80,11 @@ export interface CvdSnapshot {
 }
 
 interface ScanState {
-  primed: boolean;
+  primed: boolean; // footprint signals
   marketPrimed: boolean;
+  whalePrimed: boolean;
+  liqPrimed: boolean;
+  cvdPrimed: boolean;
   seenSig: Set<string>;
   prevRsi: { m15: number | null; h1: number | null };
   prevBand: number | null; // signed VWAP band index (±1, ±2, ±3, 0)
@@ -114,6 +117,9 @@ function stateOf(sym: string): ScanState {
     st = {
       primed: false,
       marketPrimed: false,
+      whalePrimed: false,
+      liqPrimed: false,
+      cvdPrimed: false,
       seenSig: new Set(),
       prevRsi: { m15: null, h1: null },
       prevBand: null,
@@ -357,7 +363,7 @@ async function scanWhale(sym: string) {
         if (o.currentUsd >= 10_000_000) {
           if (!st.whaleSeen.has(o.id)) {
             st.whaleSeen.add(o.id);
-            if (st.primed) bigNew.push({ price: o.price, usd: o.currentUsd, side: o.side === 0 ? "bid" : "ask", ex: grp.instrument?.exName ?? "?" });
+            if (st.whalePrimed) bigNew.push({ price: o.price, usd: o.currentUsd, side: o.side === 0 ? "bid" : "ask", ex: grp.instrument?.exName ?? "?" });
           }
         } else if (!st.whaleSeen.has(o.id)) {
           st.whaleSeen.add(o.id);
@@ -374,6 +380,7 @@ async function scanWhale(sym: string) {
   const topAsks = topOf(askBins, 3);
 
   S.whale.set(sym, { sym, bidUsd, askUsd, orders, exchanges: exOk, topBids, topAsks, bigNew, updatedAt: at });
+  st.whalePrimed = true; // per-lane priming: a footprint failure must not silence whale alerts
 
   for (const w of bigNew) {
     emit({ ts: at, asset: sym, source: "whale-orders", kind: "whale_wall", dir: w.side === "bid" ? "bullish" : "bearish", severity: "high",
@@ -382,7 +389,7 @@ async function scanWhale(sym: string) {
   const imb = bidUsd + askUsd > 0 ? (bidUsd - askUsd) / (bidUsd + askUsd) : 0;
   const prevImb = st.prevWhaleImb;
   st.prevWhaleImb = imb;
-  if (st.primed && prevImb != null && Math.abs(imb) >= 0.25 && Math.sign(imb) !== Math.sign(prevImb || 0)) {
+  if (st.whalePrimed && prevImb != null && Math.abs(imb) >= 0.25 && Math.sign(imb) !== Math.sign(prevImb || 0)) {
     emit({ ts: at, asset: sym, source: "whale-orders", kind: "whale_imb_flip", dir: imb > 0 ? "bullish" : "bearish", severity: "info",
       title: `${sym} whale order imbalance flipped ${imb > 0 ? "bid-heavy" : "ask-heavy"}`, detail: `open orders: bids ${fmtUsd(bidUsd)} vs asks ${fmtUsd(askUsd)} — imbalance ${(imb * 100).toFixed(0)}%`, price: firstPrice });
   }
@@ -419,7 +426,10 @@ async function scanLiq(sym: string) {
   const stats = liqStats(model, 4);
   S.liq.set(sym, { sym, last: stats.last, topAbove: stats.keyLevels.above, topBelow: stats.keyLevels.below, totals: stats.totals, updatedAt: Date.now() });
 
-  if (!st.primed) return;
+  if (!st.liqPrimed) {
+    st.liqPrimed = true; // per-lane priming (see whalePrimed)
+    return;
+  }
   // sweep setup: price within 1.2% of a ≥60-strength cluster
   for (const lv of [...stats.keyLevels.above.slice(0, 3), ...stats.keyLevels.below.slice(0, 3)]) {
     if (lv.strength < 60 || lv.distPct > 1.2) continue;
@@ -509,7 +519,10 @@ async function scanCvd(sym: string) {
   checkPair(pivLow, "low");
   const cvd24 = delta.length > 96 ? delta[delta.length - 1] - delta[delta.length - 1 - 96] : null;
   S.cvd.set(sym, { sym, cvd: delta[delta.length - 1] ?? 0, delta24h: cvd24 ?? 0, divergences: divs, updatedAt: Date.now() });
-  if (!st.primed) return;
+  if (!st.cvdPrimed) {
+    st.cvdPrimed = true; // per-lane priming (see whalePrimed)
+    return;
+  }
   for (const d of divs) {
     const key = `${d.dir}|${Math.round(d.to / 1000)}`;
     if (st.cvdNotified.has(key)) continue;
@@ -567,11 +580,15 @@ export function startScanner() {
   S.started = true;
   const assets = (process.env.CG_SCAN_ASSETS ?? "").split(",").map((s) => s.trim().toUpperCase()).filter(Boolean);
   const list = (assets.length ? ASSETS.filter((a) => assets.includes(a.sym)) : ASSETS).map((a) => a.sym);
-  const t = (ms: number, firstDelay: number, fn: (sym: string) => Promise<void>) => {
+  const fastList = list.filter((s) => assetOf(s)?.tier === "fast");
+  const slowList = list.filter((s) => assetOf(s)?.tier !== "fast");
+  // round-robin lane over its OWN asset list — no shared index, no skip ticks
+  const t = (lane: string[], ms: number, firstDelay: number, fn: (sym: string) => Promise<void>) => {
+    if (!lane.length) return;
     let i = 0;
     const first = setTimeout(() => {
       const id = setInterval(() => {
-        const sym = list[i % list.length];
+        const sym = lane[i % lane.length];
         i++;
         S.ticks++;
         fn(sym).catch(() => undefined);
@@ -580,19 +597,20 @@ export function startScanner() {
     }, firstDelay);
     first.unref?.();
   };
-  // footprint + market: round-robin, fast assets get their own lane
-  t(30_000, 20_000, async (sym) => {
-    const a = assetOf(sym);
-    if (a?.tier === "fast") return; // handled by fast lane below
+  // footprint + market, per-tier lanes with the intended cadence:
+  //   fast tier (BTC/ETH/SOL): every 60 s over 3 assets → each ~every 3 min
+  //   slow tier (9 alts/metals): every 90 s over 9 assets → each ~every 13.5 min
+  // combined work rate ≈ 1.67 scans/min — identical to the previous schedule,
+  // but the primary trading assets now refresh 6× more often (they used to be
+  // the SLOWER tier: 18 min vs the alts' 6 min, an inverted design).
+  t(slowList, 90_000, 20_000, async (sym) => {
     await scanAssetAll(sym);
   });
-  t(90_000, 25_000, async (sym) => {
-    const a = assetOf(sym);
-    if (a?.tier !== "fast") return;
+  t(fastList, 60_000, 25_000, async (sym) => {
     await scanAssetAll(sym);
   });
-  // whale: slow round-robin every 90s over the list ≈ every ~18 min per asset
-  t(90_000, 60_000, async (sym) => {
+  // whale: slow round-robin every 90s over the full list ≈ every ~18 min per asset
+  t(list, 90_000, 60_000, async (sym) => {
     await scanWhale(sym).catch(() => undefined);
   });
   // liq clusters + cvd: 3 assets per 5-min tick, rotating through the full

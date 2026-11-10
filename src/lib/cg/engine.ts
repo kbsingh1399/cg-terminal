@@ -23,7 +23,7 @@ import { makeObeToken } from "./crypto";
 import { decodeRow, fetchAggregateStream, rebin, type BookSnapshot } from "./book-walls";
 import { append, lastTs, markPoll, markBackfilling, stat, gapCount } from "./store";
 import type { KlineRow } from "./types";
-import { ASSETS, aggVenues } from "./assets";
+import { ASSETS, aggVenues, liqVenues } from "./assets";
 import { startScanner } from "./scan";
 
 const STEP_MS = 900_000; // m15 master step
@@ -279,7 +279,8 @@ async function pollLto() {
 }
 
 async function pollLiqLevels() {
-  const venues = ["Binance_BTCUSDT", "OKX_BTC-USDT-SWAP", "Bybit_BTCUSDT", "Hyperliquid_BTC-USD"];
+  // single registry: derive BTC's venue list instead of a second hardcoded copy
+  const venues = liqVenues("BTC").map((v) => v.key);
   try {
     const at = Date.now();
     const rows: { at: number; v: string; side: number; p: number; s: number; l2: string }[] = [];

@@ -43,7 +43,12 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
   // never render under the new symbol's unit labels
   useEffect(() => setSelected(null), [sym]);
 
-  const candles = useMemo(() => rowsToCandles(klineQ.data?.rows), [klineQ.data]);
+  // payload guard: the kline route now echoes the instrument key — never
+  // render candles that belong to another symbol's series
+  const candles = useMemo(
+    () => rowsToCandles(klineQ.data && klineQ.data.symbol === `Binance_${sym}USDT` ? klineQ.data.rows : undefined),
+    [klineQ.data, sym]
+  );
   const lastPrice = candles.length ? candles[candles.length - 1].c : null;
   // defense-in-depth: never render orders that belong to another symbol
   const groups = ltoQ.data?.symbol === sym ? ltoQ.data.groups : [];

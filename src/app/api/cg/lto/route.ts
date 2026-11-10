@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet, FAPI } from "@/lib/cg/client";
+import { isAsset } from "@/lib/cg/assets";
 import type { LtoGroup, LtoSupport } from "@/lib/cg/types";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +14,10 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const minVolUsd = Math.max(0, Number(sp.get("minVolUsd") ?? 100_000) || 0);
-  const symbol = sp.get("symbol") ?? "BTC";
+  const symbol = (sp.get("symbol") ?? "BTC").toUpperCase();
+  if (!isAsset(symbol)) {
+    return NextResponse.json({ ok: false, error: `unknown asset ${symbol}` }, { status: 400 });
+  }
   try {
     const support = (await cgGet(
       `/api/largeTakerOrder/support/v3?symbol=${encodeURIComponent(symbol)}`,

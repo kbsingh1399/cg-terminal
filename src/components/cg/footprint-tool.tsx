@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import FootprintCanvas, { type FootprintMode, type FootprintUnit } from "./charts/footprint-canvas";
 import { usePolling } from "./use-cg-data";
 import {
@@ -90,6 +90,15 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
   const [activeSignal, setActiveSignal] = useState<CgSignal | null>(null);
   const [jump, setJump] = useState<{ ts: number; key: string } | null>(null);
   const [hoverBar, setHoverBar] = useState<FpBar | null>(null);
+
+  // symbol switch: every per-symbol UI selection (hovered bar, active signal,
+  // jump target) belongs to the PREVIOUS asset's bar series — reset them so a
+  // BTC bar's volume/delta/ladder can never render under an ETH header
+  useEffect(() => {
+    setActiveSignal(null);
+    setJump(null);
+    setHoverBar(null);
+  }, [sym]);
 
   // ---- data: the exact calls the live page makes ----
   // time series at the selected interval (their TBS/D, 300 bars)

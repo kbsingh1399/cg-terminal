@@ -12,6 +12,8 @@ import {
   type TickerRow,
 } from "@/lib/cg/cvd";
 import type { KlineRow } from "@/lib/cg/types";
+import { isAsset } from "@/lib/cg/assets";
+import { BoundedMap } from "@/lib/cg/bounded";
 
 export const dynamic = "force-dynamic";
 
@@ -36,8 +38,9 @@ const ITVS: Record<string, { api: string; ms: number }> = {
   "1d": { api: "d1", ms: 86_400_000 },
 };
 
-/** module-level cache per (itv, limit) — the flow fan-out is expensive */
-const cache = new Map<string, { at: number; body: unknown }>();
+/** module-level cache per (sym, itv, limit) — the flow fan-out is expensive.
+ * BOUNDED: sym is allowlisted and limit clamped, so the key space is small. */
+const cache = new BoundedMap<{ at: number; body: unknown }>(16);
 
 async function mapLimit<T, R>(items: T[], limit: number, fn: (t: T, i: number) => Promise<R>): Promise<(R | null)[]> {
   const out: (R | null)[] = new Array(items.length).fill(null);
@@ -116,6 +119,9 @@ const NORMALIZE: Record<string, string> = { m1: "1m", m5: "5m", m15: "15m", m30:
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
+  if (!isAsset(sym)) {
+    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+  }
   const rawItv = sp.get("itv") ?? "m15";
   const itvKey = ITVS[rawItv] ? rawItv : (NORMALIZE[rawItv] ?? "m15");
   const itv = ITVS[itvKey];

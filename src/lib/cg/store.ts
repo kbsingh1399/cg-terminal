@@ -146,7 +146,13 @@ export function append(name: string, rows: unknown[], keyOf: (row: any) => strin
   try {
     fs.mkdirSync(ROOT, { recursive: true });
     if (compact) {
-      fs.writeFileSync(fileOf(name), st.rows.map((r) => JSON.stringify(r)).join("\n") + "\n", "utf8");
+      // atomic rewrite: write a sibling temp file, then rename over the target
+      // (rename is atomic on POSIX and NTFS same-volume) — a crash mid-write
+      // must never truncate months of continuity history
+      const file = fileOf(name);
+      const tmp = file + ".tmp";
+      fs.writeFileSync(tmp, st.rows.map((r) => JSON.stringify(r)).join("\n") + "\n", "utf8");
+      fs.renameSync(tmp, file);
     } else {
       fs.appendFileSync(fileOf(name), fresh.map((r) => JSON.stringify(r)).join("\n") + "\n", "utf8");
     }

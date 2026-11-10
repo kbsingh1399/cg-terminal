@@ -8,6 +8,7 @@ import BookWallsTool from "@/components/cg/book-walls-tool";
 import CvdTool from "@/components/cg/cvd-tool";
 import OverviewTool from "@/components/cg/overview-tool";
 import AlertsTool from "@/components/cg/alerts-tool";
+import { ASSETS } from "@/lib/cg/assets";
 import EngineStatus from "@/components/cg/engine-status";
 import LivePrice from "@/components/cg/live-price";
 
@@ -23,20 +24,9 @@ const TOOLS: { key: Tool; label: string; sub: string }[] = [
   { key: "alerts", label: "Alerts", sub: "Live notification feed" },
 ];
 
-const ASSET_LIST: { sym: string; name: string; kind: "crypto" | "metal" }[] = [
-  { sym: "BTC", name: "Bitcoin", kind: "crypto" },
-  { sym: "ETH", name: "Ethereum", kind: "crypto" },
-  { sym: "SOL", name: "Solana", kind: "crypto" },
-  { sym: "BNB", name: "BNB", kind: "crypto" },
-  { sym: "XRP", name: "XRP", kind: "crypto" },
-  { sym: "ADA", name: "Cardano", kind: "crypto" },
-  { sym: "AVAX", name: "Avalanche", kind: "crypto" },
-  { sym: "DOGE", name: "Dogecoin", kind: "crypto" },
-  { sym: "LINK", name: "Chainlink", kind: "crypto" },
-  { sym: "LTC", name: "Litecoin", kind: "crypto" },
-  { sym: "XAU", name: "Gold", kind: "metal" },
-  { sym: "XAG", name: "Silver", kind: "metal" },
-];
+// the 12 assets come from the single registry (src/lib/cg/assets.ts) —
+// adding an asset there updates every tool, route and this tab bar
+const ASSET_LIST = ASSETS.map(({ sym, name, kind }) => ({ sym, name, kind }));
 
 export default function Home() {
   const [tool, setTool] = useState<Tool>("overview");

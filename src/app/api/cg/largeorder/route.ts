@@ -13,6 +13,10 @@ export async function GET(req: NextRequest) {
   const hours = Math.min(Math.max(Number(sp.get("hours") ?? 24) || 24, 1), 24 * 30);
   const interval = sp.get("interval") ?? "m15";
   const symbol = sp.get("symbol") ?? "Binance_BTCUSDT";
+  // instrument-key shape validation (see kline route)
+  if (!/^[A-Za-z0-9_-]{3,48}$/.test(symbol)) {
+    return NextResponse.json({ ok: false, error: `invalid symbol ${symbol}` }, { status: 400 });
+  }
   const end = Math.floor(Date.now() / 1000);
   const start = end - hours * 3600;
   try {

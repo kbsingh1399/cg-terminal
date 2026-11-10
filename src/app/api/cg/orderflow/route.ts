@@ -13,6 +13,10 @@ export async function GET(req: NextRequest) {
   const interval = sp.get("interval") ?? "m15";
   const limit = Math.min(Number(sp.get("limit") ?? 300) || 300, 1000);
   const symbol = sp.get("symbol") ?? "Binance_BTCUSDT";
+  // instrument-key shape validation (see kline route)
+  if (!/^[A-Za-z0-9_-]{3,48}$/.test(symbol)) {
+    return NextResponse.json({ ok: false, error: `invalid symbol ${symbol}` }, { status: 400 });
+  }
   try {
     const data = await cgGet(
       `/api/orderFlow?symbol=${encodeURIComponent(`${symbol}#order_flow`)}&interval=${interval}&minLimit=false&limit=${limit}`,
