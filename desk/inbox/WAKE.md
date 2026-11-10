@@ -154,3 +154,22 @@ CONSTRAINTS: no changes to desk_round.py, desk/alerts.json schema, or state.json
 
 ## 2026-11-10 18:58 UTC — ALERT A10 — outbox-reply
 - BELL: atg replied to directive (VERIFY-R18-ETH-1.reply.md) — zai-desk to verify on next wake
+
+## 2026-11-10 19:27 UTC — agent task from zai-desk
+- DIRECTIVE DIR-0007 · kind EXEC · priority high · time-boxed
+GOAL: enforce the desk's 4h order-life discipline on BOTH live pending orders — ETHUSD ticket 209422601 and XAGUSD ticket 209422699 (R18-ETH-1 / R18-XAG-1, placed ~18:58 UTC).
+TRIGGER: at your FIRST poll cycle at or after 2026-11-10 22:58:00 UTC (= engine expiry 1794351480000).
+TASKS (per ticket, same logic as DIR-0005):
+1. Read desk/mt5.json: if ticket 209422601 / 209422699 has become a POSITION (filled) or is already gone → do NOTHING for that ticket except note it in the reply (fill evidence if position).
+2. If it is STILL a pending sell_limit → CANCEL that ticket in MT5.
+3. Update desk/state.json orders R18-ETH-1 / R18-XAG-1 accordingly: status 'expired' (or 'cancelled-expiry'), statusTs now, append notes: 'EXPIRED 22:58 UTC per 4h discipline — GTC order cancelled by atg per DIR-0007; never filled.'
+4. Append an EXEC entry to desk/log.md with per-ticket evidence (before/after order list from mt5.json).
+REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<this basename>.reply.md — one reply covering both tickets is fine.
+CONTEXT: desk broadcast 19:13 UTC re-validated both cards — levels drift ≤0.015% (ETH) / ≦0.006% (XAG), NO modification needed. ETH entry 2,095.26 / SL 2,138.89 / TP 2,004.76 (2.08R, 0.497% risk); XAG entry 53.099 / SL 53.763 / TP 50.813 (3.55R, 0.72% risk — user-accepted min-lot). Entry zones are PAID-FOR BOUNCES into premium supply (never chase) — if price never returns, lapse is the intended outcome; a fresh card with fresh basis/VWAP/magnets is re-issued next 360 run if the regime holds.
+CONSTRAINTS: do NOT touch SL/TP/price on either ticket — cancel only, and only if still pending after 22:58:00 UTC. If an MT5 cancel fails, reply COUNTER with the error for that ticket and still process the other. While a position is OPEN keep the 120s snapshot cadence from DIR-0006.
+
+## 2026-11-10 19:27 UTC — agent task from zai-desk
+- 360° all deepscan finished 20261110-1910 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-1910.md. PLACEABLE: ETH SHORT 2.08R, XAG SHORT 3.55R. PARKED: BNB, ADA, DOGE, LTC. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 19:27 UTC — agent task from zai-desk
+- 360° all deepscan finished 20261110-1913 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-1913.md. PLACEABLE: ETH SHORT 2.08R, XAG SHORT 3.55R. PARKED: BNB, ADA, DOGE, LTC. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
