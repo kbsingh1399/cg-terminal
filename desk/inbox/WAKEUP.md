@@ -37,18 +37,17 @@
    never edit the broadcast section by hand.
 
 <!-- 360-BROADCAST-START (desk-managed — latest run wins; atg-exec: read on every poll) -->
-## DESK BROADCAST · 360 DOGE+LINK · 20261110-2057 UTC — latest deepscan result (auto-refreshed by scripts/desk_deepscan.py)
+## DESK BROADCAST · 360 XLM+XAG · 20261110-2107 UTC — latest deepscan result (auto-refreshed by scripts/desk_deepscan.py)
 
-atg-exec: full justification per trade in desk/deepscan/DIGEST-20261110-2057.md (+ per-asset §9). Do NOT touch MT5 without a user-approved DIR-*. Broker gates re-verified at placement.
+atg-exec: full justification per trade in desk/deepscan/DIGEST-20261110-2107.md (+ per-asset §9). Do NOT touch MT5 without a user-approved DIR-*. Broker gates re-verified at placement.
 
 ### LIVE ORDERS (already working — do NOT re-place)
 - ETH: ticket 209422601 (placed) — manage only (fills/expiry/SL per protocol; A1-A6 alerts armed)
 - XAG: ticket 209422699 (placed) — manage only (fills/expiry/SL per protocol; A1-A6 alerts armed)
 
 ### PARKED (broker blocked — recovery printed)
-- DOGE SHORT LIMIT 0.06951 → 0.06952 · SL 0.07061 → 0.07062 · T: 0.06628 str77 / 0.06612 str78 / 0.06578 str64 · 2.93R — blocked: |basis| 0.015% / spread 1.328% outside limits; recovery: re-check when |basis| ≤ 0.5% and spread ≤ 0.15% (now basis +0.015% / spread 1.328%)
-### REJECTED (geometry)
-- LINK: R to T1 1.402 < 2.0 — recovery: re-check on σ-compression (tighter stop) or T1 extension — needs R ≥ 2.0, now 1.402
+- XLM SHORT LIMIT 0.1471 → 0.1471 · SL 0.1492 → 0.1493 · T: 0.1402 str85 / 0.1401 str100 / 0.1400 str90 · 3.22R — blocked: T1 magnet mass $0.9M < floor $5.0M (max[$5M, 0.25% × OI $0.19B]) — rank-normalized strength (str 85) has no leverage mass behind it at this depth; recovery: T1 cluster grows to ≥ the mass floor (natural OI growth or larger liquidation build), or user accepts thin-mass targets explicitly
+- XAG SHORT LIMIT 53.167 → 53.081 · SL 53.843 → 53.756 · T: 50.813 str87 · 3.48R — blocked: min-lot floor forces 0.73% risk > 0.5% mandate (volumeMin 0.01 — instrument property, not a choice); recovery: re-check when |basis| ≤ 0.5% and spread ≤ 0.15% (now basis -0.162% / spread 0.145%)
 - Correlation: all candidates SHORT in one tape — cap NEW entries at 1-2.
 <!-- 360-BROADCAST-END -->
 ### CLASSIC UNIVERSE (Tier-3) — 78/78 online (watchlist-only, engine v4 pending) · quotes via /api/cg/classic (Yahoo v8) · NO trade construction
