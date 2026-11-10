@@ -416,3 +416,17 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 ### DEEPSCAN · 2026-11-10 18:47-18:48 UTC · zai-desk — `360 all` v2 (full trade construction)
 - 12 reports with §9 limit-trade candidates + per-tab evidence manifests:
   BTC ETH SOL BNB XRP ADA AVAX DOGE LINK LTC XAU XAG → desk/deepscan/*-20261110-1848.md
+
+### DIALOG · 2026-11-10 18:51 UTC · user ↔ zai-desk — `360 all` v2 mandate
+- USER MANDATE: "360 all must print ALL potential limit trades with proper justification across
+  all data points and tabs — no data must be missed."
+- IMPLEMENTED (commit 4320b1d): §9 in scripts/desk_deepscan.py — full limit-trade construction
+  (entry confluence zone, structural stop w/ magnet extension, str≥40 magnet targets, R≥2 gate,
+  broker translation + sizing from mt5 spec, PLACEABLE/PARKED/REJECTED with printed reasons)
+  + evidence manifest: every fetched tab mapped to role, including NO-TRADE outcomes.
+- CHECKLIST-360 v1.1; first v2 run = 12 reports + DIGEST-20261110-1848.md:
+  PLACEABLE ETH (2.06R) + XAG (3.57R but min-lot 0.71% > 0.5% mandate — flagged SKIP unless accepted);
+  PARKED DOGE 2.98R / LTC 3.48R / ADA 2.28R / BNB 2.39R (broker);
+  REJECTED BTC (no str≥40 target — covered by live ticket), SOL 1.97R (marginal), LINK 1.52R,
+  XRP 1.35R, AVAX 0.83R; NO-TRADE XAU.
+- Correlation cap: all candidates are shorts in one risk-off tape — max 1-2 NEW concurrent entries.

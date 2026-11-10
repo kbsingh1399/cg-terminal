@@ -1,8 +1,10 @@
 # CHECKLIST-360 · Master checklist for a 360° deep-research run
 
-v1.0 · 2026-11-10 · owner: zai-desk · engine: v3.2 · review: after every 10 runs or on data-source change
+v1.1 · 2026-11-10 · owner: zai-desk · engine: v3.2 · review: after every 10 runs or on data-source change
 
-**360° = all 12 assets × 8 dimensions × every data point the terminal exposes.**
+**360° = all 12 assets × 8 dimensions × every data point the terminal exposes,
+ending in a fully constructed limit-trade list with per-tab evidence manifests —
+no data point may be silently dropped (user mandate 2026-11-10).**
 Universe: BTC · ETH · SOL · BNB · XRP · ADA · AVAX · DOGE · LINK · LTC · XAU · XAG
 Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
@@ -12,7 +14,7 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 | Type this | What happens |
 |---|---|
-| `360 all` | **Full 360° — all 12 assets**, one report each, ranked digest |
+| `360 all` | **Full 360° — all 12 assets**: 8-section report each + §9 limit-trade candidates + evidence manifests + ranked digest with the complete trade list (PLACEABLE / PARKED / REJECTED / NO-TRADE, reasons printed) |
 | `360 top` | Top-3 assets by \|confluence score\| (from state.json) |
 | `360 BTC ETH XAU` | Named subset only |
 
@@ -46,6 +48,8 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 - [ ] **6 News & notifications** — 24h items that could invalidate the technical read
 - [ ] **7 Broker state** — basis/spread → TRADEABLE or BLOCKED · live positions + pending orders on the symbol
 - [ ] **8 Synthesis** — 8-dimension scorecard (bias / h4 EMA / d1 EMA / CVD / footprint Δ24h / signals / funding / OI×price) → **bias** (net ≥3 votes) or **NO-TRADE** + attack zone + magnet targets
+- [ ] **9 Limit-trade candidates** — full construction per asset: entry zone confluence (day POC / VWAP±1σ / VAH-VAL), structural stop (VWAP±2σ, extended past str≥40 opposing magnet), targets (str≥40 magnets, R≥2.0 gate), size from broker spec (0.5% equity mandate — flag min-lot violations), broker translation (`mt5Level = perpLevel×(1+basis/100)`, SHORT SL on ASK), status PLACEABLE / PARKED (broker) / REJECTED (geometry, reason printed)
+- [ ] **9 Evidence manifest** — EVERY fetched tab appears with reading + role (market·EMA/RSI/VWAP · auction day+month · footprint Δ/events/Δdiv/POC-migr · cvd+div · signals · funding · oi · liq·magnets/squeeze · lto·walls · bookwalls · stopmap (n/a marked for non-BTC) · news · broker) — including for NO-TRADE / REJECTED / PARKED outcomes
 
 ## E · Cross-asset synthesis (desk layer, after all reports exist)
 
@@ -68,7 +72,7 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 - [ ] Reports **committed + pushed** (script auto-commits; if push loses the daemon race → `pull --rebase`, on `log.md` conflict keep BOTH records timestamp-ordered, rebase --continue, push)
 - [ ] `log.md` DEEPSCAN entry exists (auto)
-- [ ] Chat digest: ranked table (asset · bias · conviction · tradeable?) + top setup details + blocked list + data gaps
+- [ ] Chat digest: **the complete trade list** (PLACEABLE with levels+size / PARKED with blocker / REJECTED with reason / NO-TRADE) + correlation warning + data gaps — the user must see every potential trade in chat, not just in files
 - [ ] Actionable setup → full level plan (entry/SL/TP perp AND broker levels, size, ladder) → user decides
 - [ ] Nothing left uncommitted — uncommitted files die with the sandbox (lesson: ETH-20261110-1827.md lost to recycling)
 
@@ -81,4 +85,5 @@ Report per asset: `desk/deepscan/<SYM>-<YYYYMMDD-HHMM>.md`
 
 ## I · Changelog
 
+- v1.1 · 2026-11-10 — §9 limit-trade construction + evidence manifest added to every report; `360 all` now prints the complete trade list (user mandate: all potential limit trades, proper justification across all tabs, no data missed). First v2 run: 12× desk/deepscan/*-1848.md + DIGEST-20261110-1848.md (2 PLACEABLE, 4 PARKED, 5 REJECTED, 1 NO-TRADE; XAG min-lot risk mandate violation caught).
 - v1.0 · 2026-11-10 — initial, post playbook-audit DIALOG; pipeline validated end-to-end (BTC desk runs 18:28/18:33, BTC atg-exec run 18:35, ETH desk run 18:36 incl. daemon log.md race resolution)
