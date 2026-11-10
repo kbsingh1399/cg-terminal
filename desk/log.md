@@ -563,3 +563,18 @@ TIER 3 · NOT IN STACK (terminal exposes nothing — 404 verified): funding rate
 - LTC: desk/deepscan/LTC-20261110-1932.md
 - XAU: desk/deepscan/XAU-20261110-1932.md
 - XAG: desk/deepscan/XAG-20261110-1932.md
+## R19 · 2026-11-10 19:40 UTC · zai-desk
+
+**Market**: BTC 73,317.0 (-2.7%)  ETH 2,038.31 (-4.5%)  SOL 82.57 (-4.8%)  XAU 4,034.56 (-2.7%)  XAG 51.480 (-3.8%)
+**Bias (|score|≥2)**: BTC-7(TREND)  ADA-4(TREND)  SOL-3(TREND)  BNB-3(TREND)  LTC-4(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R7-LTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R9-ADA-1 re-debated: FOR 6/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
