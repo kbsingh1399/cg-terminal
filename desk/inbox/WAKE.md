@@ -142,3 +142,6 @@ CONSTRAINTS: no changes to desk_round.py, desk/alerts.json schema, or state.json
 
 ## 2026-11-10 18:26 UTC — ALERT A10 — outbox-reply
 - BELL: atg replied to directive (2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md, 2026-11-10T17-36-00_DIR-0004-funding-oi-endpoints.reply.md, VERIFY-R4-BTC-1.reply.md, VERIFY-TP-209404683.reply.md) — zai-desk to verify on next wake
+
+## 2026-11-10 18:28 UTC — ALERT A10 — outbox-reply
+- BELL: atg replied to directive (2026-11-10T18-12-00_DIR-0006-local-alerts.reply.md) — zai-desk to verify on next wake
