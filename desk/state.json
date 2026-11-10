@@ -317,11 +317,7 @@
         {
           "source": "overview",
           "verdict": "FOR",
-<<<<<<< HEAD
-          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (50.38 vs 50.78), h4 RSI 40.6, day -2.0%"
-=======
-          "evidence": "h4 ↓/d1 ↓ EMA, price below day VWAP (50.06 vs 50.78), h4 RSI 38.2, day -2.6%"
->>>>>>> e9d6135 (desk(deepscan): 360° deep analysis DOGE, LINK, SOL)
+          "evidence": "h4 ↓/d1 ↓ EMA, price below day VWAP (50.38 vs 50.78), h4 RSI 40.6, day -2.0%"
         },
         {
           "source": "footprint",
@@ -331,11 +327,7 @@
         {
           "source": "microFlow(abs/trap/exh)",
           "verdict": "FOR",
-<<<<<<< HEAD
-          "evidence": "6h micro-events: abs:buy\u00d76, abs:sell\u00d76, div:buy\u00d71, div:sell\u00d75, exh:sell\u00d73, sdiv:sell\u00d72, trap:buy\u00d72 \u2014 net 9 buy-side vs 16 sell-side"
-=======
-          "evidence": "6h micro-events: abs:buy×4, abs:sell×6, div:sell×3, exh:sell×3, sdiv:sell×2, trap:buy×1 — net 5 buy-side vs 14 sell-side"
->>>>>>> e9d6135 (desk(deepscan): 360° deep analysis DOGE, LINK, SOL)
+          "evidence": "6h micro-events: abs:buy×6, abs:sell×6, div:buy×1, div:sell×5, exh:sell×3, sdiv:sell×2, trap:buy×2 — net 9 buy-side vs 16 sell-side"
         },
         {
           "source": "largeOrders",
@@ -355,11 +347,7 @@
         {
           "source": "bookWalls",
           "verdict": "FOR",
-<<<<<<< HEAD
-          "evidence": "\u00b15% depth imbalance -0.043 (5m ago +0.029, falling bids); bid $0.01B vs ask $0.01B"
-=======
-          "evidence": "±5% depth imbalance +0.012 (5m ago +0.012, falling bids); bid $0.01B vs ask $0.01B"
->>>>>>> e9d6135 (desk(deepscan): 360° deep analysis DOGE, LINK, SOL)
+          "evidence": "±5% depth imbalance -0.043 (5m ago +0.029, falling bids); bid $0.01B vs ask $0.01B"
         },
         {
           "source": "cvd",
@@ -407,11 +395,7 @@
         {
           "source": "overview",
           "verdict": "FOR",
-<<<<<<< HEAD
-          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (0.1742 vs 0.1753), h4 RSI 40.2, day -1.8%"
-=======
-          "evidence": "h4 ↓/d1 ↓ EMA, price below day VWAP (0.1729 vs 0.1753), h4 RSI 37.5, day -2.5%"
->>>>>>> e9d6135 (desk(deepscan): 360° deep analysis DOGE, LINK, SOL)
+          "evidence": "h4 ↓/d1 ↓ EMA, price below day VWAP (0.1742 vs 0.1753), h4 RSI 40.2, day -1.8%"
         },
         {
           "source": "footprint",
@@ -421,11 +405,7 @@
         {
           "source": "microFlow(abs/trap/exh)",
           "verdict": "FOR",
-<<<<<<< HEAD
-          "evidence": "6h micro-events: abs:buy\u00d75, abs:sell\u00d713, div:buy\u00d77, div:sell\u00d74, exh:buy\u00d74, exh:sell\u00d73, sdiv:buy\u00d71, sdiv:sell\u00d72, trap:buy\u00d73, trap:sell\u00d71 \u2014 net 20 buy-side vs 23 sell-side"
-=======
-          "evidence": "6h micro-events: abs:buy×6, abs:sell×14, div:buy×7, div:sell×4, exh:buy×4, exh:sell×3, sdiv:buy×1, sdiv:sell×2, trap:buy×3, trap:sell×1 — net 21 buy-side vs 24 sell-side"
->>>>>>> e9d6135 (desk(deepscan): 360° deep analysis DOGE, LINK, SOL)
+          "evidence": "6h micro-events: abs:buy×5, abs:sell×13, div:buy×7, div:sell×4, exh:buy×4, exh:sell×3, sdiv:buy×1, sdiv:sell×2, trap:buy×3, trap:sell×1 — net 20 buy-side vs 23 sell-side"
         },
         {
           "source": "largeOrders",
@@ -445,11 +425,7 @@
         {
           "source": "bookWalls",
           "verdict": "FOR",
-<<<<<<< HEAD
-          "evidence": "\u00b15% depth imbalance -0.342 (5m ago -0.342, falling bids); bid $0.01B vs ask $0.02B"
-=======
-          "evidence": "±5% depth imbalance -0.182 (5m ago -0.180, falling bids); bid $0.01B vs ask $0.02B"
->>>>>>> e9d6135 (desk(deepscan): 360° deep analysis DOGE, LINK, SOL)
+          "evidence": "±5% depth imbalance -0.342 (5m ago -0.342, falling bids); bid $0.01B vs ask $0.02B"
         },
         {
           "source": "cvd",
