@@ -18,29 +18,41 @@ export function usePolling<T>(url: string | null, intervalMs: number) {
   const [loading, setLoading] = useState(true);
   const [updatedAt, setUpdatedAt] = useState<number>(0);
   const alive = useRef(true);
+  // fetch generation: only the latest request may commit state, so a slow
+  // response for a previous URL (e.g. the old symbol) can never clobber it
+  const gen = useRef(0);
 
   const load = useCallback(async () => {
     if (!url) return;
+    const myGen = ++gen.current;
     try {
       const res = await fetch(url);
       const json = (await res.json()) as { ok: boolean; error?: string };
-      if (!alive.current) return;
+      if (!alive.current || myGen !== gen.current) return; // superseded → discard
       if (json.ok === false) {
         setError(json.error ?? "request failed");
+        setData(null); // never keep the previous symbol's data on failure
       } else {
         setError(null);
         setData(json as unknown as T);
         setUpdatedAt(Date.now());
       }
     } catch (e) {
-      if (alive.current) setError(e instanceof Error ? e.message : "network error");
+      if (alive.current && myGen === gen.current) {
+        setError(e instanceof Error ? e.message : "network error");
+        setData(null);
+      }
     } finally {
-      if (alive.current) setLoading(false);
+      if (alive.current && myGen === gen.current) setLoading(false);
     }
   }, [url]);
 
   useEffect(() => {
     alive.current = true;
+    // url changed (symbol/mode/interval switch): drop the previous payload
+    // immediately so it can never render under the new selection
+    setData(null);
+    setError(null);
     setLoading(true);
     load();
     const t = setInterval(load, intervalMs);
@@ -77,12 +89,14 @@ export interface TickerPayload {
  */
 export function useTicker(sym: string, intervalMs = 1_000) {
   const q = usePolling<TickerPayload>(`/api/cg/ticker?sym=${encodeURIComponent(sym)}`, intervalMs);
+  // defense-in-depth: only trust the payload when it belongs to this symbol
+  const mine = q.data?.sym === sym;
   return {
-    price: q.data?.price ?? null,
-    dir: q.data?.dir ?? "flat",
-    live: !!q.data?.ok && !q.data?.stale && q.data?.price != null,
-    ageMs: q.data?.ageMs ?? null,
-    fetchedAt: q.data?.fetchedAt ?? null,
+    price: mine ? q.data?.price ?? null : null,
+    dir: mine ? q.data?.dir ?? "flat" : "flat",
+    live: mine && !!q.data?.ok && !q.data?.stale && q.data?.price != null && !q.error,
+    ageMs: mine ? q.data?.ageMs ?? null : null,
+    fetchedAt: mine ? q.data?.fetchedAt ?? null : null,
     error: q.error,
     updatedAt: q.updatedAt,
   };

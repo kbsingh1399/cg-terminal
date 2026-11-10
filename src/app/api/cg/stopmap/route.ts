@@ -49,6 +49,18 @@ export async function GET(req: NextRequest) {
   if (!isAsset(sym)) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
+  // The anonymous /api/index/v2/liqHeatMap endpoint serves BTC only — every
+  // other symbol returns upstream code 40000 (live-verified for ETH/SOL/XRP/
+  // XAU/XAG across the v1/v2/v3/v5/v6 and aggregate variants).
+  if (sym !== "BTC") {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: `stopmap (liquidation heatmap) is BTC-only on the anonymous Coinglass API — ${sym} returns upstream code 40000`,
+      },
+      { status: 400 }
+    );
+  }
   const REF_SYMBOL = `Binance_${sym}USDT`;
   const endTimeRaw = Number(sp.get("endTime") ?? 0);
   const endTime = Number.isFinite(endTimeRaw) && endTimeRaw > 0 ? Math.floor(endTimeRaw) : undefined;

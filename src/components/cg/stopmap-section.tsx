@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { usePolling } from "./use-cg-data";
 import StopmapCanvas from "./charts/stopmap-canvas";
-import { fmtPrice } from "@/lib/cg/format";
+import { assetOf } from "@/lib/cg/assets";
 
 /**
  * Stops (liquidation heatmap) — the intra-day leveraged-position stop map
@@ -16,6 +16,7 @@ import { fmtPrice } from "@/lib/cg/format";
 interface StopmapResponse {
   ok: boolean;
   error?: string;
+  sym: string;
   window: { interval: string; bars: number; from: number; to: number };
   instrument: string;
   model: {
@@ -43,7 +44,10 @@ function fmtB(n: number): string {
 
 export default function StopmapSection({ sym = "BTC" }: { sym?: string }) {
   const q = usePolling<StopmapResponse>(`/api/cg/stopmap?sym=${sym}`, 60_000);
-  const m = q.data?.model;
+  // defense-in-depth: never render a model that belongs to another symbol
+  const m = q.data && q.data.sym === sym ? q.data.model : undefined;
+  const decs = assetOf(sym)?.priceDecs ?? 2;
+  const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
 
   const bandMax = useMemo(() => (m ? Math.max(1, ...m.bands.map((b) => b.below + b.above)) : 1), [m]);
 
@@ -60,7 +64,7 @@ export default function StopmapSection({ sym = "BTC" }: { sym?: string }) {
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5">
         <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 px-3 py-2">
           <div className="text-[10px] uppercase tracking-wide text-neutral-500">Last price</div>
-          <div className="mt-0.5 font-mono text-sm font-semibold text-neutral-100">{fmtPrice(m.lastPrice)}</div>
+          <div className="mt-0.5 font-mono text-sm font-semibold text-neutral-100">{fmtP(m.lastPrice)}</div>
           <div className="text-[10px] text-neutral-500">{q.data?.instrument} · 24h / 5m grid</div>
         </div>
         <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 px-3 py-2">
@@ -76,7 +80,7 @@ export default function StopmapSection({ sym = "BTC" }: { sym?: string }) {
         <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 px-3 py-2">
           <div className="text-[10px] uppercase tracking-wide text-neutral-500">Sweep magnet</div>
           <div className="mt-0.5 font-mono text-sm font-semibold text-neutral-100">
-            {fmtPrice([...m.clusters.below, ...m.clusters.above].sort((a, b) => b.usd - a.usd)[0]?.price ?? 0)}
+            {fmtP([...m.clusters.below, ...m.clusters.above].sort((a, b) => b.usd - a.usd)[0]?.price ?? 0)}
           </div>
           <div className="text-[10px] text-neutral-500">strongest cluster (24h build-up)</div>
         </div>
@@ -88,7 +92,7 @@ export default function StopmapSection({ sym = "BTC" }: { sym?: string }) {
       </div>
 
       <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 p-2">
-        <StopmapCanvas model={m} height={380} />
+        <StopmapCanvas model={m} height={380} priceDecs={decs} />
       </div>
 
       <div className="grid gap-3 xl:grid-cols-3">
@@ -109,7 +113,7 @@ export default function StopmapSection({ sym = "BTC" }: { sym?: string }) {
             <tbody>
               {m.clusters.below.slice(0, 8).map((c, i) => (
                 <tr key={i} className="border-t border-neutral-800/40">
-                  <td className="py-1 font-mono text-neutral-200">{fmtPrice(c.price)}</td>
+                  <td className="py-1 font-mono text-neutral-200">{fmtP(c.price)}</td>
                   <td className="py-1 text-right font-mono text-emerald-400/80">{c.distPct.toFixed(2)}%</td>
                   <td className="py-1 text-right font-mono text-neutral-300">${fmtB(c.usd)}</td>
                   <td className="py-1 pl-2">
@@ -143,7 +147,7 @@ export default function StopmapSection({ sym = "BTC" }: { sym?: string }) {
             <tbody>
               {m.clusters.above.slice(0, 8).map((c, i) => (
                 <tr key={i} className="border-t border-neutral-800/40">
-                  <td className="py-1 font-mono text-neutral-200">{fmtPrice(c.price)}</td>
+                  <td className="py-1 font-mono text-neutral-200">{fmtP(c.price)}</td>
                   <td className="py-1 text-right font-mono text-red-400/80">+{c.distPct.toFixed(2)}%</td>
                   <td className="py-1 text-right font-mono text-neutral-300">${fmtB(c.usd)}</td>
                   <td className="py-1 pl-2">

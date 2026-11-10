@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import LargeOrdersCanvas from "./charts/large-orders-canvas";
 import { usePolling, rowsToCandles, type KlinePayload, type LtoPayload } from "./use-cg-data";
 import type { LtoOrder } from "@/lib/cg/types";
-import { fmtAge, fmtNum, fmtPct, fmtPrice, fmtUsd } from "@/lib/cg/format";
+import { fmtAge, fmtNum, fmtPct, fmtUsd } from "@/lib/cg/format";
+import { assetOf } from "@/lib/cg/assets";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -38,9 +39,16 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
   const klineQ = usePolling<KlinePayload>(`/api/cg/kline?type=kline&interval=m15&limit=300&symbol=Binance_${sym}USDT`, 60_000);
   const ltoQ = usePolling<LtoPayload>(`/api/cg/lto?symbol=${sym}&minVolUsd=${minVolUsd}`, 45_000);
 
+  // symbol switched: drop the detail selection so a stale BTC order can
+  // never render under the new symbol's unit labels
+  useEffect(() => setSelected(null), [sym]);
+
   const candles = useMemo(() => rowsToCandles(klineQ.data?.rows), [klineQ.data]);
   const lastPrice = candles.length ? candles[candles.length - 1].c : null;
-  const groups = ltoQ.data?.groups ?? [];
+  // defense-in-depth: never render orders that belong to another symbol
+  const groups = ltoQ.data?.symbol === sym ? ltoQ.data.groups : [];
+  const decs = assetOf(sym)?.priceDecs ?? 2;
+  const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
 
   const marketOf = (t: number) => (t === 1 ? "futures" : "spot");
 
@@ -147,7 +155,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
         id: o.id,
         exchangeName: exName,
         name: o.name,
-        symbol: "BTC",
+        symbol: sym,
         price: o.price,
         side: o.side,
         baseVol: o.currentAmount,
@@ -165,7 +173,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
       {/* controls */}
       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900/60 p-2.5">
         <div className="flex items-center gap-1.5 pr-2">
-          <span className="text-sm font-semibold text-neutral-100">BTC</span>
+          <span className="text-sm font-semibold text-neutral-100">{sym}</span>
           <span className="rounded bg-neutral-800 px-1.5 py-0.5 text-[10px] text-neutral-400">
             all exchanges · large resting orders
           </span>
@@ -376,7 +384,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
           sub={`${exSelected ? `${exSelected.size} exchanges` : "all venues"}${marketMode !== "all" ? ` · ${marketMode} only` : ""}`}
         />
         <Metric label="Open orders" value={String(summary.count)} sub={`${exchangeChips.length} exchanges with data`} />
-        <Metric label="Last price" value={lastPrice ? fmtPrice(lastPrice) : "—"} sub="Binance perp · 15m" />
+        <Metric label="Last price" value={lastPrice ? fmtP(lastPrice) : "—"} sub="Binance perp · 15m" />
         <Metric label="Threshold" value={`≥ ${fmtUsd(minVolUsd)}`} sub="resting order size filter" />
       </div>
 
@@ -430,7 +438,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
               showWalls
               showTrades={false}
               showImbalance={false}
-              resetKey={`${[...(exSelected ?? [])].sort().join(",")}-${minVolUsd}-${marketMode}`}
+              resetKey={`${sym}-${[...(exSelected ?? [])].sort().join(",")}-${minVolUsd}-${marketMode}`}
             />
           ) : (
             <div className="flex h-full items-center justify-center text-sm text-neutral-500">Loading price data…</div>
@@ -485,7 +493,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
                         {isBid ? "Bid" : "Ask"}
                       </span>
                     </td>
-                    <td className="px-3 py-1.5 text-right font-mono text-neutral-200">{fmtPrice(o.price)}</td>
+                    <td className="px-3 py-1.5 text-right font-mono text-neutral-200">{fmtP(o.price)}</td>
                     <td className="px-3 py-1.5 text-right font-mono text-neutral-400">
                       {lastPrice ? fmtPct(((o.price - lastPrice) / lastPrice) * 100) : ""}
                     </td>
@@ -521,7 +529,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
 
       {/* whale-order walls — the order-book wall view derived purely from
           open whale orders (subset of the full book: only ≥ threshold) */}
-      <WhaleWalls scoped={scoped} lastPrice={lastPrice} />
+      <WhaleWalls scoped={scoped} lastPrice={lastPrice} fmtP={fmtP} />
 
       {/* order detail */}
       {selected && (
@@ -535,7 +543,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
           <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-[11px] sm:grid-cols-4">
             <Detail label="Venue" value={`${selected.name}`} />
             <Detail label="Side" value={selected.side === 2 ? "Bid (buy wall)" : "Ask (sell wall)"} tone={selected.side === 2 ? "up" : "down"} />
-            <Detail label="Price" value={fmtPrice(selected.price)} />
+            <Detail label="Price" value={fmtP(selected.price)} />
             <Detail label="Status" value="Open" tone="up" />
             <Detail label="Initial size" value={`${fmtNum(selected.startAmount, 3)} ${sym} · ${fmtUsd(selected.startUsd)}`} />
             <Detail label="Remaining" value={`${fmtNum(selected.currentAmount, 3)} ${sym} · ${fmtUsd(selected.currentUsd)}`} />
@@ -591,11 +599,23 @@ function Metric({ label, value, sub, tone }: { label: string; value: string; sub
 function WhaleWalls({
   scoped,
   lastPrice,
+  fmtP,
 }: {
   scoped: { order: LtoOrder; exName: string; market: string; instrumentId: string }[];
   lastPrice: number | null;
+  fmtP: (n: number) => string;
 }) {
-  const BUCKET = 50;
+  // bucket ≈ price/500, rounded to 1-2-5×10ⁿ — BTC@74k → $200 buckets,
+  // XRP@$1.09 → $0.005 buckets (a fixed $50 grid collapses sub-$10 assets
+  // into a single "$0.00" row)
+  const BUCKET = useMemo(() => {
+    if (!lastPrice || lastPrice <= 0) return 50;
+    const raw = lastPrice / 500;
+    const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const n = raw / mag;
+    const mult = n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10;
+    return mult * mag;
+  }, [lastPrice]);
   const band = useMemo(() => {
     if (!lastPrice) return null;
     const m = new Map<number, { bid: number; ask: number; orders: number; venues: Set<string> }>();
@@ -634,7 +654,7 @@ function WhaleWalls({
     <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 p-3">
       <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-sm font-semibold text-neutral-100">
-          Whale-order walls <span className="text-[11px] font-normal text-neutral-500">open orders ≥ threshold aggregated at ${BUCKET} price buckets · ±5%</span>
+          Whale-order walls <span className="text-[11px] font-normal text-neutral-500">open orders ≥ threshold aggregated at ${fmtP(BUCKET)} price buckets · ±5%</span>
         </h3>
         <span className="font-mono text-[11px] text-neutral-400">
           bid {fmtUsd(band.bidTotal)} · ask {fmtUsd(band.askTotal)} · net{" "}
@@ -644,8 +664,8 @@ function WhaleWalls({
         </span>
       </div>
       <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <Metric label="Largest bid wall" value={band.maxBid ? fmtPrice(band.maxBid.price) : "—"} sub={band.maxBid ? `${fmtUsd(band.maxBid.bid)} · ${(((band.maxBid.price - lastPrice) / lastPrice) * 100).toFixed(2)}%` : "none"} tone="up" />
-        <Metric label="Largest ask wall" value={band.maxAsk ? fmtPrice(band.maxAsk.price) : "—"} sub={band.maxAsk ? `${fmtUsd(band.maxAsk.ask)} · +${(((band.maxAsk.price - lastPrice) / lastPrice) * 100).toFixed(2)}%` : "none"} tone="down" />
+        <Metric label="Largest bid wall" value={band.maxBid ? fmtP(band.maxBid.price) : "—"} sub={band.maxBid ? `${fmtUsd(band.maxBid.bid)} · ${(((band.maxBid.price - lastPrice) / lastPrice) * 100).toFixed(2)}%` : "none"} tone="up" />
+        <Metric label="Largest ask wall" value={band.maxAsk ? fmtP(band.maxAsk.price) : "—"} sub={band.maxAsk ? `${fmtUsd(band.maxAsk.ask)} · +${(((band.maxAsk.price - lastPrice) / lastPrice) * 100).toFixed(2)}%` : "none"} tone="down" />
         <Metric label="Whale bid depth" value={fmtUsd(band.bidTotal)} sub="sum of open buy walls ±5%" tone="up" />
         <Metric label="Whale ask depth" value={fmtUsd(band.askTotal)} sub="sum of open sell walls ±5%" tone="down" />
       </div>
@@ -659,7 +679,7 @@ function WhaleWalls({
                 <div className="h-3 rounded-l bg-emerald-500/70" style={{ width: `${bidW}%` }} title={`bid ${fmtUsd(r.bid)}`} />
               </div>
               <span className={`w-16 shrink-0 text-center font-mono ${r.price < lastPrice ? "text-neutral-300" : "text-neutral-100"}`}>
-                {fmtPrice(r.price)}
+                {fmtP(r.price)}
               </span>
               <div className="flex h-4 flex-1 items-center">
                 <div className="h-3 rounded-r bg-red-500/70" style={{ width: `${askW}%` }} title={`ask ${fmtUsd(r.ask)}`} />

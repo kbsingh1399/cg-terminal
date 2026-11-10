@@ -97,6 +97,27 @@ export function liqVenues(sym: string): { name: string; key: string }[] {
   return v;
 }
 
+/**
+ * Liquidity-heatmap AGGREGATE-stream venues per asset (live-verified against
+ * capi.coinglass.com): the full multi-venue futures/spot aggregates exist
+ * only for BTC and ETH. Alt-coin perps aggregate over Binance+Hyperliquid
+ * (OKX/Gate/Bitget/Bybit carry no alt futures heatmap pairs — the stream
+ * errors with "No supported futures heatmap pair" if any listed venue lacks
+ * the pair). Metals are Binance-only (no Hyperliquid listing, no spot books).
+ */
+export function aggVenues(sym: string, market: "futures" | "spot"): string[] {
+  const s = sym.toUpperCase();
+  const a = assetOf(s);
+  if (market === "futures") {
+    if (s === "BTC" || s === "ETH") return ["Binance", "OKX", "Gate", "Bitget", "Hyperliquid"];
+    if (a?.kind === "metal") return ["Binance"];
+    return ["Binance", "Hyperliquid"];
+  }
+  if (s === "BTC" || s === "ETH") return ["Binance", "Coinbase", "OKX", "Bitget", "Gate", "Kraken", "Bitfinex"];
+  if (a?.kind === "metal") return []; // no spot books for metals on the stream
+  return ["Binance"];
+}
+
 export function fmtAssetPrice(v: number | null | undefined, sym: string): string {
   if (null == v || !Number.isFinite(v)) return "–";
   const a = assetOf(sym);

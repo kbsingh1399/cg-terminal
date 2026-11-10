@@ -25,12 +25,15 @@ export default function CvdCanvas({
   showDelta,
   showRatio,
   height = 460,
+  priceDecs = 1,
 }: {
   model: CvdChartModel;
   mode: "perp" | "spot" | "total";
   showDelta: boolean;
   showRatio: boolean;
   height?: number;
+  /** per-asset price decimals (assetOf(sym).priceDecs) for axis labels */
+  priceDecs?: number;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -81,7 +84,7 @@ export default function CvdCanvas({
       const yy = yP(p);
       drawGridLine(ctx, padL, yy, padL + plotW, yy);
       ctx.fillStyle = COLORS.text;
-      ctx.fillText(p.toFixed(0), padL + plotW + 8, yy + 3);
+      ctx.fillText(p.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs }), padL + plotW + 8, yy + 3);
     }
 
     candles.forEach((c, i) => {
@@ -134,10 +137,18 @@ export default function CvdCanvas({
     ctx.lineTo(padL + plotW, zy);
     ctx.stroke();
     ctx.setLineDash([]);
-    // CVD axis labels (right, blue)
+    // CVD axis labels (right, blue) — adaptive K/M/B so low-volume assets
+    // (XAG, ADA …) don't render as "0.0B"
+    const fmtCvd = (v: number) => {
+      const a = Math.abs(v);
+      if (a >= 1e9) return `${(v / 1e9).toFixed(2)}B`;
+      if (a >= 1e6) return `${(v / 1e6).toFixed(1)}M`;
+      if (a >= 1e3) return `${(v / 1e3).toFixed(1)}K`;
+      return v.toFixed(0);
+    };
     ctx.fillStyle = "#58a6ff";
-    ctx.fillText(`${(cHi / 1000).toFixed(1)}B`, padL + plotW + 8, mainTop + 8);
-    ctx.fillText(`${(cLo / 1000).toFixed(1)}B`, padL + plotW + 8, mainBot - 2);
+    ctx.fillText(fmtCvd(cHi), padL + plotW + 8, mainTop + 8);
+    ctx.fillText(fmtCvd(cLo), padL + plotW + 8, mainBot - 2);
 
     // divergence markers
     for (const d of divergences) {

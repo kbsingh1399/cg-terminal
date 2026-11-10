@@ -3,14 +3,15 @@
 import { useMemo, useState } from "react";
 import { usePolling } from "./use-cg-data";
 import type { LiqStats } from "@/lib/cg/liq-model";
-import { fmtPrice } from "@/lib/cg/format";
+import { assetOf, liqVenues } from "@/lib/cg/assets";
 import { Button } from "@/components/ui/button";
 import StopmapSection from "./stopmap-section";
 
 /**
  * Liquidation levels — 3D / 7D / 30D estimated clusters within ±4% of price,
- * AGGREGATED over Binance + OKX + Bybit + Hyperliquid, using the EXACT model
- * of the live Coinglass page (ported in src/lib/cg/liq-model.ts):
+ * AGGREGATED over Binance + OKX + Bybit (+ Hyperliquid where listed — metals
+ * drop it), using the EXACT model of the live Coinglass page (ported in
+ * src/lib/cg/liq-model.ts):
  *  - 520-row price grid over 0.88×–1.12× of the candle range
  *  - only levels price has NOT touched yet count as open strength
  *  - key levels = top-5 rows per side within the ±% window, strength
@@ -35,6 +36,7 @@ const VENUE_COLORS: Record<string, string> = {
 interface LiqResponse {
   ok: boolean;
   error?: string;
+  sym: string;
   range: string;
   lvR: number;
   venues: string[];
@@ -56,8 +58,12 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
   const [tab, setTab] = useState<"levels" | "stops">("levels");
 
   const liqQ = usePolling<LiqResponse>(tab === "levels" ? `/api/cg/liqlevels?sym=${sym}&range=${range}&lvR=${windowPct}` : null, 45_000);
-  const stats = liqQ.data?.stats ?? null;
+  // defense-in-depth: never render stats that belong to another symbol
+  const stats = liqQ.data?.sym === sym ? liqQ.data.stats ?? null : null;
   const err = liqQ.error;
+  const decs = assetOf(sym)?.priceDecs ?? 2;
+  const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
+  const venueList = liqVenues(sym).map((v) => v.name).join(" + ");
 
   const bandMax = useMemo(
     () => (stats ? Math.max(1, ...stats.bands.map((b) => b.up + b.down)) : 1),
@@ -80,9 +86,9 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
       {/* controls */}
       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900/60 p-2.5">
         <div className="flex items-center gap-1.5 pr-2">
-          <span className="text-sm font-semibold text-neutral-100">BTC</span>
+          <span className="text-sm font-semibold text-neutral-100">{sym}</span>
           <span className="rounded bg-neutral-800 px-1.5 py-0.5 text-[10px] text-neutral-400">
-            aggregated · Binance+OKX+Bybit+Hyperliquid
+            aggregated · {venueList}
           </span>
         </div>
         <div className="flex overflow-hidden rounded border border-neutral-700">
@@ -142,7 +148,17 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
       </div>
 
       {tab === "stops" ? (
-        <StopmapSection sym={sym} />
+        sym === "BTC" ? (
+          <StopmapSection sym={sym} />
+        ) : (
+          <div className="flex h-64 flex-col items-center justify-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900/60 text-sm text-neutral-500">
+            <div>The 24h stops heatmap is BTC-only on the anonymous Coinglass API.</div>
+            <div className="text-xs text-neutral-600">
+              The liqHeatMap endpoint rejects {sym} (upstream code 40000). Switch to BTC for the stops map — the 3D/7D/30D
+              levels above work for every asset.
+            </div>
+          </div>
+        )
       ) : (
         <>
       {err && (
@@ -159,7 +175,7 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
         <>
           {/* summary strip */}
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6">
-            <Stat label="Last price" value={fmtPrice(stats.last)} sub={`range ${range.toUpperCase()} · window ±${windowPct}%`} />
+            <Stat label="Last price" value={fmtP(stats.last)} sub={`range ${range.toUpperCase()} · window ±${windowPct}%`} />
             <Stat
               label="Open levels"
               value={fmtM(stats.counts.open)}
@@ -212,17 +228,17 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
                 </thead>
                 <tbody>
                   {[...stats.keyLevels.above].reverse().map((k, i) => (
-                    <KeyRow k={k} key={`a${i}`} />
+                    <KeyRow k={k} fmtP={fmtP} key={`a${i}`} />
                   ))}
                   <tr>
                     <td colSpan={5} className="py-1.5 text-center">
                       <span className="rounded bg-neutral-800 px-2 py-0.5 font-mono text-[11px] text-neutral-300">
-                        Last price {fmtPrice(stats.last)}
+                        Last price {fmtP(stats.last)}
                       </span>
                     </td>
                   </tr>
                   {stats.keyLevels.below.map((k, i) => (
-                    <KeyRow k={k} key={`b${i}`} />
+                    <KeyRow k={k} fmtP={fmtP} key={`b${i}`} />
                   ))}
                   {!stats.keyLevels.above.length && !stats.keyLevels.below.length && (
                     <tr>
@@ -302,7 +318,7 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
                 <div className="flex flex-wrap gap-3 text-[11px]">
                   {[...stats.keyLevels.above.slice(0, 3), ...stats.keyLevels.below.slice(0, 3)].map((k, i) => (
                     <div key={i} className="min-w-[130px] rounded border border-neutral-800 bg-neutral-900 px-2 py-1.5">
-                      <div className="font-mono text-neutral-300">{fmtPrice(k.price)}</div>
+                      <div className="font-mono text-neutral-300">{fmtP(k.price)}</div>
                       <div className="mt-1 flex gap-1">
                         {k.venues.map((v) => (
                           <span key={v} className="inline-block h-1.5 w-4 rounded-full" style={{ background: VENUE_COLORS[v] ?? "#888" }} title={v} />
@@ -321,8 +337,8 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
           <div className="rounded-lg border border-neutral-800 bg-neutral-900/40 px-3 py-2 text-[10px] leading-relaxed text-neutral-500">
             Levels are estimated from open interest and common leverage settings — they are not resting orders. A level
             stops counting once price has touched it (endX set). Strength is the summed estimated size of open levels in
-            the price row, normalized so the strongest key row = 100. Aggregated over Binance, OKX, Bybit and
-            Hyperliquid with the live page&apos;s exact 520-row grid model.
+            the price row, normalized so the strongest key row = 100. Aggregated over {venueList} with the live
+            page&apos;s exact 520-row grid model.
           </div>
         </>
       )}
@@ -332,7 +348,7 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
   );
 }
 
-function KeyRow({ k }: { k: LiqStats["keyLevels"]["above"][number] }) {
+function KeyRow({ k, fmtP }: { k: LiqStats["keyLevels"]["above"][number]; fmtP: (n: number) => string }) {
   const short = k.side === "short";
   return (
     <tr className="border-t border-neutral-800/40">
@@ -341,7 +357,7 @@ function KeyRow({ k }: { k: LiqStats["keyLevels"]["above"][number] }) {
           {short ? "Short" : "Long"}
         </span>
       </td>
-      <td className="py-1.5 text-right font-mono text-neutral-200">{fmtPrice(k.price)}</td>
+      <td className="py-1.5 text-right font-mono text-neutral-200">{fmtP(k.price)}</td>
       <td className={`py-1.5 text-right font-mono ${short ? "text-red-400/80" : "text-emerald-400/80"}`}>
         {k.distPct > 0 ? "+" : ""}
         {k.distPct.toFixed(2)}%

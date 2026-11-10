@@ -17,7 +17,16 @@ export interface StopmapModel {
  * heat cells (bar × price level), price line on top, and the cumulative
  * cluster profile on the right edge (their rainbow heatmap view).
  */
-export default function StopmapCanvas({ model, height = 360 }: { model: StopmapModel; height?: number }) {
+export default function StopmapCanvas({
+  model,
+  height = 360,
+  priceDecs = 1,
+}: {
+  model: StopmapModel;
+  height?: number;
+  /** per-asset price decimals (assetOf(sym).priceDecs) for axis/tag labels */
+  priceDecs?: number;
+}) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -74,7 +83,7 @@ export default function StopmapCanvas({ model, height = 360 }: { model: StopmapM
       const yy = yOf(p);
       drawGridLine(ctx, padL, yy, padL + plotW, yy);
       ctx.fillStyle = COLORS.text;
-      ctx.fillText(p.toFixed(0), padL + plotW + 8, yy + 3);
+      ctx.fillText(p.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs }), padL + plotW + 8, yy + 3);
     }
 
     // time labels
@@ -118,7 +127,7 @@ export default function StopmapCanvas({ model, height = 360 }: { model: StopmapM
     ctx.fillRect(padL + plotW + 2, ly - 8, padR - 6, 16);
     ctx.fillStyle = "#000";
     ctx.font = "bold 10px ui-monospace, monospace";
-    ctx.fillText(lastPrice.toFixed(1), padL + plotW + 6, ly + 4);
+    ctx.fillText(lastPrice.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs }), padL + plotW + 6, ly + 4);
 
     // cumulative cluster profile on the right edge
     const maxProfile = Math.max(1, ...profile);

@@ -444,7 +444,13 @@ export const WALL_MIN_USD: Record<string, number> = {
   XRP: 300_000,
   BNB: 300_000,
   DOGE: 300_000,
+  ADA: 300_000,
+  AVAX: 300_000,
+  LINK: 300_000,
+  LTC: 300_000,
   HYPE: 300_000,
+  XAU: 1_000_000,
+  XAG: 300_000,
 };
 
 export interface WallsModel {

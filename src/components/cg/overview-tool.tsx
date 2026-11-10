@@ -35,6 +35,7 @@ interface MarketResp {
 
 interface SignalsResp {
   ok: boolean;
+  sym?: string;
   counts: { all: number; bullish: number; bearish: number };
   sets: { bt: string; label: string; sigs: { t: string; side: string; p: number; ts: number; name?: string; main?: string }[] }[];
   updatedAt: number;
@@ -58,30 +59,36 @@ export default function OverviewTool({ sym = "BTC" }: { sym?: string }) {
   const q = usePolling<MarketResp>(`/api/cg/market?sym=${sym}`, 30_000);
   const sigQ = usePolling<SignalsResp>(`/api/cg/signals?sym=${sym}`, 45_000);
   const tk = useTicker(sym); // 1s live price — refreshes the header every second
-  const d = q.data;
+  // defense-in-depth: never render a snapshot that belongs to another symbol
+  const d = q.data && q.data.sym === sym ? q.data : null;
+  const sigData = sigQ.data && (sigQ.data.sym ?? sym) === sym ? sigQ.data : null;
   const decs = assetOf(sym)?.priceDecs ?? 2;
 
   const recentSigs = useMemo(() => {
-    if (!sigQ.data?.sets) return [];
-    return sigQ.data.sets
+    if (!sigData?.sets) return [];
+    return sigData.sets
       .flatMap((s) => s.sigs.map((g) => ({ ...g, btLabel: s.label })))
       .sort((a, b) => b.ts - a.ts)
       .slice(0, 8);
-  }, [sigQ.data]);
+  }, [sigData]);
 
   const sigCountByBt = useMemo(() => {
     const m: Record<string, { bull: number; bear: number }> = {};
-    for (const s of sigQ.data?.sets ?? []) {
+    for (const s of sigData?.sets ?? []) {
       const e = (m[s.bt] ??= { bull: 0, bear: 0 });
       for (const g of s.sigs) g.side === "buy" ? e.bull++ : e.bear++;
     }
     return m;
-  }, [sigQ.data]);
+  }, [sigData]);
 
   const price = tk.price ?? d?.price.last ?? null;
-  // day change % computed from the 1s live price (prev-day close from the 30s snapshot)
+  // day change % computed from the 1s live price (prev-day close from the 30s
+  // snapshot — only when the snapshot belongs to the CURRENT symbol, else the
+  // new price against the old symbol's close would flash ±99%)
   const chgLive =
-    price != null && d?.price.prevDayClose ? ((price - d.price.prevDayClose) / d.price.prevDayClose) * 100 : (d?.price.chgDayPct ?? null);
+    d && price != null && d.price.prevDayClose
+      ? ((price - d.price.prevDayClose) / d.price.prevDayClose) * 100
+      : (d?.price.chgDayPct ?? null);
   const vwap = d?.vwap;
   const vwapBands = useMemo(() => {
     if (!vwap || vwap.vwap == null) return [];
@@ -136,7 +143,9 @@ export default function OverviewTool({ sym = "BTC" }: { sym?: string }) {
           <Stat label="Prev day close" value={fmt(d?.price.prevDayClose, decs)} />
           <Stat label="Day open (VWAP anchor)" value={fmt(vwap?.open, decs)} />
         </div>
-        {q.error && <div className="text-xs text-amber-500">market: {q.error}</div>}
+        {(q.error || sigQ.error) && (
+          <div className="text-xs text-amber-500">{q.error ? `market: ${q.error}` : `signals: ${sigQ.error}`}</div>
+        )}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">

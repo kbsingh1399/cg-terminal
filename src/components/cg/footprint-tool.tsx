@@ -23,15 +23,17 @@ import {
   type SigUnit,
 } from "@/lib/cg/cg-signals";
 import { fmtPrice } from "@/lib/cg/format";
+import { assetOf, fpVenues } from "@/lib/cg/assets";
 import { Button } from "@/components/ui/button";
 
 /**
  * Footprint — EXACT replica of the Coinglass footprint page's signal system.
  *
  * Data: the same API calls the live page makes (aggregated futures:
- * Binance + OKX + Bybit + Hyperliquid), loaded through /api/cg/fp which
- * mirrors their aggregation 1:1 (lead-venue kline OHLC, USD-venue price
- * offset, coarsest-tick row merge).
+ * Binance + OKX + Bybit + Hyperliquid where listed — metals drop the
+ * Hyperliquid venue), loaded through /api/cg/fp which mirrors their
+ * aggregation 1:1 (lead-venue kline OHLC, USD-venue price offset,
+ * coarsest-tick row merge).
  *
  * Signals: their client-side engine ported line-for-line (cg-signals.ts) and
  * run on the same three bar types they compute — time bars (selected
@@ -60,6 +62,7 @@ type PanelTab = "details" | "signals" | "imbalances";
 interface FpResponse {
   ok: boolean;
   error?: string;
+  sym: string;
   bars: FpBar[];
   missing?: string[];
 }
@@ -94,8 +97,9 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
   // m1 series for volume / range bars (their M1S, 1000 bars)
   const m1Q = usePolling<FpResponse>(`/api/cg/fp?sym=${sym}&itv=m1&limit=1000`, 45_000);
 
-  const timeBars = useMemo(() => tfQ.data?.bars ?? [], [tfQ.data]);
-  const m1Bars = useMemo(() => m1Q.data?.bars ?? [], [m1Q.data]);
+  // defense-in-depth: never render bars that belong to another symbol
+  const timeBars = useMemo(() => (tfQ.data?.sym === sym ? tfQ.data.bars : []), [tfQ.data, sym]);
+  const m1Bars = useMemo(() => (m1Q.data?.sym === sym ? m1Q.data.bars : []), [m1Q.data, sym]);
 
   // ---- auto thresholds (their ef) ----
   const volAuto = useMemo(() => (m1Bars.length ? autoThreshold(m1Bars, "vol") : 0), [m1Bars]);
@@ -207,10 +211,10 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
 
   // stats strip
   const lastBar = currentBars[currentBars.length - 1] ?? null;
-  const dp = priceDecimals(lastBar?.c ?? 0);
+  const dp = assetOf(sym)?.priceDecs ?? priceDecimals(lastBar?.c ?? 0);
   const latestSignal = currentSigs.length ? currentSigs.reduce((a, b) => (b.ts > a.ts ? b : a)) : null;
   const err = tfQ.error ?? m1Q.error;
-  const missing = [...(tfQ.data?.missing ?? []), ...(m1Q.data?.missing ?? [])];
+  const missing = [...(tfQ.data?.sym === sym ? tfQ.data.missing ?? [] : []), ...(m1Q.data?.sym === sym ? m1Q.data.missing ?? [] : [])];
   const sigUnit: SigUnit = unit === "usd" ? "usd" : "qty";
 
   const marks = useMemo(
@@ -235,9 +239,9 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
       {/* controls */}
       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900/60 p-2.5">
         <div className="flex items-center gap-1.5 pr-2">
-          <span className="text-sm font-semibold text-neutral-100">BTC</span>
+          <span className="text-sm font-semibold text-neutral-100">{sym}</span>
           <span className="rounded bg-neutral-800 px-1.5 py-0.5 text-[10px] text-neutral-400">
-            aggregated futures · Binance+OKX+Bybit+Hyperliquid
+            aggregated futures · {fpVenues(sym).map((v) => v.id.replace("-perp", "")).join("+")}
           </span>
         </div>
 
@@ -419,7 +423,7 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
               unit={unit}
               imbalanceRatio={ratio}
               showProfile={showProfile}
-              resetKey={`${bt}-${bt === "time" ? tf : btvMode === "auto" ? "auto" : btvMode}`}
+              resetKey={`${sym}-${bt}-${bt === "time" ? tf : btvMode === "auto" ? "auto" : btvMode}`}
               onHoverBar={setHoverBar}
               signals={marks}
               jump={jump}

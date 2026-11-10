@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import {
-  AGG_VENUES,
   buildWallsModel,
   decodeRow,
   fetchAggregateStream,
+  WALL_MIN_USD,
   type BookSnapshot,
 } from "@/lib/cg/book-walls";
 import type { KlineRow } from "@/lib/cg/types";
-import { isAsset } from "@/lib/cg/assets";
+import { aggVenues, isAsset } from "@/lib/cg/assets";
 
 export const dynamic = "force-dynamic";
 
@@ -63,7 +63,16 @@ export async function GET(req: NextRequest) {
   if (hit && Date.now() - hit.at < 45_000) return NextResponse.json(hit.body);
 
   try {
-    const venues = AGG_VENUES[market];
+    // per-asset venue list: the full 5-venue futures aggregate only exists
+    // for BTC/ETH (alts = Binance+Hyperliquid, metals = Binance) — a venue
+    // without a (coin, market) heatmap pair kills the whole stream
+    const venues = aggVenues(sym, market);
+    if (!venues.length) {
+      return NextResponse.json(
+        { ok: false, error: `no ${market} aggregate for ${sym} on the liquidity-heatmap stream — use market=futures` },
+        { status: 400 }
+      );
+    }
     const stream = await fetchAggregateStream({
       coin: sym,
       exchanges: venues,
@@ -118,6 +127,7 @@ export async function GET(req: NextRequest) {
       limit,
       band,
       venues,
+      minWallUsd: WALL_MIN_USD[sym] ?? 100_000,
       model,
       updatedAt: Date.now(),
     };

@@ -162,6 +162,17 @@ Scalability properties:
   liquidation prices. Strong clusters are liquidity **magnets** that attract
   sweeps; they are not guaranteed targets. We reproduce Coinglass's numbers
   exactly, and their number is itself an estimate.
+- **Book-walls aggregate is per-asset**: the full 5-venue futures aggregate
+  (Binance+OKX+Gate+Bitget+Hyperliquid) exists only for BTC/ETH on the
+  heatmap stream; alt perps aggregate over Binance+Hyperliquid and metals
+  over Binance alone (`aggVenues()` in `src/lib/cg/assets.ts`,
+  live-verified — a venue without a pair kills the whole stream with
+  "No supported futures heatmap pair"). Metals have no spot books: the spot
+  toggle returns a clear 400 instead of a stream error.
+- **The 24h stops heatmap is BTC-only**: the anonymous Coinglass liqHeatMap
+  endpoint serves BTC only (every other asset → upstream code 40000). The
+  Stops tab shows an explicit notice for other assets; the 3D/7D/30D
+  liquidation levels work for all 12 assets.
 - **Whale-order walls** cover only single resting orders above the threshold;
   **Book Walls** covers the complete aggregated depth — use both.
 - **CVD divergences** confirm 5 bars after the second pivot and never

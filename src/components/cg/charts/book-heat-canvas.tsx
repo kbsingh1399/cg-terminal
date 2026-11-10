@@ -15,7 +15,16 @@ export interface StripModel {
  * current ladder profile on the right edge — the Coinglass LiquidityHeatmap
  * look in compact form.
  */
-export default function BookHeatCanvas({ model, height = 300 }: { model: StripModel; height?: number }) {
+export default function BookHeatCanvas({
+  model,
+  height = 300,
+  priceDecs = 1,
+}: {
+  model: StripModel;
+  height?: number;
+  /** per-asset price decimals (assetOf(sym).priceDecs) for axis/tag labels */
+  priceDecs?: number;
+}) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -108,7 +117,7 @@ export default function BookHeatCanvas({ model, height = 300 }: { model: StripMo
       const yy = yOf(p);
       drawGridLine(ctx, padL, yy, padL + plotW, yy);
       ctx.fillStyle = COLORS.text;
-      ctx.fillText(p.toFixed(0), padL + plotW + 6, yy + 3);
+      ctx.fillText(p.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs }), padL + plotW + 6, yy + 3);
     }
 
     // time labels
@@ -127,8 +136,8 @@ export default function BookHeatCanvas({ model, height = 300 }: { model: StripMo
     ctx.fillRect(padL + plotW + 2, ly - 8, 60, 16);
     ctx.fillStyle = "#000";
     ctx.font = "bold 10px ui-monospace, monospace";
-    ctx.fillText(last.price.toFixed(1), padL + plotW + 6, ly + 4);
-  }, [model]);
+    ctx.fillText(last.price.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs }), padL + plotW + 6, ly + 4);
+  }, [model, priceDecs]);
 
   return <canvas ref={ref} style={{ width: "100%", height }} className="rounded-md" />;
 }

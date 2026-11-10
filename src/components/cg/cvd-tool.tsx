@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePolling } from "./use-cg-data";
 import CvdCanvas from "./charts/cvd-canvas";
-import { fmtPrice } from "@/lib/cg/format";
+import { assetOf } from "@/lib/cg/assets";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 interface CvdResponse {
   ok: boolean;
   error?: string;
+  sym: string;
   itv: string;
   mode: string;
   anchor: string;
@@ -97,9 +98,12 @@ export default function CvdTool({ sym = "BTC" }: { sym?: string }) {
     `/api/cg/cvd?sym=${sym}&itv=${itv}&limit=1500&mode=${mode === "total" ? "total" : mode}&anchor=${anchor}`,
     60_000
   );
-  const d = q.data;
+  // defense-in-depth: never render data that belongs to another symbol
+  const d = q.data && q.data.sym === sym ? q.data : undefined;
   const err = q.error;
   const k = d?.kpis;
+  const decs = assetOf(sym)?.priceDecs ?? 2;
+  const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
   const quad = k ? QUADRANTS[k.quadrant] ?? QUADRANTS.partial : null;
 
   return (
@@ -107,7 +111,7 @@ export default function CvdTool({ sym = "BTC" }: { sym?: string }) {
       {/* controls */}
       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900/60 p-2.5">
         <div className="flex items-center gap-1.5 pr-2">
-          <span className="text-sm font-semibold text-neutral-100">BTC</span>
+          <span className="text-sm font-semibold text-neutral-100">{sym}</span>
           <span className="rounded bg-neutral-800 px-1.5 py-0.5 text-[10px] text-neutral-400">
             CVD · {d ? d.instruments.length : "…"} venues · taker flows
           </span>
@@ -205,7 +209,7 @@ export default function CvdTool({ sym = "BTC" }: { sym?: string }) {
             <Kpi
               label="Latest divergence"
               value={k.latestDiv ? (k.latestDiv.type === "bear" ? "Bear div" : "Bull div") : "—"}
-              sub={k.latestDiv ? `${fmtPrice(k.latestDiv.price)} · ${ago(k.latestDiv.ts)}` : "none in window"}
+              sub={k.latestDiv ? `${fmtP(k.latestDiv.price)} · ${ago(k.latestDiv.ts)}` : "none in window"}
               tone={k.latestDiv ? (k.latestDiv.type === "bull" ? "up" : "down") : undefined}
             />
             <Kpi
@@ -217,7 +221,7 @@ export default function CvdTool({ sym = "BTC" }: { sym?: string }) {
 
           <div className="grid gap-3 xl:grid-cols-4">
             <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 p-2 xl:col-span-3">
-              <CvdCanvas model={d} mode={mode} showDelta={showDelta} showRatio={showRatio} height={480} />
+              <CvdCanvas model={d} mode={mode} showDelta={showDelta} showRatio={showRatio} height={480} priceDecs={decs} />
               <div className="px-1 pb-1 pt-2 text-[10px] text-neutral-500">
                 {d.n} bars · {d.itv} · price from {d.priceKey} · CVD over {d.instruments.filter((i) => (mode === "spot" ? i.kind === "spot" : mode === "perp" ? i.kind === "perp" : true)).length} venues.
                 Blue = CVD (own scale), dashed = zero. Markers: Bull div (green) / Bear div (red) connect the two swings.
@@ -237,7 +241,7 @@ export default function CvdTool({ sym = "BTC" }: { sym?: string }) {
                       <span className={`rounded px-1 py-0.5 text-[9px] font-semibold ${dv.type === "bull" ? "bg-emerald-900/60 text-emerald-400" : "bg-red-900/60 text-red-400"}`}>
                         {dv.type === "bull" ? "Bull div" : "Bear div"}
                       </span>
-                      <span className="font-mono text-neutral-300">{fmtPrice(dv.priceA)} → {fmtPrice(dv.priceB)}</span>
+                      <span className="font-mono text-neutral-300">{fmtP(dv.priceA)} → {fmtP(dv.priceB)}</span>
                       <span className="ml-auto font-mono text-neutral-500">
                         {new Date(dv.ts).toLocaleDateString([], { month: "2-digit", day: "2-digit" })}{" "}
                         {new Date(dv.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}

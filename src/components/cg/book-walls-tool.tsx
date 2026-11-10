@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { usePolling } from "./use-cg-data";
 import BookHeatCanvas from "./charts/book-heat-canvas";
-import { fmtPrice } from "@/lib/cg/format";
+import { fmtNum } from "@/lib/cg/format";
+import { assetOf } from "@/lib/cg/assets";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -12,17 +13,22 @@ import { Button } from "@/components/ui/button";
  * the live wall list and add/fill/pull events — computed with their exact
  * wall scanner over the aggregate (price-shift aligned) depth stream.
  *
- * Futures aggregate = Binance+OKX+Gate+Bitget+Hyperliquid perps.
- * Spot aggregate = Binance+Coinbase+OKX+Bitget+Gate+Kraken+Bitfinex.
+ * Futures aggregate = Binance+OKX+Gate+Bitget+Hyperliquid perps for BTC/ETH;
+ * alt perps aggregate over Binance+Hyperliquid, metals over Binance only
+ * (per-asset venue lists live in src/lib/cg/assets.ts → aggVenues).
+ * Spot aggregate = Binance+Coinbase+OKX+Bitget+Gate+Kraken+Bitfinex (BTC/ETH;
+ * alts Binance-only, metals have no spot books).
  */
 
 interface WallsResponse {
   ok: boolean;
   error?: string;
+  sym: string;
   market: string;
   interval: string;
   band: number;
   venues: string[];
+  minWallUsd: number;
   model: {
     snapshots: number;
     from: number;
@@ -52,6 +58,8 @@ const MARKETS = [
   { v: "spot", l: "Spot Aggregated" },
 ] as const;
 const INTERVALS = [
+  { v: "1m", l: "1m" },
+  { v: "5m", l: "5m" },
   { v: "m15", l: "15m" },
   { v: "1h", l: "1h" },
   { v: "4h", l: "4h" },
@@ -67,8 +75,12 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
     `/api/cg/bookwalls?sym=${sym}&market=${market}&interval=${interval}&limit=150&band=${band}`,
     60_000
   );
-  const m = q.data?.model;
+  // defense-in-depth: never render a model that belongs to another symbol
+  const m = q.data && q.data.sym === sym ? q.data.model : undefined;
   const err = q.error;
+  const decs = assetOf(sym)?.priceDecs ?? 2;
+  const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
+  const minUsd = q.data?.minWallUsd ?? 100_000;
 
   const maxBidWall = m ? [...m.walls].filter((w) => w.side === "b").sort((a, b) => b.usd - a.usd)[0] : null;
   const maxAskWall = m ? [...m.walls].filter((w) => w.side === "a").sort((a, b) => b.usd - a.usd)[0] : null;
@@ -78,7 +90,7 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
       {/* controls */}
       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900/60 p-2.5">
         <div className="flex items-center gap-1.5 pr-2">
-          <span className="text-sm font-semibold text-neutral-100">BTC</span>
+          <span className="text-sm font-semibold text-neutral-100">{sym}</span>
           <span className="rounded bg-neutral-800 px-1.5 py-0.5 text-[10px] text-neutral-400">
             order-book heatmap · aggregate
           </span>
@@ -146,19 +158,19 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
             <Kpi
               label={`Last price · ${market === "futures" ? "perp agg" : "spot agg"}`}
-              value={fmtPrice(m.last.price)}
-              sub={`Bid ${fmtPrice(m.last.bid)} · Ask ${fmtPrice(m.last.ask)}`}
+              value={fmtP(m.last.price)}
+              sub={`Bid ${fmtP(m.last.bid)} · Ask ${fmtP(m.last.ask)}`}
             />
             <Kpi
               label={`Bid depth · ${band}% below`}
               value={`$${fmtM(m.depth?.bidUsd ?? 0)}`}
-              sub={`${((m.depth?.bidBase ?? 0) / 1000).toFixed(1)}K ${sym}`}
+              sub={`${fmtNum(m.depth?.bidBase ?? 0, 1)} ${sym}`}
               tone="up"
             />
             <Kpi
               label={`Ask depth · ${band}% above`}
               value={`$${fmtM(m.depth?.askUsd ?? 0)}`}
-              sub={`${((m.depth?.askBase ?? 0) / 1000).toFixed(1)}K ${sym}`}
+              sub={`${fmtNum(m.depth?.askBase ?? 0, 1)} ${sym}`}
               tone="down"
             />
             <Kpi
@@ -175,20 +187,20 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
             />
             <Kpi
               label="Largest bid wall"
-              value={maxBidWall ? fmtPrice(maxBidWall.price) : "—"}
+              value={maxBidWall ? fmtP(maxBidWall.price) : "—"}
               sub={maxBidWall ? `$${fmtM(maxBidWall.usd)} · ${maxBidWall.distPct.toFixed(2)}% away` : "none"}
               tone="up"
             />
             <Kpi
               label="Largest ask wall"
-              value={maxAskWall ? fmtPrice(maxAskWall.price) : "—"}
+              value={maxAskWall ? fmtP(maxAskWall.price) : "—"}
               sub={maxAskWall ? `$${fmtM(maxAskWall.usd)} · +${maxAskWall.distPct.toFixed(2)}% away` : "none"}
               tone="down"
             />
           </div>
 
           <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 p-2">
-            <BookHeatCanvas model={m} height={320} />
+            <BookHeatCanvas model={m} height={320} priceDecs={decs} />
             <div className="px-1 pb-1 pt-2 text-[10px] text-neutral-500">
               {m.snapshots} depth snapshots · grid ${m.grid} · {q.data?.venues.join(" + ")} — books of the same moment are
               summed price-by-price with mid-price shift alignment (their aggregate model).
@@ -212,7 +224,7 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
                       <th className="py-1 text-right font-medium">Price</th>
                       <th className="py-1 text-right font-medium">Distance</th>
                       <th className="py-1 text-right font-medium">Size</th>
-                      <th className="py-1 text-right font-medium">BTC</th>
+                      <th className="py-1 text-right font-medium">{sym}</th>
                       <th className="py-1 text-right font-medium">Age</th>
                       <th className="py-1 text-right font-medium">Touched</th>
                     </tr>
@@ -225,13 +237,13 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
                             {w.side === "b" ? "BID" : "ASK"}
                           </span>
                         </td>
-                        <td className="py-1 text-right font-mono text-neutral-200">{fmtPrice(w.price)}</td>
+                        <td className="py-1 text-right font-mono text-neutral-200">{fmtP(w.price)}</td>
                         <td className={`py-1 text-right font-mono ${w.side === "b" ? "text-emerald-400/80" : "text-red-400/80"}`}>
                           {w.distPct > 0 ? "+" : ""}
                           {w.distPct.toFixed(2)}%
                         </td>
                         <td className="py-1 text-right font-mono text-neutral-300">${fmtM(w.usd)}</td>
-                        <td className="py-1 text-right font-mono text-neutral-400">{w.qty.toFixed(1)}</td>
+                        <td className="py-1 text-right font-mono text-neutral-400">{fmtNum(w.qty, 1)}</td>
                         <td className="py-1 text-right font-mono text-neutral-400">
                           {w.ageMs >= 3_600_000 ? `${Math.round(w.ageMs / 3_600_000)}h` : `${Math.round(w.ageMs / 60_000)}m`}
                         </td>
@@ -260,7 +272,7 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
                       {e.type.toUpperCase()}
                     </span>
                     <span className={`font-mono ${e.side === "b" ? "text-emerald-400" : "text-red-400"}`}>
-                      {e.side === "b" ? "BID" : "ASK"} {fmtPrice(e.p)}
+                      {e.side === "b" ? "BID" : "ASK"} {fmtP(e.p)}
                     </span>
                     <span className="ml-auto font-mono text-neutral-400">${fmtM(e.usd)}</span>
                     <span className="w-10 text-right font-mono text-neutral-600">
@@ -280,7 +292,7 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
           <div className="rounded-lg border border-neutral-800 bg-neutral-900/40 px-3 py-2 text-[10px] leading-relaxed text-neutral-500">
             Walls come from full depth snapshots (every resting order in the aggregated book), not just whale orders —
             same data as the Coinglass order-book heatmap. A wall is a price bucket whose USD size passes their
-            adaptive threshold (≥ 6× the local ±1% median, min $1.5M for BTC), confirmed on 2 consecutive 15-minute
+            adaptive threshold (≥ 6× the local ±1% median, min ${fmtM(minUsd)} for {sym}), confirmed on 2 consecutive
             snapshots. For the subset of walls built from explicitly large single orders see the Large Orders tab.
           </div>
         </>

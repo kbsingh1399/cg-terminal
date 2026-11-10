@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { fmtAssetPrice } from "@/lib/cg/assets";
 
 /**
  * Live notification feed — every event from every tab (footprint signals,
@@ -170,7 +171,7 @@ export default function AlertsTool({ sym }: { sym?: string }) {
               <div className="mt-0.5 text-[11px] leading-snug text-neutral-400">{n.detail}</div>
             </div>
             <div className="shrink-0 text-right">
-              {n.price != null && <div className="tabular-nums text-xs text-neutral-300">{n.price.toLocaleString("en-US", { maximumFractionDigits: 6 })}</div>}
+              {n.price != null && <div className="tabular-nums text-xs text-neutral-300">{fmtAssetPrice(n.price, n.asset)}</div>}
               <div className="tabular-nums text-[10px] text-neutral-600">
                 {new Date(n.ts).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
               </div>

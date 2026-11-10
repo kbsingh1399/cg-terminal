@@ -595,16 +595,20 @@ export function startScanner() {
   t(90_000, 60_000, async (sym) => {
     await scanWhale(sym).catch(() => undefined);
   });
-  // liq clusters: every 5 min for fast assets only (whale lane keeps load low)
-  const liqTimer = setInterval(() => {
-    for (const sym of list.slice(0, 3)) scanLiq(sym).catch(() => undefined);
+  // liq clusters + cvd: 3 assets per 5-min tick, rotating through the full
+  // list — same upstream load as before, but every asset gets covered
+  // (a full pass over 12 assets ≈ 20 min) instead of only BTC/ETH/SOL
+  let laneI = 0;
+  const laneTimer = setInterval(() => {
+    if (!list.length) return;
+    for (let k = 0; k < 3; k++) {
+      const sym = list[(laneI + k) % list.length];
+      scanLiq(sym).catch(() => undefined);
+      scanCvd(sym).catch(() => undefined);
+    }
+    laneI = (laneI + 3) % list.length;
   }, 5 * 60_000);
-  liqTimer.unref?.();
-  // cvd: fast assets every 5 min
-  const cvdTimer = setInterval(() => {
-    for (const sym of list.slice(0, 3)) scanCvd(sym).catch(() => undefined);
-  }, 5 * 60_000);
-  cvdTimer.unref?.();
+  laneTimer.unref?.();
   // initial pass: prime the fast lane + first slow asset immediately
   setTimeout(() => {
     scanAssetAll("BTC").catch(() => undefined);

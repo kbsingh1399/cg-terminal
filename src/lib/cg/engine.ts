@@ -20,10 +20,10 @@
  */
 import { cgGet, FAPI } from "./client";
 import { makeObeToken } from "./crypto";
-import { decodeRow, fetchAggregateStream, rebin, AGG_VENUES, type BookSnapshot } from "./book-walls";
+import { decodeRow, fetchAggregateStream, rebin, type BookSnapshot } from "./book-walls";
 import { append, lastTs, markPoll, markBackfilling, stat, gapCount } from "./store";
 import type { KlineRow } from "./types";
-import { ASSETS } from "./assets";
+import { ASSETS, aggVenues } from "./assets";
 import { startScanner } from "./scan";
 
 const STEP_MS = 900_000; // m15 master step
@@ -192,7 +192,7 @@ async function pollStopmap() {
 async function fetchWallSnapshots(limit: number, endTime?: number): Promise<{ size: number; snaps: BookSnapshot[] }> {
   const stream = await fetchAggregateStream({
     coin: "BTC",
-    exchanges: AGG_VENUES.futures,
+    exchanges: aggVenues("BTC", "futures"),
     market: "futures",
     interval: "m15",
     limit,
