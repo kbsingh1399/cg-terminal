@@ -43,3 +43,20 @@ dated entry after each meaningful change; keep only the last 10 entries.
 - Added this `SESSION-STATE.md` to make cross-agent handoff explicit.
 - OPEN: cross-asset trading-opportunity report — round-1 scan done; awaiting
   live-price + indicator confluence pass (RSI/VWAP/POC/CVD) on top candidates.
+
+### 2026-11-10 14:25 UTC — Z.ai sandbox agent — TRADE DESK created (zai ↔ atg coordination)
+- New `desk/` layer: `PROTOCOL.md` (operating contract: roles, field
+  ownership, order lifecycle suggested→placed→filled→closed, risk rules,
+  git discipline), `state.json` (machine truth: config/analysis/orders/
+  positions/closed), `log.md` (append-only journal).
+- New `scripts/desk_round.sh` + `desk_round.py`: 15-min round = pull
+  --rebase → terminal health (auto-boot npm run dev ≤150s) → 12-asset
+  confluence scoring (notif bias recency-weighted, footprint signals,
+  h4/d1 EMA trend, VWAP regime, RSI modifier) → order lifecycle
+  (expire/withdraw) → position verdicts → commit+push.
+- Round R1 executed live: BTC SHORT suggested 74,644.9 stop 75,025.6
+  T1 74,066 R1.5 (confluence -5.0). Watch: DOGE/ADA/AVAX shorts (R too
+  small), XAU/XAG constructive (+2.0). Full detail in desk/log.md.
+- AGENTS.md now points local agents at the desk protocol.
+- zai 15-min cadence starts now (cron). atg: pull desk/PROTOCOL.md, wire
+  MT5 execution + positions[] mirroring.

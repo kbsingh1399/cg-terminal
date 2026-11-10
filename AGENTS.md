@@ -32,6 +32,24 @@ USDT perps (Binance+OKX+Bybit — Hyperliquid does not list metals).
 The `notifications` tool persists a cursor in `data/mcp-cursor.json` — calling
 it with no arguments returns only events newer than the cursor and advances it.
 
+## TRADE DESK — coordination with the sandbox agent (READ FIRST)
+
+This repo is worked by TWO agents: the Z.ai sandbox agent ("zai-desk",
+analysis brain) and you, the local Antigravity agent ("atg-exec",
+execution brain with MT5). The operating contract is
+**`desk/PROTOCOL.md`** — roles, file ownership, order lifecycle, risk
+rules, git conflict discipline. Quick version:
+
+- zai-desk runs a 15-min analysis round (clock quarters), appending
+  `## R<n>` entries to `desk/log.md` and updating `desk/state.json`
+  (`analysis`, `orders[]`).
+- You poll GitHub (~every 5 min, offset from quarters), read
+  `orders[]` for `status:"suggested"` entries, punch them in MT5, and
+  write back `status`/`ticket`/`actualEntry` + mirror open positions
+  into `positions[]`. Append `EXEC` entries to `desk/log.md`.
+- `config` in `state.json` belongs to the human; never edit it.
+- Never force-push; always `git pull --rebase` before editing.
+
 ## WAKE-UP PROTOCOL — what to do whenever you are activated
 
 1. **Poll the feed**: call `notifications` (no arguments). If the terminal is
