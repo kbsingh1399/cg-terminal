@@ -22,30 +22,30 @@
     }
   },
   "analysis": {
-    "last_round": "R4",
-    "last_round_ts": 1794322422399,
-    "engine": "v2 (full params: notif+signals+trend+vwap+rsi+cvd | liq clusters + whale walls in levels | min R 2.0)",
+    "last_round": "R5",
+    "last_round_ts": 1794323512392,
+    "engine": "v3 (debate-gated: 8 data sources FOR/AGAINST, FOR>=3 & FOR>AGAINST | full params | min R 2.0 | perpRefPrice basis stamp)",
     "assets": {
       "BTC": {
-        "price": 74123.2,
-        "chgDayPct": -1.5980989552219032,
-        "score": -4.1,
+        "price": 74525.6,
+        "chgDayPct": -1.063894752213674,
+        "score": -4.43,
         "parts": {
           "notif": -2,
-          "signals": 0.0,
+          "signals": -0.33,
           "trend": -2.0,
-          "vwap": -1,
+          "vwap": 1,
           "rsi": 0,
-          "cvd": 0.9
+          "cvd": -1.1
         },
         "error": null
       },
       "ETH": {
-        "price": 2074.22,
-        "chgDayPct": -2.801312089971893,
-        "score": 0.5,
+        "price": 2080.66,
+        "chgDayPct": -2.49953139643862,
+        "score": 0.2,
         "parts": {
-          "notif": 2,
+          "notif": 1.7,
           "signals": 1,
           "trend": -2.0,
           "vwap": -1,
@@ -54,35 +54,34 @@
         "error": null
       },
       "SOL": {
-        "price": 83.86,
-        "chgDayPct": -3.264505710001152,
-        "score": -1.42,
+        "price": 84.72,
+        "chgDayPct": -2.272465105548505,
+        "score": -1.0,
         "parts": {
-          "notif": 1.62,
-          "signals": -0.66,
-          "trend": -2.0,
-          "vwap": -1,
-          "rsi": 0,
-          "cvd": 0.62
-        },
-        "error": null
-      },
-      "BNB": {
-        "price": 687.88,
-        "chgDayPct": -0.5781349366942244,
-        "score": -0.47,
-        "parts": {
-          "notif": 1.53,
-          "signals": 1,
+          "notif": 2,
+          "signals": 0.0,
           "trend": -2.0,
           "vwap": -1,
           "rsi": 0
         },
         "error": null
       },
+      "BNB": {
+        "price": 689.45,
+        "chgDayPct": -0.35121697404173413,
+        "score": 0.82,
+        "parts": {
+          "notif": 0.82,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": 1,
+          "rsi": 0
+        },
+        "error": null
+      },
       "XRP": {
-        "price": 1.0587,
-        "chgDayPct": -3.6143481427531015,
+        "price": 1.0637,
+        "chgDayPct": -3.159140568099049,
         "score": 0.5,
         "parts": {
           "notif": 2,
@@ -94,49 +93,22 @@
         "error": null
       },
       "ADA": {
-        "price": 0.1763,
-        "chgDayPct": -0.620067643742948,
-        "score": -5.01,
+        "price": 0.1776,
+        "chgDayPct": 0.11273957158963119,
+        "score": -3.96,
         "parts": {
-          "notif": -0.68,
+          "notif": -1.66,
           "signals": -1,
           "trend": -2.0,
-          "vwap": -1,
+          "vwap": 1,
           "rsi": 0,
-          "cvd": -0.32
+          "cvd": -0.3
         },
         "error": null
       },
       "AVAX": {
-        "price": 8.35,
-        "chgDayPct": -3.468208092485557,
-        "score": -1.82,
-        "parts": {
-          "notif": 0.18,
-          "signals": 1,
-          "trend": -2.0,
-          "vwap": -1,
-          "rsi": 0
-        },
-        "error": null
-      },
-      "DOGE": {
-        "price": 0.06899,
-        "chgDayPct": -1.4569347236109227,
-        "score": -3.61,
-        "parts": {
-          "notif": 1.89,
-          "signals": -1,
-          "trend": -2.0,
-          "vwap": -1,
-          "rsi": 0,
-          "cvd": -1.5
-        },
-        "error": null
-      },
-      "LINK": {
-        "price": 10.432,
-        "chgDayPct": -2.120472884218419,
+        "price": 8.361,
+        "chgDayPct": -3.341040462427742,
         "score": 0.0,
         "parts": {
           "notif": 2,
@@ -147,12 +119,12 @@
         },
         "error": null
       },
-      "LTC": {
-        "price": 51.21,
-        "chgDayPct": -0.3502626970227665,
-        "score": -4.8,
+      "DOGE": {
+        "price": 0.06935,
+        "chgDayPct": -0.942722468218837,
+        "score": -3.5,
         "parts": {
-          "notif": 0.7,
+          "notif": 2,
           "signals": -1,
           "trend": -2.0,
           "vwap": -1,
@@ -161,9 +133,36 @@
         },
         "error": null
       },
+      "LINK": {
+        "price": 10.526,
+        "chgDayPct": -1.2385062863576626,
+        "score": 2.78,
+        "parts": {
+          "notif": 2,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": 1,
+          "rsi": 0,
+          "cvd": 0.78
+        },
+        "error": null
+      },
+      "LTC": {
+        "price": 51.5,
+        "chgDayPct": 0.21404942595835652,
+        "score": 0.28,
+        "parts": {
+          "notif": 1.94,
+          "signals": -0.66,
+          "trend": -2.0,
+          "vwap": 1,
+          "rsi": 0
+        },
+        "error": null
+      },
       "XAU": {
-        "price": 4041.84,
-        "chgDayPct": -2.4956034439086245,
+        "price": 4057.38,
+        "chgDayPct": -2.120720142619693,
         "score": 1.99,
         "parts": {
           "notif": 2,
@@ -175,40 +174,43 @@
         "error": null
       },
       "XAG": {
-        "price": 51.72,
-        "chgDayPct": -3.3451691272659305,
-        "score": 2.97,
+        "price": 52.09,
+        "chgDayPct": -2.653709586993075,
+        "score": 1.66,
         "parts": {
           "notif": 2,
-          "signals": 1,
+          "signals": 0.66,
           "trend": 0.0,
           "vwap": -1,
-          "rsi": 0,
-          "cvd": 0.97
+          "rsi": 0
         },
         "error": null
       }
     },
     "watchlist": [
       {
-        "sym": "BTC",
-        "score": -4.1
-      },
-      {
         "sym": "ADA",
-        "score": -5.01
+        "score": -3.96
       },
       {
-        "sym": "LTC",
-        "score": -4.8
+        "sym": "BTC",
+        "score": -4.43
       },
       {
         "sym": "DOGE",
-        "score": -3.61
+        "score": -3.5
+      },
+      {
+        "sym": "LINK",
+        "score": 2.78
+      },
+      {
+        "sym": "XAU",
+        "score": 1.99
       },
       {
         "sym": "XAG",
-        "score": 2.97
+        "score": 1.66
       }
     ]
   },
@@ -237,33 +239,55 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
-    },
-    {
-      "id": "R4-LTC-2",
-      "createdTs": 1794322422399,
-      "round": "R4",
-      "sym": "LTC",
-      "mt5Symbol": "LTCUSD",
-      "side": "short",
-      "type": "limit",
-      "entry": 51.4,
-      "stop": 51.61,
-      "targets": [
-        50.2
+      "notes": null,
+      "debate": [
+        {
+          "source": "overview",
+          "verdict": "FOR",
+          "evidence": "h4 \u2193/d1 \u2193 EMA, price above day VWAP (74,525.6 vs 74,342.1), h4 RSI 41.0, day -1.1%"
+        },
+        {
+          "source": "footprint",
+          "verdict": "FOR",
+          "evidence": "bull 14 / bear 15; recent: none <6h"
+        },
+        {
+          "source": "largeOrders",
+          "verdict": "AGAINST",
+          "evidence": "ask wall $22.2M @ 75,812.0 within 2% opposes"
+        },
+        {
+          "source": "liquidation",
+          "verdict": "FOR",
+          "evidence": "long-liq magnet 73,125.0 (str 44, ~$604M est, -1.82%) as target"
+        },
+        {
+          "source": "liquidation-hazard",
+          "verdict": "AGAINST",
+          "evidence": "short-liq magnet 75,126.9 (str 100) sits between entry and stop \u2014 sweep risk"
+        },
+        {
+          "source": "stops(BTC heatmap)",
+          "verdict": "FOR",
+          "evidence": "24h liq exposure below $332M vs above $671M"
+        },
+        {
+          "source": "bookWalls",
+          "verdict": "FOR",
+          "evidence": "\u00b15% depth imbalance +0.076 (5m ago +0.116, falling bids); bid $1.35B vs ask $1.15B"
+        },
+        {
+          "source": "cvd",
+          "verdict": "FOR",
+          "evidence": "taker buy 49.6%, perpCvd -1018, spotCvd +257, quadrant spot-bid, latestDiv bear (recent)"
+        },
+        {
+          "source": "notifications",
+          "verdict": "FOR",
+          "evidence": "6h weighted bias -51.2 (39 events)"
+        }
       ],
-      "targetSources": [
-        "long-liq cluster str 49 (~$1M est)"
-      ],
-      "riskR": 5.9,
-      "expiresTs": 1794336822399,
-      "status": "suggested",
-      "statusTs": 1794322422399,
-      "rationale": "confluence -4.8 [notif +0.7 \u00b7 signals -1.0 \u00b7 trend -2 \u00b7 vwap -1 \u00b7 rsi +0.0 \u00b7 cvd -1.5]; entry VWAP+1\u03c3/day-POC 51.40; stop beyond 2\u03c3 zone; T1 long-liq cluster str 49 (~$1M est) \u00b7 T2 \u2014 \u00b7 T3 \u2014; liq clusters are Coinglass estimates",
-      "ticket": null,
-      "actualEntry": null,
-      "filledTs": null,
-      "notes": null
+      "perpRefPrice": 74525.6
     },
     {
       "id": "R4-DOGE-3",
@@ -293,7 +317,50 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": null,
+      "debate": [
+        {
+          "source": "overview",
+          "verdict": "FOR",
+          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (0.06935 vs 0.06941), h4 RSI 40.3, day -0.9%"
+        },
+        {
+          "source": "footprint",
+          "verdict": "FOR",
+          "evidence": "bull 26 / bear 30; recent: none <6h"
+        },
+        {
+          "source": "largeOrders",
+          "verdict": "NEUTRAL",
+          "evidence": "12 walls \u2265$5M, none within 2% of price"
+        },
+        {
+          "source": "liquidation",
+          "verdict": "FOR",
+          "evidence": "long-liq magnet 0.06787 (str 58, ~$7M est, -2.00%) as target"
+        },
+        {
+          "source": "stops(BTC heatmap)",
+          "verdict": "NEUTRAL",
+          "evidence": "n/a (upstream: BTC-only)"
+        },
+        {
+          "source": "bookWalls",
+          "verdict": "FOR",
+          "evidence": "\u00b15% depth imbalance +0.004 (5m ago +0.004, falling bids); bid $0.04B vs ask $0.03B"
+        },
+        {
+          "source": "cvd",
+          "verdict": "FOR",
+          "evidence": "taker buy 47.8%, perpCvd -93, spotCvd -13, quadrant both-selling, latestDiv bear (recent)"
+        },
+        {
+          "source": "notifications",
+          "verdict": "AGAINST",
+          "evidence": "6h weighted bias +6.5 (14 events)"
+        }
+      ],
+      "perpRefPrice": 0.06935
     }
   ],
   "positions": [],
@@ -345,6 +412,33 @@
       "filledTs": null,
       "notes": null,
       "withdrawReason": "riskR 1.7 below mandated minimum 2.0"
+    },
+    {
+      "id": "R4-LTC-2",
+      "createdTs": 1794322422399,
+      "round": "R4",
+      "sym": "LTC",
+      "mt5Symbol": "LTCUSD",
+      "side": "short",
+      "type": "limit",
+      "entry": 51.4,
+      "stop": 51.61,
+      "targets": [
+        50.2
+      ],
+      "targetSources": [
+        "long-liq cluster str 49 (~$1M est)"
+      ],
+      "riskR": 5.9,
+      "expiresTs": 1794336822399,
+      "status": "withdrawn",
+      "statusTs": 1794323512392,
+      "rationale": "confluence -4.8 [notif +0.7 \u00b7 signals -1.0 \u00b7 trend -2 \u00b7 vwap -1 \u00b7 rsi +0.0 \u00b7 cvd -1.5]; entry VWAP+1\u03c3/day-POC 51.40; stop beyond 2\u03c3 zone; T1 long-liq cluster str 49 (~$1M est) \u00b7 T2 \u2014 \u00b7 T3 \u2014; liq clusters are Coinglass estimates",
+      "ticket": null,
+      "actualEntry": null,
+      "filledTs": null,
+      "notes": null,
+      "withdrawReason": "confluence flipped (+0.3)"
     }
   ]
 }

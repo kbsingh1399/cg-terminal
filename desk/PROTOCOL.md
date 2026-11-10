@@ -126,8 +126,49 @@ suggested ──(atg places in MT5)──► placed ──(fill)──► filled
 - Orders carry `expiresTs` (`config.order_expiry_hours` after creation). An
   unfilled, still-valid order survives rounds; an invalidated one is
   withdrawn with a reason in `log.md`.
+- Every suggested order is **re-debated every round** with fresh data
+  (all 8 sources below). A lost debate withdraws the order.
+
+## The debate — every data source must vote (engine v3)
+
+Each order carries a `debate[]`: one FOR/AGAINST/NEUTRAL verdict with
+evidence per source — `overview` (EMAs/VWAP/RSI/day change) ·
+`footprint` (signal counts + recent signals) · `largeOrders` (whale
+walls ±2%) · `liquidation` (target magnet) · `liquidation-hazard` ·
+`stops(BTC heatmap)` · `bookWalls` (±5% depth imbalance, 5m delta) ·
+`cvd` (taker share, perp/spot CVD, divergence) · `notifications`
+(weighted 6h bias). An order is emitted only if **FOR ≥ 3 AND
+FOR > AGAINST** (on top of the numeric gates). WAKE.md shows every
+non-neutral vote so the human can audit the reasoning before anything
+is punched.
+
+## Broker basis — MT5 prices ≠ terminal perp prices (mandatory rule)
+
+Terminal levels are **USDT-M perp** prices; MT5 is a CFD with its own
+spread. Before placing ANY order in MT5:
+
+1. Read `desk/mt5.json` → `spreads.<SYMBOL>.basisPct` (computed live by
+   the daemon: MT5 mid vs terminal perp mid) and `spreadPct`.
+2. Translate EVERY level: `mt5Level = perpLevel × (1 + basisPct/100)`.
+   The order's `perpRefPrice` field is the perp price the levels were
+   built from.
+3. Mind the quote side: a SHORT fills at **bid** and its SL triggers on
+   ask / TP on bid (MT5 convention); pad tight levels by the spread.
+4. If `|basisPct| > 0.5%` or `spreadPct > 0.15%`: flag it in `log.md`
+   and widen the stop accordingly (or skip) — never place raw perp
+   levels on the broker.
+
 - atg-exec should treat `suggested` orders as **proposals**: it may skip any
   (spread, session, news), but must log why in `log.md`.
+
+## User prompts (canonical)
+
+- **`desk round now`** — zai pulls latest, boots the terminal if needed,
+  runs the full v3 round (12-asset scan → deep data → debate-gated order
+  formulation → lifecycle → position review), refreshes WAKE.md, pushes
+  to GitHub, and reports a digest with the debates.
+- **`desk review`** — no new orders: review open MT5 positions, running
+  PnL, suggested/placed orders, verdicts and basis; report only.
 
 ## Levels are data-driven (institutional playbook — from AGENTS.md)
 

@@ -63,3 +63,19 @@ entries. All timestamps UTC.
 ### Positions
 - no open positions
 
+## R5 · 2026-11-10 15:11 UTC · zai-desk
+
+**Market**: BTC 74,525.6 (-1.1%)  ETH 2,080.66 (-2.5%)  SOL 84.72 (-2.3%)  XAU 4,057.38 (-2.1%)  XAG 52.090 (-2.7%)
+**Bias (|score|≥2)**: ADA-4  BTC-4  DOGE-4  LINK+3
+
+### Opportunities (engine v3 — debate-gated, min R 2.0)
+- ADA SHORT confluence -4.0 — REJECTED: no structural target >= 2.0R (nearest magnet 0.1766 = 1.6R)
+
+### Order lifecycle
+- R4-LTC-2 WITHDRAWN (confluence flipped to +0.3)
+- R4-BTC-1 re-debated: FOR 7/AGAINST 2 — stands
+- R4-DOGE-3 re-debated: FOR 5/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
