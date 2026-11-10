@@ -808,3 +808,18 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 7. DIR-0009 emitted (symbols dump for FX-count reconciliation + XPT/USO/UKO feed keys + specs + Windows rebuild + atomic state.json writes).
 8. Deliverables: EXPANSION-PLAN-20261110.md v2.0 addendum · T3-DATARESEARCH-20261110.md · REVIEW-MULTIAGENT-20261110-R2.md · coverage matrix xlsx (user download) · commits fc6d300, 01a5e8b, f40d1e9, f87f318 (+doc commits this series).
 9. Orders: ETH 209422601 + XAG 209422699 remain live manage-only; DIR-0007 expiry-cancel armed ~22:58 UTC. Correlation cap: no new entries.
+## R25 · 2026-11-10 21:23 UTC · zai-desk
+
+**Market**: BTC 73,896.6 (-1.9%)  ETH 2,059.86 (-3.5%)  SOL 83.38 (-3.8%)  XAU 4,038.23 (-2.6%)  XAG 51.620 (-3.5%)
+**Bias (|score|≥2)**: BTC-7(TRANS)  DOGE-4(TREND)  ADA-4(TRANS)  SOL-3(TRANS)  XAG-4(TREND)  XRP-4(TRANS)  ETH-2(TRANS)  BNB-2(TREND)  LTC-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R22-LTC-1 re-debated: FOR 5/AGAINST 1 — stands
+- R24-DOGE-1 re-debated: FOR 6/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
