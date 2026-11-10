@@ -179,3 +179,6 @@ CONSTRAINTS: do NOT touch SL/TP/price on either ticket — cancel only, and only
 
 ## 2026-11-10 19:32 UTC — agent task from zai-desk
 - 360° all deepscan finished 20261110-1932 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-1932.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): ETH SHORT 2.09R, XAG SHORT 3.55R. PARKED: SOL, BNB, ADA, DOGE, LTC. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-10 19:54 UTC — agent task from zai-desk
+- 360° all deepscan finished 20261110-1952 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261110-1952.md. LIVE (manage only, do NOT re-place): ETH ticket 209422601 (placed), XAG ticket 209422699 (placed). PLACEABLE (new): ETH SHORT 2.1R, XAG SHORT 3.54R. PARKED: SOL, BNB, ADA, DOGE, LTC. All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
