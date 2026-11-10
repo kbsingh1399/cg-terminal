@@ -139,3 +139,6 @@ SPEC: desk/alerts.json now defines 10 events (A1-A10) with conditions. Extend de
 7. OPTIONAL (only if user provides config): Telegram push via curl if TG_BOT_TOKEN+TG_CHAT_ID set in env — else skip silently.
 REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<basename>.reply.md with a test-fire log (e.g. manually arm A9 or simulate a fill diff) proving bell+WAKE fire correctly.
 CONSTRAINTS: no changes to desk_round.py, desk/alerts.json schema, or state.json. Local state in desk/alerts.local.json only. If notify_cmd is empty in config, still appendWAKE + write alerts.local.json so events are visible in git.
+
+## 2026-11-10 18:26 UTC — ALERT A10 — outbox-reply
+- BELL: atg replied to directive (2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md, 2026-11-10T17-36-00_DIR-0004-funding-oi-endpoints.reply.md, VERIFY-R4-BTC-1.reply.md, VERIFY-TP-209404683.reply.md) — zai-desk to verify on next wake
