@@ -694,3 +694,26 @@ Deliverables: EXPANSION-PLAN-20261110.md (v1.1) · REVIEW-MULTIAGENT-20261110.md
   * `XLMUSD`: bid 0.14428, ask 0.14448, basis +0.0554%, spread 0.1385% (TRADEABLE!)
   * `XMRUSD`: bid 558.50, ask 559.82, basis +0.1352%, spread 0.2361%
 - Reply filed in `desk/outbox/2026-11-10T20-30-00_DIR-0008-terminal-rebuild-and-feed-verify.reply.md`.
+## R22 · 2026-11-10 20:31 UTC · zai-desk
+
+**Market**: BTC 73,578.7 (-2.3%)  ETH 2,049.58 (-4.0%)  SOL 83.12 (-4.1%)  XAU 4,043.59 (-2.5%)  XAG 51.700 (-3.4%)
+**Bias (|score|≥2)**: BTC-7(TREND)  ADA-4(TRANS)  DOGE-4(TREND)  LTC-6(TREND)  SOL-3(TREND)  BNB-3(TREND)  AVAX-2(TREND)  XAG-2(TREND)  ETH-2(TREND)  LINK-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- BTC SHORT confluence -6.8 — REJECTED: no structural target >= 2.0R (nearest magnet 73,348.3 = 1.6R)
+- DOGE SHORT confluence -3.5 — REJECTED: opposite liq magnet 0.07012 (str 59, ~$4M est) within 1.2R of entry — wait for sweep
+- NEW R22-LTC-1 LTC SHORT limit 51.37 · stop 51.98 · T1 49.48 · T2 49.27 · T3 49.03 · R 3.1
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (50.24 vs 50.77), h4 RSI 39.5, day -2.2%
+      [FOR    ] footprint: bull 45 / bear 59; recent: none <6h
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×6, abs:sell×7, div:buy×1, div:sell×5, exh:sell×3, sdiv:sell×2, trap:buy×2, trap:sell×1 — net 9 buy-side vs 18 sell-side
+      [FOR    ] liquidation: long-liq magnet 49.48 (str 71, ~$1M est, -1.41%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.164 (5m ago -0.213, rising bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.0%, perpCvd -23, spotCvd -5, quadrant both-selling, latestDiv bear (recent)
+
+### Order lifecycle
+- R7-LTC-1 EXPIRED (unfilled past expiry)
+- R9-ADA-1 re-debated: FOR 6/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
