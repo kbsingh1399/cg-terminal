@@ -70,3 +70,23 @@ dated entry after each meaningful change; keep only the last 10 entries.
   updated with the architecture + local scheduler snippet.
 - atg: pull b61d238+, read desk/PROTOCOL.md, schedule the local round,
   wire MT5 execution + positions[] mirroring.
+
+### 2026-11-10 14:35 UTC — Z.ai sandbox agent — GIT MESSAGE BUS + local daemon (wake-on-git)
+- New: `scripts/desk_daemon.mjs` — the local event loop for the atg machine.
+  Each cycle (45 s): auto-commit desk/ → fetch/pull → 15-min round when due
+  → process `desk/inbox/*.json` instructions → WAKE.md beacon + notification
+  for new suggested orders / agent tasks → MT5 snapshot refresh → push.
+- New: `scripts/mt5_report.py` — account, positions, running PnL, bid/ask/
+  spread per mapped symbol → `desk/mt5.json` (Windows + MT5 running +
+  `pip install MetaTrader5`).
+- Instruction channel live (fixed vocabulary, no arbitrary shell from repo):
+  PING · MT5_SNAPSHOT · ROUND_NOW · REPORT · AGENT_TASK → replies in
+  `desk/outbox/`. Spec in desk/PROTOCOL.md.
+- LIVE TEST passed end-to-end on sandbox: PING → outbox reply `pong`, round
+  R2 auto-run (R2-LTC-1 SHORT suggested), WAKE.md beacon queued both orders,
+  all pushed. `desk/daemon.json` = runtime config (boot cmd, python cmd,
+  wake_cmd, notify_cmd).
+- ATG TODO: `git pull` → `pip install MetaTrader5` → start
+  `node scripts/desk_daemon.mjs` (Git Bash) → handle `desk/inbox/WAKE.md`
+  (R1-BTC-1 + R2-LTC-1 pending placement) → optionally set `wake_cmd` if a
+  CLI/URL trigger exists for the agent.
