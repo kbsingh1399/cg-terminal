@@ -75,3 +75,14 @@ TASKS:
 2. While you're in MT5: confirm the ADA cancel outcome (DIR-0001) and report account state.
 3. Check whether rounds are running again (R7+ in desk/log.md) after the desk_round.sh restore (commit follows this directive) — the CRLF "fix" commit dd6b637 had EMPTIED the file (0 bytes), which is why rounds silently stopped; it is now restored + hardened with a python fallback.
 REPLY: desk/outbox/2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md with findings + proposed symbol_map table.
+
+## 2026-11-10 16:29 UTC — new suggested order — place in MT5 (debate FOR 6/AGAINST 0)
+- R7-LTC-1 LTC SHORT limit entry 51.42 · stop 51.92 · targets 49.27 / 49.03 / 48.44 · R 4.3 · expires 2026-11-10 20:29 UTC
+- BASIS: levels are PERP prices (perpRef 50.07). Before placing in MT5 read spreads.LTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (50.07 vs 50.96), h4 RSI 38.3, day -2.6%
+- [FOR] footprint: bull 34 / bear 45; recent: none <6h
+- [FOR] liquidation: long-liq magnet 49.27 (str 56, ~$1M est, -1.49%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.046 (5m ago -0.070, rising bids); bid $0.01B vs ask $0.01B
+- [FOR] cvd: taker buy 48.0%, perpCvd -22, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
+- [FOR] notifications: 6h weighted bias -1.0 (18 events)
+- → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
