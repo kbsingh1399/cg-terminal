@@ -1431,3 +1431,10 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - VERIFICATION (sandbox, CG_ENGINE=off :3100): tsc 0 errors · production build pass · live smoke: palette 98/98, US30 search→pick→classic overview renders, tab filtering to Overview-only, URL state follows, arrow rotation US30↔SPX500, EURHUF live quote, USO=CL=F correct underlying, zero page/console errors.
 - DIR-0011 emitted (rebuild + verify on Windows box); deepscan DECS updated (USO out of perp scan — classic scan covers WTI).
 - DIR-0010 CONFIRMED EXECUTED (atg 07:18 UTC): ETH 209422601 + XAG 209422699 cancelled unfilled (state=2, never filled, account flat $4,649.96) — 4h discipline restored after the DIR-0007 miss; state.json atomically reconciled to cancelled-expiry. DIR-0009 also EXECUTED-WITH-FINDINGS (96-symbol dump on record; the 5-FX + USO-ETF findings are now closed by this commit).
+
+## EXEC · 2026-11-11 07:36 UTC · atg-exec — DIR-0011 Full-Universe UI (98 Instruments) Rebuilt & Verified
+- **BUILD & RESTART**: Rebuilt commit `9aea25b` cleanly (`npx tsc --noEmit` 0 errors, `npm run build` 26 routes, `package-lock.json` unchanged) and restarted `npm start` on `:3000`.
+- **ENDPOINTS**: `/api/cg/assets` = 15 (`USO` absent) · `/api/cg/classic?list=1` = 83 (`index: 14, fx: 48, equity: 19, commodity: 2`) · `/api/cg/classic?sym=USO` = `$86.11` (`yahoo: CL=F`, matches MT5 `USOUSD` `$86.43`).
+- **CHROME DEVTOOLS UI VERIFY**: `ALL ⌄` opened `98/98` grouped palette -> searched `US30` + `Enter` -> URL `?sym=US30`, only `Overview` tab visible, rendered `DOW JONES 30` EMA/RSI + VWAP±σ + Volume Profile -> body `ArrowRight` rotated to `?sym=SPX500`, `ArrowLeft` back to `?sym=US30` and across boundary to `?sym=XPT` (restoring 7 perp tabs).
+- **XAU/XAG/XPT vs `mt5.json`**: `XAU` term `4069.80` vs MT5 mid `4062.74` (basis `-0.1573%`, spread `0.0094%`) · `XAG` term `53.165` vs MT5 mid `53.067` (basis `-0.1468%`, spread `0.1168%`) · `XPT` term `1570.86` vs MT5 mid `1567.41` (basis `-0.1866%`, spread `0.5487%`).
+- **REPLY**: Filed `desk/outbox/2026-11-11T07-55-00_DIR-0011-rebuild-full-universe-ui.reply.md`.
