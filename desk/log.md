@@ -1406,3 +1406,20 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - **SYMBOLS DUMP (`desk/outbox/DIR-0009-symbols-dump.txt`)**: 96 MT5 symbols dumped. Reconciled vs `classic.ts`: Forex **48 vs 43** (+5 on MT5: `EURHUF, MXNJPY, NOKJPY, USDHKD, ZARJPY`); Indices **14 vs 14** (exact incl `VIX`); Equities **20 vs 19** (+1 on MT5: `SPCX` = SpaceX Spot CFD, confirming Yahoo exclusion was right); Commodities **5**; Crypto **9** (`SOL/BNB/AVAX` unlisted → `R57-BNB-1` BLOCKED).
 - **CRITICAL MISMATCH FLAGGED (`USO` vs `USOUSD`)**: `OKX_USO-USDT-SWAP` = `$140.97` tracks the `USO` ETF (Yahoo `USO = $141.45`), whereas MT5 `USOUSD` = `$86.49` tracks WTI Crude Cash (Yahoo `CL=F = $86.25`). Plus63% underlying mismatch — DO NOT translate `USO` perp levels to `USOUSD`.
 - **DIR-0010 RECONCILIATION**: `mt5.history_orders_get` confirms ETH `209422601` (`09:08:39` server / `07:08:39 UTC`) & XAG `209422699` (`09:08:40` server / `07:08:40 UTC`) cancelled prior to fill (`state = 2`). Account flat (`balance = equity = $4,649.96`). `R18-ETH-1` & `R18-XAG-1` atomically updated to `cancelled-expiry` in `desk/state.json`.
+## R60 · 2026-11-11 07:23 UTC · zai-desk
+
+**Market**: BTC 73,843.0 (+0.1%)  ETH 2,063.87 (+0.6%)  SOL 82.93 (-0.4%)  XAU 4,071.41 (+0.6%)  XAG 53.250 (+3.0%)
+**Bias (|score|≥2)**: ADA-5(TREND)  DOGE-6(TREND)  LINK-5(TRANS)  LTC-5(TREND)  SOL-3(TREND)  BNB-4(TRANS)  BTC-2(TREND)  XAG-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- ADA SHORT confluence -5.3 — REJECTED: no structural target >= 2.0R (nearest magnet 0.1742 = 1.3R)
+- DOGE SHORT confluence -5.5 — REJECTED: no structural target >= 2.0R (nearest magnet 0.06805 = 0.8R)
+- LINK SHORT confluence -5.3 — REJECTED: no structural target >= 2.0R (nearest magnet 10.311 = 1.5R)
+- LTC SHORT confluence -5.5 — REJECTED: no structural target >= 2.0R (nearest magnet 50.70 = 1.1R)
+
+### Order lifecycle
+- R57-BNB-1 re-debated: FOR 5/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
