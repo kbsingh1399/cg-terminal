@@ -2394,3 +2394,8 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+## R107-EXEC · 2026-11-11 20:52 UTC · atg-exec
+
+- **R107-BNB-1 (`BNB SHORT limit 687.91 / SL 690.66 / T1 679.26 / R 3.1`)**: **SKIPPED / UNSUPPORTED on MT5 (`BNBUSD`)** — live broker symbol check (`mt5.symbols_get()` and `desk/mt5.json`) confirms zero `*BNB*` instruments and `BNBUSD.ok = false` (no tick). Status kept `"suggested"` with `notes`; cleared from `WAKE.md`.
+- **MT5 Account Sync**: User cancelled `#209656712` (`XAUUSD`) and `#209657396` (`XLMUSD`); `2/4` pending limit slots now active (`#209656134 XMRUSD @ 595.77`, `#209657041 BTCUSD @ 75,340.0`, equity `$4,649.96`, `0` open positions).

@@ -637,7 +637,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 20:52 UTC: (1) Unsupported symbol on MT5 broker: BNBUSD has ok=false (no tick, zero *BNB* symbols in mt5.symbols_get()); R107-BNB-1 (BNB SHORT 687.91 / SL 690.66 / T1 679.26 / R 3.1) cannot be routed on MT5. Live standing MT5 slots now 2/4 (#209656134 XMRUSD @ 595.77, #209657041 BTCUSD @ 75340.0; user cancelled #209656712 XAUUSD and #209657396 XLMUSD)."
     }
   ],
   "positions": [],
