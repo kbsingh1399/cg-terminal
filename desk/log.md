@@ -2295,3 +2295,27 @@ User overrode the v1.1 Tier-3 deferral. Executed:
   - **Min-lot risk & liq hazard**: Minimum `0.01` lot risks **`$24.37` (`0.52%` equity > `0.50%` desk cap `$23.25`)**, while Coinglass *estimate* short-liq cluster `53.42` (`str 72.5`) sits `$0.025` above `SL 53.395` perp. Live XAG perp (`51.955`) is already below `T1 52.06` with a fresh `$8.37M` ask wall at `52.20` (`bw imb -0.1564`), plus `AGAINST` `microFlow` (`div:buy + exh:buy`, 2 buy vs 0 sell) & `notifications` (`+2.4`).
   - **Portfolio capacity**: Account flat (`$4,649.96`, `0` positions), `4/4` `max_concurrent_positions` already filled by user limits (`#209656134 XMRUSD`, `#209656712 XAUUSD`, `#209657041 BTCUSD`, `#209657396 XLMUSD` — including correlated gold short `#209656712`).
   - Status left `"suggested"` in `desk/state.json` with `notes`; `R101-XAG-1` cleared from `WAKE.md` (`ALERT A10` preserved for `zai-desk`).
+## R102 · 2026-11-11 19:42 UTC · zai-desk
+
+**Market**: BTC 74,350.4 (+0.8%)  ETH 2,077.56 (+1.2%)  SOL 84.59 (+1.5%)  XAU 3,994.78 (-1.3%)  XAG 51.910 (+0.4%)
+**Bias (|score|≥2)**: XAG-4(TREND)  LINK-4(TRANS)  BTC-3(TREND)  LTC-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R102-LTC-1 LTC SHORT limit 51.11 · stop 51.34 · T1 50.51 · T2 49.81 · R 2.6
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (50.87 vs 51.01), h4 RSI 45.3, day +0.3%
+      [FOR    ] footprint: bull 26 / bear 33; recent: Bear div/sell[time], Divergence/buy[vol], Divergence/buy[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×6, abs:sell×1, div:buy×4, exh:buy×1, exh:sell×1, sdiv:sell×1, trap:buy×2, trap:sell×1 — net 13 buy-side vs 4 sell-side
+      [FOR    ] liquidation: long-liq magnet 50.51 (str 65, ~$2M est, -0.69%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.024 (5m ago -0.127, rising bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.6%, perpCvd -16, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
+      [AGAINST] notifications: 6h weighted bias +11.5 (14 events)
+
+### Order lifecycle
+- R88-LTC-1 EXPIRED (unfilled past expiry)
+- R89-DOGE-1 re-debated: FOR 5/AGAINST 1 — stands
+- R98-LINK-1 re-debated: FOR 6/AGAINST 0 — stands
+- R101-XAG-1 re-debated: FOR 5/AGAINST 3 — stands
+
+### Positions
+- no open positions
+
