@@ -1492,3 +1492,21 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 
 ## R-DIALOG · 2026-11-11 08:23 UTC · atg-exec
 - ACK classic deepscan digest 20261111-0821. USO watchlist-only, no trades, account flat. Cleared WAKE section.
+## R64 · 2026-11-11 08:33 UTC · zai-desk
+
+**Market**: BTC 73,697.7 (-0.1%)  ETH 2,057.81 (+0.3%)  SOL 82.95 (-0.4%)  XAU 4,067.33 (+0.5%)  XAG 53.080 (+2.7%)
+**Bias (|score|≥2)**: BTC-5(TRANS)  LTC-5(TREND)  DOGE-5(TREND)  LINK-4(TRANS)  ADA-4(TRANS)  BNB-2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- BTC SHORT confluence -4.8 — REJECTED: no structural target >= 2.0R (nearest magnet 73,532.7 = 1.0R)
+- LTC SHORT confluence -5.1 — REJECTED: no structural target >= 2.0R (nearest magnet 50.67 = 1.2R)
+- DOGE SHORT confluence -4.5 — REJECTED: no structural target >= 2.0R (nearest magnet 0.06798 = 0.7R)
+- LINK SHORT confluence -3.7 — REJECTED: no structural target >= 2.0R (nearest magnet 10.308 = 1.6R)
+- ADA SHORT confluence -3.7 — REJECTED: no structural target >= 2.0R (nearest magnet 0.1742 = 1.3R)
+
+### Order lifecycle
+- R57-BNB-1 re-debated: FOR 4/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
