@@ -2490,3 +2490,25 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R114 · 2026-11-11 22:35 UTC · zai-desk
+
+**Market**: BTC 74,199.7 (+0.6%)  ETH 2,064.73 (+0.6%)  SOL 84.11 (+1.0%)  XAU 3,996.77 (-1.2%)  XAG 51.760 (+0.2%)
+**Bias (|score|≥2)**: DOGE-6(TREND)  LTC-5(TREND)  LINK-4(TREND)  XRP-3(TREND)  BNB-3(TRANS)  ADA-3(TREND)  AVAX-2(TRANS)  XAU-2(TREND)  XAG-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R114-LINK-1 LINK SHORT limit 10.347 · stop 10.416 · T1 10.091 · T2 10.054 · T3 10.010 · R 3.7
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (10.238 vs 10.392), h4 RSI 38.9, day -0.5%
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×3, abs:sell×2, div:buy×1, sdiv:buy×3, sdiv:sell×1, trap:buy×1 — net 8 buy-side vs 3 sell-side
+      [FOR    ] liquidation: long-liq magnet 10.091 (str 47, ~$2M est, -1.30%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.056 (5m ago +0.056, falling bids); bid $0.02B vs ask $0.01B
+      [FOR    ] cvd: taker buy 49.0%, perpCvd -25, spotCvd -1, quadrant both-selling, latestDiv bear (recent)
+
+### Order lifecycle
+- R98-LINK-1 EXPIRED (unfilled past expiry)
+- R102-LTC-1 re-debated: FOR 5/AGAINST 1 — stands
+- R107-BNB-1 re-debated: FOR 6/AGAINST 0 — stands
+- R113-DOGE-1 re-debated: FOR 5/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
