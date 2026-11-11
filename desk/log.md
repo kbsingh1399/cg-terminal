@@ -2202,3 +2202,26 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R98 · 2026-11-11 18:33 UTC · zai-desk
+
+**Market**: BTC 74,530.5 (+1.0%)  ETH 2,089.38 (+1.8%)  SOL 85.25 (+2.3%)  XAU 4,001.77 (-1.1%)  XAG 52.100 (+0.8%)
+**Bias (|score|≥2)**: XAG-4(TREND)  LINK-3(TREND)  BTC-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- XAG SHORT confluence -4.1 — REJECTED: opposite liq magnet 53.420 (str 72, ~$27M est) within 1.2R of entry — wait for sweep
+- NEW R98-LINK-1 LINK SHORT limit 10.499 · stop 10.571 · T1 10.275 · T2 10.079 · R 3.1
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (10.499 vs 10.386), h4 RSI 47.0, day +2.0%
+      [FOR    ] footprint: bull 17 / bear 21; recent: Absorption/sell[time], Divergence/buy[vol], Absorption/buy[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×3, abs:sell×1, div:buy×1, div:sell×1, sdiv:sell×1, trap:buy×1 — net 5 buy-side vs 3 sell-side
+      [FOR    ] liquidation: long-liq magnet 10.079 (str 56, ~$3M est, -3.94%) as target
+      [AGAINST] liquidation-hazard: short-liq magnet 10.604 (str 80) sits between entry and stop — sweep risk
+      [FOR    ] bookWalls: ±5% depth imbalance +0.007 (5m ago +0.029, falling bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 49.0%, perpCvd -23, spotCvd -3, quadrant both-selling, latestDiv bear (recent)
+
+### Order lifecycle
+- R88-LTC-1 re-debated: FOR 4/AGAINST 2 — stands
+- R89-DOGE-1 re-debated: FOR 5/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
