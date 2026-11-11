@@ -248,3 +248,15 @@ TASKS:
 7. STATE.JSON RACE HARDENING (your side, per multi-agent review G4 — 2nd corruption occurred today): (a) make desk_round.py's state.json write ATOMIC (write to state.json.tmp then os.replace); (b) NEVER commit a state.json containing conflict markers — if a pull/rebase leaves markers, abort the rebase and re-pull instead. Report both changes in your reply.
 8. Note: ETH ticket 209422601 + XAG ticket 209422699 remain manage-only (DIR-0007 expiry-cancel ~22:58 UTC still armed). No new orders from this directive.
 9. Reply outputs to desk/outbox/ as DIR-0009 reply. Rollback (if build fails): `git revert <registry commits> && npm run build && restart` — do not hand-edit built output.
+
+## 2026-11-11 00:49 UTC — new suggested order — place in MT5 (debate FOR 6/AGAINST 1)
+- R37-BNB-1 BNB SHORT limit entry 681.03 · stop 683.75 · targets 668.8 · R 4.5 · expires 2026-11-11 04:47 UTC
+- BASIS: levels are PERP prices (perpRef 680.69). Before placing in MT5 read spreads.BNBUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (680.69 vs 680.92), h4 RSI 41.6, day -0.0%
+- [AGAINST] footprint: bull 27 / bear 22; recent: none <6h
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: div:buy×1, div:sell×2 — net 1 buy-side vs 2 sell-side
+- [FOR] liquidation: long-liq magnet 668.80 (str 46, ~$7M est, -1.75%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.044 (5m ago +0.034, rising bids); bid $0.03B vs ask $0.02B
+- [FOR] cvd: taker buy 48.7%, perpCvd -36, spotCvd -6, quadrant both-selling, latestDiv bear (stale/none)
+- [FOR] notifications: 6h weighted bias -2.8 (8 events)
+- → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
