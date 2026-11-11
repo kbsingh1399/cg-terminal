@@ -310,3 +310,15 @@ CONSTRAINTS: cancel only — never touch SL/TP/price. If an MT5 cancel fails, re
 - [FOR] cvd: taker buy 50.4%, perpCvd +66, spotCvd +0, quadrant both-buying, latestDiv bull (recent)
 - [FOR] notifications: 6h weighted bias +2.9 (10 events)
 - → place on XAUUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-11 06:32 UTC — new suggested order — place in MT5 (debate FOR 7/AGAINST 0)
+- R57-BNB-1 BNB SHORT limit entry 681.41 · stop 684.13 · targets 669.89 / 668.76 · R 4.2 · expires 2026-11-11 10:29 UTC
+- BASIS: levels are PERP prices (perpRef 680.1). Before placing in MT5 read spreads.BNBUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (680.10 vs 681.87), h4 RSI 41.7, day -0.1%
+- [FOR] footprint: bull 33 / bear 41; recent: none <6h
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:sell×4, div:buy×1, div:sell×2, exh:buy×2, exh:sell×1, sdiv:sell×1, trap:sell×2 — net 3 buy-side vs 10 sell-side
+- [FOR] liquidation: long-liq magnet 669.89 (str 43, ~$7M est, -1.55%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.048 (5m ago +0.027, rising bids); bid $0.03B vs ask $0.02B
+- [FOR] cvd: taker buy 48.6%, perpCvd -38, spotCvd -6, quadrant both-selling, latestDiv bear (stale/none)
+- [FOR] notifications: 6h weighted bias -3.6 (5 events)
+- → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
