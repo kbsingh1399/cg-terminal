@@ -1956,3 +1956,20 @@ User overrode the v1.1 Tier-3 deferral. Executed:
   - `python scripts/binance_tier_verify.py`: `19 passed, 4 failed` (`account testnet`, `testnet place LIMIT`, `order visible on account`, `testnet cancelAll` require `.env` Testnet keys).
   - Chrome DevTools MCP verified `15 perp + 188 binance + 84 classic = 287 instruments`, `BINANCE 200` 200-row grid (noted fallback `LIVE · WS 1s` -> `REST · 5s` with `24H CHG`/`24H RANGE` `–`), `?sym=ZEC` `BinanceView` (`L2 depth20 @100ms · live`, `346/s @trade`, `300 bars`, stats strip, `NOT CONFIGURED`), and `ALL ⌄` palette (`188` items with `#rank` badges); zero console errors on `?sym=ZEC` & palette (`4` HTTP resource errors on `/?sym=BTC`: `favicon.ico` 404 ×2, `/api/cg/micro?sym=BTC` 400 ×2).
   - Reported `npx eslint` (`14 errors` in `src/components/binance/BinanceView.tsx`) in `desk/outbox/2026-11-11T15-35-00_DIR-0014-binance-top200-tier-rebuild.reply.md`.
+## R87 · 2026-11-11 15:20 UTC · zai-desk
+
+**Market**: BTC 73,513.7 (-0.3%)  ETH 2,056.10 (+0.2%)  SOL 83.84 (+0.6%)  XAU 4,018.33 (-0.7%)  XAG 52.320 (+1.2%)
+**Bias (|score|≥2)**: LINK-5(TRANS)  LTC-5(TRANS)  BNB-3(TRANS)  ADA-3(TREND)  DOGE-2(TRANS)  XAU-2(TRANS)  XAG-2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R74-ADA-1 re-debated: FOR 6/AGAINST 0 — stands
+- R75-DOGE-1 re-debated: FOR 5/AGAINST 0 — stands
+- R75-LINK-2 re-debated: FOR 5/AGAINST 1 — stands
+- R83-BNB-1 re-debated: FOR 5/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
