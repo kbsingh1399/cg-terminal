@@ -1704,3 +1704,26 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - Executed `npm ci` (841 packages), `npm run build` (TypeScript 10.5s, zero warnings), restarted `npm start` on `:3000` (`/api/health` 200, `rssMb=83`).
 - Verified all `DIR-0013` checks (`XAU`, `EURUSD`, `NATGAS`, `XPT`, `JP225`, `US30`) + `DIR-0012` R3 regression (`perpdepth` `USO`/`SPX500`/`US2000`, `cot` `SPX500`, `cnbc` `USO,XAU`) + Chrome DevTools renders across all views with zero console runtime errors.
 - Reply filed in `desk/outbox/2026-11-11T09-50-00_DIR-0013-rebuild-r4-microstructure-layer.reply.md`; MT5 flat (`$4,649.96`, `0` pos, `0` ord).
+## R74 · 2026-11-11 11:34 UTC · zai-desk
+
+**Market**: BTC 74,000.8 (+0.3%)  ETH 2,056.13 (+0.2%)  SOL 83.81 (+0.6%)  XAU 4,057.62 (+0.3%)  XAG 53.020 (+2.6%)
+**Bias (|score|≥2)**: DOGE-6(TRANS)  ETH-2(TREND)  ADA-3(TREND)  LINK-3(TRANS)  LTC-3(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- DOGE SHORT confluence -5.5 — REJECTED: no structural target >= 2.0R (nearest magnet 0.06776 = 1.3R)
+- NEW R74-ADA-1 ADA SHORT limit 0.1761 · stop 0.1769 · T1 0.1741 · R 2.6
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (0.1761 vs 0.1752), h4 RSI 44.4, day +1.3%
+      [FOR    ] footprint: bull 50 / bear 60; recent: none <6h
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×9, abs:sell×8, div:buy×2, div:sell×1, exh:buy×7, exh:sell×5, trap:buy×2, trap:sell×3 — net 20 buy-side vs 17 sell-side
+      [FOR    ] liquidation: long-liq magnet 0.1706 (str 46, ~$2M est, -3.19%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.005 (5m ago -0.002, rising bids); bid $0.02B vs ask $0.02B
+      [FOR    ] cvd: taker buy 48.9%, perpCvd -17, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
+- LINK SHORT confluence -3.3 — REJECTED: no structural target >= 2.0R (nearest magnet 10.311 = 1.8R)
+
+### Order lifecycle
+- R69-LTC-1 re-debated: FOR 6/AGAINST 0 — stands
+- R73-ETH-1 WITHDRAWN (re-debate lost: FOR 4/AGAINST 4)
+
+### Positions
+- no open positions
+
