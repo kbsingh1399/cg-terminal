@@ -1,5 +1,6 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
+import reactHooks from "eslint-plugin-react-hooks";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -7,6 +8,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const eslintConfig = [...nextCoreWebVitals, ...nextTypescript, {
+  // Flat config scopes plugins per config object: the react-hooks rules below
+  // need the plugin registered in THIS object, not just in the next presets.
+  plugins: { "react-hooks": reactHooks },
   rules: {
     // TypeScript rules
     "@typescript-eslint/no-explicit-any": "off",
@@ -22,7 +26,6 @@ const eslintConfig = [...nextCoreWebVitals, ...nextTypescript, {
     "react/no-unescaped-entities": "off",
     "react/display-name": "off",
     "react/prop-types": "off",
-    "react-compiler/react-compiler": "off",
     
     // Next.js rules
     "@next/next/no-img-element": "off",
@@ -44,7 +47,7 @@ const eslintConfig = [...nextCoreWebVitals, ...nextTypescript, {
     "no-useless-escape": "off",
   },
 }, {
-  ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts", "examples/**", "skills"]
+  ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts", "examples/**", "skills/**", "external/**", "desk/**", "db/**", "prisma/**", "mini-services/**", "mcp/**", "tests/**", "tool-results/**", "download/**", "upload/**", "data/**", "scripts/**", "*.config.*"]
 }];
 
 export default eslintConfig;

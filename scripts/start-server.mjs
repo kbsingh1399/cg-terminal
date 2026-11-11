@@ -22,6 +22,11 @@ if (!existsSync(server)) {
 
 process.env.HOSTNAME ??= "127.0.0.1"; // loopback by default, override for LAN
 process.env.NODE_ENV ??= "production";
+// PUBLIC PATH GUARD: the platform edge proxy (Caddy on :81, FC_CUSTOM_LISTEN_PORT)
+// routes preview traffic to localhost:3000 by default. A server started on any
+// other port is unreachable from the public URL (502). Pin the default to 3000
+// unless the caller explicitly overrides PORT.
+process.env.PORT ??= "3000";
 
 const child = spawn(process.execPath, [server], {
   stdio: "inherit",

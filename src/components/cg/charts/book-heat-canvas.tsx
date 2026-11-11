@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { COLORS, drawGridLine, makeScale, niceStep, setupHiDPI, toPx, type Scale } from "./chart-utils";
 
 export interface StripModel {
@@ -44,6 +44,15 @@ export default function BookHeatCanvas({
   live?: LiveOverlay | null;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  // redraw on container resize (see cvd-canvas for rationale)
+  const [resizeTick, setResizeTick] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setResizeTick((t) => t + 1));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -184,7 +193,7 @@ export default function BookHeatCanvas({
       drawGridLine(ctx, x, padT, x, padT + plotH);
       const d = new Date(t);
       ctx.fillStyle = COLORS.text;
-      ctx.fillText(`${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`, x - 12, H - 6);
+      ctx.fillText(`${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`, x - 12, H - 6);
     }
 
     // last price tag — REAL-TIME when the live layer is on
@@ -195,7 +204,7 @@ export default function BookHeatCanvas({
     ctx.fillStyle = "#000";
     ctx.font = "bold 10px ui-monospace, monospace";
     ctx.fillText(tagPrice.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs }), padL + plotW + 6, ly + 4);
-  }, [model, priceDecs, live]);
+  }, [model, priceDecs, live, resizeTick]);
 
   return <canvas ref={ref} style={{ width: "100%", height }} className="rounded-md" />;
 }

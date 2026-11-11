@@ -77,7 +77,10 @@ export default function OverviewTool({ sym = "BTC" }: { sym?: string }) {
     const m: Record<string, { bull: number; bear: number }> = {};
     for (const s of sigData?.sets ?? []) {
       const e = (m[s.bt] ??= { bull: 0, bear: 0 });
-      for (const g of s.sigs) g.side === "buy" ? e.bull++ : e.bear++;
+      for (const g of s.sigs) {
+        if (g.side === "buy") e.bull++;
+        else e.bear++;
+      }
     }
     return m;
   }, [sigData]);

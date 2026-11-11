@@ -22,6 +22,7 @@ import { cgGet, FAPI } from "./client";
 import { makeObeToken } from "./crypto";
 import { decodeRow, fetchAggregateStream, rebin, type BookSnapshot } from "./book-walls";
 import { append, lastTs, markPoll, markBackfilling, stat, gapCount } from "./store";
+import { startMemWatch } from "./memwatch";
 import type { KlineRow } from "./types";
 import { ASSETS, aggVenues, leadInstr, liqVenues } from "./assets";
 import { startScanner } from "./scan";
@@ -70,7 +71,9 @@ type TickerRaw = { instrument?: { exName?: string; instrumentId?: string; baseAs
 
 async function cvdInstrumentKeys(): Promise<string[]> {
   if (engine.instrumentKeys) return engine.instrumentKeys;
-  const futRaw = (await cgGet(`/api/select/coins/tickers?type=FUTURES&keyword=BTC`, 300_000)) as { data?: TickerRaw[] } | TickerRaw[];
+  // both lanes are best-effort: a transient failure must not abort the whole
+  // flows lane (pollFlows/boot would reject before any markPoll)
+  const futRaw = (await cgGet(`/api/select/coins/tickers?type=FUTURES&keyword=BTC`, 300_000).catch(() => null)) as ({ data?: TickerRaw[] } | TickerRaw[]) | null;
   const spotRaw = (await cgGet(`/api/select/coins/tickers?type=SPOT&keyword=BTC`, 300_000).catch(() => null)) as ({ data?: TickerRaw[] } | TickerRaw[]) | null;
   // the decrypted payload is a bare array (not wrapped in .data)
   const asRows = (x: unknown): TickerRaw[] => (Array.isArray(x) ? (x as TickerRaw[]) : ((x as { data?: TickerRaw[] })?.data ?? []));
@@ -443,6 +446,7 @@ export function ensureEngine(): { started: boolean; startedAt: number; bootDone:
   if (engine.started || process.env.CG_ENGINE === "off") return engine;
   engine.started = true;
   engine.startedAt = Date.now();
+  startMemWatch(); // 2026-11-11 postmortem: RSS/heap telemetry every 5 min
   const days = Math.max(1, Math.min(30, Number(process.env.CG_ENGINE_BACKFILL_DAYS ?? 3) || 3));
   // gentle boot: let the server finish its own startup work first
   const bootDelay = Number(process.env.CG_ENGINE_BOOT_DELAY_MS ?? 15_000) || 15_000;
@@ -454,13 +458,24 @@ export function ensureEngine(): { started: boolean; startedAt: number; bootDone:
     }, bootDelay);
     t.unref?.();
   });
-  // staggered pollers (each fires first after its own delay + interval)
+  // staggered pollers (each fires first after its own delay + interval).
+  // Overlap guard: a pass that outlives its interval (slow upstream, 429
+  // backoffs) must NOT stack a second concurrent pass — the pileup amplifies
+  // rate-limit episodes and multiplies transient heap pressure.
   const t = (ms: number, firstDelay: number, fn: () => Promise<void>) => {
+    let busy = false;
+    const run = () => {
+      if (busy) return; // previous pass still in flight — skip this tick
+      busy = true;
+      fn()
+        .catch(() => undefined)
+        .finally(() => {
+          busy = false;
+        });
+    };
     const first = setTimeout(() => {
-      fn().catch(() => undefined);
-      const id = setInterval(() => {
-        fn().catch(() => undefined);
-      }, ms);
+      run();
+      const id = setInterval(run, ms);
       id.unref?.();
       engine.timers.push(id);
     }, firstDelay);

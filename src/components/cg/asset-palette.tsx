@@ -53,14 +53,22 @@ export default function AssetPalette({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // reset the palette state each time it opens — adjusted during render on
+  // prop change (React docs pattern), no effect needed
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
     if (open) {
       setQ("");
       setHi(0);
-      // focus after mount so the key handler below doesn't steal the first keys
-      const t = setTimeout(() => inputRef.current?.focus(), 30);
-      return () => clearTimeout(t);
     }
+  }
+
+  // focus after open so the key handler below doesn't steal the first keys
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(() => inputRef.current?.focus(), 30);
+    return () => clearTimeout(t);
   }, [open]);
 
   const filtered = useMemo(() => {
@@ -71,9 +79,12 @@ export default function AssetPalette({
     );
   }, [q, universe]);
 
-  useEffect(() => {
+  // keep hi within range as the filtered list shrinks — render-time clamp
+  const [prevLen, setPrevLen] = useState(filtered.length);
+  if (filtered.length !== prevLen) {
+    setPrevLen(filtered.length);
     if (hi >= filtered.length) setHi(0);
-  }, [filtered.length, hi]);
+  }
 
   // scroll the highlighted row into view
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loadFpBars } from "@/lib/cg/fp-load";
 import { isAsset } from "@/lib/cg/assets";
+import { parseInterval } from "@/lib/cg/params";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,10 @@ export async function GET(req: NextRequest) {
   if (!isAsset(sym)) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
-  const itv = sp.get("itv") ?? "m15";
+  const itv = parseInterval(sp.get("itv"));
+  if (!itv) {
+    return NextResponse.json({ ok: false, error: "invalid interval" }, { status: 400 });
+  }
   const live = sp.get("live") === "1";
   const limit = live
     ? Math.min(Math.max(Number(sp.get("limit") ?? 8) || 8, 2), 12)

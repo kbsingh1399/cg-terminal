@@ -41,8 +41,13 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
   const ltoQ = usePolling<LtoPayload>(`/api/cg/lto?symbol=${sym}&minVolUsd=${minVolUsd}`, 20_000);
 
   // symbol switched: drop the detail selection so a stale BTC order can
-  // never render under the new symbol's unit labels
-  useEffect(() => setSelected(null), [sym]);
+  // never render under the new symbol's unit labels — render-time adjust
+  // (no one-frame flash)
+  const [prevSym, setPrevSym] = useState(sym);
+  if (sym !== prevSym) {
+    setPrevSym(sym);
+    setSelected(null);
+  }
 
   // payload guard: the kline route now echoes the instrument key — never
   // render candles that belong to another symbol's series
@@ -644,14 +649,18 @@ function WhaleWalls({
       .sort((a, b) => b.usd - a.usd);
     const bids = rows.filter((r) => r.bid > 0).sort((a, b) => b.bid - a.bid);
     const asks = rows.filter((r) => r.ask > 0).sort((a, b) => b.ask - a.ask);
+    // the ladder shows the 14 BIGGEST buckets by USD, then price-sorted —
+    // slicing a price-sorted list instead would keep only the highest-priced
+    // (farthest) asks and hide every bid wall
+    const top = rows.slice(0, 14).sort((a, b) => b.price - a.price);
     return {
-      rows: rows.sort((a, b) => b.price - a.price),
+      rows: top,
       maxBid: bids[0] ?? null,
       maxAsk: asks[0] ?? null,
       bidTotal: scoped.filter((s) => s.order.side === 2 && Math.abs(s.order.price - lastPrice) / lastPrice <= 0.05).reduce((t, s) => t + s.order.currentUsd, 0),
       askTotal: scoped.filter((s) => s.order.side === 1 && Math.abs(s.order.price - lastPrice) / lastPrice <= 0.05).reduce((t, s) => t + s.order.currentUsd, 0),
     };
-  }, [scoped, lastPrice]);
+  }, [scoped, lastPrice, BUCKET]);
 
   if (!band || !lastPrice) return null;
   const maxUsd = Math.max(1, ...band.rows.map((r) => r.usd));
@@ -676,7 +685,7 @@ function WhaleWalls({
         <Metric label="Whale ask depth" value={fmtUsd(band.askTotal)} sub="sum of open sell walls ±5%" tone="down" />
       </div>
       <div className="space-y-1">
-        {band.rows.slice(0, 14).map((r) => {
+        {band.rows.map((r) => {
           const bidW = (r.bid / maxUsd) * 46;
           const askW = (r.ask / maxUsd) * 46;
           return (

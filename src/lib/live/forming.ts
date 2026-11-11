@@ -30,6 +30,9 @@ export interface FormingAcc {
   lo: number | null;
   /** raw tape ring (last ~40 s) — the overlay folds trades newer than a cutoff */
   tape: { t: number; p: number; q: number; buy: boolean }[];
+  /** timestamp of the LAST TRADE folded in (ms) — the honest liveness signal.
+   *  NOT the commit time: a dead tape must age out, not look fresh. */
+  lastTradeAt: number;
   /** commit timestamp of this snapshot (ms) */
   at: number;
 }
@@ -55,7 +58,7 @@ function storeOf(sym: string, itv: string, stepMs: number): FormingAcc {
   const key = `${sym}|${itv}`;
   let s = stores.get(key);
   if (!s) {
-    s = { barTs: 0, lastPrice: null, buyQty: 0, sellQty: 0, buyCnt: 0, sellCnt: 0, hi: null, lo: null, tape: [], at: 0 };
+    s = { barTs: 0, lastPrice: null, buyQty: 0, sellQty: 0, buyCnt: 0, sellCnt: 0, hi: null, lo: null, tape: [], lastTradeAt: 0, at: 0 };
     stores.set(key, s);
   }
   return s;
@@ -66,14 +69,13 @@ export function useLiveForming(sym: string, itv: string): FormingAcc | null {
   const stepMs = ITV_MS[itv] ?? 900_000;
   const key = `${sym}|${itv}`;
 
-  // symbol/interval switch (render-adjust pattern — same as the canvases):
-  // drop the old store and any stale store of the new key, reset the snapshot,
-  // so a BTC bar can never leak into an ETH view
+  // symbol/interval switch — render-adjust pattern (same as the canvases):
+  // reset the snapshot so the old key's forming bar can never render under
+  // the new key's header, not even for one frame. Store lifecycle (fresh
+  // accumulator per mount) is handled by the effect below.
   const [lastKey, setLastKey] = useState(key);
   if (lastKey !== key) {
     setLastKey(key);
-    stores.delete(lastKey);
-    stores.delete(key);
     setSnap(null);
   }
 
@@ -95,6 +97,7 @@ export function useLiveForming(sym: string, itv: string): FormingAcc | null {
       a.tape = [];
     }
     a.lastPrice = tr.p;
+    a.lastTradeAt = tr.t;
     if (tr.buy) {
       a.buyQty += tr.q;
       a.buyCnt += 1;
@@ -110,12 +113,20 @@ export function useLiveForming(sym: string, itv: string): FormingAcc | null {
   });
 
   useEffect(() => {
+    // FRESH accumulator per mount: a remount mid-bar (tab switch and back)
+    // must not resurrect the pre-unmount price/delta as "live" — the store
+    // rebuilds from new prints only. Cleanup drops the store so the map
+    // stays bounded by currently-mounted consumers.
+    stores.delete(key);
     const id = setInterval(() => {
-      const a = stores.get(`${sym}|${itv}`);
-      setSnap(a && a.lastPrice != null ? { ...a, tape: a.tape, at: Date.now() } : null);
+      const a = stores.get(key);
+      setSnap(a && a.lastPrice != null ? { ...a, tape: a.tape, at: a.lastTradeAt } : null);
     }, 1000 / COMMIT_HZ);
-    return () => clearInterval(id);
-  }, [sym, itv]);
+    return () => {
+      clearInterval(id);
+      stores.delete(key);
+    };
+  }, [key]);
 
   return snap;
 }

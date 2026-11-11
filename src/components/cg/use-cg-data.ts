@@ -109,22 +109,29 @@ export function useTicker(sym: string, restIntervalMs = 500) {
   // REST fallback only runs while the WS is down — zero upstream cost when live
   const q = usePolling<TickerPayload>(wsUsable ? null : `/api/cg/live?sym=${encodeURIComponent(sym)}`, restIntervalMs);
 
-  // tick-to-tick direction from whichever tier is feeding us
+  // tick-to-tick direction from whichever tier is feeding us.
+  // The refs are READ during render but WRITTEN post-commit (effect) —
+  // mutating them during render would let a discarded concurrent render
+  // advance the baseline and flip the next committed tick's color.
   const prevRef = useRef<number | null>(null);
   const prevSrcRef = useRef<TickerSource>(null);
   const priceWs = lastTrade?.p ?? quote?.mid ?? null;
   const priceRest = q.data?.sym === sym ? q.data?.price ?? null : null;
   const price = wsUsable ? priceWs : priceRest;
   const source: TickerSource = wsUsable ? "ws" : q.data?.source === "coinglass" ? "rest-cg" : q.data?.source ? "rest" : null;
-  if (price != null && prevSrcRef.current !== source) prevRef.current = null; // tier switch → no bogus flash
+  // tier switch (or a null-price gap across one) → no bogus flash: never
+  // compare prices across tiers
+  const prevPrice = prevSrcRef.current !== source ? null : prevRef.current;
   const dir =
-    price == null || prevRef.current == null || price === prevRef.current
+    price == null || prevPrice == null || price === prevPrice
       ? "flat"
-      : price > prevRef.current
+      : price > prevPrice
         ? "up"
         : "down";
-  if (price != null) prevRef.current = price;
-  prevSrcRef.current = source;
+  useEffect(() => {
+    if (price != null) prevRef.current = price;
+    prevSrcRef.current = source;
+  }, [price, source]);
 
   const fetchedAt = wsUsable ? quote?.t ?? null : q.updatedAt || null;
   const ageMs = wsUsable ? Math.max(0, Date.now() - (lastTrade?.t ?? quote?.t ?? Date.now())) : q.data?.ageMs ?? null;

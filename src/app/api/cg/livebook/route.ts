@@ -36,6 +36,12 @@ const POLL_MS = Math.max(1_500, Number(process.env.CG_LIVEBOOK_POLL_MS ?? 2_500)
 const IDLE_STOP_MS = 30_000;
 const RING_MS = 6.5 * 60_000; // covers the 5m-ago imbalance comparison
 const RING_MAX = 320;
+/** total poller cap — a looping client must not be able to spin up rings
+ *  without bound (each costs recurring fapi weight + CPU + memory). */
+const MAX_RINGS = 24;
+/** guard against degenerate grids: a snapshot may never need more buckets
+ *  than this regardless of grid granularity (top-1000 depth levels). */
+const MAX_BUCKETS = 250_000;
 
 interface Ring {
   grid: number;
@@ -52,6 +58,21 @@ const g = globalThis as unknown as { __cgLiveBook?: Map<string, Ring> };
 const rings = (g.__cgLiveBook ??= new Map<string, Ring>());
 
 const ringKey = (sym: string, grid: number, band: number) => `${sym}|${grid}|${band}`;
+
+/**
+ * Quantize a client-supplied grid to ONE significant digit (47 → 50,
+ * 0.037 → 0.04, 137 → 100). The grid is client-controllable and keys the
+ * ring map — without quantization a looping request can mint unlimited
+ * distinct rings (each with its own fapi poller and snapshot buffers).
+ * The aggregate model's grids are already nice values, so snapping is
+ * lossless for legitimate callers.
+ */
+function snapGrid(g: number): number {
+  if (!(g > 0) || !Number.isFinite(g)) return 0;
+  const mag = Math.pow(10, Math.floor(Math.log10(g)));
+  const snapped = Math.round(g / mag) * mag;
+  return snapped > 0 && Number.isFinite(snapped) ? snapped : 0;
+}
 
 function niceGrid(mid: number): number {
   // fallback grid when the client did not pass the aggregate model's grid:
@@ -96,6 +117,8 @@ async function fetchDepthSnapshot(sym: string, grid: number): Promise<BookSnapsh
   add(bids, "b");
   add(asks, "a");
   if (!flat.length) return null;
+  // degenerate-grid guard: never allocate a giant bucket array
+  if (kMax - kMin + 1 > MAX_BUCKETS) return null;
   const q = new Float64Array(kMax - kMin + 1);
   for (let i = 0; i < flat.length; i += 2) q[flat[i] - kMin] += flat[i + 1];
   return { t: Date.now(), g: grid, k0: kMin, q, bb, ba, mid: (bb + ba) / 2 };
@@ -174,6 +197,22 @@ function ensurePoller(sym: string, grid: number, band: number): Ring {
   const key = ringKey(sym, grid, band);
   let ring = rings.get(key);
   if (!ring) {
+    // ring cap: evict the least-recently-requested ring before creating one
+    if (rings.size >= MAX_RINGS) {
+      let oldestKey: string | null = null;
+      let oldestAt = Infinity;
+      for (const [k, r] of rings) {
+        if (r.lastRequestAt < oldestAt) {
+          oldestAt = r.lastRequestAt;
+          oldestKey = k;
+        }
+      }
+      if (oldestKey) {
+        const old = rings.get(oldestKey)!;
+        if (old.timer) clearInterval(old.timer);
+        rings.delete(oldestKey);
+      }
+    }
     ring = { grid, band, snaps: [], at: 0, lastRequestAt: Date.now(), timer: null, busy: false };
     rings.set(key, ring);
   }
@@ -207,7 +246,9 @@ export async function GET(req: NextRequest) {
   }
   const band = [0.5, 1, 2, 5].includes(Number(sp.get("band"))) ? Number(sp.get("band")) : 5;
   const gridRaw = Number(sp.get("grid") ?? 0);
-  const clientGrid = Number.isFinite(gridRaw) && gridRaw > 0 ? gridRaw : null;
+  // quantize BEFORE the ring lookup so distinct attacker grids collapse onto
+  // the same ring key (see snapGrid)
+  const clientGrid = Number.isFinite(gridRaw) && gridRaw > 0 ? snapGrid(gridRaw) : null;
 
   // find an existing fresh-enough ring — exact (sym,grid,band) first, then
   // same (sym,grid) with a different band as a degraded hit

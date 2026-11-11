@@ -38,7 +38,7 @@ interface AggRow {
 
 const AXIS_W = 64;
 const TIME_H = 22;
-const PROFILE_W = 110;
+const PROFILE_W = 150;
 const BAR_GAP = 2;
 const MIN_ROW_H = 15;
 
@@ -260,7 +260,7 @@ export default function FootprintCanvas({
       ctx.fillStyle = COLORS.text;
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
-      ctx.fillText(fmtPrice(p), plotR + 6, y);
+      ctx.fillText(fmtPrice(p), showProfile ? plotR + PROFILE_W - AXIS_W + 6 : plotR + 6, y);
     }
 
     // ----- time grid -----
@@ -407,8 +407,11 @@ export default function FootprintCanvas({
         }
       }
       const maxProf = Math.max(1, ...profByRow.values());
-      const profX0 = plotR + 14;
-      const profW = PROFILE_W - 20;
+      const profX0 = plotR + 8;
+      // profile must END before the price-label zone — with the labels moved
+      // into the same right gutter, sharing it wider than the profile was
+      // unreadable (profile bars painted over every label in the traded range)
+      const profW = PROFILE_W - AXIS_W - 14;
       for (const [ri, v] of profByRow) {
         const yTop = toPx(yScale, pLo + ri * rowSize + rowSize);
         const yBot = toPx(yScale, pLo + ri * rowSize);
@@ -546,8 +549,13 @@ export default function FootprintCanvas({
   }, [draw]);
 
   // ----- interactions -----
-  const onWheel = useCallback(
-    (e: React.WheelEvent) => {
+  // native NON-PASSIVE wheel listener: React 19 registers root wheel
+  // handlers as passive, so preventDefault() inside a React onWheel prop is
+  // a silent no-op and the page scrolls while the chart zooms
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       setView((v) => {
         if (!v || !merged.length) return v;
@@ -558,9 +566,10 @@ export default function FootprintCanvas({
         const start = Math.round(clamp(v.start + anchor * (1 - count / v.count), 0, Math.max(0, merged.length - count)));
         return { ...v, start, count };
       });
-    },
-    [merged.length, hover]
-  );
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [merged.length, hover]);
 
   const onMouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -620,7 +629,6 @@ export default function FootprintCanvas({
         ref={canvasRef}
         className="h-full w-full cursor-crosshair"
         style={{ width: "100%", height: "100%" }}
-        onWheel={onWheel}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}

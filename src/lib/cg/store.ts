@@ -157,6 +157,16 @@ export function append(name: string, rows: unknown[], keyOf: (row: any) => strin
       fs.appendFileSync(fileOf(name), fresh.map((r) => JSON.stringify(r)).join("\n") + "\n", "utf8");
     }
   } catch (e) {
+    // compaction failed: the fresh rows exist ONLY in memory now — append at
+    // least those so a restart in this window cannot lose rows the UI already
+    // saw (lto:open has no upstream history to re-backfill from)
+    if (compact) {
+      try {
+        fs.appendFileSync(fileOf(name), fresh.map((r) => JSON.stringify(r)).join("\n") + "\n", "utf8");
+      } catch {
+        /* disk gone — nothing more to do */
+      }
+    }
     // disk issues must not kill the engine, but silence here hides Windows
     // filename problems — log once per series per process
     if (!st.writeWarned) {

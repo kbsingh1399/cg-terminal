@@ -69,9 +69,13 @@ export default function AlertsTool({ sym }: { sym?: string }) {
 
   useEffect(() => {
     alive.current = true;
+    let kick: ReturnType<typeof setTimeout> | undefined;
     if (!loadedRef.current) {
       loadedRef.current = true;
-      load();
+      // kick the initial load off the effect body — `load`'s setState lands
+      // after its awaits anyway; the timeout keeps it out of the synchronous
+      // effect path (no cascading render from the effect itself).
+      kick = setTimeout(load, 0);
     }
     const es = new EventSource("/api/cg/stream");
     es.addEventListener("hello", () => setLive(true));
@@ -89,12 +93,17 @@ export default function AlertsTool({ sym }: { sym?: string }) {
       alive.current = false;
       es.close();
       clearInterval(poll);
+      if (kick) clearTimeout(kick);
     };
   }, [load]);
 
-  useEffect(() => {
+  // keep the asset filter glued to the active symbol — adjusted during render
+  // on prop change (React docs pattern), no effect needed
+  const [prevSym, setPrevSym] = useState(sym);
+  if (sym !== prevSym) {
+    setPrevSym(sym);
     if (sym) setAssetFilter(sym);
-  }, [sym]);
+  }
 
   const filtered = useMemo(() => {
     let out = items;

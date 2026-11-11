@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { COLORS, drawGridLine, makeScale, niceStep, setupHiDPI, toPx, type Scale } from "./chart-utils";
 
 export interface CvdChartModel {
@@ -36,6 +36,17 @@ export default function CvdCanvas({
   priceDecs?: number;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  // redraw on container resize — the bitmap is sized from getBoundingClientRect
+  // at draw time, so without this a resize leaves it CSS-stretched until the
+  // next poll (up to 15 s)
+  const [resizeTick, setResizeTick] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setResizeTick((t) => t + 1));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -233,11 +244,11 @@ export default function CvdCanvas({
       const d = new Date(t);
       const label = i === 0 || i === 6
         ? `${d.getMonth() + 1}/${d.getDate()}`
-        : `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+        : `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`;
       ctx.fillStyle = COLORS.text;
       ctx.fillText(label, x - 14, H - 8);
     }
-  }, [model, mode, showDelta, showRatio]);
+  }, [model, mode, showDelta, showRatio, resizeTick]);
 
   return <canvas ref={ref} style={{ width: "100%", height }} className="rounded-md" />;
 }

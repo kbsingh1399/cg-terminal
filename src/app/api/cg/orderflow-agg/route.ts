@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import { fpVenues, isAsset } from "@/lib/cg/assets";
+import { parseInterval, clampLimit } from "@/lib/cg/params";
 import type { OrderFlowBucket, OrderFlowBar } from "@/lib/cg/types";
 
 export const dynamic = "force-dynamic";
@@ -80,11 +81,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   const VENUES = fpVenues(sym).map((v) => v.key);
-  const interval = sp.get("interval") ?? "m15";
+  const interval = parseInterval(sp.get("interval"));
+  if (!interval) {
+    return NextResponse.json({ ok: false, error: "invalid interval" }, { status: 400 });
+  }
   const all = sp.get("intervals") === "all";
   // m1 may request a deep window (up to 48h) for volume/range bar construction
   const maxLimit = interval === "m1" || all ? 2880 : 1000;
-  const limit = Math.min(Number(sp.get("limit") ?? 300) || 300, maxLimit);
+  const limit = clampLimit(sp.get("limit"), 300, maxLimit);
   const intervalList = all ? ["m1", "m5", "m15", "m30", "h1"] : [interval];
   try {
     const results = await Promise.allSettled(

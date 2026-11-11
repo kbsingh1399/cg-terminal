@@ -163,3 +163,52 @@ dated entry after each meaningful change; keep only the last 10 entries.
 - Multi-agent: RV-ARCH+RV-QUANT (design) / RV-QA+RV-SEC (code) — all conditions fixed (suppressed-only amber boxes, APR-None crash, ms→s span 1000× bug, decompression guards, concurrent fetches).
 - VERIFIED: tsc+build clean; endpoint battery (10 syms); browser XAU/XPT/EURUSD/US30 zero console errors; deepscan §0+§micro live. Evidence: scripts/research/probes/l2l3/ + MICRO-DESIGN-R4.md.
 - OPEN: DIR-0013 rebuild on Windows box (supersedes DIR-0012). Micro stays CONTEXT (no scorecard weight) until a ≥30-round correlation study.
+
+### 2026-11-11 10:40 UTC — Z.ai sandbox agent — R5: "terminal not live" root cause + full multi-skill bug hunt
+- ROOT CAUSE (why terminal was not live): the platform's boot-supervised
+  `bun run dev` (port 3000, started by /start.sh via .zscripts/dev.sh) was
+  OOM-KILLED at 07:33 UTC (dmesg: anon-rss 1.93GB, concurrent `npm run build`
+  pushed the 4GB box over) and NOTHING restarts it — the preview URL
+  (Caddy :81 → localhost:3000) has been 502 since. Production servers started
+  from the agent Bash tool are reaped at command end (verified with
+  setsid/nohup/double-fork test processes — all die between commands), so
+  in-sandbox revival is impossible without a container restart.
+  FIX AVAILABLE TO USER: restart the sandbox (top-right restart button) —
+  boot re-runs bun run dev on the current fixed code and the preview goes
+  live. PORT GUARD: start-server.mjs now pins PORT=3000 (public path).
+- INSTALLED addyosmani/agent-skills (external/agent-skills, gitignored) and
+  applied debugging-and-error-recovery / code-review-and-quality /
+  shipping-and-launch / doubt-driven-development + browser-testing skills.
+- STATIC GATES: eslint config was BROKEN (react-hooks plugin not registered
+  in flat config) — fixed + scoped ignores; 5 errors fixed (set-state-in-effect
+  ×4 → render-time adjust pattern; BUCKET memo dep); 0 errors now, tsc clean,
+  `next build` ZERO warnings (middleware.ts → proxy.ts per Next 16; memory
+  watchdog moved to server-only src/lib/cg/memwatch.ts — instrumentation.ts
+  edge-bundles and instrumentation.nodejs.ts is NOT supported in 16.1.3).
+- 3 PARALLEL ADVERSARIAL REVIEWS (RV-DATA / RV-SEC / RV-UI) → all Required
+  findings fixed: client.ts (stale-serve bounded + ttl0 throws, in-flight
+  coalescing, globalThis cache), engine.ts (poller overlap guard, tickers
+  .catch), book-walls.ts (reader.cancel+abort on mid-stream error), crypto.ts
+  (non-JSON decrypted payload throws), store.ts (compaction-fail fallback
+  append), livebook route (CRITICAL: snapGrid 1-sig-digit quantization,
+  MAX_RINGS=24 LRU eviction, MAX_BUCKETS=250k guard), interval allowlist +
+  limit clamp via new src/lib/cg/params.ts on kline/orderflow/largeorder/
+  orderflow-agg/fp, middleware→proxy.ts Host allowlist (DNS-rebinding defense,
+  CG_ALLOWED_HOSTS env), SSE req.signal cleanup, forming.ts (fresh store per
+  mount + honest lastTradeAt stamping), passive-wheel no-op fix (native
+  non-passive listeners on footprint/large-orders canvases), profile-vs-axis
+  label overdraw fix (PROFILE_W 150 + separated gutters), WhaleWalls top-14-
+  by-USD fix, per-symbol stale-frame fixes (footprint/large-orders tools),
+  UTC time axes + ResizeObserver on cvd/stopmap/book-heat canvases, useTicker
+  committed-price dir, new /api/health route, memory watchdog in engine.
+- VERIFIED END-TO-END (all within single commands — reaper constraint):
+  verify-live.sh GREEN via public path :81; API battery 77×200 + 36×clean-400
+  + 0 fail (scripts/e2e-api-battery.sh, full-body JSON validation, clean-400
+  acceptance, lto ?symbol= param fix); browser E2E BTC/XAU/EURUSD/US30 zero
+  page errors + zero console errors; XAU live 4,054.09 REAL-TIME WS confirmed;
+  screenshots download/verify-*.png; proxy guard 403s verified; rss 365-384MB
+  under full load (vs 1.9GB pre-fix leak path).
+- OPERATIONAL RULES learned: (1) never run tsc/eslint/build while the live
+  server runs (4GB box — the 07:33 OOM); (2) server + all verification must
+  complete within ONE agent Bash command (spawned processes die at command
+  end); (3) lto route takes ?symbol= not ?sym=.

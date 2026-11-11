@@ -373,20 +373,28 @@ async function readNdjson(url: string, timeoutMs: number): Promise<{ meta: { siz
         throw new Error(`stream error ${f.code}: ${f.msg ?? ""}`);
       }
     };
-    for (;;) {
-      const { done, value } = await reader.read();
-      buf += dec.decode(value ?? new Uint8Array(), { stream: !done });
-      let nl: number;
-      while ((nl = buf.indexOf("\n")) >= 0) {
-        const line = buf.slice(0, nl);
-        buf = buf.slice(nl + 1);
-        handle(line);
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        buf += dec.decode(value ?? new Uint8Array(), { stream: !done });
+        let nl: number;
+        while ((nl = buf.indexOf("\n")) >= 0) {
+          const line = buf.slice(0, nl);
+          buf = buf.slice(nl + 1);
+          handle(line);
+        }
+        if (done) break;
       }
-      if (done) break;
+      handle(buf.trim());
+      if (!ended || !meta) throw new Error("stream ended early");
+      return { meta: meta!, rows };
+    } catch (e) {
+      // mid-stream failure: actively release the socket instead of pinning
+      // it (plus its buffers) until the runtime body timeout destroys it
+      await reader.cancel().catch(() => {});
+      ctrl.abort();
+      throw e;
     }
-    handle(buf.trim());
-    if (!ended || !meta) throw new Error("stream ended early");
-    return { meta: meta!, rows };
   } finally {
     clearTimeout(kill);
   }

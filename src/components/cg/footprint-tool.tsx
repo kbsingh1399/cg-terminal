@@ -96,13 +96,16 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
   const [hoverBar, setHoverBar] = useState<FpBar | null>(null);
 
   // symbol switch: every per-symbol UI selection (hovered bar, active signal,
-  // jump target) belongs to the PREVIOUS asset's bar series — reset them so a
-  // BTC bar's volume/delta/ladder can never render under an ETH header
-  useEffect(() => {
+  // jump target) belongs to the PREVIOUS asset's bar series — reset during
+  // render (React docs adjust-state pattern) so a BTC bar's volume/delta/
+  // ladder can never render under an ETH header, not even for one frame
+  const [prevSym, setPrevSym] = useState(sym);
+  if (sym !== prevSym) {
+    setPrevSym(sym);
     setActiveSignal(null);
     setJump(null);
     setHoverBar(null);
-  }, [sym]);
+  }
 
   // ---- data: the exact calls the live page makes ----
   // time series at the selected interval (their TBS/D, 300 bars)
@@ -474,7 +477,7 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
           label="Latest price"
           value={livePrice != null ? fmtPriceDec(livePrice, dp) : "—"}
           sub={`${tk.source === "ws" ? "real-time tape" : tk.source === "rest" ? "0.25s rest" : "aggregate"}${
-            focusStats ? ` · ${fmtPctSigned(lastBar && currentBars.length > 96 ? (lastBar.c - (currentBars[currentBars.length - 97]?.c ?? lastBar.c)) / (currentBars[currentBars.length - 97]?.c ?? 1) : 0, 2)} 24 bars` : ""
+            focusStats ? ` · ${fmtPctSigned(lastBar && currentBars.length > 96 ? (lastBar.c - (currentBars[currentBars.length - 97]?.c ?? lastBar.c)) / (currentBars[currentBars.length - 97]?.c ?? 1) : 0, 2)} 96 bars` : ""
           }`}
           tone={
             lastBar && currentBars.length > 96

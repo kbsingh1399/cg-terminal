@@ -129,7 +129,11 @@ export function decryptCgResponse(resp: CgResponse, cacheTs: string, url: string
   try {
     return JSON.parse(payloadRaw);
   } catch {
-    return payloadRaw;
+    // A garbage plaintext must NOT be returned as a string and cached as
+    // data — callers expect objects/arrays and would degrade silently to
+    // "empty data + healthy status". Fail loudly so the caller's error
+    // path (markPoll) records it.
+    throw new Error(`decrypted payload is not JSON (${url}) — head: ${payloadRaw.slice(0, 80)}`);
   }
 }
 

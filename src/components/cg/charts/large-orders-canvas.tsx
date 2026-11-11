@@ -304,8 +304,12 @@ export default function LargeOrdersCanvas({
     draw();
   }, [draw]);
 
-  const onWheel = useCallback(
-    (e: React.WheelEvent) => {
+  // native NON-PASSIVE wheel listener (React 19 passive onWheel makes
+  // preventDefault a no-op — page would scroll while the chart zooms)
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       setView((v) => {
         if (!v || !candles.length) return v;
@@ -318,9 +322,10 @@ export default function LargeOrdersCanvas({
         );
         return { ...v, count, start };
       });
-    },
-    [candles.length]
-  );
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [candles.length]);
 
   const onMouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -356,7 +361,6 @@ export default function LargeOrdersCanvas({
       <canvas
         ref={canvasRef}
         className="h-full w-full cursor-crosshair"
-        onWheel={onWheel}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={() => (drag.current = null)}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
+import { parseInterval, clampLimit, instrumentKeyOK } from "@/lib/cg/params";
 import type { KlineRow, OiKlineRow } from "@/lib/cg/types";
 
 export const dynamic = "force-dynamic";
@@ -11,12 +12,15 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const type = sp.get("type") === "oi" ? "oi_kline" : "kline";
-  const interval = sp.get("interval") ?? "m15";
-  const limit = Math.min(Number(sp.get("limit") ?? 300) || 300, 2880);
+  const interval = parseInterval(sp.get("interval"));
+  if (!interval) {
+    return NextResponse.json({ ok: false, error: "invalid interval" }, { status: 400 });
+  }
+  const limit = clampLimit(sp.get("limit"), 300, 2880);
   const symbol = sp.get("symbol") ?? "Binance_BTCUSDT";
   // instrument keys are `Exchange_SYMBOLQUOTE` — validate the shape so the
   // param can't be used to probe arbitrary upstream paths
-  if (!/^[A-Za-z0-9_-]{3,48}$/.test(symbol)) {
+  if (!instrumentKeyOK(symbol)) {
     return NextResponse.json({ ok: false, error: `invalid symbol ${symbol}` }, { status: 400 });
   }
   try {
