@@ -1584,3 +1584,7 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - MULTI-AGENT REVIEW (4 agents: RV-ARCH + RV-QUANT on design, RV-QA + RV-SEC on code): all 4 APPROVE-WITH-CONDITIONS → every condition fixed & re-verified: suppressed-only 502→200+amber (XPT/JP225), deepscan APR-None crash, ms→s 1000× span bug, decompression/zip bomb guards, markdown injection strip, concurrent fetch chains, encodeURIComponent, footer copy.
 - Verified end-to-end on sandbox :3100 (CG_ENGINE=off): tsc+build clean, 10-symbol endpoint battery, browser XAU/XPT/EURUSD/US30 (cards, amber boxes, hidden, zero console errors), deepscan §0 (metals) + §micro (classic) live in reports.
 - DIR-0013 emitted for the Windows rebuild (supersedes DIR-0012, includes its checks). No MT5 actions. Execution stays broker-side; micro is signal-market context.
+
+### DIALOG · 2026-11-11 09:50 UTC · zai-desk — DIR-0013 re-issued (first emission was invalid JSON — daemon correctly rejected it)
+- Root cause: a sentence was used as a JSON key ("REPLY per contract (...)…") — parse error at line 16. Removed both inbox+outbox copies, re-emitted 09-50-00 in the proven DIR-0012 flat-instruction format, validated with python json.load before push.
+- Status answer to user: sandbox terminal = R4 live (commit 22198de running, endpoints verified). Windows box = rebuild pending DIR-0013 execution (daemon alive, broker feed fresh 5.7 min, equity $4,649.96, account flat).
