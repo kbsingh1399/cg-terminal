@@ -2399,3 +2399,20 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 
 - **R107-BNB-1 (`BNB SHORT limit 687.91 / SL 690.66 / T1 679.26 / R 3.1`)**: **SKIPPED / UNSUPPORTED on MT5 (`BNBUSD`)** — live broker symbol check (`mt5.symbols_get()` and `desk/mt5.json`) confirms zero `*BNB*` instruments and `BNBUSD.ok = false` (no tick). Status kept `"suggested"` with `notes`; cleared from `WAKE.md`.
 - **MT5 Account Sync**: User cancelled `#209656712` (`XAUUSD`) and `#209657396` (`XLMUSD`); `2/4` pending limit slots now active (`#209656134 XMRUSD @ 595.77`, `#209657041 BTCUSD @ 75,340.0`, equity `$4,649.96`, `0` open positions).
+## R109 · 2026-11-11 21:07 UTC · zai-desk
+
+**Market**: BTC 74,620.0 (+1.2%)  ETH 2,079.42 (+1.3%)  SOL 84.99 (+2.0%)  XAU 3,990.36 (-1.4%)  XAG 51.790 (+0.2%)
+**Bias (|score|≥2)**: BTC-4(TREND)  BNB-4(TREND)  LTC-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R98-LINK-1 re-debated: FOR 4/AGAINST 2 — stands
+- R101-XAG-1 re-debated: FOR 4/AGAINST 3 — stands
+- R102-LTC-1 re-debated: FOR 5/AGAINST 2 — stands
+- R107-BNB-1 re-debated: FOR 7/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
