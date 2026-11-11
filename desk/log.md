@@ -1973,3 +1973,26 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R88 · 2026-11-11 15:38 UTC · zai-desk
+
+**Market**: BTC 74,180.1 (+0.6%)  ETH 2,081.30 (+1.4%)  SOL 85.00 (+2.0%)  XAU 4,016.79 (-0.7%)  XAG 52.500 (+1.6%)
+**Bias (|score|≥2)**: DOGE-4(TREND)  LTC-3(TREND)  XAU-3(TRANS)  XAG-3(RANGE)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R88-LTC-1 LTC SHORT limit 51.47 · stop 51.69 · T1 50.72 · R 3.4
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (51.47 vs 50.93), h4 RSI 49.6, day +1.5%
+      [FOR    ] footprint: bull 22 / bear 35; recent: Absorption/buy[time], Trapped shorts/buy[vol], Absorption/sell[range]
+      [FOR    ] liquidation: long-liq magnet 49.74 (str 73, ~$1M est, -3.24%) as target
+      [AGAINST] liquidation-hazard: short-liq magnet 51.94 (str 100) sits between entry and stop — sweep risk
+      [FOR    ] bookWalls: ±5% depth imbalance -0.112 (5m ago -0.009, falling bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.4%, perpCvd -19, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
+
+### Order lifecycle
+- R74-ADA-1 EXPIRED (unfilled past expiry)
+- R75-DOGE-1 re-debated: FOR 7/AGAINST 0 — stands
+- R75-LINK-2 re-debated: FOR 4/AGAINST 2 — stands
+- R83-BNB-1 re-debated: FOR 3/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
