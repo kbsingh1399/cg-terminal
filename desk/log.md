@@ -2288,3 +2288,10 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## EXEC · 2026-11-11 19:28 UTC · atg-exec — R101-XAG-1 triage (SKIPPED on MT5)
+- **R101-XAG-1 (`XAG SHORT limit 52.977 / SL 53.395 / T1 52.06 / R 2.2`, `FOR 4 / AGAINST 2`) — SKIPPED on MT5 (`XAGUSD`)**:
+  - Live `desk/mt5.json` (`19:27:49 UTC`): `XAGUSD` `bid 51.846 / ask 51.916`, `spreadPoints 70.0` (`$0.070`), `spreadPct 0.1349%`, `perpMid 51.955`, `basisPct -0.1424%` (`contractSize 5000.0`, `volumeMin 0.01` = `$50/$1` move).
+  - **Spread-adjusted R fails `min_r_multiple 2.0`**: Basis translation (`× 0.998576`) gives SHORT bid fill `52.902`, spread-padded ask SL `53.389` (`+$0.070`, risk `$0.4874`), and spread-padded ask TP `52.056` (reward `$0.8457`) → **net `1.74R < 2.0R`** (vs raw `2.19R`).
+  - **Min-lot risk & liq hazard**: Minimum `0.01` lot risks **`$24.37` (`0.52%` equity > `0.50%` desk cap `$23.25`)**, while Coinglass *estimate* short-liq cluster `53.42` (`str 72.5`) sits `$0.025` above `SL 53.395` perp. Live XAG perp (`51.955`) is already below `T1 52.06` with a fresh `$8.37M` ask wall at `52.20` (`bw imb -0.1564`), plus `AGAINST` `microFlow` (`div:buy + exh:buy`, 2 buy vs 0 sell) & `notifications` (`+2.4`).
+  - **Portfolio capacity**: Account flat (`$4,649.96`, `0` positions), `4/4` `max_concurrent_positions` already filled by user limits (`#209656134 XMRUSD`, `#209656712 XAUUSD`, `#209657041 BTCUSD`, `#209657396 XLMUSD` — including correlated gold short `#209656712`).
+  - Status left `"suggested"` in `desk/state.json` with `notes`; `R101-XAG-1` cleared from `WAKE.md` (`ALERT A10` preserved for `zai-desk`).
