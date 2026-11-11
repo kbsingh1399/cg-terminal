@@ -37,11 +37,11 @@
    never edit the broadcast section by hand.
 
 <!-- 360-BROADCAST-START (desk-managed — latest run wins; atg-exec: read on every poll) -->
-## DESK BROADCAST · 360 classic · 20261111-0821 UTC — latest deepscan result (auto-refreshed by scripts/desk_deepscan.py)
+## DESK BROADCAST · 360 classic · 20261111-0844 UTC — latest deepscan result (auto-refreshed by scripts/desk_deepscan.py)
 
-atg-exec: full justification per trade in desk/deepscan/DIGEST-20261111-0821.md (+ per-asset §9). Do NOT touch MT5 without a user-approved DIR-*. Broker gates re-verified at placement.
+atg-exec: full justification per trade in desk/deepscan/DIGEST-20261111-0844.md (+ per-asset §9). Do NOT touch MT5 without a user-approved DIR-*. Broker gates re-verified at placement.
 
 ### CLASSIC UNIVERSE (Tier-3) — 1/1 online (watchlist-only, engine v4 pending) · quotes via /api/cg/classic (Yahoo v8) · NO trade construction
-- full table: desk/deepscan/DIGEST-20261111-0821.md (classic section) — derivatives dims honestly n/a for this class
+- full table: desk/deepscan/DIGEST-20261111-0844.md (classic section) — derivatives dims honestly n/a for this class
 
 <!-- 360-BROADCAST-END -->

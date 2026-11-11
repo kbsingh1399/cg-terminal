@@ -1510,3 +1510,5 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+### DEEPSCAN · 2026-11-11 08:44 UTC · zai-desk — 360° on-demand deep analysis (classic)
+- USO (classic): desk/deepscan/USO-20261111-0844.md
