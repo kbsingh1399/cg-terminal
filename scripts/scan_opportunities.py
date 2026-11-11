@@ -49,23 +49,46 @@ print()
 print("=" * 100)
 print("FOOTPRINT SIGNAL ENGINE — all 12 assets (15m time / auto volume / auto range bars)")
 print("=" * 100)
+
+
+def sig_name(sig):
+    """cgSigName port (cg-signals.ts:597) — CgSignal carries type field `t`,
+    not `name` (the old reader printed `?` for every signal)."""
+    t, side = sig.get("t", "?"), sig.get("side", "?")
+    if t == "sdiv":
+        return "Bull div" if side == "buy" else "Bear div"
+    if t == "trap":
+        return "Trapped shorts" if side == "buy" else "Trapped longs"
+    return {"div": "Divergence", "abs": "Absorption"}.get(t, "Exhaustion")
+
+
 summary = {}
 for sym in SYMS:
     try:
         s = get(f"/signals?sym={sym}")
         c = s.get("counts", {})
         sets = s.get("sets", [])
-        # newest signal per set
+        # newest signal per set — CgSignal.ts is unix SECONDS (cg-signals.ts:295);
+        # the old `barTs` key never existed, so max() always returned the first row
         latest = []
         for st in sets:
             sigs = st.get("sigs", [])
             if sigs:
-                newest = max(sigs, key=lambda x: x.get("barTs", 0))
-                latest.append(f"{st['bt']}: {newest.get('name','?')}({newest.get('side','?')}) @{newest.get('barTs',0)}")
+                newest = max(sigs, key=lambda x: x.get("ts", 0))
+                age_min = (time.time() - (newest.get("ts") or 0)) / 60
+                latest.append((age_min, f"{st['bt']}: {sig_name(newest)}({newest.get('side', '?')}) {age_min:.0f}m ago"))
         summary[sym] = (c, s.get("updatedAt", 0), latest)
         bulls, bears = c.get("bullish", 0), c.get("bearish", 0)
         age = (now_ms - s.get("updatedAt", 0)) / 60000
         print(f"{sym:<6} bullish={bulls:<3} bearish={bears:<3} (cache {age:4.0f}m old)")
+        # newest signal per bar-type — the `latest` strings were built but never
+        # printed before; show the fresh (<6h) ones so the fix is observable.
+        # LOCAL name `freshTxt` — a loop-local `fresh` would shadow the module-
+        # level notifications list (line 24) and crash section 3's bias table
+        # with 'str' object has no attribute 'get' (adversarial review finding 1).
+        freshTxt = [txt for a, txt in latest if a < 360]
+        if freshTxt:
+            print(f"       newest: {' · '.join(freshTxt)}")
     except Exception as e:
         print(f"{sym:<6} FAILED: {e}")
 

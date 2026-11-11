@@ -23,6 +23,19 @@ const gC = globalThis as unknown as { __cgClientCache?: Map<string, CacheEntry>;
 const cache = (gC.__cgClientCache ??= new Map());
 /** running total of cached raw bytes — the OOM guard reads this (debug/mem route) */
 const cacheBytes = (gC.__cgClientCacheBytes ??= { n: 0 });
+// resync ONCE at module init: the Map is the source of truth, so any counter
+// inflation left behind by the pre-fix overwrite leak (or by a stale module
+// instance still running in dev hot-reload) is healed the moment this module
+// (re)loads. cacheSet is fully synchronous, so this sum can never observe a
+// half-applied write. UNCONDITIONAL (adversarial review finding 3): a guard on
+// `cache.size` skips the heal exactly when the Map is empty but the counter is
+// still inflated — then every insert over-evicts live entries until some later
+// reload catches a non-empty Map. An empty Map must resync the counter to 0.
+{
+  let sum = 0;
+  cache.forEach((e) => { sum += e.bytes ?? 0; });
+  cacheBytes.n = sum;
+}
 /** in-flight request coalescing: N concurrent misses for one URL = 1 fetch */
 const inflight = (gC.__cgClientInflight ??= new Map());
 
@@ -42,7 +55,22 @@ const CACHE_MAX = Math.max(50, Number(process.env.CG_CLIENT_CACHE_MAX ?? 800) ||
 const CACHE_MAX_BYTES = Math.max(8_000_000, Number(process.env.CG_CLIENT_CACHE_BYTES ?? 96_000_000) || 96_000_000);
 
 function cacheSet(url: string, data: unknown, rawBytes = 0) {
+  // OVERWRITE LEAK (R6 follow-up): re-setting an existing URL never returned
+  // THAT entry's old bytes — only the eviction loop below subtracted, and only
+  // for whichever entry happened to be oldest. Hot URLs re-fetched with
+  // ttlMs=0 every engine cycle (kline/flows/liqlevels/stopmap polls) therefore
+  // re-added their full payload size on every refresh, inflating the counter
+  // monotonically until the 96MB budget evicted unrelated LIVE entries.
+  // Subtracting the previous entry's bytes FIRST keeps the counter equal to
+  // the true sum of cached bytes at all times.
+  const prev = cache.get(url);
+  if (prev) {
+    cacheBytes.n -= prev.bytes ?? 0;
+    cache.delete(url);
+  }
   // evict while EITHER cap is exceeded (entries or bytes) — oldest first
+  // (after the prev-entry delete above, a pure overwrite no longer trips the
+  // entry cap — net entry count does not change)
   while (cache.size >= CACHE_MAX || (cacheBytes.n + rawBytes > CACHE_MAX_BYTES && cache.size > 0)) {
     const oldest = cache.keys().next().value;
     if (oldest === undefined) break;

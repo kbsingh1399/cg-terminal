@@ -49,8 +49,18 @@ const keyKline = (r: any) => String(r.t);
 const keyFlow = (r: any) => String(r.t);
 const keyStop = (r: any) => `${r.t}|${r.p}`;
 const keyWall = (r: any) => `${r.t}|${r.p}`;
-const keyLto = (r: any) => `${r.at}|${r.i}`;
-const keyLiq = (r: any) => `${r.at}|${r.side}|${r.p}`;
+// Row identity for append() dedup — the key must distinguish EVERY distinct
+// row a single poll produces or rows silently collapse (store.ts dedups by
+// exact string):
+//  - lto: `at` is one poll timestamp (identical for all rows of the poll) and
+//    `i` (exName_instrumentId) repeats per ORDER — without the order `id`, one
+//    poll kept exactly one row per instrument, the last order winning
+//    arbitrarily (live 2026-11-11: 1316 ≥$1M BTC orders → 20 rows stored).
+//  - liq: same (at, side, price) recurs ACROSS venues and across leverage
+//    tiers within a poll — without venue+tier ~6% of rows collapsed
+//    (live: 9508 levels → 8885 stored).
+const keyLto = (r: any) => `${r.at}|${r.i}|${r.id}`;
+const keyLiq = (r: any) => `${r.at}|${r.v}|${r.side}|${r.p}|${r.l2}`;
 
 async function fetchKlines(symbol: string, itv: string, limit: number, endTime?: number): Promise<KlineRow[]> {
   const q = `/api/v2/kline?symbol=${encodeURIComponent(symbol + "#kline")}&interval=${itv}&limit=${limit}&minLimit=false${endTime ? `&endTime=${endTime}` : ""}`;
@@ -307,6 +317,22 @@ async function pollLiqLevels() {
 // Boot backfill
 // ---------------------------------------------------------------------------
 
+/**
+ * Page-count guard for an m15 backfill of `days` days.
+ *
+ * A full upstream v2/kline page is ~504 bars ≈ 5.25 d, so the legacy fixed
+ * caps (12 pages kline/flows, 8 pages per-asset) cover 63 d / 42 d — fine at
+ * full pages. But some instruments SHORT-PAGE at ~100 bars ≈ 1 d/page
+ * (observed live 2026-11-11 on the spot bs_usd series), where 8 pages silently
+ * stops a CG_ENGINE_BACKFILL_DAYS=30 boot at ~8 d with no signal. Scale the
+ * guard with the requested days at the WORST observed page size, floored at
+ * the legacy caps so default 3-day boots behave identically. The guard is
+ * only a loop bound — once history is exhausted the loop exits via the
+ * `end > targetFrom` condition, so full-page series never spend the extra
+ * requests.
+ */
+const m15PagesFor = (days: number, floor: number) => Math.max(floor, Math.ceil((days * 96) / 100) + 2);
+
 async function backfillKlineAndFlows(days: number) {
   const keys = ["Binance_BTCUSDT", ...(await cvdInstrumentKeys())];
   const uniqueKeys = [...new Set(keys)];
@@ -320,7 +346,8 @@ async function backfillKlineAndFlows(days: number) {
     markBackfilling(name, isPrice ? keyKline : keyFlow, true);
     let end = Math.floor(Date.now() / 1000) + 60;
     let guard = 0;
-    while (end * 1000 > targetFrom && guard++ < 12) {
+    const pages = m15PagesFor(days, 12);
+    while (end * 1000 > targetFrom && guard++ < pages) {
       try {
         const rows = isPrice ? await fetchKlines(k, "m15", 500, end) : (await fetchFlows(k, "m15", 500, end)).map((r) => ({ t: r[0], b: r[1], s: r[2] }));
         if (!rows.length) break;
@@ -354,7 +381,8 @@ async function backfillAllAssets(days: number) {
     let end = Math.floor(Date.now() / 1000) + 60;
     let guard = 0;
     try {
-      while (end * 1000 > targetFrom && guard++ < 8) {
+      // see m15PagesFor: legacy cap was a flat 8 pages
+      while (end * 1000 > targetFrom && guard++ < m15PagesFor(days, 8)) {
         const rows = await fetchKlines(inst, "m15", 500, end);
         if (!rows.length) break;
         const mapped = rows.map((r) => ({ t: 1000 * Number(r[0]), o: +r[1], h: +r[2], l: +r[3], c: +r[4], v: +r[5] }));
@@ -381,7 +409,9 @@ async function backfillStopmap(days: number) {
   markBackfilling(name, keyStop, true);
   let end = Math.floor(Date.now() / 1000);
   let guard = 0;
-  while (end * 1000 > targetFrom && guard++ < days + 2) {
+  // a full liqHeatMap page is 288 × 5-min bars = exactly 1 day; tolerate
+  // half-size pages by allowing 2 pages per requested day (legacy: days + 2)
+  while (end * 1000 > targetFrom && guard++ < 2 * days + 2) {
     try {
       const w = await fetchStopmap(end);
       if (!w) break;
@@ -401,6 +431,11 @@ async function backfillStopmap(days: number) {
 }
 
 async function backfillBookwalls(days: number) {
+  // NOTE: both call sites pass Math.min(days, 2) — bookwall snapshots are the
+  // heaviest series (~74k rows/day) so the boot backfill is deliberately
+  // capped at 2 days; 2 d = 192 m15 snaps = 2 full pages of 150, and the
+  // m15PagesFor guard (worst-case 100-snap pages) yields 4 pages for that —
+  // same bound as the legacy flat cap, now derived instead of hardcoded.
   const name = "bookwalls";
   const stored = lastTs(name, keyWall) ?? 0;
   const backMs = days * 86_400_000;
@@ -409,7 +444,7 @@ async function backfillBookwalls(days: number) {
   markBackfilling(name, keyWall, true);
   let end = Math.floor(Date.now() / 1000);
   let guard = 0;
-  while (end * 1000 > targetFrom && guard++ < 4) {
+  while (end * 1000 > targetFrom && guard++ < m15PagesFor(days, 4)) {
     try {
       const { snaps } = await fetchWallSnapshots(150, end);
       if (!snaps.length) break;

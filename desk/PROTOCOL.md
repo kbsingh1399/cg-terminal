@@ -57,6 +57,38 @@ terminal boot command, MT5 python command, wake/notify commands). Local
 files `desk/.daemon.lock`, `desk/.daemon-state.json`,
 `desk/rounds.local.log` are gitignored.
 
+### `notify_cmd` / `wake_cmd` — safe command syntax (no shell, ever)
+
+Alert titles and agent-task text come from **git-synced** `desk/` files
+(`alerts.json` actions, inbox `AGENT_TASK` instructions) — untrusted
+content. The daemon therefore runs both commands WITHOUT a shell
+(`spawn(file, argv)` with `shell:false`): the configured string is
+tokenized on whitespace, with double-quoted spans surviving spaces
+(quotes are consumed, never re-interpreted), and every dynamic value is
+passed as its own argv element. Metacharacters in alert text can never
+escape their argv slot — there is no shell line to inject into.
+
+```jsonc
+// desk/daemon.json
+"notify_cmd": "python scripts/bell_alert.py",
+//   → runs: python scripts/bell_alert.py "<title>" "<text>"
+//     (title/text appended as two extra argv elements — bell_alert.py
+//      reads them from sys.argv[1] / sys.argv[2])
+"wake_cmd": "python scripts/wake_watcher.py \"{msg}\""
+//   → the argv token {msg} (quote it so spaces survive) is replaced by
+//     the task text; every other token is passed through verbatim
+```
+
+Rules:
+- one command, arguments separated by spaces — exactly like typing it
+  into a shell for the simple cases;
+- double quotes group a span with spaces (e.g. `"C:\\Program Files\\Tool\\notify.exe" --bell` → 2 argv elements);
+- no escapes (`\"`), variable expansion, `&&`, pipes or redirects —
+  those are shell features and no shell is involved. Need a pipeline?
+  Point the command at a script that does it internally;
+- `notify_cmd` receives the title and message as the LAST TWO argv
+  elements; `wake_cmd` substitutes `{msg}` only as a whole token.
+
 ## Instruction channel — git as the message bus
 
 zai-desk remote-controls the local machine by pushing one JSON file per
@@ -80,8 +112,9 @@ appends tasks (new suggested orders, zai agent tasks), the local agent
 handles them on activation (place MT5 orders, update state, EXEC log
 entries) and clears the handled sections. If your Antigravity install
 exposes a CLI/URL trigger for agents, set it as `wake_cmd` in
-`desk/daemon.json` (`{msg}` is replaced with the task text) for a hard
-wake; beacon + desktop notification is the baseline otherwise.
+`desk/daemon.json` (the argv token `{msg}` is replaced with the task
+text — see the safe-command-syntax section above) for a hard wake;
+beacon + desktop notification is the baseline otherwise.
 
 ## Files (field ownership)
 

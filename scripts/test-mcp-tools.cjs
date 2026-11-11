@@ -80,7 +80,7 @@ function record(name, ok, note) {
     return text;
   };
 
-  await expectOk("list_assets", {}, (t) => t.split("\n").length + " assets");
+  await expectOk("list_assets", {}, (t) => t.split("\n")[0].slice(0, 80)); // first line: live-derived count header
   await expectOk("market_snapshot", { sym: "BTC" }, (t) => t.split("\n")[0].slice(0, 90));
   await expectOk("live_price", { sym: "BTC" }, (t) => t.slice(0, 80));
   await expectOk("signals", { sym: "BTC", bt: "all" }, (t) => t.split("\n")[0].slice(0, 90));
@@ -88,12 +88,13 @@ function record(name, ok, note) {
   await expectOk("liquidation_levels", { sym: "BTC", range: "3d" }, (t) => t.split("\n")[0].slice(0, 90));
   await expectOk("whale_orders", { sym: "BTC", minUsd: 500000 }, (t) => t.split("\n")[0].slice(0, 90));
   await expectOk("book_walls", { sym: "BTC" }, (t) => t.split("\n")[1].slice(0, 110), "book_walls BTC (defaults)");
-  await expectOk("book_walls", { sym: "ETH", interval: "1h", band: 3, limit: 60 }, (t) => t.split("\n")[0].slice(0, 100), "book_walls ETH 1h band3 (new params)");
+  await expectOk("book_walls", { sym: "ETH", interval: "1h", band: 2, limit: 60 }, (t) => t.split("\n")[0].slice(0, 100), "book_walls ETH 1h band2 (new params)"); // band must be route-allowlisted (0.5/1/2/5) — band=3 was silently coerced to 5
   await expectOk("cvd_state", { sym: "BTC", mode: "total", itv: "15m" }, (t) => t.split("\n")[0].slice(0, 100));
   await expectOk("cvd_state", { sym: "ETH", itv: "1h", anchor: "day" }, (t) => t.split("\n")[0].slice(0, 100), "cvd_state ETH 1h anchor=day (new params)");
   await expectOk("stopmap", { sym: "BTC" }, (t) => t.split("\n")[1].slice(0, 110), "stopmap BTC (new tool)");
-  await expectOk("footprint", { sym: "ETH", interval: "15m", last: 6 }, (t) => t.split("\n").slice(0, 2).join(" | ").slice(0, 130), "footprint ETH (new tool)");
-  await expectOk("large_orders", { sym: "BTC", hours: 24 }, (t) => t.split("\n")[0].slice(0, 100), "large_orders BTC (new tool)");
+  await expectOk("footprint", { sym: "ETH", interval: "m15", last: 6 }, (t) => t.split("\n").slice(0, 2).join(" | ").slice(0, 130), "footprint ETH (new tool)");
+  await expectOk("footprint", { sym: "ETH", interval: "15m", last: 3 }, (t) => t.split("\n")[0].slice(0, 90), "footprint ETH 15m-alias (route vocabulary is m15)");
+  await expectOk("large_orders", { sym: "BTC", hours: 24 }, (t) => t.split("\n")[0].slice(0, 100), "large_orders BTC (new tool)"); // default interval m15 — the old default 15m hit the route's parseInterval 400
   await expectOk("kline_series", { sym: "BTC", type: "oi", interval: "h1", limit: 60 }, (t) => t.split("\n").join(" | ").slice(0, 140), "kline_series OI (new tool)");
   await expectOk("analyze_setup", { sym: "BTC" }, (t) => {
     const secs = (t.match(/--- [A-Z ]+ ---/g) ?? []).length;

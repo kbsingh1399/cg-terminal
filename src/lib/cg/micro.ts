@@ -365,8 +365,15 @@ export function buildLighterCard(
   const sideOf = (o: LoOrder) => ({ px: num(o.price), rem: num(o.remaining_base_amount), init: num(o.initial_base_amount) });
   const askNotional = book.asks.reduce((a, o) => { const s = sideOf(o); return a + (Number.isFinite(s.px) && Number.isFinite(s.rem) ? s.px * s.rem : 0); }, 0);
   const bidNotional = book.bids.reduce((a, o) => { const s = sideOf(o); return a + (Number.isFinite(s.px) && Number.isFinite(s.rem) ? s.px * s.rem : 0); }, 0);
-  const bestAsk = book.asks.length ? Math.min(...book.asks.map((o) => num(o.price)).filter(Number.isFinite)) : null;
-  const bestBid = book.bids.length ? Math.max(...book.bids.map((o) => num(o.price)).filter(Number.isFinite)) : null;
+  // ±Infinity guard (P2): Math.min()/Math.max() over an EMPTY spread returns
+  // ±Infinity — a non-empty side whose prices are ALL non-finite used to leak
+  // Infinity/-Infinity into bestBid/bestAsk → mid, spreadPct (NaN) and the
+  // HL-mark drift guard. Filter FIRST; null when empty-after-filter, on BOTH
+  // sides — every derived value below is then finite-or-null by construction.
+  const askPx = book.asks.map((o) => num(o.price)).filter(Number.isFinite);
+  const bidPx = book.bids.map((o) => num(o.price)).filter(Number.isFinite);
+  const bestAsk = askPx.length ? Math.min(...askPx) : null;
+  const bestBid = bidPx.length ? Math.max(...bidPx) : null;
   const mid = bestBid != null && bestAsk != null ? (bestBid + bestAsk) / 2 : (bestBid ?? bestAsk);
 
   const card: LighterCard = {

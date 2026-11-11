@@ -76,14 +76,51 @@ const fmtUsd = (v) =>
 const fmtM = (v) => (v == null || !Number.isFinite(v) ? "—" : `$${(v / 1e6).toFixed(1)}M`);
 const tsOf = (t) => new Date(t > 1e12 ? t : t * 1000).toISOString().slice(5, 16).replace("T", " ");
 
+// ---- interval vocabularies (keep in lockstep with the routes) ----
+// The routes do NOT share one interval vocabulary — verified per route:
+//   · orderflow-agg / largeorder / kline validate via src/lib/cg/params.ts
+//     parseInterval → m-tokens ONLY: m1 m3 m5 m15 m30 h1 h2 h4 h6 h12 d1 w1
+//   · bookwalls accepts page tokens 1m 5m 15m 1h 4h 1d (+ m-token aliases
+//     via its NORMALIZE map)
+//   · cvd accepts page tokens 1m 5m 15m 30m 1h 4h 1d (+ m-token aliases)
+// Historical bug: every MCP tool defaulted to "15m", so the parseInterval
+// routes 400'd on each default call ("invalid interval"). Each tool now
+// validates against its route's NATIVE vocabulary and accepts the other
+// style as an alias — an agent passing "15m" or "m15" always gets the
+// duration it asked for, never a silent fallback to the default.
+const M_INTERVALS = ["m1", "m3", "m5", "m15", "m30", "h1", "h2", "h4", "h6", "h12", "d1", "w1"];
+const PAGE_TO_M = { "1m": "m1", "3m": "m3", "5m": "m5", "15m": "m15", "30m": "m30", "1h": "h1", "2h": "h2", "4h": "h4", "6h": "h6", "12h": "h12", "1d": "d1", "1w": "w1" };
+const M_TO_PAGE = { m1: "1m", m5: "5m", m15: "15m", m30: "30m", h1: "1h", h4: "4h", d1: "1d" };
+const BOOKWALLS_ITV = ["1m", "5m", "15m", "1h", "4h", "1d"];
+const CVD_ITV = ["1m", "5m", "15m", "30m", "1h", "4h", "1d"];
+function resolveInterval(v, native, alias, fallback) {
+  const s = typeof v === "string" ? v.trim() : "";
+  if (native.includes(s)) return s;
+  const a = alias[s];
+  return a != null && native.includes(a) ? a : fallback;
+}
+
 // ---------------------------------------------------------------------------
 // Tool implementations — each returns MCP content (text + structured)
 // ---------------------------------------------------------------------------
 
 async function toolListAssets() {
   const d = await api("/api/cg/assets");
+  // honest failure (adversarial review finding 2): a non-ok route body must
+  // surface as an MCP error — `d.assets ?? []` on a 500 would report
+  // "0 tradable assets" as SUCCESS, a fabricated answer to the agent.
+  if (!d || d.ok === false || !Array.isArray(d.assets)) {
+    throw new Error(`assets route unhealthy: ${JSON.stringify(d).slice(0, 200)}`);
+  }
+  // count + crypto/metal split derived from the LIVE response — the registry
+  // (src/lib/cg/assets.ts ASSETS) is the source of truth and grows; a
+  // hardcoded count here drifted 12 → 15 once and lied to the agent.
+  const assets = d.assets;
+  const metals = assets.filter((a) => a.kind === "metal").length;
   return {
-    text: d.assets.map((a) => `${a.sym.padEnd(5)} ${a.name}${a.kind === "metal" ? " (metal perp)" : ""}`).join("\n"),
+    text:
+      `${assets.length} tradable assets (${assets.length - metals} crypto perps + ${metals} metal perps) — live from the terminal:\n` +
+      assets.map((a) => `${a.sym.padEnd(5)} ${a.name}${a.kind === "metal" ? " (metal perp)" : ""}`).join("\n"),
     data: d,
   };
 }
@@ -186,9 +223,14 @@ async function toolWhaleOrders(args) {
   const rows = [];
   for (const g of d.groups ?? []) {
     for (const o of g.list ?? []) {
-      if (o.side === 0) bid += o.currentUsd;
+      // Coinglass largeTakerOrder side convention (src/lib/cg/types.ts
+      // LtoOrder.side): 1 = ask (sell wall), 2 = bid (buy wall) — side is
+      // NEVER 0. Verified empirically against live /api/cg/lto BTC data:
+      // every side=1 order sits above the live price, every side=2 below.
+      // The old `side === 0` test classified ALL whale size as asks.
+      if (o.side === 2) bid += o.currentUsd;
       else ask += o.currentUsd;
-      rows.push({ ex: g.instrument?.exName, inst: g.instrument?.instrumentId, side: o.side === 0 ? "bid" : "ask", price: o.price, usd: o.currentUsd, filled: o.volUsd });
+      rows.push({ ex: g.instrument?.exName, inst: g.instrument?.instrumentId, side: o.side === 2 ? "bid" : "ask", price: o.price, usd: o.currentUsd, filled: o.volUsd });
     }
   }
   rows.sort((a, b) => b.usd - a.usd);
@@ -204,9 +246,15 @@ async function toolWhaleOrders(args) {
 
 async function toolBookWalls(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
-  const interval = ["1m", "5m", "15m", "1h", "4h", "1d"].includes(args?.interval) ? args.interval : "15m";
-  const limit = Math.min(Math.max(Number(args?.limit ?? 150) || 150, 10), 500);
-  const band = Math.min(Math.max(Number(args?.band ?? 5) || 5, 0.5), 20);
+  const interval = resolveInterval(args?.interval, BOOKWALLS_ITV, M_TO_PAGE, "15m");
+  // limit allowlist mirrors the route exactly (bookwalls route clamps 30-300,
+  // verified live — the old 10-500 clamp let MCP advertise ranges the route
+  // silently coerced: limit=500 ran as 300, limit=10 as 30) — review finding 5
+  const limit = Math.min(Math.max(Number(args?.limit ?? 150) || 150, 30), 300);
+  // band allowlist mirrors the route exactly ([0.5, 1, 2, 5], else it silently
+  // falls back to 5 server-side) — the old 0.5–20 clamp let MCP advertise
+  // bands the route never honored (band=10 silently ran as 5).
+  const band = [0.5, 1, 2, 5].includes(Number(args?.band)) ? Number(args?.band) : 5;
   const market = args?.market === "spot" ? "spot" : "futures";
   let endQ = "";
   const endN = Number(args?.endTime);
@@ -241,8 +289,10 @@ async function toolBookWalls(args) {
 async function toolCvdState(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
   const mode = ["perp", "spot", "total"].includes(args?.mode) ? args.mode : "total";
-  const itv = ["1m", "5m", "15m", "30m", "1h", "4h", "1d"].includes(args?.itv) ? args.itv : "15m";
-  const limit = Math.min(Math.max(Number(args?.limit ?? 600) || 600, 50), 1500);
+  const itv = resolveInterval(args?.itv, CVD_ITV, M_TO_PAGE, "15m");
+  // cvd route clamps limit 300-1500 (verified live) — the old 50-1500 clamp
+  // advertised a 50-299 range the route silently ran as 300 — review finding 5
+  const limit = Math.min(Math.max(Number(args?.limit ?? 600) || 600, 300), 1500);
   const anchor = ["all", "day", "week"].includes(args?.anchor) ? args.anchor : "all";
   const d = await api(`/api/cg/cvd?sym=${sym}&itv=${itv}&limit=${limit}&mode=${mode}&anchor=${anchor}`);
   if (!d.ok) throw new Error(d.error || "cvd failed");
@@ -278,7 +328,7 @@ async function toolStopmap(args) {
 
 async function toolFootprint(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
-  const interval = ["1m", "5m", "15m", "30m", "1h"].includes(args?.interval) ? args.interval : "15m";
+  const interval = resolveInterval(args?.interval, M_INTERVALS, PAGE_TO_M, "m15");
   const limit = Math.min(Math.max(Number(args?.limit ?? 96) || 96, 10), 500);
   const lastN = Math.min(Math.max(Number(args?.last ?? 12) || 12, 1), 48);
   const d = await api(`/api/cg/orderflow-agg?sym=${sym}&interval=${interval}&limit=${limit}`);
@@ -313,7 +363,7 @@ async function toolFootprint(args) {
 async function toolLargeOrders(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
   const hours = Math.min(Math.max(Number(args?.hours ?? 24) || 24, 1), 720);
-  const interval = ["1m", "5m", "15m", "1h", "4h"].includes(args?.interval) ? args.interval : "15m";
+  const interval = resolveInterval(args?.interval, M_INTERVALS, PAGE_TO_M, "m15");
   let symbol = String(args?.symbol ?? "");
   if (!/^[A-Za-z0-9_-]{3,48}$/.test(symbol)) symbol = `Binance_${sym}USDT`;
   const d = await api(`/api/cg/largeorder?symbol=${encodeURIComponent(symbol)}&interval=${interval}&hours=${hours}`);
@@ -359,7 +409,7 @@ async function toolLargeOrders(args) {
 async function toolKline(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
   const type = args?.type === "oi" ? "oi" : "kline";
-  const interval = String(args?.interval ?? "15m");
+  const interval = resolveInterval(args?.interval, M_INTERVALS, PAGE_TO_M, "m15");
   const limit = Math.min(Math.max(Number(args?.limit ?? 300) || 300, 10), 1000);
   let symbol = String(args?.symbol ?? "");
   if (!/^[A-Za-z0-9_-]{3,48}$/.test(symbol)) symbol = `Binance_${sym}USDT`;
@@ -420,7 +470,7 @@ async function toolAnalyzeSetup(args) {
 const TOOLS = [
   {
     name: "list_assets",
-    description: "List the 12 tradable assets (10 crypto + gold/silver) with engine + scanner status.",
+    description: "List the tradable assets with engine + scanner status. Count and membership come live from the terminal (source of truth: src/lib/cg/assets.ts ASSETS) — no hardcoded count.",
     inputSchema: { type: "object", properties: {} },
     handler: toolListAssets,
   },
@@ -500,9 +550,9 @@ const TOOLS = [
       properties: {
         sym: { type: "string" },
         market: { type: "string", enum: ["futures", "spot"] },
-        interval: { type: "string", enum: ["1m", "5m", "15m", "1h", "4h", "1d"] },
-        limit: { type: "number", description: "Snapshot frames (10-500, default 150)" },
-        band: { type: "number", description: "Depth band % around mid (0.5-20, default 5)" },
+        interval: { type: "string", enum: ["1m", "5m", "15m", "1h", "4h", "1d"], description: "Snapshot interval (m-token aliases m1/m5/m15/h1/h4/d1 also accepted)" },
+        limit: { type: "number", description: "Snapshot frames (30-300, default 150 — route clamp)" },
+        band: { type: "number", enum: [0.5, 1, 2, 5], description: "Depth band % around mid — route allowlist 0.5/1/2/5, default 5" },
         endTime: { type: "number", description: "Unix seconds — historical window (up to 30 days back)" },
       },
       required: ["sym"],
@@ -518,7 +568,7 @@ const TOOLS = [
         sym: { type: "string" },
         mode: { type: "string", enum: ["perp", "spot", "total"] },
         itv: { type: "string", enum: ["1m", "5m", "15m", "30m", "1h", "4h", "1d"] },
-        limit: { type: "number", description: "Bars (50-1500, default 600)" },
+        limit: { type: "number", description: "Bars (300-1500, default 600 — route clamp)" },
         anchor: { type: "string", enum: ["all", "day", "week"] },
       },
       required: ["sym"],
@@ -542,7 +592,7 @@ const TOOLS = [
       type: "object",
       properties: {
         sym: { type: "string" },
-        interval: { type: "string", enum: ["1m", "5m", "15m", "30m", "1h"] },
+        interval: { type: "string", enum: ["m1", "m3", "m5", "m15", "m30", "h1", "h2", "h4", "h6", "h12", "d1", "w1"], description: "Bar interval (route vocabulary; 15m-style page aliases accepted), default m15" },
         limit: { type: "number", description: "Bars to fetch (10-500, default 96)" },
         last: { type: "number", description: "Bars to return in detail (1-48, default 12)" },
       },
@@ -559,7 +609,7 @@ const TOOLS = [
         sym: { type: "string", description: "Asset symbol — derives the default Binance instrument key" },
         symbol: { type: "string", description: "Explicit instrument key, e.g. OKX_BTC-USDT-SWAP (overrides sym)" },
         hours: { type: "number", description: "Lookback hours (1-720, default 24)" },
-        interval: { type: "string", enum: ["1m", "5m", "15m", "1h", "4h"] },
+        interval: { type: "string", enum: ["m1", "m3", "m5", "m15", "m30", "h1", "h2", "h4", "h6", "h12", "d1", "w1"], description: "Bar interval (route vocabulary; 15m-style page aliases accepted), default m15" },
       },
       required: ["sym"],
     },
@@ -574,7 +624,7 @@ const TOOLS = [
         sym: { type: "string", description: "Asset symbol — derives the default Binance instrument key" },
         symbol: { type: "string", description: "Explicit instrument key, e.g. Hyperliquid_BTC-USD (overrides sym)" },
         type: { type: "string", enum: ["kline", "oi"] },
-        interval: { type: "string", description: "m1/m5/m15/m30/h1/h4/d1" },
+        interval: { type: "string", enum: ["m1", "m3", "m5", "m15", "m30", "h1", "h2", "h4", "h6", "h12", "d1", "w1"], description: "Bar interval m1…w1 (15m-style page aliases accepted), default m15" },
         limit: { type: "number", description: "Rows (10-1000, default 300)" },
       },
       required: ["sym"],

@@ -55,7 +55,14 @@ export async function GET(req: NextRequest) {
       if (!item || !item.exchangeName) continue;
       const rate = typeof item.rate === "number" ? item.rate : 0;
       const interval = typeof item.fundingIntervalHours === "number" && item.fundingIntervalHours > 0 ? item.fundingIntervalHours : 8;
-      const rate8h = interval === 1 ? Number((rate * 8).toFixed(6)) : Number(rate.toFixed(6));
+      // Normalize the PER-INTERVAL rate to its 8h-equivalent: a venue that
+      // settles every 4h pays `rate` twice per 8h, so the 8h-equivalent carry
+      // is rate × (8/interval). This is the identity for every interval —
+      // 8h → ×1, 4h → ×2, 1h → ×8 — replacing the old `interval === 1` special
+      // case which left 4h venues (all XAU/XAG/XPT venues, verified live
+      // 2026-11-11: XAU Binance interval=4 rate=0.006243 printed rate8h
+      // unchanged, understating metals funding carry 2×).
+      const rate8h = Number((rate * (8 / interval)).toFixed(6));
 
       venues.push({
         name: item.exchangeName,
@@ -68,7 +75,13 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Key venues priority for aggregate: Binance, OKX, Bybit, Hyperliquid
+    // Key venues priority for aggregate: Binance, OKX, Bybit, Hyperliquid.
+    // HONEST SCOPE: fundingPct8h is a SIMPLE MEAN of rate8h across the pool
+    // below — NOT OI-weighted (per-venue open interest is not part of the
+    // fundingRate/v2/home payload and weighting it here would cost a second
+    // upstream call). Consumers that print this number must label it a mean;
+    // scripts/desk_deepscan.py computes a true OI-weighted figure locally from
+    // its own already-fetched /oi payload.
     const keyNames = new Set(["Binance", "OKX", "Bybit", "Hyperliquid"]);
     const activeKey = venues.filter((v) => keyNames.has(v.name) && v.status === 1);
     const pool = activeKey.length > 0 ? activeKey : venues.filter((v) => v.status === 1);

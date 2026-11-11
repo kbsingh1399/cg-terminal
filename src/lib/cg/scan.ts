@@ -345,10 +345,19 @@ async function scanWhale(sym: string) {
   // cancelled orders far from market (e.g. "ask walls" 15% BELOW price) —
   // those are stale and must not become alerts or skew the imbalance.
   const liveP = (await getLivePrice(sym).catch(() => null))?.price ?? null;
+  // Side convention (types.ts LtoOrder.side, verified empirically live
+  // 2026-11-11 on /api/cg/lto?sym=BTC: all 672 side=1 orders rest ABOVE the
+  // live price, all 613 side=2 orders BELOW it, side is never 0):
+  //   1 = ask (sell wall), 2 = bid (buy wall)
+  // The pre-fix code tested `side === 0` for bids — with real 1|2 data every
+  // order landed in the ask branch, inverting the whole bid/ask math.
+  const isBid = (side: number) => side === 2;
   const plausible = (side: number, price: number): boolean => {
     if (liveP == null || !(price > 0)) return true; // no reference — legacy behavior
     const rel = (price - liveP) / liveP;
-    return side === 0 ? rel <= 0.005 && rel >= -0.1 : rel >= -0.005 && rel <= 0.1;
+    // a RESTING bid sits at or below the market (≤ +0.5% venue drift, ≥ −10%),
+    // a RESTING ask at or above it — anything else is a stale/cancelled order
+    return isBid(side) ? rel <= 0.005 && rel >= -0.1 : rel >= -0.005 && rel <= 0.1;
   };
   let bidUsd = 0;
   let askUsd = 0;
@@ -367,18 +376,18 @@ async function scanWhale(sym: string) {
         if (!plausible(o.side, o.price)) continue; // stale/impossible resting order
         if (firstPrice == null) firstPrice = o.price;
         orders++;
-        if (o.side === 0) bidUsd += o.currentUsd;
+        if (isBid(o.side)) bidUsd += o.currentUsd;
         else askUsd += o.currentUsd;
         // price bins 0.2% wide for walls — anchored to the LIVE price when
         // available (deterministic), else the first observed order price
         const anchor = liveP ?? firstPrice;
         const bin = anchor != null ? Math.round((Math.log(o.price / anchor) / Math.log(1.002))) : Math.round(o.price);
-        const m = o.side === 0 ? bidBins : askBins;
+        const m = isBid(o.side) ? bidBins : askBins;
         m.set(bin, (m.get(bin) ?? 0) + o.currentUsd);
         if (o.currentUsd >= 10_000_000) {
           if (!st.whaleSeen.has(o.id)) {
             st.whaleSeen.add(o.id);
-            if (st.whalePrimed) bigNew.push({ price: o.price, usd: o.currentUsd, side: o.side === 0 ? "bid" : "ask", ex: grp.instrument?.exName ?? "?" });
+            if (st.whalePrimed) bigNew.push({ price: o.price, usd: o.currentUsd, side: isBid(o.side) ? "bid" : "ask", ex: grp.instrument?.exName ?? "?" });
           }
         } else if (!st.whaleSeen.has(o.id)) {
           st.whaleSeen.add(o.id);
@@ -600,16 +609,27 @@ export function startScanner() {
   const list = (assets.length ? ASSETS.filter((a) => assets.includes(a.sym)) : ASSETS).map((a) => a.sym);
   const fastList = list.filter((s) => assetOf(s)?.tier === "fast");
   const slowList = list.filter((s) => assetOf(s)?.tier !== "fast");
-  // round-robin lane over its OWN asset list — no shared index, no skip ticks
+  // round-robin lane over its OWN asset list — no shared index, no skip ticks.
+  // Overlap guard (engine.ts poller pattern): a scan that outlives its
+  // interval (slow upstream, 429 backoffs) must NOT stack a second concurrent
+  // pass on the same lane — the pileup amplifies rate-limit episodes. Skip the
+  // tick instead; the next tick re-covers the asset.
   const t = (lane: string[], ms: number, firstDelay: number, fn: (sym: string) => Promise<void>) => {
     if (!lane.length) return;
     let i = 0;
+    let busy = false;
     const first = setTimeout(() => {
       const id = setInterval(() => {
+        if (busy) return; // previous pass still in flight — skip this tick
         const sym = lane[i % lane.length];
         i++;
         S.ticks++;
-        fn(sym).catch(() => undefined);
+        busy = true;
+        fn(sym)
+          .catch(() => undefined)
+          .finally(() => {
+            busy = false;
+          });
       }, ms);
       id.unref?.();
     }, firstDelay);
@@ -633,14 +653,18 @@ export function startScanner() {
   });
   // liq clusters + cvd: 3 assets per 5-min tick, rotating through the full
   // list — same upstream load as before, but every asset gets covered
-  // (a full pass over 12 assets ≈ 20 min) instead of only BTC/ETH/SOL
+  // (a full pass over 12 assets ≈ 20 min) instead of only BTC/ETH/SOL.
+  // Same overlap guard as the lanes above, per-symbol: a slow liq/cvd pass
+  // for one sym must not stack with the next tick's pass for that sym.
   let laneI = 0;
+  const laneBusy = new Set<string>();
   const laneTimer = setInterval(() => {
     if (!list.length) return;
     for (let k = 0; k < 3; k++) {
       const sym = list[(laneI + k) % list.length];
-      scanLiq(sym).catch(() => undefined);
-      scanCvd(sym).catch(() => undefined);
+      if (laneBusy.has(sym)) continue; // previous pass for this sym still in flight
+      laneBusy.add(sym);
+      Promise.allSettled([scanLiq(sym), scanCvd(sym)]).finally(() => laneBusy.delete(sym));
     }
     laneI = (laneI + 3) % list.length;
   }, 5 * 60_000);

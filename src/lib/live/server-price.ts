@@ -62,7 +62,18 @@ async function refreshViaCoinglass(sym: string, base: LivePrice, why: string): P
     const close = Number(last?.[4]);
     const open = Number(last?.[1]);
     const use = Number.isFinite(close) ? close : Number.isFinite(open) ? open : null;
-    const e: LivePrice = { ...base, source: "coinglass", price: use, bid: null, ask: null };
+    // HOT-LOOP GUARD (P1): a null price MUST carry err. getLivePrice()'s
+    // refresh condition `(price == null && !err)` treats an err-less null
+    // entry as "not even attempted" and bypasses the TTL on EVERY call —
+    // with Binance fapi failing AND cg returning empty rows, every caller
+    // re-hit BOTH upstreams with zero cooldown. Setting err re-arms the TTL
+    // gate; the success path below stays byte-identical to the old one.
+    const e: LivePrice = use != null
+      ? { ...base, source: "coinglass", price: use, bid: null, ask: null }
+      : {
+          ...base, source: "coinglass", price: null, bid: null, ask: null,
+          err: rows.length ? "cg: kline rows unusable (no finite close/open)" : "cg: empty kline rows",
+        };
     cache.set(sym, e);
     return e;
   } catch (err2) {

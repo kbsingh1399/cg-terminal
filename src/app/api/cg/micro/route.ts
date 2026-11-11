@@ -79,22 +79,30 @@ export async function GET(req: NextRequest) {
     const coin = cfg.hl.coin;
     const snapHit = cached(snapCache, "dex", SNAP_TTL);
     let snap = snapHit.hit;
-    if (!snap && !snapHit.err) {
+    // ERROR HONESTY (P2): snapHit/bookHit are read BEFORE the fetch attempt —
+    // reading THEM back in the error return hid a just-thrown upstream message
+    // (it went into the cache but the card fell back to the generic HL_ERR
+    // text). The locals below carry either the cached error or the FRESH one.
+    let snapErr = snapHit.err;
+    if (!snap && !snapErr) {
       try {
         snap = await hlXyzSnapshot();
         store(snapCache, "dex", snap);
       } catch (e) {
-        store(snapCache, "dex", null, e instanceof Error ? e.message : "hl snapshot failed");
+        snapErr = e instanceof Error ? e.message : "hl snapshot failed";
+        store(snapCache, "dex", null, snapErr);
       }
     }
     const bookHit = cached(bookCache, coin, BOOK_TTL);
     let book = bookHit.hit;
-    if (!book && !bookHit.err) {
+    let bookErr = bookHit.err;
+    if (!book && !bookErr) {
       try {
         book = await hlBook(coin);
         store(bookCache, coin, book);
       } catch (e) {
-        store(bookCache, coin, null, e instanceof Error ? e.message : "hl book failed");
+        bookErr = e instanceof Error ? e.message : "hl book failed";
+        store(bookCache, coin, null, bookErr);
       }
     }
     if (snap && book) {
@@ -107,18 +115,20 @@ export async function GET(req: NextRequest) {
       if (!card.ok && card.suppressed) card.error = card.suppressed;
       return card;
     }
-    return { ...HL_ERR, coin, error: snapHit.err ?? bookHit.err ?? HL_ERR.error };
+    return { ...HL_ERR, coin, error: snapErr ?? bookErr ?? HL_ERR.error };
   })();
 
   const loFetch = cfg.lighter
     ? (async () => {
         const idKey = String(cfg.lighter!.id);
         const bHit = cached(loBookCache, idKey, BOOK_TTL);
-        const lbP = bHit.err ? null : (bHit.hit ?? lighterBook(cfg.lighter!.id).then((r) => { store(loBookCache, idKey, r); return r; }).catch((e) => { store(loBookCache, idKey, null, e instanceof Error ? e.message : "lighter book failed"); return null; }));
+        let bErr = bHit.err; // same honesty fix as hlTask: fresh throw overrides the pre-fetch cache read
+        const lbP = bErr ? null : (bHit.hit ?? lighterBook(cfg.lighter!.id).then((r) => { store(loBookCache, idKey, r); return r; }).catch((e) => { bErr = e instanceof Error ? e.message : "lighter book failed"; store(loBookCache, idKey, null, bErr); return null; }));
         const tHit = cached(loTradesCache, idKey, BOOK_TTL);
-        const ltP = tHit.err ? null : (tHit.hit ?? lighterTrades(cfg.lighter!.id).then((r) => { store(loTradesCache, idKey, r); return r; }).catch((e) => { store(loTradesCache, idKey, null, e instanceof Error ? e.message : "lighter trades failed"); return null; }));
+        let tErr = tHit.err;
+        const ltP = tErr ? null : (tHit.hit ?? lighterTrades(cfg.lighter!.id).then((r) => { store(loTradesCache, idKey, r); return r; }).catch((e) => { tErr = e instanceof Error ? e.message : "lighter trades failed"; store(loTradesCache, idKey, null, tErr); return null; }));
         const [lb, lt] = await Promise.all([lbP, ltP]);
-        return { lb, lt, bErr: bHit.err, tErr: tHit.err };
+        return { lb, lt, bErr, tErr };
       })()
     : null;
 

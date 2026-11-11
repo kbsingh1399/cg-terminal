@@ -127,11 +127,47 @@ function resolveBash() {
 }
 
 // ---------------- notifications / wake ----------------
-function spawnDetached(cmd, args = []) {
+
+/**
+ * Quote-aware tokenizer for CONFIGURED command strings (desk/daemon.json
+ * `notify_cmd` / `wake_cmd` — trusted, atg/human-owned config, NOT git-synced
+ * desk content). Splits on whitespace like a POSIX shell for the simple
+ * cases; double-quoted spans survive spaces and lose their quotes (the
+ * quotes are consumed, never re-interpreted). No escapes, no expansion —
+ * that is the point: the result is a plain argv array, and everything
+ * dynamic (alert titles, agent-task text from git-synced desk/ files) is
+ * appended as its own argv element, so untrusted metacharacters can never
+ * reach a shell. There is no shell.
+ */
+function tokenizeCmd(s) {
+  const out = [];
+  let cur = "";
+  let inQ = false;
+  let hasTok = false;
+  for (const ch of String(s ?? "")) {
+    if (ch === '"') {
+      inQ = !inQ;
+      hasTok = true; // "" is an explicit empty argument
+    } else if (!inQ && /\s/.test(ch)) {
+      if (hasTok) {
+        out.push(cur);
+        cur = "";
+        hasTok = false;
+      }
+    } else {
+      cur += ch;
+      hasTok = true;
+    }
+  }
+  if (hasTok) out.push(cur);
+  return out;
+}
+
+/** Detached best-effort runner — argv arrays ONLY, shell:false, always. */
+function spawnDetached(cmd, args) {
+  if (typeof cmd !== "string" || !cmd || !Array.isArray(args)) return;
   try {
-    const c = args.length
-      ? spawn(cmd, args, { detached: true, stdio: "ignore" })
-      : spawn(cmd, { shell: true, detached: true, stdio: "ignore" });
+    const c = spawn(cmd, args, { shell: false, detached: true, stdio: "ignore" });
     c.on("error", () => {}); // async spawn errors must not crash the daemon
     c.unref();
   } catch { /* best effort */ }
@@ -150,17 +186,27 @@ function sendTelegram(text) {
 function notify(title, text) {
   sendTelegram(`[${title}] ${text}`);
   if (cfg.notify_cmd === "") return;
+  // title/text derive from git-synced desk/ files (alert actions, inbox
+  // instructions) — untrusted. Tokenize the CONFIGURED command and append
+  // title/text as separate argv elements; never build a shell line from
+  // them (the old `"${cfg.notify_cmd} \"${title}\" \"${text}\""` +
+  // shell:true let a crafted title run arbitrary commands on this machine).
   if (cfg.notify_cmd && cfg.notify_cmd !== "auto") {
-    spawnDetached(`${cfg.notify_cmd} "${title}" "${text}"`);
+    const argv = tokenizeCmd(cfg.notify_cmd);
+    if (argv.length) spawnDetached(argv[0], [...argv.slice(1), title, text]);
   } else if (process.platform === "win32") {
-    spawnDetached(`python scripts/bell_alert.py "${title}" "${text}"`);
+    spawnDetached("python", ["scripts/bell_alert.py", title, text]);
   } else {
     spawnDetached("notify-send", [title, text]);
   }
 }
 function fireWake(text) {
   if (!cfg.wake_cmd) return;
-  spawnDetached(cfg.wake_cmd.replace("{msg}", () => text));
+  // {msg} substitution happens at the argv-TOKEN level (a token that is
+  // exactly {msg} is replaced by the message) — the old string-level
+  // `.replace()` into a shell line turned message text into shell code.
+  const argv = tokenizeCmd(cfg.wake_cmd).map((tok) => (tok === "{msg}" ? text : tok));
+  if (argv.length) spawnDetached(argv[0], argv.slice(1));
 }
 
 // ---------------- WAKE.md beacon (daemon appends, agent clears) ----------------
@@ -381,11 +427,19 @@ async function checkAlerts() {
       }
 
       case "expiry": {
-        const nowUtc = new Date();
-        const expiryPassed = nowUtc.getTime() >= 1794336822399 || (nowUtc.getUTCHours() === 18 && nowUtc.getUTCMinutes() >= 53 && nowUtc.getUTCSeconds() >= 42) || nowUtc.getUTCHours() > 18;
-        const stillPending = orders.some((o) => o.ticket === ev.ticket);
-        if (expiryPassed && stillPending) {
-          triggered = true;
+        // Expiry comes from LIVE order data: desk/state.json orders[] carry
+        // expiresTs, and the alert's ticket binds it to the order. The old
+        // check hardcoded epoch 1794336822399 (A6's expiry, 2026-11-10
+        // 18:53:42 UTC) plus a daily 18:53:42 UTC window — a frozen constant
+        // that kept "expiring" every evening forever. No matching order with
+        // an expiry → skip entirely; never fire on a stale constant.
+        const stOrder = (deskState().orders ?? []).find((o) => o.ticket === ev.ticket && Number(o.expiresTs) > 0);
+        if (stOrder) {
+          const expiryPassed = Date.now() >= Number(stOrder.expiresTs);
+          const stillPending = orders.some((o) => o.ticket === ev.ticket);
+          if (expiryPassed && stillPending) {
+            triggered = true;
+          }
         }
         break;
       }

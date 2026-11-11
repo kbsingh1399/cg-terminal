@@ -65,6 +65,29 @@ def clamp(x, lo, hi):
     return max(lo, min(hi, x))
 
 
+def sig_fresh(lv, hours=6):
+    """Recency of a CgSignal: /api/cg/signals rows carry `ts` in unix SECONDS
+    (cg-signals.ts:295 — verified live: newest BTC time-bar ts ≈ now−2.1h).
+    The old readers used a nonexistent `barTs` field assumed to be ms, so
+    now_ms − 0 was always huge and every signal read as stale — the desk
+    debate never saw a recent footprint signal. Defensive ms-sniff (same as
+    the microEvents block) keeps units honest if upstream ever drifts."""
+    ts = lv.get("ts") or 0
+    ts = ts / 1000 if ts > 1e12 else ts
+    return (now_ms / 1000) - ts < hours * 3600
+
+
+def sig_name(sig):
+    """cgSigName port (cg-signals.ts:597) — CgSignal has type field `t`, not
+    `name`; the old readers printed `None` for every signal."""
+    t, side = sig.get("t", "?"), sig.get("side", "?")
+    if t == "sdiv":
+        return "Bull div" if side == "buy" else "Bear div"
+    if t == "trap":
+        return "Trapped shorts" if side == "buy" else "Trapped longs"
+    return {"div": "Divergence", "abs": "Absorption"}.get(t, "Exhaustion")
+
+
 def cluster_usd(lv):
     """usd field is in base-coin units — honest $ approximation."""
     try:
@@ -116,7 +139,8 @@ for sym in SYMS:
         rec["signals"] = s.get("counts", {})
         rec["sigSets"] = [
             {"bt": st.get("bt"), "label": st.get("label"),
-             "latest": max(st.get("sigs", []), key=lambda x: x.get("barTs", 0))
+             # newest by `ts` (unix seconds — the real CgSignal timestamp field)
+             "latest": max(st.get("sigs", []), key=lambda x: x.get("ts", 0))
              if st.get("sigs") else None}
             for st in s.get("sets", [])
         ]
@@ -298,8 +322,8 @@ def build_debate(sym, side, rec, deep, regime=None):
     names = []
     for st in (rec.get("sigSets") or []):
         lv = st.get("latest")
-        if lv and now_ms - lv.get("barTs", 0) < 6 * 3600_000:
-            names.append(f"{lv.get('name')}/{lv.get('side')}[{st['bt']}]")
+        if lv and sig_fresh(lv):  # CgSignal.ts is unix seconds — see sig_fresh
+            names.append(f"{sig_name(lv)}/{lv.get('side')}[{st['bt']}]")
     ev = f"bull {c.get('bullish', 0)} / bear {c.get('bearish', 0)}; recent: {', '.join(names[:3]) or 'none <6h'}"
     d.append({"source": "footprint", "verdict": "FOR" if sig_sign > 0 else ("AGAINST" if sig_sign < 0 else "NEUTRAL"), "evidence": ev})
     # 2b. micro-flow events (v3.1): absorption / exhaustion / traps / divergences, last 6h
@@ -534,8 +558,8 @@ def build_order(sym, side, score, parts, rec, deep, regime="TRANSITION"):
     sig_names = []
     for st in (rec.get("sigSets") or []):
         lv = st.get("latest")
-        if lv and now_ms - lv.get("barTs", 0) < 6 * 3600_000:
-            sig_names.append(f"{lv.get('name', '?')}/{lv.get('side', '?')} ({st['bt']})")
+        if lv and sig_fresh(lv):  # CgSignal.ts is unix seconds — see sig_fresh
+            sig_names.append(f"{sig_name(lv)}/{lv.get('side', '?')} ({st['bt']})")
     rationale = (
         f"confluence {score:+.1f} [notif {parts.get('notif', 0):+.1f} · signals {parts.get('signals', 0):+.1f} · "
         f"trend {parts.get('trend', 0):+.0f} · vwap {parts.get('vwap', 0):+.0f} · rsi {parts.get('rsi', 0):+.1f} · cvd {parts.get('cvd', 0):+.1f}]"

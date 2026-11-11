@@ -42,6 +42,29 @@ DRY = "--dry-run" in sys.argv
 now_ms = int(time.time() * 1000)
 now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
+# --help must exit BEFORE any network call or desk-file access below (the
+# state.json guard and the /classic registry fetch at import time) — a usage
+# printer that first hits the network is not a usage printer.
+USAGE = f"""desk_deepscan.py — 360° per-asset deep analysis (on demand)
+
+Usage:
+  python3 scripts/desk_deepscan.py BTC            # one perp or classic symbol
+  python3 scripts/desk_deepscan.py BTC ETH XAU    # several (case-insensitive)
+  python3 scripts/desk_deepscan.py --top 3        # top |score| perp symbols from state.json
+  python3 scripts/desk_deepscan.py --top          # same, N defaults to 3
+  python3 scripts/desk_deepscan.py all            # all perp symbols + full classic universe
+  python3 scripts/desk_deepscan.py classic        # the classic (Yahoo) universe only
+  python3 scripts/desk_deepscan.py --dry-run BTC  # no git commit/push
+  python3 scripts/desk_deepscan.py --help         # this text
+
+Perp registry ({len(SYMS)}): {', '.join(SYMS)}
+Classic registry: `python3 scripts/desk_deepscan.py classic` (78 Yahoo-served instruments)
+"""
+if any(a in ("--help", "-h", "help") for a in sys.argv[1:]):
+    print(USAGE)
+    sys.exit(0)
+
+
 # MT5 symbol resolution — config.symbol_map in desk/state.json is the source of
 # truth (user directive 2026-11-10: DOGE→DOGUSD, LINK→LNKUSD). Absent symbols
 # fall back to the legacy <SYM>USD form.
@@ -93,6 +116,36 @@ def fnum(x, nd=1):
         return f"{x:,.{nd}f}"
     except Exception:
         return "?"
+
+
+def funding_read(d):
+    """(rate8h_pct, weighted, n_pool) — the desk's funding reading for one asset.
+
+    /api/cg/funding's aggregate.fundingPct8h is a SIMPLE MEAN over the key
+    perp venues (see the route's honest-scope comment) — but the desk docs
+    label it "OI-weighted". Weight it HERE, truthfully, using the /oi payload
+    deepscan already fetched (per-venue oiUsd — zero extra API weight), over
+    the SAME venue pool the route aggregates. Honest fallback: when /oi is
+    missing or covers none of the funding venues, return the route's mean
+    with weighted=False so callers can relabel to "mean across active venues"
+    instead of printing a false OI-weighted claim.
+    """
+    fu = d.get("funding") or {}
+    oi_map = {v.get("name"): (v.get("oiUsd") or 0)
+              for v in ((d.get("oi") or {}).get("venues") or [])}
+    pool = [v for v in (fu.get("venues") or [])
+            if v.get("status") == 1 and v.get("rate8h") is not None]
+    key = [v for v in pool if v.get("name") in ("Binance", "OKX", "Bybit", "Hyperliquid")]
+    pool = key or pool  # same pool rule as the funding route's aggregate
+    num = den = 0.0
+    for v in pool:
+        w = oi_map.get(v.get("name"))
+        if w:  # venue without OI in the /oi registry is excluded from the weighted mean
+            num += w * v["rate8h"]
+            den += w
+    if den > 0:
+        return num / den, True, len(pool)
+    return ((fu.get("aggregate") or {}).get("fundingPct8h")), False, len(pool)
 
 
 # Classic (Tier-3) registry — the 78 FundedNext instruments with NO perp data
@@ -423,13 +476,17 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
                     dv_ = fpx.get("div")
                     if dv_ and ("BULLISH" in dv_) == (bias == "SHORT"):
                         risks.append(f"{dv_} = counter-trend pressure live → limit-only, cancel if it persists")
-                    fr_ = ((d["funding"] or {}).get("aggregate") or {}).get("fundingPct8h")
+                    fr_, _w_fr, _ = funding_read(d)  # OI-weighted when /oi venue OI is available
                     if fr_ is not None and fr_ < -0.003 and bias == "SHORT":
                         risks.append("shorts pay funding (crowded-short squeeze fuel)")
+                    # FIX: totals keys are PLURAL (shorts/longs) — liq-model.ts
+                    # LiqStats.totals and the UI (liquidation-levels-tool.tsx)
+                    # both use plurals; the old singular reads made this
+                    # squeeze-fuel risk line silently never fire.
                     tot_ = ((d["liq"] or {}).get("stats") or {}).get("totals") or {}
-                    if bias == "SHORT" and tot_.get("short") and tot_.get("long") and \
-                            tot_["short"] > 1.2 * tot_["long"]:
-                        risks.append(f"short-squeeze fuel {fnum(tot_['short'] / max(tot_['long'], 1e-9), 1)}× longs")
+                    if bias == "SHORT" and tot_.get("shorts") and tot_.get("longs") and \
+                            tot_["shorts"] > 1.2 * tot_["longs"]:
+                        risks.append(f"short-squeeze fuel {fnum(tot_['shorts'] / max(tot_['longs'], 1e-9), 1)}× longs")
                     risks.append("all desk candidates share one risk-off tape — cap NEW entries at 1-2")
                     ap("  - *Invalidation*: " + "; ".join(risks) + ".")
                     # ---- fill trade card (digest + broadcast layer)
@@ -690,8 +747,11 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
         v12, j12 = "○", "no typed micro events — neutral"
     ap(f"| signals·micro | bull {b12} / bear {s12} (24h events listed §3) | {v12} | {j12} |")
 
-    # 13 · funding
-    fr13 = ((d["funding"] or {}).get("aggregate") or {}).get("fundingPct8h")
+    # 13 · funding — OI-weighted via funding_read() when the /oi payload
+    # covers the funding pool; honestly relabeled "mean" otherwise (the
+    # route's aggregate is an unweighted mean over the same key venues)
+    fr13, w13, n13 = funding_read(d)
+    lbl13 = "OI-weighted" if w13 else "mean across active venues"
     if fr13 is not None and S:
         if fr13 > 0.003:
             v13 = vv(S == "SHORT")
@@ -703,7 +763,7 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
             v13, j13 = "○", f"{fnum(fr13, 4)}%/8h neutral — no squeeze fuel either way"
     else:
         v13, j13 = "○", f"{fnum(fr13, 4)}%/8h — positioning context only"
-    ap(f"| funding | {fnum(fr13, 4)}%/8h OI-weighted | {v13} | {j13} |")
+    ap(f"| funding | {fnum(fr13, 4)}%/8h {lbl13} ({n13} venues) | {v13} | {j13} |")
 
     # 14 · open interest × price
     oagg = (d["oi"] or {}).get("aggregate") or {}
@@ -749,12 +809,12 @@ def build_trades(sym, d, fpx, price, vwap, sd1, day, kl, k, cnt, bias, ns=0, nl=
                           "(no construction to attach)")
     ap(f"| liq·magnets | above {len(ab15)} / below {len(be15)} tracked (§5) | {v15} | {j15} |")
 
-    # 16 · squeeze fuel
+    # 16 · squeeze fuel (totals keys are PLURAL: shorts/longs — see liq-model.ts)
     tot16 = ((d["liq"] or {}).get("stats") or {}).get("totals") or {}
-    if tot16.get("short") and tot16.get("long"):
+    if tot16.get("shorts") and tot16.get("longs"):
         div_ = 1 if sym in ("XAU", "XAG") else 1000
-        ratio16 = tot16["short"] / max(tot16["long"], 1e-9)
-        read16 = (f"shorts {fnum(tot16['short'] / div_, 1)}K vs longs {fnum(tot16['long'] / div_, 1)}K "
+        ratio16 = tot16["shorts"] / max(tot16["longs"], 1e-9)
+        read16 = (f"shorts {fnum(tot16['shorts'] / div_, 1)}K vs longs {fnum(tot16['longs'] / div_, 1)}K "
                   f"({fnum(ratio16, 1)}×)")
         if S and ratio16 > 1.2:
             v16 = vv(S == "LONG")
@@ -1042,17 +1102,17 @@ def deep_report(sym):
     ap("## 4 · Positioning, funding & open interest")
     fu = d["funding"] or {}
     oi = d["oi"] or {}
-    agg = fu.get("aggregate") or {}
-    fr = agg.get("fundingPct8h")
+    fr, wfr, nfr = funding_read(d)
+    lblfr = "OI-weighted" if wfr else "mean across active venues"
     venues = fu.get("venues") or []
     if venues:
         parts = " · ".join(f"{v.get('name')} {fnum((v.get('rate8h') or 0), 4)}%" for v in venues[:4])
-        ap(f"- funding (8h): {parts}")
+        ap(f"- funding (8h-equiv): {parts}")
         if fr is not None:
             tag = ("longs paying shorts — crowded longs (squeeze fuel DOWN)" if fr > 0.003 else
                    "shorts paying longs — crowded shorts (squeeze fuel UP)" if fr < -0.003 else
                    "neutral")
-            ap(f"- OI-weighted funding: **{fnum(fr, 4)}%/8h** → {tag}")
+            ap(f"- {lblfr} funding ({nfr} venues): **{fnum(fr, 4)}%/8h** → {tag}")
     else:
         ap("- funding: no venue data")
     oagg = oi.get("aggregate") or {}
@@ -1090,11 +1150,11 @@ def deep_report(sym):
             ap(f"  - {fmt(sym, lvv['price'])} (−{fnum(abs(lvv.get('distPct', 0)), 2)}%) str {fnum(lvv.get('strength'), 0)} "
                f"{lvv.get('lev', '')} · ~${fnum(lvv.get('usd', 0) * lvv['price'] / 1e6, 0)}M est")
     tot = liq.get("totals") or {}
-    if tot.get("short") and tot.get("long"):
-        ap(f"- squeeze fuel: shorts {fnum(tot['short'] / (1 if sym in ('XAU', 'XAG') else 1000), 1)}K vs "
-           f"longs {fnum(tot['long'] / (1 if sym in ('XAU', 'XAG') else 1000), 1)}K "
-           f"({fnum(tot['short'] / max(tot['long'], 1e-9), 1)}× — "
-           f"{'upside squeeze fuel dominates' if tot['short'] > tot['long'] else 'downside fuel dominates'})")
+    if tot.get("shorts") and tot.get("longs"):
+        ap(f"- squeeze fuel: shorts {fnum(tot['shorts'] / (1 if sym in ('XAU', 'XAG') else 1000), 1)}K vs "
+           f"longs {fnum(tot['longs'] / (1 if sym in ('XAU', 'XAG') else 1000), 1)}K "
+           f"({fnum(tot['shorts'] / max(tot['longs'], 1e-9), 1)}× — "
+           f"{'upside squeeze fuel dominates' if tot['shorts'] > tot['longs'] else 'downside fuel dominates'})")
     net_bid = net_ask = 0.0
     for g in (d["lto"] or {}).get("groups", []):
         for o in g.get("list", []):
@@ -1713,36 +1773,71 @@ def broadcast_wakeup(cards, scope, ts, classic_cards=None):
 
 # ------------------------------------------------------------------ main
 def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    # CLI parse. The old parser filtered `--*` out of argv and then tested
+    # `args[0] == "--top"` — impossible after the filter, so the documented
+    # `--top 3` yielded args=["3"] → "unknown symbol(s) ['3']". Parse the flag
+    # BEFORE filtering: `--top N` (or `--top=N`, or bare `--top` = 3), bare
+    # words as symbols/modes, other `--*` flags (e.g. --dry-run) pass through
+    # to their module-level handlers.
+    argv = sys.argv[1:]
+    top_n = None
+    words = []
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        if a == "--top":
+            nxt = argv[i + 1] if i + 1 < len(argv) else None
+            if nxt is not None and not nxt.startswith("--"):
+                # < 1 rejected here too (adversarial review finding 4): --top 0
+                # passed isdigit() and ran a zero-asset scan that still wrote
+                # and pushed an empty digest — same rule as --top= below.
+                if not nxt.isdigit() or int(nxt) < 1:
+                    sys.exit(f"ERROR: --top expects a positive integer, got {nxt!r} (see --help)")
+                top_n = int(nxt)
+                i += 2
+                continue
+            top_n = 3  # bare --top: documented default
+            i += 1
+            continue
+        if a.startswith("--top="):
+            v = a.split("=", 1)[1]
+            if not v.isdigit() or int(v) < 1:
+                sys.exit(f"ERROR: --top expects a positive integer, got {a!r} (see --help)")
+            top_n = int(v)
+            i += 1
+            continue
+        if a.startswith("--"):
+            i += 1  # global flag (--dry-run) — handled at module level
+            continue
+        words.append(a)
+        i += 1
+    if top_n is not None and words:
+        sys.exit("ERROR: --top cannot be combined with explicit symbols — "
+                 "pass either `--top N` or a symbol list (see --help)")
     syms, classic_syms = [], []
-    if args and args[0] == "--top":
-        n = int(args[1]) if len(args) > 1 else 3
+    if top_n is not None:
         st = json.loads((DESK / "state.json").read_text())
         scored = {s: a.get("score") or 0 for s, a in (st.get("analysis", {}).get("assets") or {}).items()}
-        syms = sorted(scored, key=lambda s: -abs(scored[s]))[:n]
-    elif args and args[0].lower() == "all":
+        syms = sorted(scored, key=lambda s: -abs(scored[s]))[:top_n]
+    elif words and words[0].lower() == "all":
         syms = SYMS
         classic_syms = list(CLASSIC)  # full-universe 360: perp 16 + classic 78
-    elif args and args[0].lower() == "classic":
+    elif words and words[0].lower() == "classic":
         classic_syms = list(CLASSIC)
     else:
-        for a in args:
+        for a in words:
             u = a.upper()
             if u in SYMS:
                 syms.append(u)
             elif u in CLASSIC:
                 classic_syms.append(u)
-        bad = [a.upper() for a in args if a.upper() not in SYMS and a.upper() not in CLASSIC]
+        bad = [a.upper() for a in words if a.upper() not in SYMS and a.upper() not in CLASSIC]
         if bad:
             sys.exit(f"ERROR: unknown symbol(s) {bad} — perp: {', '.join(SYMS)} · "
                      f"classic ({len(CLASSIC)}): use `classic` for the full list via /api/cg/classic?list=1 — "
-                     f"refusing the legacy silent BTC fallback (multi-agent review 2026-11-10).")
+                     f"refusing the legacy silent BTC fallback (multi-agent review 2026-11-10).\n{USAGE}")
         if not syms and not classic_syms:
             syms = ["BTC"]
-    if "--top" in sys.argv and not args:
-        st = json.loads((DESK / "state.json").read_text())
-        scored = {s: a.get("score") or 0 for s, a in (st.get("analysis", {}).get("assets") or {}).items()}
-        syms = sorted(scored, key=lambda s: -abs(scored[s]))[:3]
 
     outdir = DESK / "deepscan"
     outdir.mkdir(exist_ok=True)
