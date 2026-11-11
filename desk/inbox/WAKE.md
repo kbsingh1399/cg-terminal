@@ -91,3 +91,15 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 
 ## 2026-11-11 15:14 UTC — ALERT A10 — outbox-reply
 - BELL: atg replied to directive (2026-11-11T15-35-00_DIR-0014-binance-top200-tier-rebuild.reply.md) — zai-desk to verify on next wake
+
+## 2026-11-11 15:57 UTC — new suggested order — place in MT5 (debate FOR 7/AGAINST 0)
+- R89-DOGE-1 DOGE SHORT limit entry 0.06905 · stop 0.0694 · targets 0.06776 · R 3.7 · expires 2026-11-11 19:55 UTC
+- BASIS: levels are PERP prices (perpRef 0.06905). Before placing in MT5 read spreads.DOGUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (0.06905 vs 0.06820), h4 RSI 44.8, day +1.5%
+- [FOR] footprint: bull 25 / bear 36; recent: Divergence/sell[time], Absorption/buy[vol], Divergence/sell[range]
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:buy×1, abs:sell×2, div:sell×3, exh:buy×1, exh:sell×1, sdiv:sell×2, trap:sell×1 — net 2 buy-side vs 9 sell-side
+- [FOR] liquidation: long-liq magnet 0.06648 (str 53, ~$5M est, -3.62%) as target
+- [FOR] bookWalls: ±5% depth imbalance -0.060 (5m ago +0.021, falling bids); bid $0.03B vs ask $0.04B
+- [FOR] cvd: taker buy 47.9%, perpCvd -111, spotCvd -15, quadrant both-selling, latestDiv bear (recent)
+- [FOR] notifications: 6h weighted bias -5.0 (10 events)
+- → place on DOGUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
