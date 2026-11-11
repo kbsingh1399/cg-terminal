@@ -32,10 +32,11 @@ DESK = ROOT / "desk"
 BASE = "http://localhost:3000/api/cg"
 DECS = {"BTC": 1, "ETH": 2, "SOL": 2, "BNB": 2, "XRP": 4, "ADA": 4, "AVAX": 3,
         "DOGE": 5, "LINK": 3, "LTC": 2, "XLM": 4, "XMR": 3, "XAU": 2, "XAG": 3,
-        # 2026-11-11 expansion (user directive): XPT (Binance+OKX perps) and
-        # USO (OKX-lead perp) join the perp universe. UKO has zero perp data
-        # on every Coinglass venue → classic registry (below).
-        "XPT": 2, "USO": 2}
+        # 2026-11-11 expansion (user directive): XPT joined the perp universe.
+        # USO REMOVED same day (DIR-0009): the OKX "USO" perp is the USO ETF
+        # (+63% mismatch vs broker USOUSD WTI) — WTI is scanned via the
+        # classic registry (Yahoo CL=F) instead. UKO: classic, zero perp data.
+        "XPT": 2}
 SYMS = list(DECS)
 DRY = "--dry-run" in sys.argv
 now_ms = int(time.time() * 1000)

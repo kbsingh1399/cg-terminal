@@ -4,12 +4,17 @@
  * All venue instruments are REAL Coinglass instrument ids (verified live):
  *   - 12 crypto perps: BTC ETH SOL BNB XRP ADA AVAX DOGE LINK LTC XLM XMR
  *     (Binance + OKX + Bybit + Hyperliquid aggregated futures)
- *   - 4 metals/commodities: XAU (gold) / XAG (silver) / XPT (platinum) /
- *     USO (WTI crude) — USDT perps on the crypto venues; Hyperliquid does
- *     not carry them, so footprints aggregate over 1-3 venues.
+ *   - 3 metals: XAU (gold) / XAG (silver) / XPT (platinum) — USDT perps on
+ *     the crypto venues; Hyperliquid does not carry them, so footprints
+ *     aggregate over 1-3 venues.
  *
- * Tier-3 instruments (14 indices · 42 FX · 20 equities · UKO) have NO perp
- * data anywhere — they live in src/lib/cg/classic.ts (Yahoo-backed quotes)
+ * USO REMOVED 2026-11-11 (DIR-0009 critical finding): OKX USO-USDT-SWAP
+ * tracks the United States Oil Fund ETF (~$141), a +63% underlying mismatch
+ * vs broker USOUSD WTI (~$86) — wrong-instrument data is worse than no data;
+ * WTI now lives in src/lib/cg/classic.ts on Yahoo CL=F.
+ *
+ * Tier-3 instruments (14 indices · 48 FX · 19 equities · UKO + USO) have NO
+ * perp data anywhere — they live in src/lib/cg/classic.ts (Yahoo-backed quotes)
  * and never enter this perp registry.
  *
  * Every downstream route derives its instrument keys from this table so
@@ -36,7 +41,7 @@ function mk(
   priceDecs: number,
   tier: "fast" | "slow" = "slow",
   hl = true,
-  /** optional lead-instrument override (USO: no Binance perp — OKX lead) */
+  /** optional lead-instrument override (future non-Binance leads; unused) */
   lead?: string
 ): AssetCfg {
   return {
@@ -67,13 +72,10 @@ export const ASSETS: AssetCfg[] = [
   mk("XMR", "Monero", "crypto", 3),
   mk("XAU", "Gold", "metal", 2, "slow", false),
   mk("XAG", "Silver", "metal", 3, "slow", false),
-  // 2026-11-11 expansion (user directive: metals + classic universe):
-  // XPT = platinum perp (Binance+OKX only — metals venue branch, no Hyperliquid).
-  // USO = WTI oil perp, OKX-LEAD (no Binance kline — the registry's only
-  // non-Binance lead; see leadInstr() for the centralized derivation).
-  // UKO (Brent) has zero perp data on every Coinglass venue → classic.ts.
+  // 2026-11-11 expansion: XPT = platinum perp (Binance+OKX only — metals venue
+  // branch, no Hyperliquid). USO REMOVED (DIR-0009: OKX USO perp = USO ETF,
+  // +63% mismatch vs broker USOUSD WTI) — WTI + UKO Brent live in classic.ts.
   mk("XPT", "Platinum", "metal", 2, "slow", false),
-  mk("USO", "WTI Crude Oil", "metal", 2, "slow", false, "OKX_USO-USDT-SWAP"),
 ];
 
 export const ASSET_SYMS = ASSETS.map((a) => a.sym);
@@ -90,15 +92,15 @@ export function isAsset(sym: string): boolean {
 
 /** Centralized lead-instrument derivation — the ONLY place that builds the
  *  kline/lead key (multi-agent review A2: 5 call sites hardcoded
- *  `Binance_${sym}USDT`, which would silently keep USO on a dead Binance
- *  lead). Unknown symbols keep the legacy Binance form. */
+ *  `Binance_${sym}USDT`). Unknown symbols keep the legacy Binance form. */
 export function leadInstr(sym: string): string {
   return assetOf(sym)?.leadKey(sym) ?? `Binance_${sym.toUpperCase()}USDT`;
 }
 
 /** Perp aggregation venues for a symbol — mirrors the fp route's VENUES.
- * The registry's LEAD instrument goes first (fp-load merges onto keys[0]):
- * USO's lead is OKX (no Binance kline), every other asset leads on Binance. */
+ * The registry's LEAD instrument goes first (fp-load merges onto keys[0]);
+ * the lead-override mechanism is currently unused (every listed asset leads
+ * on Binance since the USO removal) but stays for future non-Binance leads. */
 export function fpVenues(sym: string): { id: string; key: string; usd: boolean }[] {
   const s = sym.toUpperCase();
   const a = assetOf(s);
@@ -140,7 +142,7 @@ export function aggVenues(sym: string, market: "futures" | "spot"): string[] {
   const a = assetOf(s);
   if (market === "futures") {
     if (s === "BTC" || s === "ETH") return ["Binance", "OKX", "Gate", "Bitget", "Hyperliquid"];
-    if (s === "USO") return []; // OKX-only oil perp — no heatmap aggregate pair exists (honest 400, not a stream error)
+    if (s === "USO") return []; // USO left the perp registry 2026-11-11 (ETF mismatch) — kept as a guard: honest 400, never a stream error
     if (a?.kind === "metal") return ["Binance"];
     return ["Binance", "Hyperliquid"];
   }

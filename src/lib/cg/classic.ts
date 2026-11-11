@@ -1,6 +1,12 @@
 /**
- * Classic (Tier-3) instrument registry — the 77 FundedNext-listed instruments
- * with NO crypto-perp data anywhere: 14 indices · 42 FX · 20 equities · UKO.
+ * Classic (Tier-3) instrument registry — the 83 FundedNext-listed instruments
+ * with NO crypto-perp data anywhere: 14 indices · 48 FX · 19 equities · UKO + USO.
+ *
+ * 2026-11-11 (DIR-0009 symbols-dump reconciliation): +5 MT5 FX pairs missing
+ * from the first pass (EURHUF MXNJPY NOKJPY USDHKD ZARJPY) → FX 43→48, full
+ * broker coverage. USO moved here from the perp registry: OKX USO-USDT-SWAP
+ * tracks the United States Oil Fund ETF (~$141), NOT WTI (~$86) — a +63%
+ * underlying mismatch vs broker USOUSD; WTI is served by Yahoo CL=F instead.
  *
  * Market-data path: Yahoo Finance chart API (v8) — live-verified 2026-11-11
  * (scripts/probe_t3_universe.py): every ticker below returned HTTP 200 with
@@ -52,9 +58,10 @@ export const CLASSIC_ASSETS: ClassicCfg[] = [
   { sym: "JP225", name: "Nikkei 225", klass: "index", broker: "JP225", yahoo: "^N225", volume: false },
   { sym: "HK50", name: "Hang Seng", klass: "index", broker: "HK50", yahoo: "^HSI", volume: false },
   { sym: "AUS200", name: "ASX 200", klass: "index", broker: "AUS200", yahoo: "^AXJO", volume: false },
-  // ---- commodity with no perp data (1) ----
+  // ---- commodities with no perp data (2 · WTI + Brent) ----
   { sym: "UKO", name: "Brent Crude", klass: "commodity", broker: "UKOUSD", yahoo: "BZ=F", volume: true, note: "zero Coinglass perp data — Yahoo Brent futures are the reference market" },
-  // ---- forex (42 · FundedNext help-centre list, all live-verified on Yahoo) ----
+  { sym: "USO", name: "WTI Crude Oil", klass: "commodity", broker: "USOUSD", yahoo: "CL=F", volume: true, note: "MOVED from perp registry 2026-11-11 (DIR-0009): OKX USO-USDT-SWAP is the USO ETF (+63% mismatch) — WTI rides Yahoo CL=F" },
+  // ---- forex (48 · full MT5 broker coverage after DIR-0009 reconciliation) ----
   fx("EURUSD"), fx("GBPUSD"), fx("USDJPY"), fx("USDCHF"), fx("AUDUSD"), fx("USDCAD"),
   fx("NZDUSD"), fx("EURGBP"), fx("EURJPY"), fx("EURCHF"), fx("EURAUD"), fx("EURCAD"),
   fx("EURNZD"), fx("EURHKD"), fx("EURNOK"), fx("EURSGD"), fx("GBPJPY"), fx("GBPCHF"),
@@ -63,6 +70,11 @@ export const CLASSIC_ASSETS: ClassicCfg[] = [
   fx("NZDJPY"), fx("NZDCAD"), fx("NZDCHF"), fx("NZDSGD"), fx("SGDJPY"), fx("USDCNH"),
   fx("USDDKK"), fx("USDHUF"), fx("USDMXN"), fx("USDNOK"), fx("USDSEK"), fx("USDSGD"),
   fx("USDZAR"),
+  fx("EURHUF"),
+  fx("MXNJPY"),
+  fx("NOKJPY"),
+  fx("USDHKD"),
+  fx("ZARJPY"),
   // ---- equities (19 scanned · FN help-centre lists 20 incl. SPCX — REMOVED 2026-11-11:
   // Yahoo "SPCX" is Tuttle's SPAC/New-Issue ETF, a different instrument entirely;
   // wrong-instrument data is worse than no data. Restore only after the FN
