@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   microMapOf, MICRO_SYMS, hlXyzSnapshot, hlBook, buildHlCard, recordOi, oiD24hPct,
   lighterBook, lighterTrades, buildLighterCard, krakenDepth,
+  microCache as mkCache, microCached as cached, microStore as store,
+  SNAP_TTL, BOOK_TTL,
   type MicroResp, type HlCard, type LighterCard, type KrakenCard, type HlCtx,
 } from "@/lib/cg/micro";
 
@@ -33,30 +35,9 @@ export const dynamic = "force-dynamic";
  * Lighter drift guard consumes this response's HL mark.
  */
 
-const SNAP_TTL = 60_000;
-const BOOK_TTL = 30_000;
-const ERR_TTL = 30_000;
-
-interface CacheEntry<T> { at: number; v: T; err?: string }
-function mkCache<T>(name: string): Map<string, CacheEntry<T>> {
-  const g = globalThis as unknown as Record<string, Map<string, CacheEntry<T>> | undefined>;
-  return (g[name] ??= new Map<string, CacheEntry<T>>());
-}
-// errors age out faster than successes (ERR_TTL) — a transient upstream hiccup
-// must not pin a dead panel (RV-ARCH M1 / R3 convention)
-function cached<T>(m: Map<string, CacheEntry<T>>, key: string, ttl: number): { hit: T | null; err: string | null } {
-  const e = m.get(key);
-  if (!e) return { hit: null, err: null };
-  if (Date.now() - e.at >= (e.err ? ERR_TTL : ttl)) return { hit: null, err: null };
-  return e.err ? { hit: null, err: e.err } : { hit: e.v, err: null };
-}
-function store<T>(m: Map<string, CacheEntry<T>>, key: string, v: T | null, err?: string) {
-  m.set(key, { at: Date.now(), v: v as T, err });
-  if (m.size > 128) {
-    const oldest = m.keys().next().value;
-    if (oldest !== undefined) m.delete(oldest);
-  }
-}
+// Cache helpers + TTLs live in @/lib/cg/micro (shared with microLiveQuote so
+// the classic route's live anchors ride the same warm entries — no doubled
+// upstream weight).
 
 const HL_ERR: HlCard = { ok: false, error: "xyz snapshot/book unavailable", coin: "?", mark: null, oracle: null,
   markVsOraclePct: null, vol24hUsd: null, oiBase: null, oiNotionalUsd: null, oiD24hPct: null,

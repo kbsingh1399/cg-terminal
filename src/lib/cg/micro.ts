@@ -516,3 +516,136 @@ export async function krakenDepth(pair: string): Promise<KrakenCard> {
       : undefined,
   };
 }
+
+// ---------------------------------------------------------------------------
+// Shared micro caches — single source of truth for /api/cg/micro AND
+// microLiveQuote() below (same globalThis maps ⇒ warm-cache sharing: the
+// classic route's live anchors ride the exact entries the micro panel just
+// fetched, and vice versa — no doubled upstream weight).
+
+export const SNAP_TTL = 60_000;
+export const BOOK_TTL = 30_000;
+export const ERR_TTL = 30_000;
+
+export interface MicroCacheEntry<T> { at: number; v: T; err?: string }
+
+export function microCache<T>(name: string): Map<string, MicroCacheEntry<T>> {
+  const g = globalThis as unknown as Record<string, Map<string, MicroCacheEntry<T>> | undefined>;
+  return (g[name] ??= new Map<string, MicroCacheEntry<T>>());
+}
+
+/** errors age out faster than successes (ERR_TTL) — a transient upstream hiccup
+ *  must not pin a dead panel (RV-ARCH M1 / R3 convention) */
+export function microCached<T>(m: Map<string, MicroCacheEntry<T>>, key: string, ttl: number): { hit: T | null; err: string | null } {
+  const e = m.get(key);
+  if (!e) return { hit: null, err: null };
+  if (Date.now() - e.at >= (e.err ? ERR_TTL : ttl)) return { hit: null, err: null };
+  return e.err ? { hit: null, err: e.err } : { hit: e.v, err: null };
+}
+
+export function microStore<T>(m: Map<string, MicroCacheEntry<T>>, key: string, v: T | null, err?: string) {
+  m.set(key, { at: Date.now(), v: v as T, err });
+  if (m.size > 128) {
+    const oldest = m.keys().next().value;
+    if (oldest !== undefined) m.delete(oldest);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Live quote anchor — the freshest tradable price for a classic instrument
+// (user report 2026-11-11: "many values are stale like forex and other
+// indices" — Yahoo cash indices freeze outside their cash session for up to
+// 19.5h/day while broker CFDs keep quoting; the R4 micro sources trade 24/7).
+//
+// Ladder: Kraken real spot FX (closest to broker FX CFDs) → Hyperliquid xyz
+// perp mark (one shared snapshot request covers every coin) → Lighter DEX L3
+// top-of-book mid. `at` is the epoch-ms the quote was computed so consumers
+// can age it themselves even when served from a cached body.
+
+export interface LiveQuote {
+  ok: boolean;
+  sym: string;
+  price: number | null;
+  source: "kraken" | "hl-xyz" | "lighter" | null;
+  sourceDetail: string | null;
+  at: number;
+  err?: string;
+}
+
+export async function microLiveQuote(sym: string): Promise<LiveQuote> {
+  const cfg = microMapOf(sym);
+  if (!cfg) {
+    return { ok: false, sym, price: null, source: null, sourceDetail: null, at: Date.now(), err: "no micro source mapped" };
+  }
+
+  // 1) Kraken spot FX — real interbank-adjacent spot, not a perp mark
+  if (cfg.kraken) {
+    const krCache = microCache<KrakenCard>("__microKraken");
+    const hit = microCached(krCache, cfg.kraken, BOOK_TTL);
+    let kc: KrakenCard | null = hit.hit;
+    if (!kc && !hit.err) {
+      try {
+        kc = await krakenDepth(cfg.kraken);
+        microStore(krCache, cfg.kraken, kc);
+      } catch (e) {
+        microStore(krCache, cfg.kraken, null, e instanceof Error ? e.message : "kraken failed");
+      }
+    }
+    if (kc?.ok && !kc.stale && kc.bestBid != null && kc.bestAsk != null) {
+      const mid = +(((kc.bestBid + kc.bestAsk) / 2).toFixed(6)); // toFixed kills FP noise (1.11364000…2)
+      if (Number.isFinite(mid) && mid > 0) {
+        return { ok: true, sym, price: mid, source: "kraken", sourceDetail: `Kraken ${cfg.kraken} spot mid`, at: Date.now() };
+      }
+    }
+  }
+
+  // 2) Hyperliquid xyz mark — the shared dex snapshot covers every coin in
+  //    ONE request, so this is the cheapest 24/7 anchor in the whole system
+  if (cfg.hl) {
+    const snapCache = microCache<Record<string, HlCtx>>("__microHlSnap");
+    const hit = microCached(snapCache, "dex", SNAP_TTL);
+    let snap = hit.hit;
+    if (!snap && !hit.err) {
+      try {
+        snap = await hlXyzSnapshot();
+        microStore(snapCache, "dex", snap);
+      } catch (e) {
+        microStore(snapCache, "dex", null, e instanceof Error ? e.message : "hl snapshot failed");
+      }
+    }
+    const mark = snap?.[cfg.hl.coin]?.markPx;
+    const m = mark != null ? +mark : NaN;
+    if (Number.isFinite(m) && m > 0) {
+      return { ok: true, sym, price: m, source: "hl-xyz", sourceDetail: `${cfg.hl.coin} perp mark`, at: Date.now() };
+    }
+  }
+
+  // 3) Lighter DEX true-L3 top of book
+  if (cfg.lighter) {
+    const loCache = microCache<Awaited<ReturnType<typeof lighterBook>>>("__microLoBook");
+    const idKey = String(cfg.lighter.id);
+    const hit = microCached(loCache, idKey, BOOK_TTL);
+    let lb = hit.hit;
+    if (!lb && !hit.err) {
+      try {
+        lb = await lighterBook(cfg.lighter.id);
+        microStore(loCache, idKey, lb);
+      } catch (e) {
+        microStore(loCache, idKey, null, e instanceof Error ? e.message : "lighter book failed");
+      }
+    }
+    if (lb) {
+      const num = (v: unknown) => (v == null ? NaN : +v);
+      const askPx = lb.asks.map((o) => num(o.price)).filter(Number.isFinite);
+      const bidPx = lb.bids.map((o) => num(o.price)).filter(Number.isFinite);
+      const bA = askPx.length ? Math.min(...askPx) : null;
+      const bB = bidPx.length ? Math.max(...bidPx) : null;
+      const mid = bA != null && bB != null ? (bA + bB) / 2 : bA ?? bB;
+      if (mid != null && Number.isFinite(mid) && mid > 0) {
+        return { ok: true, sym, price: mid, source: "lighter", sourceDetail: `Lighter ${cfg.lighter.symbol} L3 mid`, at: Date.now() };
+      }
+    }
+  }
+
+  return { ok: false, sym, price: null, source: null, sourceDetail: null, at: Date.now(), err: "all mapped live sources unavailable" };
+}

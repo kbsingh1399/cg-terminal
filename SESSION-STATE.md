@@ -212,3 +212,29 @@ dated entry after each meaningful change; keep only the last 10 entries.
   server runs (4GB box — the 07:33 OOM); (2) server + all verification must
   complete within ONE agent Bash command (spawned processes die at command
   end); (3) lto route takes ?symbol= not ?sym=.
+
+### 2026-11-11 12:40 UTC — Z.ai sandbox agent — classic stale-values fix (quote ladder)
+- User report: "many values are stale like forex and other indices". Root cause
+  (empirical): Yahoo cash indices (^DJI/^GSPC/^NDX/^RUT) freeze outside cash
+  sessions (14.4h old at 12:07 UTC), EU/oil feeds lag 10-15m, and chgPct was
+  the 5-DAY range change displayed unlabeled (read as today's move). FX quotes
+  were fresh but got lumped in with the frozen indices.
+- Fix — quote ladder wired into /api/cg/classic (concurrent with Yahoo fetch):
+  live = microLiveQuote() 24/7 anchor (NEW in src/lib/cg/micro.ts: Kraken spot
+  mid → Hyperliquid xyz perp mark → Lighter L3 mid; shared globalThis caches
+  with /api/cg/micro — route refactored onto the same helpers, no doubled
+  upstream weight) for the 25 mapped instruments; fut = Yahoo futures lead
+  (US30→YM=F, US2000→RTY=F; classic.ts futYahoo) for indices with no micro
+  anchor; price = Yahoo cash + bars (indicators stay cash-anchored).
+  chg24hPct added (vs last bar closed ≥24h ago); UI headline rides
+  live→fut→cash with source+age label, cash basis %, honest stale badge.
+  Yahoo-down now serves quote-only via the ladder instead of a flat 502.
+- VERIFIED: tsc clean, eslint 0 errors on all 5 touched files, API battery
+  (US30 fut 52,379 · SPX500 live xyz mark 7,585.9 0s · NDX100 28,262 · EURUSD
+  Kraken mid 1.11364 0s · US2000 fut RTY=F · JP225 live 61,790 · USO live
+  xyz:CL), browser E2E US30/SPX500/EURUSD — headline, basis, badges, zero
+  console errors.
+- Sandbox was 971 commits BEHIND origin/main (local daemon pushed overnight:
+  R3 classic universe, R4 micro layer, R5 terminal-not-live/OOM fixes, R6 OOM
+  byte-budget). Synced via backup branch backup-sandbox-20261111 → reset to
+  origin/main. No conflicts.

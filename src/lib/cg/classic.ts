@@ -31,6 +31,14 @@ export interface ClassicCfg {
   broker: string | null; // FundedNext MT5 ticker (null = not listed at broker, watchlist only)
   yahoo: string;      // Yahoo chart API ticker
   volume: boolean;    // live-verified: bars carry volume?
+  /** Yahoo FUTURES lead ticker (24/5 Globex hours, ~10min-delayed feed) for
+   *  indices with NO micro-layer anchor: Yahoo cash indices freeze outside
+   *  their cash session (US cash = 19.5h/day frozen) while broker CFDs keep
+   *  quoting — the futures chain is what the CFD tracks, so it is the honest
+   *  headline when cash is closed. Micro-mapped instruments (SPX500, NDX100,
+   *  JP225, USO, UKO, NATGAS, FX majors, big equities) use the 24/7 R4 live
+   *  anchor instead (see microLiveQuote) and need no futYahoo. */
+  futYahoo?: string;
   note?: string;
 }
 
@@ -44,10 +52,13 @@ function eq(sym: string, name: string, yahoo: string, note?: string): ClassicCfg
 
 export const CLASSIC_ASSETS: ClassicCfg[] = [
   // ---- indices (14 · user broker audit incl. VIX, which the FN site omits) ----
-  { sym: "US30", name: "Dow Jones 30", klass: "index", broker: "US30", yahoo: "^DJI", volume: true },
+  // Live-quote ladder per instrument (2026-11-11 stale-values fix):
+  //   micro anchor (24/7, seconds-fresh) → futYahoo (24/5, ~10m delayed) → cash (session-bound).
+  // US30 + US2000 have no micro-mapped perp, so they ride Yahoo futures leads.
+  { sym: "US30", name: "Dow Jones 30", klass: "index", broker: "US30", yahoo: "^DJI", volume: true, futYahoo: "YM=F" },
   { sym: "SPX500", name: "S&P 500", klass: "index", broker: "SPX500", yahoo: "^GSPC", volume: true },
   { sym: "NDX100", name: "Nasdaq 100", klass: "index", broker: "NDX100", yahoo: "^NDX", volume: true },
-  { sym: "US2000", name: "Russell 2000", klass: "index", broker: "US2000", yahoo: "^RUT", volume: false },
+  { sym: "US2000", name: "Russell 2000", klass: "index", broker: "US2000", yahoo: "^RUT", volume: false, futYahoo: "RTY=F" },
   { sym: "VIX", name: "CBOE Volatility Index", klass: "index", broker: "VIX", yahoo: "^VIX", volume: false, note: "cash VIX is price-only; VIX futures not on Yahoo" },
   { sym: "GER30", name: "DAX 40", klass: "index", broker: "GER30", yahoo: "^GDAXI", volume: false },
   { sym: "UK100", name: "FTSE 100", klass: "index", broker: "UK100", yahoo: "^FTSE", volume: false },

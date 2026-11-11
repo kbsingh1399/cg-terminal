@@ -23,6 +23,25 @@ interface Bar {
   v: number;
 }
 
+interface LiveBlock {
+  ok: boolean;
+  sym: string;
+  price: number | null;
+  source: "kraken" | "hl-xyz" | "lighter" | null;
+  sourceDetail: string | null;
+  at: number;
+  err?: string;
+}
+
+interface FutBlock {
+  ok: boolean;
+  price: number | null;
+  yahoo: string;
+  rmt: number | null;
+  at: number;
+  err?: string;
+}
+
 interface ClassicResp {
   ok: boolean;
   sym: string;
@@ -33,15 +52,20 @@ interface ClassicResp {
   note: string | null;
   price: number | null;
   prevClose: number | null;
-  chgPct: number | null;
+  chgPct: number | null;      // RANGE change (chartPreviousClose of the range) — never today's move
+  chg24hPct: number | null;   // vs last bar that closed >=24h ago
   currency: string | null;
   exchange: string | null;
   tz: string | null;
+  regularMarketTime: number | null; // epoch-s of the Yahoo cash quote
   hasVolume: boolean;
   nBars: number;
   bars: Bar[];
   source: string;
   fetchedAt: number;
+  quoteOnly?: boolean;        // Yahoo body unavailable — live/fut quote carried the response
+  live?: LiveBlock;           // 24/7 micro anchor (Kraken spot / xyz perp mark / Lighter L3 mid)
+  fut?: FutBlock;             // Yahoo futures lead (24/5 Globex hours, ~10m delayed)
 }
 
 const PRESETS: { label: string; interval: string; range: string; minutes: number }[] = [
@@ -178,7 +202,37 @@ export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
     };
   }, [bars, d?.hasVolume]);
 
-  const stale = calc != null && calc.lastBarAgeMin > Math.max(30, p.minutes * 10);
+  // ---- headline-quote ladder (2026-11-11 stale-values fix) ----
+  // Yahoo cash indices freeze outside their cash session (US cash frozen
+  // 19.5h/day) and delayed feeds lag 10-15min — the headline therefore rides
+  // the freshest HONEST source: 24/7 micro anchor → 24/5 futures lead →
+  // Yahoo cash quote. Cash always stays visible (basis-labelled) because the
+  // indicator suite below is computed from cash bars.
+  const liveOk = !!d?.live?.ok && d.live.price != null && Number.isFinite(d.live.price);
+  const futOk = !!d?.fut?.ok && d.fut.price != null && Number.isFinite(d.fut.price);
+  const cashAgeS = typeof d?.regularMarketTime === "number" ? Math.max(0, Math.round(Date.now() / 1000 - d.regularMarketTime)) : null;
+  const cashStale = cashAgeS == null || cashAgeS > 1800;
+  const useLive = liveOk;
+  const useFut = !useLive && futOk && cashStale;
+  const headline = useLive ? d!.live!.price! : useFut ? d!.fut!.price! : price;
+  const liveAgeS = d?.live?.at ? Math.max(0, Math.round((Date.now() - d.live.at) / 1000)) : null;
+  const futDelayS = d?.fut?.rmt ? Math.max(0, Math.round(Date.now() / 1000 - d.fut.rmt)) : null;
+  const headlineSrc = useLive
+    ? `live · ${d!.live!.sourceDetail ?? d!.live!.source} · ${liveAgeS != null ? `${liveAgeS}s ago` : ""}`
+    : useFut
+      ? `${d!.fut!.yahoo} futures · Globex 24/5${futDelayS != null ? ` · feed ${Math.round(futDelayS / 60)}m delayed` : ""}`
+      : d?.exchange
+        ? `Yahoo ${String(d.exchange)} cash${cashAgeS != null ? ` · quote ${cashAgeS > 5400 ? `${Math.round(cashAgeS / 3600)}h` : `${Math.round(cashAgeS / 60)}m`} old` : ""}`
+        : "Yahoo cash";
+  // basis of the headline venue vs the Yahoo cash quote (both real numbers —
+  // perp premium / futures basis is information, never hidden)
+  const basisPct =
+    headline != null && price != null && price > 0 && headline !== price
+      ? +(((headline - price) / price) * 100).toFixed(2)
+      : null;
+
+  // stale = no live anchor, no usable futures lead, and cash bars went quiet
+  const stale = !useLive && !useFut && calc != null && calc.lastBarAgeMin > Math.max(30, p.minutes * 10);
 
   return (
     <div className="space-y-4">
@@ -200,7 +254,9 @@ export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
         </span>
       </div>
 
-      {/* quote header */}
+      {/* quote header — headline rides the freshest honest source (micro live
+          anchor → futures lead → Yahoo cash); the cash quote and its basis to
+          the headline stay visible because every indicator below is cash-bar based */}
       <div className="flex flex-wrap items-end gap-x-8 gap-y-3 rounded-lg border border-neutral-800 bg-[#11151a] p-4">
         <div>
           <div className="text-[10px] uppercase tracking-wider text-neutral-500">
@@ -208,25 +264,41 @@ export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
             {d?.exchange ? ` · ${d.exchange}` : ""}
           </div>
           <div className="flex items-baseline gap-3">
-            <div className={`text-3xl font-bold tabular-nums ${(d?.chgPct ?? 0) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
-              {fmt(price, decs)}
+            <div className={`text-3xl font-bold tabular-nums ${(d?.chg24hPct ?? d?.chgPct ?? 0) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+              {fmt(headline, decs)}
             </div>
-            <div className={`text-sm font-semibold ${(d?.chgPct ?? 0) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
-              {pct(d?.chgPct)}
+            <div className={`text-sm font-semibold ${(d?.chg24hPct ?? d?.chgPct ?? 0) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+              {d?.chg24hPct != null ? (
+                <span title="change vs the close 24h ago">24h {pct(d.chg24hPct)}</span>
+              ) : (
+                <span title={`change over the visible ${p.label} window`}>{p.label.split("·")[1]?.trim() ?? "range"} {pct(d?.chgPct)}</span>
+              )}
             </div>
           </div>
-          <div className="mt-1 text-[10px] text-neutral-500">
-            prev close {fmt(d?.prevClose, decs)} · {p.label} high {fmt(calc?.viewHigh, decs)} · low {fmt(calc?.viewLow, decs)}
-            {d?.currency && d.currency !== "USD" ? ` · ${d.currency}` : ""}
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-neutral-500">
+            {headline !== price && price != null && (
+              <span>
+                Yahoo cash {fmt(price, decs)}
+                {basisPct != null && (
+                  <span className={basisPct >= 0 ? "text-emerald-600" : "text-rose-600"}> ({basisPct >= 0 ? "+" : ""}{basisPct.toFixed(2)}% basis)</span>
+                )}
+              </span>
+            )}
+            <span>prev close {fmt(d?.prevClose, decs)}</span>
+            {calc && <span>{p.label} high {fmt(calc.viewHigh, decs)} · low {fmt(calc.viewLow, decs)}</span>}
+            {d?.currency && d.currency !== "USD" ? <span>{d.currency}</span> : null}
           </div>
         </div>
         <div className="ml-auto text-right">
-          <div className={`rounded-md px-2 py-1 text-[10px] font-semibold ${stale ? "bg-amber-500/15 text-amber-300" : "bg-neutral-800 text-neutral-400"}`}>
-            {stale ? "⚠ stale — market likely closed (cash session)" : "live"}
+          <div className={`rounded-md px-2 py-1 text-[10px] font-semibold ${useLive ? "bg-emerald-500/15 text-emerald-300" : useFut ? "bg-sky-500/15 text-sky-300" : stale ? "bg-amber-500/15 text-amber-300" : "bg-neutral-800 text-neutral-400"}`}>
+            {useLive ? "LIVE — 24/7 anchor" : useFut ? "futures lead" : stale ? "⚠ stale — cash market likely closed" : "live"}
           </div>
-          <div className="mt-1 text-[10px] text-neutral-600">
-            last bar {calc ? `${Math.max(0, Math.round(calc.lastBarAgeMin))}m ago` : "–"}
-          </div>
+          <div className="mt-1 max-w-[240px] text-[10px] text-neutral-600">{headlineSrc}</div>
+          {calc && (
+            <div className="mt-1 text-[10px] text-neutral-600">
+              last bar {Math.max(0, Math.round(calc.lastBarAgeMin))}m ago{d?.quoteOnly ? " · Yahoo bars unavailable" : ""}
+            </div>
+          )}
         </div>
       </div>
 
