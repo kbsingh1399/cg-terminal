@@ -638,7 +638,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:47 UTC: (1) Spread & basis gate failure: MT5 LTCUSD live bid 50.80 / ask 52.02 (spread $1.22 / 2.3731%, 15.8x over 0.15% gate; basis +1.0615% vs perpRef 50.87) translates SHORT entry 51.11 -> 51.65 bid / SL 51.34 -> 51.88 ask ($0.23 SL width vs $1.22 spread = 5.25x SL width -> instant stop-out on fill as ask clears 51.88 at entry); (2) AGAINST microFlow (13 buy-side vs 4 sell-side over 6h) & notifications (+11.5); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     }
   ],
   "positions": [],
@@ -1104,7 +1104,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:47 UTC: (1) Spread & basis gate failure: MT5 LTCUSD live bid 50.80 / ask 52.02 (spread $1.22 / 2.3731%, 15.8x over 0.15% gate; basis +1.0615% vs perpRef 50.87) translates SHORT entry 51.11 -> 51.65 bid / SL 51.34 -> 51.88 ask ($0.23 SL width vs $1.22 spread = 5.25x SL width -> instant stop-out on fill as ask clears 51.88 at entry); (2) AGAINST microFlow (13 buy-side vs 4 sell-side over 6h) & notifications (+11.5); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     },
     {
       "id": "R24-DOGE-1",
@@ -1189,7 +1189,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:47 UTC: (1) Spread & basis gate failure: MT5 LTCUSD live bid 50.80 / ask 52.02 (spread $1.22 / 2.3731%, 15.8x over 0.15% gate; basis +1.0615% vs perpRef 50.87) translates SHORT entry 51.11 -> 51.65 bid / SL 51.34 -> 51.88 ask ($0.23 SL width vs $1.22 spread = 5.25x SL width -> instant stop-out on fill as ask clears 51.88 at entry); (2) AGAINST microFlow (13 buy-side vs 4 sell-side over 6h) & notifications (+11.5); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     },
     {
       "id": "R37-BNB-1",
@@ -1342,7 +1342,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:47 UTC: (1) Spread & basis gate failure: MT5 LTCUSD live bid 50.80 / ask 52.02 (spread $1.22 / 2.3731%, 15.8x over 0.15% gate; basis +1.0615% vs perpRef 50.87) translates SHORT entry 51.11 -> 51.65 bid / SL 51.34 -> 51.88 ask ($0.23 SL width vs $1.22 spread = 5.25x SL width -> instant stop-out on fill as ask clears 51.88 at entry); (2) AGAINST microFlow (13 buy-side vs 4 sell-side over 6h) & notifications (+11.5); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     },
     {
       "id": "R42-BNB-1",
@@ -1418,7 +1418,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:47 UTC: (1) Spread & basis gate failure: MT5 LTCUSD live bid 50.80 / ask 52.02 (spread $1.22 / 2.3731%, 15.8x over 0.15% gate; basis +1.0615% vs perpRef 50.87) translates SHORT entry 51.11 -> 51.65 bid / SL 51.34 -> 51.88 ask ($0.23 SL width vs $1.22 spread = 5.25x SL width -> instant stop-out on fill as ask clears 51.88 at entry); (2) AGAINST microFlow (13 buy-side vs 4 sell-side over 6h) & notifications (+11.5); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     },
     {
       "id": "R56-XAU-1",
@@ -1580,7 +1580,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:47 UTC: (1) Spread & basis gate failure: MT5 LTCUSD live bid 50.80 / ask 52.02 (spread $1.22 / 2.3731%, 15.8x over 0.15% gate; basis +1.0615% vs perpRef 50.87) translates SHORT entry 51.11 -> 51.65 bid / SL 51.34 -> 51.88 ask ($0.23 SL width vs $1.22 spread = 5.25x SL width -> instant stop-out on fill as ask clears 51.88 at entry); (2) AGAINST microFlow (13 buy-side vs 4 sell-side over 6h) & notifications (+11.5); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     },
     {
       "id": "R73-ETH-1",
@@ -1745,7 +1745,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:47 UTC: (1) Spread & basis gate failure: MT5 LTCUSD live bid 50.80 / ask 52.02 (spread $1.22 / 2.3731%, 15.8x over 0.15% gate; basis +1.0615% vs perpRef 50.87) translates SHORT entry 51.11 -> 51.65 bid / SL 51.34 -> 51.88 ask ($0.23 SL width vs $1.22 spread = 5.25x SL width -> instant stop-out on fill as ask clears 51.88 at entry); (2) AGAINST microFlow (13 buy-side vs 4 sell-side over 6h) & notifications (+11.5); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     },
     {
       "id": "R74-ADA-1",
@@ -1821,7 +1821,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:47 UTC: (1) Spread & basis gate failure: MT5 LTCUSD live bid 50.80 / ask 52.02 (spread $1.22 / 2.3731%, 15.8x over 0.15% gate; basis +1.0615% vs perpRef 50.87) translates SHORT entry 51.11 -> 51.65 bid / SL 51.34 -> 51.88 ask ($0.23 SL width vs $1.22 spread = 5.25x SL width -> instant stop-out on fill as ask clears 51.88 at entry); (2) AGAINST microFlow (13 buy-side vs 4 sell-side over 6h) & notifications (+11.5); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     },
     {
       "id": "R75-DOGE-1",
@@ -1897,7 +1897,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:47 UTC: (1) Spread & basis gate failure: MT5 LTCUSD live bid 50.80 / ask 52.02 (spread $1.22 / 2.3731%, 15.8x over 0.15% gate; basis +1.0615% vs perpRef 50.87) translates SHORT entry 51.11 -> 51.65 bid / SL 51.34 -> 51.88 ask ($0.23 SL width vs $1.22 spread = 5.25x SL width -> instant stop-out on fill as ask clears 51.88 at entry); (2) AGAINST microFlow (13 buy-side vs 4 sell-side over 6h) & notifications (+11.5); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     },
     {
       "id": "R75-LINK-2",
@@ -1973,7 +1973,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:47 UTC: (1) Spread & basis gate failure: MT5 LTCUSD live bid 50.80 / ask 52.02 (spread $1.22 / 2.3731%, 15.8x over 0.15% gate; basis +1.0615% vs perpRef 50.87) translates SHORT entry 51.11 -> 51.65 bid / SL 51.34 -> 51.88 ask ($0.23 SL width vs $1.22 spread = 5.25x SL width -> instant stop-out on fill as ask clears 51.88 at entry); (2) AGAINST microFlow (13 buy-side vs 4 sell-side over 6h) & notifications (+11.5); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     },
     {
       "id": "R83-BNB-1",
