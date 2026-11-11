@@ -1,0 +1,229 @@
+{
+ "hyperliquid_xyz": {
+  "ok": false,
+  "error": "'str' object has no attribute 'get'"
+ },
+ "hl_l2book_xyzGOLD": {
+  "ok": true,
+  "n_bids": 20,
+  "n_asks": 20,
+  "best_bid": {
+   "px": "4058.8",
+   "sz": "0.0864",
+   "n": 1
+  },
+  "best_ask": {
+   "px": "4058.9",
+   "sz": "12.5038",
+   "n": 10
+  },
+  "sample_bid_lvl3": {
+   "px": "4058.6",
+   "sz": "4.7958",
+   "n": 2
+  }
+ },
+ "hl_candles_xyzGOLD": {
+  "ok": true,
+  "n_bars_1h_62d": 1489,
+  "first": {
+   "t": 1789030800000,
+   "T": 1789034399999,
+   "s": "xyz:GOLD",
+   "i": "1h",
+   "o": "4397.6",
+   "c": "4396.4",
+   "h": "4398.6",
+   "l": "4393.0",
+   "v": "355.561",
+   "n": 461
+  },
+  "last": {
+   "t": 1794387600000,
+   "T": 1794391199999,
+   "s": "xyz:GOLD",
+   "i": "1h",
+   "o": "4058.8",
+   "c": "4058.9",
+   "h": "4060.1",
+   "l": "4058.8",
+   "v": "1.7236",
+   "n": 24
+  }
+ },
+ "lighter": {
+  "XAU": {
+   "ok": true,
+   "id": 92,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "XAG": {
+   "ok": true,
+   "id": 93,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "US100": {
+   "ok": true,
+   "id": 181,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "US500": {
+   "ok": true,
+   "id": 180,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "SPY": {
+   "ok": true,
+   "id": 128,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "QQQ": {
+   "ok": true,
+   "id": 129,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "WTI": {
+   "ok": true,
+   "id": 145,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "BRENTOIL": {
+   "ok": true,
+   "id": 159,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "NATGAS": {
+   "ok": true,
+   "id": 158,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "EURUSD": {
+   "ok": true,
+   "id": 96,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "USDJPY": {
+   "ok": true,
+   "id": 98,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  },
+  "GBPUSD": {
+   "ok": true,
+   "id": 97,
+   "n_orders_sample": 0,
+   "n_trades_sample": 0,
+   "order0": null,
+   "trade0": null
+  }
+ },
+ "kraken_depth_eurusd": {
+  "ok": true,
+  "pair_key": "ZEURZUSD",
+  "n_bids": 25,
+  "n_asks": 25,
+  "best_bid": [
+   "1.11451",
+   "7557.951",
+   1794387777
+  ],
+  "best_ask": [
+   "1.11453",
+   "164.942",
+   1794387777
+  ]
+ },
+ "dukascopy_xauusd": {
+  "ok": true,
+  "url": "http://datafeed.dukascopy.com/datafeed/XAUUSD/2026/10/11/06h_ticks.bi5",
+  "bytes": 73138,
+  "n_ticks": 17689,
+  "first_5": [
+   {
+    "ms_offset": 113,
+    "ask": 4058.793,
+    "bid": 4058.329,
+    "ask_vol": 0.0,
+    "bid_vol": 0.0
+   },
+   {
+    "ms_offset": 164,
+    "ask": 4058.955,
+    "bid": 4058.329,
+    "ask_vol": 0.0,
+    "bid_vol": 0.0
+   },
+   {
+    "ms_offset": 288,
+    "ask": 4058.945,
+    "bid": 4058.327,
+    "ask_vol": 0.0,
+    "bid_vol": 0.0
+   },
+   {
+    "ms_offset": 391,
+    "ask": 4058.923,
+    "bid": 4058.327,
+    "ask_vol": 0.0,
+    "bid_vol": 0.0
+   },
+   {
+    "ms_offset": 492,
+    "ask": 4058.613,
+    "bid": 4058.295,
+    "ask_vol": 0.0,
+    "bid_vol": 0.0
+   }
+  ]
+ },
+ "binance_vision_trades": {
+  "ok": true,
+  "status": 200,
+  "url": "https://data.binance.vision/data/futures/um/daily/trades/XAUUSDT/XAUUSDT-trades-2026-11-10.zip",
+  "content_length": "13860075"
+ },
+ "binance_vision_aggTrades": {
+  "ok": true,
+  "status": 200,
+  "url": "https://data.binance.vision/data/futures/um/daily/aggTrades/XAUUSDT/XAUUSDT-aggTrades-2026-11-10.zip",
+  "content_length": "7731485"
+ },
+ "binance_vision_bookDepth": {
+  "ok": true,
+  "status": 200,
+  "url": "https://data.binance.vision/data/futures/um/daily/bookDepth/XAUUSDT/XAUUSDT-bookDepth-2026-11-10.zip",
+  "content_length": "570102"
+ }
+}

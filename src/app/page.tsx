@@ -182,9 +182,11 @@ export default function Home() {
 
       <footer className="mt-auto border-t border-neutral-800 px-4 py-3">
         <div className="mx-auto max-w-[1600px] text-[10px] leading-relaxed text-neutral-600">
-          Data sourced live from the Coinglass web API (perp assets) and Yahoo Finance v8 (Tier-3 classic instruments)
-          for personal analysis. Figures are estimates reported by the upstream provider and are not investment advice.
-          XAU/XAG/XPT trade as USDT-margined perps (no Hyperliquid venue); classic instruments are quotes+bars only.
+          Data sourced live from the Coinglass web API (perp assets), Yahoo Finance v8 (Tier-3 classic instruments),
+          and — for microstructure — the free Hyperliquid xyz HIP-3 perps, Lighter DEX L3 order books, and Kraken spot
+          FX depth, for personal analysis. Figures are estimates reported by the upstream providers and are not
+          investment advice. Microstructure panels are signal-market context only (execution stays at the broker);
+          classic instruments without micro mappings are quotes+bars only — never fabricated.
         </div>
       </footer>
     </div>

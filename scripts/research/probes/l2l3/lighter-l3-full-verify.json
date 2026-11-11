@@ -1,0 +1,710 @@
+[
+ {
+  "id": 92,
+  "name": "XAU",
+  "symbol_echo": "XAU",
+  "kind": "perps",
+  "n_asks": 250,
+  "n_bids": 250,
+  "ask_notional_usd": 15186901,
+  "bid_notional_usd": 15313886,
+  "best_bid": 4057.63,
+  "best_ask": 4057.94,
+  "spread_pct": 0.0076,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 77,
+    "ask$": 11933010,
+    "bid$": 11946322,
+    "two_sided": true
+   },
+   {
+    "acc": 90364,
+    "n": 12,
+    "ask$": 1108552,
+    "bid$": 1398245,
+    "two_sided": true
+   },
+   {
+    "acc": 726714,
+    "n": 38,
+    "ask$": 576216,
+    "bid$": 335306,
+    "two_sided": true
+   },
+   {
+    "acc": 724216,
+    "n": 50,
+    "ask$": 364563,
+    "bid$": 309899,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976624302,
+    "n": 2,
+    "ask$": 212149,
+    "bid$": 211329,
+    "two_sided": true
+   }
+  ],
+  "n_visible_partials": 3,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 102596,
+  "taker_sell_usd": 114038,
+  "trade_span_s": 356726
+ },
+ {
+  "id": 93,
+  "name": "XAG",
+  "symbol_echo": "XAG",
+  "kind": "perps",
+  "n_asks": 250,
+  "n_bids": 250,
+  "ask_notional_usd": 10299079,
+  "bid_notional_usd": 13148988,
+  "best_bid": 52.9865,
+  "best_ask": 52.9929,
+  "spread_pct": 0.0121,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 60,
+    "ask$": 7694262,
+    "bid$": 11666819,
+    "two_sided": true
+   },
+   {
+    "acc": 726714,
+    "n": 79,
+    "ask$": 1153735,
+    "bid$": 466274,
+    "two_sided": true
+   },
+   {
+    "acc": 724216,
+    "n": 141,
+    "ask$": 272521,
+    "bid$": 214905,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976696055,
+    "n": 18,
+    "ask$": 188757,
+    "bid$": 188455,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976505833,
+    "n": 2,
+    "ask$": 149728,
+    "bid$": 149692,
+    "two_sided": true
+   }
+  ],
+  "n_visible_partials": 2,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 21827,
+  "taker_sell_usd": 45883,
+  "trade_span_s": 819413
+ },
+ {
+  "id": 180,
+  "name": "US500",
+  "symbol_echo": "US500",
+  "kind": "perps",
+  "n_asks": 85,
+  "n_bids": 58,
+  "ask_notional_usd": 15005622,
+  "bid_notional_usd": 15653783,
+  "best_bid": 7574.9,
+  "best_ask": 7575.7,
+  "spread_pct": 0.0106,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 29,
+    "ask$": 14366040,
+    "bid$": 15255278,
+    "two_sided": true
+   },
+   {
+    "acc": 702384,
+    "n": 28,
+    "ask$": 131697,
+    "bid$": 175582,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976696055,
+    "n": 12,
+    "ask$": 182433,
+    "bid$": 30000,
+    "two_sided": true
+   },
+   {
+    "acc": 726714,
+    "n": 11,
+    "ask$": 160777,
+    "bid$": 35692,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976505833,
+    "n": 2,
+    "ask$": 50047,
+    "bid$": 50029,
+    "two_sided": true
+   }
+  ],
+  "n_visible_partials": 6,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 200267,
+  "taker_sell_usd": 210413,
+  "trade_span_s": 4654836
+ },
+ {
+  "id": 181,
+  "name": "US100",
+  "symbol_echo": "US100",
+  "kind": "perps",
+  "n_asks": 101,
+  "n_bids": 91,
+  "ask_notional_usd": 10762275,
+  "bid_notional_usd": 11637652,
+  "best_bid": 28173.0,
+  "best_ask": 28177.0,
+  "spread_pct": 0.0142,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 28,
+    "ask$": 9058887,
+    "bid$": 9095099,
+    "two_sided": true
+   },
+   {
+    "acc": 726714,
+    "n": 20,
+    "ask$": 630237,
+    "bid$": 769051,
+    "two_sided": true
+   },
+   {
+    "acc": 726731,
+    "n": 9,
+    "ask$": 539684,
+    "bid$": 673952,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976505833,
+    "n": 2,
+    "ask$": 300552,
+    "bid$": 300424,
+    "two_sided": true
+   },
+   {
+    "acc": 710415,
+    "n": 7,
+    "ask$": 0,
+    "bid$": 258870,
+    "two_sided": false
+   }
+  ],
+  "n_visible_partials": 7,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 28762,
+  "taker_sell_usd": 9935,
+  "trade_span_s": 218086
+ },
+ {
+  "id": 128,
+  "name": "SPY",
+  "symbol_echo": "SPY",
+  "kind": "perps",
+  "n_asks": 126,
+  "n_bids": 115,
+  "ask_notional_usd": 15750030,
+  "bid_notional_usd": 15802171,
+  "best_bid": 755.53,
+  "best_ask": 755.58,
+  "spread_pct": 0.0066,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 29,
+    "ask$": 14657433,
+    "bid$": 15166549,
+    "two_sided": true
+   },
+   {
+    "acc": 760372,
+    "n": 18,
+    "ask$": 302036,
+    "bid$": 241544,
+    "two_sided": true
+   },
+   {
+    "acc": 702386,
+    "n": 19,
+    "ask$": 182917,
+    "bid$": 180197,
+    "two_sided": true
+   },
+   {
+    "acc": 726714,
+    "n": 10,
+    "ask$": 321535,
+    "bid$": 35695,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976627395,
+    "n": 6,
+    "ask$": 46658,
+    "bid$": 46655,
+    "two_sided": true
+   }
+  ],
+  "n_visible_partials": 10,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 15587,
+  "taker_sell_usd": 7679,
+  "trade_span_s": 324048
+ },
+ {
+  "id": 129,
+  "name": "QQQ",
+  "symbol_echo": "QQQ",
+  "kind": "perps",
+  "n_asks": 116,
+  "n_bids": 188,
+  "ask_notional_usd": 9886921,
+  "bid_notional_usd": 10702870,
+  "best_bid": 685.7,
+  "best_ask": 685.75,
+  "spread_pct": 0.0073,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 26,
+    "ask$": 9005796,
+    "bid$": 9130055,
+    "two_sided": true
+   },
+   {
+    "acc": 726714,
+    "n": 18,
+    "ask$": 240081,
+    "bid$": 299457,
+    "two_sided": true
+   },
+   {
+    "acc": 728353,
+    "n": 20,
+    "ask$": 0,
+    "bid$": 421386,
+    "two_sided": false
+   },
+   {
+    "acc": 760372,
+    "n": 17,
+    "ask$": 209456,
+    "bid$": 146453,
+    "two_sided": true
+   },
+   {
+    "acc": 2680,
+    "n": 20,
+    "ask$": 0,
+    "bid$": 343970,
+    "two_sided": false
+   }
+  ],
+  "n_visible_partials": 3,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 4127,
+  "taker_sell_usd": 44371,
+  "trade_span_s": 255356
+ },
+ {
+  "id": 153,
+  "name": "IWM",
+  "symbol_echo": "IWM",
+  "kind": "perps",
+  "n_asks": 20,
+  "n_bids": 21,
+  "ask_notional_usd": 253394,
+  "bid_notional_usd": 280887,
+  "best_bid": 282.24,
+  "best_ask": 282.92,
+  "spread_pct": 0.2409,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 26,
+    "ask$": 236980,
+    "bid$": 265000,
+    "two_sided": true
+   },
+   {
+    "acc": 433673,
+    "n": 10,
+    "ask$": 15826,
+    "bid$": 15391,
+    "two_sided": true
+   },
+   {
+    "acc": 728001,
+    "n": 2,
+    "ask$": 496,
+    "bid$": 496,
+    "two_sided": true
+   },
+   {
+    "acc": 723393,
+    "n": 3,
+    "ask$": 92,
+    "bid$": 0,
+    "two_sided": false
+   }
+  ],
+  "n_visible_partials": 1,
+  "n_trades_fetched": 72,
+  "taker_buy_usd": 33650,
+  "taker_sell_usd": 35822,
+  "trade_span_s": 192695375
+ },
+ {
+  "id": 145,
+  "name": "WTI",
+  "symbol_echo": "WTI",
+  "kind": "perps",
+  "n_asks": 227,
+  "n_bids": 235,
+  "ask_notional_usd": 10749323,
+  "bid_notional_usd": 11218905,
+  "best_bid": 85.063,
+  "best_ask": 85.068,
+  "spread_pct": 0.0059,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 53,
+    "ask$": 9130826,
+    "bid$": 9002224,
+    "two_sided": true
+   },
+   {
+    "acc": 724216,
+    "n": 22,
+    "ask$": 573347,
+    "bid$": 999154,
+    "two_sided": true
+   },
+   {
+    "acc": 40671,
+    "n": 20,
+    "ask$": 279537,
+    "bid$": 311191,
+    "two_sided": true
+   },
+   {
+    "acc": 750265,
+    "n": 6,
+    "ask$": 360801,
+    "bid$": 0,
+    "two_sided": false
+   },
+   {
+    "acc": 726714,
+    "n": 71,
+    "ask$": 154671,
+    "bid$": 200911,
+    "two_sided": true
+   }
+  ],
+  "n_visible_partials": 4,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 28402,
+  "taker_sell_usd": 7897,
+  "trade_span_s": 470329
+ },
+ {
+  "id": 159,
+  "name": "BRENTOIL",
+  "symbol_echo": "BRENTOIL",
+  "kind": "perps",
+  "n_asks": 250,
+  "n_bids": 221,
+  "ask_notional_usd": 3398446,
+  "bid_notional_usd": 3746794,
+  "best_bid": 90.14,
+  "best_ask": 90.16,
+  "spread_pct": 0.0222,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 56,
+    "ask$": 2146243,
+    "bid$": 2042420,
+    "two_sided": true
+   },
+   {
+    "acc": 724216,
+    "n": 31,
+    "ask$": 144324,
+    "bid$": 596789,
+    "two_sided": true
+   },
+   {
+    "acc": 702386,
+    "n": 7,
+    "ask$": 275590,
+    "bid$": 275999,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976644047,
+    "n": 21,
+    "ask$": 237069,
+    "bid$": 243697,
+    "two_sided": true
+   },
+   {
+    "acc": 726714,
+    "n": 66,
+    "ask$": 198161,
+    "bid$": 229093,
+    "two_sided": true
+   }
+  ],
+  "n_visible_partials": 0,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 19377,
+  "taker_sell_usd": 22654,
+  "trade_span_s": 1383694
+ },
+ {
+  "id": 158,
+  "name": "NATGAS",
+  "symbol_echo": "NATGAS",
+  "kind": "perps",
+  "n_asks": 46,
+  "n_bids": 99,
+  "ask_notional_usd": 838437,
+  "bid_notional_usd": 1469509,
+  "best_bid": 3.5708,
+  "best_ask": 3.5748,
+  "spread_pct": 0.112,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 47,
+    "ask$": 733559,
+    "bid$": 1269536,
+    "two_sided": true
+   },
+   {
+    "acc": 317068,
+    "n": 10,
+    "ask$": 37247,
+    "bid$": 34898,
+    "two_sided": true
+   },
+   {
+    "acc": 59979,
+    "n": 2,
+    "ask$": 0,
+    "bid$": 50974,
+    "two_sided": false
+   },
+   {
+    "acc": 281474976627395,
+    "n": 4,
+    "ask$": 22768,
+    "bid$": 22770,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976696055,
+    "n": 12,
+    "ask$": 20709,
+    "bid$": 22859,
+    "two_sided": true
+   }
+  ],
+  "n_visible_partials": 2,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 96514,
+  "taker_sell_usd": 108910,
+  "trade_span_s": 4318271
+ },
+ {
+  "id": 96,
+  "name": "EURUSD",
+  "symbol_echo": "EURUSD",
+  "kind": "perps",
+  "n_asks": 144,
+  "n_bids": 124,
+  "ask_notional_usd": 2872754,
+  "bid_notional_usd": 2789839,
+  "best_bid": 1.11509,
+  "best_ask": 1.11536,
+  "spread_pct": 0.0242,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 77,
+    "ask$": 2083543,
+    "bid$": 2505002,
+    "two_sided": true
+   },
+   {
+    "acc": 742164,
+    "n": 3,
+    "ask$": 452611,
+    "bid$": 0,
+    "two_sided": false
+   },
+   {
+    "acc": 281474976448285,
+    "n": 9,
+    "ask$": 114998,
+    "bid$": 113146,
+    "two_sided": true
+   },
+   {
+    "acc": 314233,
+    "n": 10,
+    "ask$": 78151,
+    "bid$": 78856,
+    "two_sided": true
+   },
+   {
+    "acc": 767233,
+    "n": 3,
+    "ask$": 22349,
+    "bid$": 63829,
+    "two_sided": true
+   }
+  ],
+  "n_visible_partials": 3,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 1151,
+  "taker_sell_usd": 3301,
+  "trade_span_s": 3361032
+ },
+ {
+  "id": 98,
+  "name": "USDJPY",
+  "symbol_echo": "USDJPY",
+  "kind": "perps",
+  "n_asks": 102,
+  "n_bids": 99,
+  "ask_notional_usd": 2625198,
+  "bid_notional_usd": 2318622,
+  "best_bid": 158.766,
+  "best_ask": 158.795,
+  "spread_pct": 0.0183,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 83,
+    "ask$": 2501630,
+    "bid$": 2195090,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976448285,
+    "n": 9,
+    "ask$": 50000,
+    "bid$": 49999,
+    "two_sided": true
+   },
+   {
+    "acc": 2373,
+    "n": 92,
+    "ask$": 39250,
+    "bid$": 40557,
+    "two_sided": true
+   },
+   {
+    "acc": 713043,
+    "n": 10,
+    "ask$": 31834,
+    "bid$": 30683,
+    "two_sided": true
+   },
+   {
+    "acc": 59229,
+    "n": 1,
+    "ask$": 0,
+    "bid$": 1517,
+    "two_sided": false
+   }
+  ],
+  "n_visible_partials": 4,
+  "n_trades_fetched": 100,
+  "taker_buy_usd": 274,
+  "taker_sell_usd": 58,
+  "trade_span_s": 2580029
+ },
+ {
+  "id": 97,
+  "name": "GBPUSD",
+  "symbol_echo": "GBPUSD",
+  "kind": "perps",
+  "n_asks": 49,
+  "n_bids": 58,
+  "ask_notional_usd": 2492496,
+  "bid_notional_usd": 2480140,
+  "best_bid": 1.33169,
+  "best_ask": 1.332,
+  "spread_pct": 0.0233,
+  "top5_accounts": [
+   {
+    "acc": 281474976710654,
+    "n": 86,
+    "ask$": 2478829,
+    "bid$": 2466682,
+    "two_sided": true
+   },
+   {
+    "acc": 281474976448285,
+    "n": 7,
+    "ask$": 12909,
+    "bid$": 12500,
+    "two_sided": true
+   },
+   {
+    "acc": 728001,
+    "n": 2,
+    "ask$": 745,
+    "bid$": 745,
+    "two_sided": true
+   },
+   {
+    "acc": 741332,
+    "n": 10,
+    "ask$": 0,
+    "bid$": 200,
+    "two_sided": false
+   },
+   {
+    "acc": 765337,
+    "n": 2,
+    "ask$": 12,
+    "bid$": 13,
+    "two_sided": true
+   }
+  ],
+  "n_visible_partials": 6,
+  "n_trades_fetched": 93,
+  "taker_buy_usd": 59830,
+  "taker_sell_usd": 28909,
+  "trade_span_s": 160754313
+ }
+]

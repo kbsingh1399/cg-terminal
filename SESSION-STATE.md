@@ -156,3 +156,10 @@ dated entry after each meaningful change; keep only the last 10 entries.
 - First directives issued: DIR-0001 cancel ADA ticket 209375723 (still pending per
   new orders[] feed), DIR-0002 place R4-BTC-1 (0.06 lots, all levels translated,
   concurrence required), DIR-0003 investigate 5 no-tick broker symbols.
+
+### 2026-11-11 09:46 UTC — Z.ai sandbox agent — R4: L2/L3 microstructure layer shipped (commit follows)
+- New: `src/lib/cg/micro.ts` + `/api/cg/micro` + `MicrostructurePanel` (classic overview + perp Overview for metals): Hyperliquid xyz HIP-3 L2 (order-count ladder, OI, 1h funding→APR×8760, venue-health gate), Lighter DEX true-L3 (whale clustering vs quoting/MM, visible partials, maker/taker prints), Kraken spot FX L2 (staleness-gated). Backfill: `scripts/backfill_dukascopy.py`, `scripts/backfill_binance_vision.py` (bomb-guarded).
+- Registry (all live-verified, ids price-checked): XAU XAG XPT SPX500 NDX100 USO UKO NATGAS EURUSD USDJPY GBPUSD + 11 US equities + 4 FX majors (Kraken). US30/EU/EU-eq/crosses = honest n/a.
+- Multi-agent: RV-ARCH+RV-QUANT (design) / RV-QA+RV-SEC (code) — all conditions fixed (suppressed-only amber boxes, APR-None crash, ms→s span 1000× bug, decompression guards, concurrent fetches).
+- VERIFIED: tsc+build clean; endpoint battery (10 syms); browser XAU/XPT/EURUSD/US30 zero console errors; deepscan §0+§micro live. Evidence: scripts/research/probes/l2l3/ + MICRO-DESIGN-R4.md.
+- OPEN: DIR-0013 rebuild on Windows box (supersedes DIR-0012). Micro stays CONTEXT (no scorecard weight) until a ≥30-round correlation study.

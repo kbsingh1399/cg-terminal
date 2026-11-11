@@ -1519,7 +1519,6 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - INTEGRATED (commit a33e841): perpmap.ts verified registry · /api/cg/perpdepth (venues+OI Δ1h/4h/24h+funding+taker flow) · /api/cg/cot (net/z3y/78w history, 6h cache) · /api/cg/cnbc (futures settle/OI/roll+basis) · DerivativesPanel UI (3 panels, auto-hidden when unmapped) · deepscan classic §2–§6 live sections · NATGAS in classic registry. End-to-end verified: USO report carries 4-venue depth + COT z −1.39σ + CNBC CLZ26 basis −0.07%.
 - MULTI-AGENT REVIEW R3 (tech-team-agents): RV-ARCH + RV-DATA → 41 PASS / 6 FAIL, ALL FIXED + re-verified: COT z on oldest record (USO +1.07→−1.39, sign flip), US2000 500→honest 400, SPX500 alias (classic UI now reaches S&P panels), funding 100× (Coinglass rate already %), COT err-cache 6h→5min, deepscan z shadowing, flow USD-columns only, CNBC %-parse.
 - DIR-0012 emitted (Windows rebuild + verify). Research compendium: scripts/research/RESEARCH-DATA-SOURCES-20261111.md. Backlog §6: FRED macro panel (needs free key), Coinbase spot-basis, USO/NATGAS/EURUSD hybrid-engine promotion, COT z as desk scorecard dimension.
-<<<<<<< HEAD
 ## R65 · 2026-11-11 08:51 UTC · zai-desk
 
 **Market**: BTC 73,715.2 (-0.1%)  ETH 2,058.84 (+0.3%)  SOL 83.07 (-0.3%)  XAU 4,064.56 (+0.5%)  XAG 53.090 (+2.7%)
@@ -1576,4 +1575,12 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### DEEPSCAN · 2026-11-11 09:34 UTC · zai-desk — 360° on-demand deep analysis (XAU+EURUSD(cl)+US30(cl))
 - XAU: desk/deepscan/XAU-20261111-0934.md
 - CLASSIC universe (2): desk/deepscan/CLASSIC-20261111-0934.md — 1 online, watchlist-only (engine v4 pending)
->>>>>>> 9a211fd (desk(deepscan): 360° deep analysis XAU)
+
+### DIALOG · 2026-11-11 09:45 UTC · zai-desk — R4 SHIPPED: L2/L3 microstructure layer (user directive: free L2/L3 for forex/indices/metals)
+- User directive: *"continuous fetching live free data via API for forex, indices, metals… at L2, L3 level too"* — external research (Lighter/Hyperliquid/Kraken/Dukascopy/Binance Vision) re-verified LIVE from sandbox before any code (no second-hand numbers; evidence scripts/research/probes/l2l3/).
+- INTEGRATED (live-verified): **Hyperliquid xyz HIP-3** perps (144 markets: L2 ladder w/ order-count n, OI, 1h funding, mark-vs-oracle) · **Lighter DEX true L3** (individual resting orders, owner-account clustering = directional whales vs quoting/MM, visible partials, maker/taker prints w/ ms→s fix) · **Kraken spot FX L2** (6 majors, staleness-gated) · **Dukascopy .bi5 + Binance Vision backfill scripts** (bomb-guarded).
+- Coverage: XAU XAG XPT SPX500 NDX100 USO UKO NATGAS EURUSD USDJPY GBPUSD + 11 US equities + 4 FX majors Kraken-only. US30/EU/EU-equities/crosses: honest n/a (no free L2/L3 exists).
+- Honest rules enforced: thin suppression ($5M vol / $250k book), whale floor max($50k, 5% side), venue-health gate (|mark−oracle|>0.3% or |APR|>200% — NATGAS trips), Lighter id-drift guards (symbol echo + HL cross-check), funding APR = 1h×8760 (fixture-verified 0.00063→5.52%), micro = CONTEXT ONLY (no scorecard weight).
+- MULTI-AGENT REVIEW (4 agents: RV-ARCH + RV-QUANT on design, RV-QA + RV-SEC on code): all 4 APPROVE-WITH-CONDITIONS → every condition fixed & re-verified: suppressed-only 502→200+amber (XPT/JP225), deepscan APR-None crash, ms→s 1000× span bug, decompression/zip bomb guards, markdown injection strip, concurrent fetch chains, encodeURIComponent, footer copy.
+- Verified end-to-end on sandbox :3100 (CG_ENGINE=off): tsc+build clean, 10-symbol endpoint battery, browser XAU/XPT/EURUSD/US30 (cards, amber boxes, hidden, zero console errors), deepscan §0 (metals) + §micro (classic) live in reports.
+- DIR-0013 emitted for the Windows rebuild (supersedes DIR-0012, includes its checks). No MT5 actions. Execution stays broker-side; micro is signal-market context.

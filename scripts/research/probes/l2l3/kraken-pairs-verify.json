@@ -1,0 +1,56 @@
+{
+ "EURUSD": {
+  "ok": true,
+  "key": "ZEURZUSD",
+  "best_bid": 1.11405,
+  "best_ask": 1.11407,
+  "spread_pct": 0.0018,
+  "newest_level_ts": 1794388325.0
+ },
+ "USDJPY": {
+  "ok": true,
+  "key": "ZUSDZJPY",
+  "best_bid": 157.361,
+  "best_ask": 161.4,
+  "spread_pct": 2.56671,
+  "newest_level_ts": 1794388310.0
+ },
+ "GBPUSD": {
+  "ok": true,
+  "key": "ZGBPZUSD",
+  "best_bid": 1.3316,
+  "best_ask": 1.33166,
+  "spread_pct": 0.00451,
+  "newest_level_ts": 1794388328.0
+ },
+ "AUDUSD": {
+  "ok": true,
+  "key": "AUDUSD",
+  "best_bid": 0.6872,
+  "best_ask": 0.68728,
+  "spread_pct": 0.01164,
+  "newest_level_ts": 1794388327.0
+ },
+ "USDCAD": {
+  "ok": true,
+  "key": "ZUSDZCAD",
+  "best_bid": 1.42209,
+  "best_ask": 1.42229,
+  "spread_pct": 0.01406,
+  "newest_level_ts": 1794388329.0
+ },
+ "USDCHF": {
+  "ok": true,
+  "key": "USDCHF",
+  "best_bid": 0.8281,
+  "best_ask": 0.82822,
+  "spread_pct": 0.01449,
+  "newest_level_ts": 1794388330.0
+ },
+ "NZDUSD": {
+  "ok": false,
+  "error": [
+   "EQuery:Unknown asset pair"
+  ]
+ }
+}

@@ -895,6 +895,39 @@ def deep_report(sym):
         ap(f"\n> data gaps: {'; '.join(d['errors'])}")
     ap("")
 
+    # 0 — L2/L3 microstructure (R4 2026-11-11): metals only (XAU/XAG/XPT have
+    # micro mappings; crypto perps honestly print nothing here). CONTEXT ONLY —
+    # no scorecard weight (RV-QUANT rule), signal-market ≠ execution market.
+    if sym in ("XAU", "XAG", "XPT"):
+        try:
+            mic0 = get(f"/micro?sym={sym}", timeout=40)
+        except Exception:
+            mic0 = None
+        mic0 = mic0 or {}
+        hl0 = (mic0.get("hl") or {}) if mic0.get("ok") else {}
+        lo0 = (mic0.get("lighter") or {}) if mic0.get("ok") else {}
+        if mic0.get("ok") and (hl0.get("ok") or lo0.get("ok") or hl0.get("suppressed")):
+            ap("## 0 · L2/L3 microstructure (Hyperliquid xyz + Lighter DEX — context only, no scorecard weight)")
+            if hl0.get("ok") and hl0.get("mark") is not None:
+                apr0 = hl0.get("fundingAprPct")
+                ap(f"- {hl0.get('coin')}: mark {hl0.get('mark')} · vs oracle {hl0.get('markVsOraclePct')}% · "
+                   f"OI ${float(hl0.get('oiNotionalUsd') or 0)/1e6:.0f}M"
+                   + (f" · funding 1h {hl0.get('funding1hPct'):+.4f}%"
+                      + (f" (APR-if-persisted {apr0:+.1f}%)" if apr0 is not None else " (APR suppressed — |implied|>500%)")
+                      if hl0.get("funding1hPct") is not None else "")
+                   + f" · 20-lvl imb {hl0.get('imbalance20')}")
+            elif hl0.get("suppressed"):
+                ap(f"- xyz: {str(hl0.get('suppressed'))[:100]}")
+            if lo0.get("ok"):
+                wh0 = lo0.get("whales") or []
+                ap(f"- Lighter L3 {lo0.get('symbol')} (id {lo0.get('marketId')}): {lo0.get('nResting')} resting · visible "
+                   f"${float(lo0.get('bidNotionalUsd') or 0)/1e6:.1f}M bid / ${float(lo0.get('askNotionalUsd') or 0)/1e6:.1f}M ask · imb {lo0.get('imbalance')}"
+                   + (f" · directional whales: " + " · ".join(
+                       f"{w['side']} ${w['notionalUsd']/1000:.0f}k@{w['avgPx']}" for w in wh0[:3]) if wh0
+                      else " · no directional account above floor (MM-dominated)"))
+            ap("- desk rule: crypto-rail venue flow ≠ underlying market flow (reads leverage demand); execution stays at broker MT5")
+            ap("")
+
     # 1 — trend & regime
     ap("## 1 · Trend & regime (all timeframes)")
     for tf in ("m15", "h1", "h4", "d1"):
@@ -1358,6 +1391,11 @@ def classic_report(sym):
         fut = get(f"/cnbc?syms={sym}", timeout=40)
     except Exception:
         fut = None
+    mic = None
+    try:
+        mic = get(f"/micro?sym={sym}", timeout=40)
+    except Exception:
+        mic = None
     fut_q = ((fut or {}).get("quotes") or {}).get(sym) if (fut or {}).get("ok") else None
     oi = (dep or {}).get("oi") or {}
     ncm = (cot or {}).get("noncomm") or {}
@@ -1397,7 +1435,51 @@ def classic_report(sym):
               ""]
     else:
         L += ["### futures reference: n/a — no CNBC symbol mapped (or empty quote)", ""]
-    L += ["- residual honest gaps (all classes): footprint Δ (no perp books for cash instruments) · liquidation magnets (no leveraged-perp data) · orderbook walls (CFD DOM is synthetic) · CVD (no venue taker split) · whale LTO/stopmap (crypto-venue only)", ""]
+
+    # §micro — L2/L3 microstructure (R4 2026-11-11): Hyperliquid xyz perp L2,
+    # Lighter DEX true-L3 resting orders (whale clustering), Kraken spot FX.
+    # CONTEXT ONLY — no scorecard weight (RV-QUANT rule: signal-market data
+    # never gates execution until a logged correlation study over >=30 rounds).
+    def mds(s):
+        """markdown-safe: strip link/bracket/angle syntax from upstream strings
+        (RV-SEC: hostile upstream text must not inject into desk reports)"""
+        return (str(s).replace("[", "(").replace("]", ")")
+                .replace("<", "‹").replace(">", "›"))[:110]
+    mic = mic or {}
+    mhl = (mic.get("hl") or {}) if mic.get("ok") else {}
+    mlo = (mic.get("lighter") or {}) if mic.get("ok") else {}
+    mkr = (mic.get("kraken") or {}) if mic.get("ok") else {}
+    if mic.get("ok") and (mhl.get("ok") or mlo.get("ok") or mkr.get("ok")
+                           or mhl.get("suppressed") or mlo.get("suppressed")):
+        L += ["### microstructure L2/L3 (Hyperliquid xyz · Lighter DEX · Kraken — R4, context only)"]
+        if mhl.get("ok") and mhl.get("mark") is not None:
+            apr = mhl.get("fundingAprPct")
+            L += [f"- HL {mds(mhl.get('coin'))}: mark {mhl.get('mark')} · vs oracle {mhl.get('markVsOraclePct')}% · spread {mhl.get('spreadPct')}%"
+                  + (f" · OI ${float(mhl.get('oiNotionalUsd') or 0)/1e6:.1f}M" if mhl.get("oiNotionalUsd") else "")
+                  + (f" · ΔOI 24h {mhl.get('oiD24hPct'):+.1f}%" if mhl.get("oiD24hPct") is not None else " · ΔOI 24h hist<23h")
+                  + ((f" · funding 1h {mhl.get('funding1hPct'):+.4f}% (APR-if-persisted {apr:+.1f}%)" if apr is not None
+                      else f" · funding 1h {mhl.get('funding1hPct'):+.4f}% (APR suppressed — |implied|>500%)")
+                     if mhl.get("funding1hPct") is not None else "")
+                  + f" · 20-lvl imb {mhl.get('imbalance20')} bid"]
+        elif mhl:
+            L += [f"- HL xyz: suppressed — {mds(mhl.get('suppressed') or mhl.get('error'))}"]
+        if mlo.get("ok"):
+            wh = mlo.get("whales") or []
+            wh_s = " · ".join(f"{w['side']} ${w['notionalUsd']/1000:.0f}k@{w['avgPx']} ({w['orders']}ord)" for w in wh[:3])
+            L += [f"- Lighter L3 {mds(mlo.get('symbol'))} (id {mlo.get('marketId')}): {mlo.get('nResting')} resting · visible ${float(mlo.get('bidNotionalUsd') or 0)/1e6:.1f}M bid / ${float(mlo.get('askNotionalUsd') or 0)/1e6:.1f}M ask · imb {mlo.get('imbalance')}"
+                  + (f" · directional whales: {wh_s}" if wh_s else " · no directional account above floor (MM-dominated)")
+                  + (f" · {len(mlo.get('partials') or [])} visible partials" if mlo.get("partials") else "")]
+        elif mlo:
+            L += [f"- Lighter L3: suppressed — {mds(mlo.get('suppressed') or mlo.get('error'))}"]
+        if mkr.get("ok"):
+            L += [f"- Kraken spot {mds(mkr.get('pair'))}: {mkr.get('bestBid')}/{mkr.get('bestAsk')} · spread {mkr.get('spreadPct')}%"
+                  + (f" · STALE — {mds(mkr.get('staleReason'))}" if mkr.get("stale") else " · fresh")]
+        L += ["- desk rule: micro is CONTEXT (no scorecard weight) · Kraken spot never gates the broker-basis rule when stale · crypto-rail flow ≠ underlying market flow",
+              ""]
+    else:
+        L += ["### microstructure L2/L3: n/a — no micro-mapped sources for this symbol (US30/EU indices/EU equities/FX crosses have no free L2/L3 — honest gap)", ""]
+    L += ["- residual honest gaps (all classes): footprint Δ (no perp books for cash instruments) · liquidation magnets (no leveraged-perp data) · CVD (no venue taker split outside micro-mapped syms) · whale LTO/stopmap (crypto-venue only)"
+          + ("" if mic.get("ok") else " · L2/L3 book walls (no micro mapping)"), ""]
     try:
         mt = json.loads((DESK / "mt5.json").read_text())
         mt_age = (now_ms - mt.get("ts", 0)) / 60000

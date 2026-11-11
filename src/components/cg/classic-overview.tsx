@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { usePolling } from "./use-cg-data";
 import DerivativesPanel from "./derivatives-panel";
+import MicrostructurePanel from "./microstructure-panel";
 
 /**
  * ClassicOverview — the Tier-3 instrument snapshot (indices · FX · equities ·
@@ -365,6 +366,9 @@ export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
 
       {/* derivatives add-ons: perp depth / COT / CNBC futures — hidden when unmapped */}
       <DerivativesPanel sym={sym} cashPrice={price} />
+
+      {/* L2/L3 microstructure: Hyperliquid xyz + Lighter L3 + Kraken spot — hidden when unmapped */}
+      <MicrostructurePanel sym={sym} />
 
       {/* honest scope note */}
       <div className="rounded-lg border border-neutral-800 bg-[#0e1216] p-3 text-[11px] leading-relaxed text-neutral-500">

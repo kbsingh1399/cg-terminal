@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { usePolling, useTicker } from "./use-cg-data";
 import { assetOf } from "@/lib/cg/assets";
+import MicrostructurePanel from "./microstructure-panel";
 
 /**
  * Overview — the institution snapshot: live price, auction VAL/POC/VAH
@@ -278,6 +279,10 @@ export default function OverviewTool({ sym = "BTC" }: { sym?: string }) {
           </div>
         </Card>
       </div>
+
+      {/* L2/L3 microstructure (R4): mounts for metals (XAU/XAG/XPT) — the panel
+          self-hides for unmapped crypto syms via its honest 400 */}
+      <MicrostructurePanel sym={sym} />
     </div>
   );
 }
