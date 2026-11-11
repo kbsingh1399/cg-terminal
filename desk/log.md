@@ -1602,3 +1602,9 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+### MONITOR · 2026-11-11 11:02 UTC · zai-desk — BTC ticket 209404683 EXPIRED (never filled)
+- Ticket 209404683 (BTCUSD SELL LIMIT 0.06 @ 74,262.9, SL 74,664, TP 72,500): **never filled** — market stayed 72,691–73,450, never pulled back into the limit. DIR-0005 reply verified: EXECUTED 2026-11-10T18:54:30Z (alert A6, state R4-BTC-1 → "expired" ts 1794336860000, EXEC logged, user prompted to delete residual GTC in MT5 desktop). Current mt5.json (09:44 UTC): positions=[], orders=[], account flat $4,649.96 equity=balance.
+- Round R68 run at 11:02 UTC (was 94 min stale): no candidates (all |score| ≤ 2.8, below 2.0R structural-target gate — BTC/LTC/DOGE/BNB all TREND/TRANS shorts rejected); R57-BNB-1 EXPIRED unfilled past expiry. 0 open positions.
+- Standing-suggestion sweep vs 09:44 broker snapshot: R4-DOGE-3 spread 1.3284% ✗ · R7-LTC-1 spread 2.3686% ✗ + basis 1.0584% ✗ · R9-ADA-1 spread 2.1714% ✗ — all fail spread ≤0.15% gate (LTC also fails |basis| ≤0.5%); NONE normalized, none placeable.
+- Local atg daemon: last sync 09:44 UTC (76+ min silent vs 45–300s norm) — **DIR-0013 (R4 microstructure rebuild, supersedes DIR-0012) still pending execution on the Windows box**; it was re-issued 09:45 UTC, after the last daemon poll. Terminal-not-live on the user's PC requires local `git pull` + rebuild per DIR-0013.
