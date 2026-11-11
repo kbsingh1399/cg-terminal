@@ -1,5 +1,5 @@
 {
-  "ts": 1794435940839,
+  "ts": 1794436027348,
   "positioning": {
     "BTC": {
       "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
@@ -11,13 +11,25 @@
       "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
     },
     "BNB": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.009293,
+      "oiUsd": 1084762735,
+      "oiDelta1hPct": -0.01,
+      "oiDelta4hPct": -0.43,
+      "oiDelta24hPct": -0.3
     },
     "DOGE": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.003109,
+      "oiUsd": 913579311,
+      "oiDelta1hPct": 0.29,
+      "oiDelta4hPct": -1.33,
+      "oiDelta24hPct": -0.39
     },
     "XAU": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.031317,
+      "oiUsd": 1646632054,
+      "oiDelta1hPct": -0.12,
+      "oiDelta4hPct": 2.55,
+      "oiDelta24hPct": 10.37
     }
   }
 }
