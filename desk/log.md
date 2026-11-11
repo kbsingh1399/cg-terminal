@@ -2037,3 +2037,31 @@ User overrode the v1.1 Tier-3 deferral. Executed:
   - Live DOGE perp (`/api/cg/live?sym=DOGE`, `/api/cg/market?sym=DOGE` @ `15:57:34 UTC`): `bid 0.06897 / ask 0.06898`, `dayVwap 0.06820`.
   - With `basisPct 0.0%`, entry `0.06905` (fills at bid) and stop `0.06940` (`0.00035` risk, triggers on ask) leave the `$0.00090` broker spread **`2.57×` wider than the entire stop distance**. Filling a SHORT at `0.06905` bid puts live `ask` at `~0.06995` — `$0.00055` past `SL 0.06940` — causing an instant stop-out; widening SL past `spread + stop` (`≥0.00125`) collapses R from `3.7` to `~1.03` (below `min_r_multiple 2.0`).
   - No MT5 order placed; account remains flat (`$4,649.96`, `0` positions, `0` pending orders).
+## R90 · 2026-11-11 16:12 UTC · zai-desk
+
+**Market**: BTC 74,224.7 (+0.6%)  ETH 2,076.85 (+1.2%)  SOL 85.06 (+2.1%)  XAU 4,011.48 (-0.8%)  XAG 52.340 (+1.3%)
+**Bias (|score|≥2)**: XAG-5(TREND)  ADA-3(TREND)  DOGE-4(TREND)  LINK-3(TREND)  LTC-3(TREND)  XAU-3(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- XAG SHORT confluence -5.0 — REJECTED: opposite liq magnet 53.420 (str 72, ~$27M est) within 1.2R of entry — wait for sweep
+- NEW R90-ADA-1 ADA SHORT limit 0.1789 · stop 0.1804 · T1 0.1743 · R 3.1
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (0.1789 vs 0.1762), h4 RSI 50.3, day +2.9%
+      [FOR    ] footprint: bull 47 / bear 59; recent: Exhaustion/sell[time], Divergence/buy[vol], Divergence/buy[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×6, abs:sell×4, div:buy×3, div:sell×5, exh:buy×1, exh:sell×3, sdiv:sell×2, trap:buy×3, trap:sell×1 — net 13 buy-side vs 15 sell-side
+      [FOR    ] bookWalls: ±5% depth imbalance -0.090 (5m ago -0.162, rising bids); bid $0.01B vs ask $0.02B
+      [FOR    ] cvd: taker buy 49.1%, perpCvd -15, spotCvd -3, quadrant both-selling, latestDiv bear (recent)
+- NEW R90-LINK-2 LINK SHORT limit 10.505 · stop 10.560 · T1 10.301 · R 3.7
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (10.505 vs 10.365), h4 RSI 47.2, day +2.1%
+      [FOR    ] footprint: bull 15 / bear 23; recent: Trapped shorts/buy[time], Divergence/buy[vol], Divergence/sell[range]
+      [FOR    ] liquidation: long-liq magnet 10.079 (str 74, ~$4M est, -3.85%) as target
+      [AGAINST] liquidation-hazard: short-liq magnet 10.604 (str 81) sits between entry and stop — sweep risk
+      [FOR    ] bookWalls: ±5% depth imbalance +0.010 (5m ago +0.055, falling bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.9%, perpCvd -25, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
+
+### Order lifecycle
+- R88-LTC-1 re-debated: FOR 5/AGAINST 1 — stands
+- R89-DOGE-1 re-debated: FOR 6/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
