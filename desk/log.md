@@ -1727,3 +1727,30 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R75 · 2026-11-11 11:52 UTC · zai-desk
+
+**Market**: BTC 73,985.0 (+0.3%)  ETH 2,057.82 (+0.3%)  SOL 84.03 (+0.9%)  XAU 4,054.29 (+0.2%)  XAG 52.940 (+2.4%)
+**Bias (|score|≥2)**: ETH-2(TRANS)  ADA-3(TREND)  DOGE-4(TREND)  LINK-3(TREND)  LTC-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R75-DOGE-1 DOGE SHORT limit 0.06839 · stop 0.06868 · T1 0.06776 · R 2.2
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (0.06827 vs 0.06810), h4 RSI 39.4, day +0.4%
+      [FOR    ] footprint: bull 27 / bear 48; recent: none <6h
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×1, abs:sell×3, div:buy×1, div:sell×2, exh:buy×1, exh:sell×2, trap:buy×1 — net 4 buy-side vs 7 sell-side
+      [FOR    ] liquidation: long-liq magnet 0.06631 (str 94, ~$9M est, -2.89%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.012 (5m ago -0.051, rising bids); bid $0.03B vs ask $0.03B
+      [FOR    ] cvd: taker buy 47.8%, perpCvd -112, spotCvd -17, quadrant both-selling, latestDiv bear (recent)
+- NEW R75-LINK-2 LINK SHORT limit 10.401 · stop 10.443 · T1 10.311 · R 2.2
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (10.401 vs 10.347), h4 RSI 43.1, day +1.1%
+      [FOR    ] footprint: bull 19 / bear 30; recent: none <6h
+      [FOR    ] liquidation: long-liq magnet 10.079 (str 100, ~$3M est, -3.07%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.031 (5m ago +0.023, falling bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.9%, perpCvd -25, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
+
+### Order lifecycle
+- R69-LTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R74-ADA-1 re-debated: FOR 5/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
