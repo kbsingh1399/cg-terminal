@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loadFpBars } from "@/lib/cg/fp-load";
-import { isAsset } from "@/lib/cg/assets";
+import { knownSym } from "@/lib/cg/sym-gate";
 import { parseInterval } from "@/lib/cg/params";
 
 export const dynamic = "force-dynamic";
@@ -16,11 +16,16 @@ export const dynamic = "force-dynamic";
  * bars and the snapshot TTL drops to 8 s, so the client's 8-second poll
  * always gets a fresh tail while the heavy 300-bar history load keeps its
  * longer TTL. No synthetic data — every value comes from the Coinglass API.
+ *
+ * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: the venue
+ * set (Binance/OKX/Bybit/Bitget ± Hyperliquid) is tried per venue and any
+ * exchange without the pair lands in `missing` — the aggregate itself stays
+ * honest.
  */
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!isAsset(sym)) {
+  if (!(await knownSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   const itv = parseInterval(sp.get("itv"));

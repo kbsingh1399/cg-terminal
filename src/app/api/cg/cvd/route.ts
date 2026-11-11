@@ -12,7 +12,7 @@ import {
   type TickerRow,
 } from "@/lib/cg/cvd";
 import type { KlineRow } from "@/lib/cg/types";
-import { isAsset } from "@/lib/cg/assets";
+import { knownSym } from "@/lib/cg/sym-gate";
 import { BoundedMap } from "@/lib/cg/bounded";
 
 export const dynamic = "force-dynamic";
@@ -26,6 +26,10 @@ export const dynamic = "force-dynamic";
  * (src/lib/cg/cvd.ts) over per-venue taker flows (#bs_usd klines).
  *
  * Pure API data: /api/select/coins/tickers + /api/v2/kline (#kline, #bs_usd).
+ * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: instrument
+ * discovery is keyword-driven and covers every venue that lists the coin
+ * (13 perp venues incl. Binance/OKX/Bybit/Gate/Bitget/Bitfinex/Kraken + 9
+ * spot venues incl. Coinbase and Crypto.com).
  */
 
 const ITVS: Record<string, { api: string; ms: number }> = {
@@ -119,7 +123,7 @@ const NORMALIZE: Record<string, string> = { m1: "1m", m5: "5m", m15: "15m", m30:
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!isAsset(sym)) {
+  if (!(await knownSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   const rawItv = sp.get("itv") ?? "m15";

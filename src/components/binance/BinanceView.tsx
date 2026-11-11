@@ -287,8 +287,10 @@ export default function BinanceView({
       <div className="rounded-lg border border-neutral-800 bg-[#0e1216] p-3 text-[11px] leading-relaxed text-neutral-500">
         <span className="font-semibold text-neutral-400">Tier-2 Binance-native instrument:</span> every field above is a
         live Binance USDT-M futures stream or endpoint — book L2 (@depth20@100ms), tape (@trade), candles (@kline),
-        funding/mark (premiumIndex), OI. Coinglass order-flow tools (footprint · CVD · liq-level aggregates · book walls)
-        stay on the 15 Tier-1 registry assets; execution is TESTNET-only by server gate.
+        funding/mark (premiumIndex), OI, liquidations (@forceOrder). The order-flow tabs (Large Orders · Liq Levels ·
+        Book Walls · CVD · Footprint) aggregate this symbol across every exchange that carries it — Binance, OKX, Bybit,
+        Bitget, Gate, Coinbase, Kraken, Bitfinex and the rest of the Coinglass venue set, discovered live per symbol.
+        Execution is TESTNET-only by server gate.
       </div>
     </div>
   );

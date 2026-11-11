@@ -140,12 +140,16 @@ export default function Home() {
     window.history.replaceState(null, "", u.toString());
   }, [sym]);
 
-  // perp-only tools don't exist for classic/Binance-tier instruments → Overview
+  // classic instruments (indices/FX/equities/commodities) have no perp
+  // order-flow tools → Overview. Tier-2 Binance symbols keep the FULL
+  // toolset since 2026-11-11: aggregated Coinglass order-flow (large orders,
+  // liquidation levels, book walls, CVD, footprint) runs on every top-200
+  // symbol, with BinanceView as its Overview tab.
   const pick = (s: string) => {
     setSym(s);
     setView("terminal");
     const u = UNI_OF.get(s);
-    if ((u?.classic || u?.kind === "binance") && tool !== "overview") setTool("overview");
+    if (u?.classic && tool !== "overview") setTool("overview");
   };
 
   // keyboard rotate (the "toggle rotate"): ←/→ cycle the whole universe when
@@ -168,9 +172,11 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sym, paletteOpen, tool, UNIVERSE]);
 
+  // classic instruments are quotes+bars only (Overview); registry perps AND
+  // Tier-2 Binance symbols get the full order-flow toolset
   const visibleTools = useMemo(
-    () => TOOLS.filter((t) => (classic || binance ? t.key === "overview" : true)),
-    [classic, binance]
+    () => TOOLS.filter((t) => (classic ? t.key === "overview" : true)),
+    [classic]
   );
 
   return (
@@ -273,7 +279,17 @@ export default function Home() {
         ) : binance && BIN_OF.has(sym) ? (
           (() => {
             const b = BIN_OF.get(sym)!;
-            return <BinanceView sym={b.sym} rank={b.rank} priceDecs={b.priceDecs} qtyDecs={b.qtyDecs} />;
+            return (
+              <>
+                {tool === "overview" && <BinanceView sym={b.sym} rank={b.rank} priceDecs={b.priceDecs} qtyDecs={b.qtyDecs} />}
+                {tool === "footprint" && <FootprintTool sym={sym} />}
+                {tool === "large-orders" && <LargeOrdersTool sym={sym} />}
+                {tool === "liquidation-levels" && <LiquidationLevelsTool sym={sym} />}
+                {tool === "book-walls" && <BookWallsTool sym={sym} />}
+                {tool === "cvd" && <CvdTool sym={sym} />}
+                {tool === "alerts" && <AlertsTool sym={sym} tier2 />}
+              </>
+            );
           })()
         ) : (
           <>
@@ -290,7 +306,8 @@ export default function Home() {
 
       <footer className="mt-auto border-t border-neutral-800 px-4 py-3">
         <div className="mx-auto max-w-[1600px] text-[10px] leading-relaxed text-neutral-600">
-          Data sourced live from the Coinglass web API (Tier-1 perp assets), the Binance USDT-M futures public market
+          Data sourced live from the Coinglass web API (order-flow aggregates for every asset — whale resting orders across
+          all supported exchanges, liquidation-level clusters, book walls, CVD), the Binance USDT-M futures public market
           (Tier-2 top-200: REST + fstream WebSocket — book/tape/klines/funding/OI; demo order execution on the futures
           TESTNET only), Yahoo Finance v8 (Tier-3 classic instruments), and — for microstructure — the free Hyperliquid
           xyz HIP-3 perps, Lighter DEX L3 order books, and Kraken spot FX depth, for personal analysis. Figures are

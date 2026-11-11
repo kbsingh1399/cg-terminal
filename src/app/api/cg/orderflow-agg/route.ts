@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
-import { fpVenues, isAsset } from "@/lib/cg/assets";
+import { fpVenues } from "@/lib/cg/assets";
+import { knownSym } from "@/lib/cg/sym-gate";
 import { parseInterval, clampLimit } from "@/lib/cg/params";
 import type { OrderFlowBucket, OrderFlowBar } from "@/lib/cg/types";
 
@@ -9,10 +10,11 @@ export const dynamic = "force-dynamic";
 /**
  * GET /api/cg/orderflow-agg?sym=BTC&interval=m15&limit=300
  * Aggregated futures order flow (footprint) across the deepest perp venues
- * of the requested asset — Binance, OKX, Bybit (+ Hyperliquid where listed;
- * metals drop it) — mirroring the "aggregated futures" view on the
+ * of the requested asset — Binance, OKX, Bybit, Bitget (+ Hyperliquid where
+ * listed; metals drop them) — mirroring the "aggregated futures" view on the
  * Coinglass footprint page. Per-venue price buckets are re-gridded onto a
- * common step and summed.
+ * common step and summed. Tier-2 (Binance top-200) symbols are accepted
+ * since 2026-11-11; venues without the pair contribute nothing (venuesOk).
  */
 
 function niceStep(range: number, target: number): number {
@@ -77,7 +79,7 @@ function parseRows(d: unknown): [number, unknown[][]][] {
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!isAsset(sym)) {
+  if (!(await knownSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   const VENUES = fpVenues(sym).map((v) => v.key);

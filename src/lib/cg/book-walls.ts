@@ -444,6 +444,70 @@ export const AGG_VENUES: Record<"futures" | "spot", string[]> = {
   spot: ["Binance", "Coinbase", "OKX", "Bitget", "Gate", "Kraken", "Bitfinex"],
 };
 
+/** venue a coin's aggregate stream rejects, e.g. "No supported futures heatmap
+ * pair for ARIA on Bitget" → "Bitget" (null when the error is something else) */
+function rejectedVenue(msg: string): string | null {
+  const m = /No supported \w+ heatmap pair for .+? on (.+?)\s*$/.exec(msg);
+  return m ? m[1] : null;
+}
+
+const g = globalThis as unknown as { __aggVenueCache?: Map<string, { at: number; venues: string[] }> };
+const venueCache = (g.__aggVenueCache ??= new Map<string, { at: number; venues: string[] }>());
+const VENUE_CACHE_TTL = 60 * 60 * 1000;
+
+/**
+ * Aggregate stream with PER-COIN venue discovery (2026-11-11 Tier-2 unlock).
+ *
+ * The stream 400s with a named-venue error when ANY requested exchange lacks
+ * a (coin, market) heatmap pair — and the error names the offending venue.
+ * So: try the candidate set; on a named rejection drop that venue and retry;
+ * cache the winning set per (coin, market) for 1h. Every coin — registry alt
+ * or Tier-2 top-200 member — ends up aggregating over exactly the venues
+ * that actually carry its book (Binance/OKX/Gate/Bitget/Hyperliquid futures,
+ * + Coinbase/Kraken/Bitfinex spot where listed).
+ *
+ * Discovery reuses the REAL fetch opts (no wasted probe): the successful
+ * attempt's StreamResult is returned to the caller.
+ */
+export async function fetchAggregateWithDiscovery(opts: {
+  coin: string;
+  exchanges: string[];
+  market: "futures" | "spot";
+  interval: string;
+  limit: number;
+  endTime?: number;
+}): Promise<{ venues: string[]; result: StreamResult }> {
+  const ck = `${opts.coin}|${opts.market}`;
+  const cached = venueCache.get(ck);
+  if (cached && Date.now() - cached.at < VENUE_CACHE_TTL) {
+    // resolved before: one plain fetch with the known-good venue set
+    const result = await fetchAggregateStream({ ...opts, exchanges: cached.venues });
+    return { venues: cached.venues, result };
+  }
+  let venues = [...opts.exchanges];
+  let lastErr: unknown = null;
+  while (venues.length > 0) {
+    try {
+      const result = await fetchAggregateStream({ ...opts, exchanges: venues });
+      venueCache.set(ck, { at: Date.now(), venues });
+      // bound the cache like every other module-level store
+      if (venueCache.size > 512) {
+        const oldest = [...venueCache.entries()].sort((a, b) => a[1].at - b[1].at);
+        for (const [k] of oldest.slice(0, oldest.length - 512)) venueCache.delete(k);
+      }
+      return { venues, result };
+    } catch (e) {
+      lastErr = e;
+      const bad = rejectedVenue(e instanceof Error ? e.message : "");
+      if (!bad) throw e; // unrelated failure — let the caller's stale-serve handle it
+      const next = venues.filter((v) => v !== bad);
+      if (next.length === venues.length) throw e; // named a venue we never asked for
+      venues = next;
+    }
+  }
+  throw lastErr ?? new Error(`no ${opts.market} heatmap pair for ${opts.coin} on any venue`);
+}
+
 /** their `y` map — minimum wall USD per coin */
 export const WALL_MIN_USD: Record<string, number> = {
   BTC: 1_500_000,

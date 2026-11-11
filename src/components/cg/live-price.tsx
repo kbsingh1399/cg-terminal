@@ -1,7 +1,7 @@
 "use client";
 
 import { useTicker, type TickerSource } from "./use-cg-data";
-import { assetOf } from "@/lib/cg/assets";
+import { symDecs } from "@/lib/cg/assets";
 
 /**
  * LivePrice — the top-bar REAL-TIME ticker shown on every tab.
@@ -32,8 +32,7 @@ const SOURCE_BADGE: Record<Exclude<TickerSource, null>, { label: string; cls: st
 
 export default function LivePrice({ sym }: { sym: string }) {
   const { price, bid, ask, dir, live, source } = useTicker(sym);
-  const cfg = assetOf(sym);
-  const decs = cfg?.priceDecs ?? 2;
+  const decs = symDecs(sym, price);
   const fmt = (n: number | null | undefined) =>
     n == null || !Number.isFinite(n)
       ? "–"

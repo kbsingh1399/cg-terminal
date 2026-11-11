@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePolling } from "./use-cg-data";
 import CvdCanvas from "./charts/cvd-canvas";
-import { assetOf } from "@/lib/cg/assets";
+import { symDecs } from "@/lib/cg/assets";
 import { useLiveForming } from "@/lib/live/forming";
 import { Button } from "@/components/ui/button";
 
@@ -103,7 +103,8 @@ export default function CvdTool({ sym = "BTC" }: { sym?: string }) {
   const d = q.data && q.data.sym === sym ? q.data : undefined;
   const err = q.error;
   const k = d?.kpis;
-  const decs = assetOf(sym)?.priceDecs ?? 2;
+  const lastClose = d?.candles?.length ? Number(d.candles[d.candles.length - 1][4]) : null;
+  const decs = symDecs(sym, lastClose);
   const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
   const quad = k ? QUADRANTS[k.quadrant] ?? QUADRANTS.partial : null;
 

@@ -100,7 +100,12 @@ export function leadInstr(sym: string): string {
 /** Perp aggregation venues for a symbol — mirrors the fp route's VENUES.
  * The registry's LEAD instrument goes first (fp-load merges onto keys[0]);
  * the lead-override mechanism is currently unused (every listed asset leads
- * on Binance since the USO removal) but stays for future non-Binance leads. */
+ * on Binance since the USO removal) but stays for future non-Binance leads.
+ * 2026-11-11 (Tier-2 unlock): unknown symbols join as-is — venues without a
+ * pair fail per-venue and land in `missing` (live-verified: ARIA aggregates
+ * Binance+Bybit). Bitget is deliberately NOT here: the /api/orderFlow
+ * endpoint carries no Bitget instrument keys (verified on BTC and ARIA);
+ * Bitget DOES serve liquidationLevels/v2, CVD flows and LTO orders. */
 export function fpVenues(sym: string): { id: string; key: string; usd: boolean }[] {
   const s = sym.toUpperCase();
   const a = assetOf(s);
@@ -116,26 +121,33 @@ export function fpVenues(sym: string): { id: string; key: string; usd: boolean }
   return venues;
 }
 
-/** Liquidation-levels venues for a symbol (4-venue aggregate). */
+/** Liquidation-levels venues for a symbol (aggregate).
+ * 2026-11-11 (Tier-2 unlock): Bitget joins the crypto candidates (registry +
+ * top-200); a venue without the pair returns no payload and shows 0 rows in
+ * perVenue — never breaks the aggregate. Metals keep their curated 3. */
 export function liqVenues(sym: string): { name: string; key: string }[] {
   const s = sym.toUpperCase();
   const a = assetOf(s);
+  const metal = a?.kind === "metal";
   const v = [
     { name: "Binance", key: `Binance_${s}USDT` },
     { name: "OKX", key: `OKX_${s}-USDT-SWAP` },
     { name: "Bybit", key: `Bybit_${s}USDT` },
   ];
+  if (!metal) v.push({ name: "Bitget", key: `Bitget_${s}USDT_UMCBL` });
   if (!a || a.hl) v.push({ name: "Hyperliquid", key: `Hyperliquid_${s}-USD` });
   return v;
 }
 
 /**
  * Liquidity-heatmap AGGREGATE-stream venues per asset (live-verified against
- * capi.coinglass.com): the full multi-venue futures/spot aggregates exist
- * only for BTC and ETH. Alt-coin perps aggregate over Binance+Hyperliquid
- * (OKX/Gate/Bitget/Bybit carry no alt futures heatmap pairs — the stream
- * errors with "No supported futures heatmap pair" if any listed venue lacks
- * the pair). Metals are Binance-only (no Hyperliquid listing, no spot books).
+ * capi.coinglass.com): BTC and ETH keep their curated full sets. Every other
+ * crypto asset (registry alts + Tier-2 top-200) gets the FULL candidate list —
+ * the route's resolveAggVenues() probes the stream once per (coin, market),
+ * drops venues the stream itself rejects ("No supported … pair for COIN on X")
+ * and caches the pruned set, so each coin aggregates over every venue that
+ * actually carries its book (Binance/OKX/Gate/Bitget/Hyperliquid futures;
+ * + Coinbase/Kraken/Bitfinex spot). Metals stay Binance-only (no spot books).
  */
 export function aggVenues(sym: string, market: "futures" | "spot"): string[] {
   const s = sym.toUpperCase();
@@ -144,15 +156,36 @@ export function aggVenues(sym: string, market: "futures" | "spot"): string[] {
     if (s === "BTC" || s === "ETH") return ["Binance", "OKX", "Gate", "Bitget", "Hyperliquid"];
     if (s === "USO") return []; // USO left the perp registry 2026-11-11 (ETF mismatch) — kept as a guard: honest 400, never a stream error
     if (a?.kind === "metal") return ["Binance"];
-    return ["Binance", "Hyperliquid"];
+    return ["Binance", "OKX", "Gate", "Bitget", "Hyperliquid"];
   }
   if (s === "BTC" || s === "ETH") return ["Binance", "Coinbase", "OKX", "Bitget", "Gate", "Kraken", "Bitfinex"];
   if (a?.kind === "metal") return []; // no spot books for metals on the stream
-  return ["Binance"];
+  return ["Binance", "Coinbase", "OKX", "Bitget", "Gate", "Kraken", "Bitfinex"];
 }
 
 export function fmtAssetPrice(v: number | null | undefined, sym: string): string {
   if (null == v || !Number.isFinite(v)) return "–";
   const a = assetOf(sym);
   return v.toLocaleString("en-US", { minimumFractionDigits: a?.priceDecs ?? 2, maximumFractionDigits: a?.priceDecs ?? 2 });
+}
+
+/** Display decimals for ANY terminal symbol — registry asset, Tier-2 Binance
+ * top-200 symbol, or unknown: registry priceDecs win; otherwise derive from a
+ * live reference price (sub-cent coins get 5-8 decimals, majors 1-3), exactly
+ * the way Binance's own tick sizes spread. Used by every tool that renders a
+ * symbol outside the 15-asset registry. */
+export function symDecs(sym: string, refPrice?: number | null): number {
+  const a = assetOf(sym);
+  if (a) return a.priceDecs;
+  const p = typeof refPrice === "number" && Number.isFinite(refPrice) && refPrice > 0 ? refPrice : null;
+  if (p == null) return 4; // safe default for an unseen Tier-2 symbol
+  if (p >= 1000) return 2;
+  if (p >= 100) return 2;
+  if (p >= 10) return 3;
+  if (p >= 1) return 3;
+  if (p >= 0.1) return 4;
+  if (p >= 0.01) return 5;
+  if (p >= 0.001) return 6;
+  if (p >= 0.0001) return 7;
+  return 8;
 }

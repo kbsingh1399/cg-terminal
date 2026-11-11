@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { usePolling } from "./use-cg-data";
 import type { LiqStats } from "@/lib/cg/liq-model";
-import { assetOf, liqVenues } from "@/lib/cg/assets";
+import { liqVenues, symDecs } from "@/lib/cg/assets";
 import { Button } from "@/components/ui/button";
 import StopmapSection from "./stopmap-section";
 
@@ -61,9 +61,17 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
   // defense-in-depth: never render stats that belong to another symbol
   const stats = liqQ.data?.sym === sym ? liqQ.data.stats ?? null : null;
   const err = liqQ.error;
-  const decs = assetOf(sym)?.priceDecs ?? 2;
+  const decs = symDecs(sym, stats?.last ?? null);
   const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
-  const venueList = liqVenues(sym).map((v) => v.name).join(" + ");
+  // venues that actually carry this symbol's liquidation data (response-
+  // driven once loaded — Tier-2 symbols discover their venue set live)
+  const venueList = (
+    liqQ.data?.sym === sym
+      ? Object.entries(liqQ.data.perVenue ?? {})
+          .filter(([, n]) => n > 0)
+          .map(([v]) => v)
+      : liqVenues(sym).map((v) => v.name)
+  ).join(" + ");
 
   const bandMax = useMemo(
     () => (stats ? Math.max(1, ...stats.bands.map((b) => b.up + b.down)) : 1),

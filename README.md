@@ -50,9 +50,19 @@ Under the hood:
   clicking an asset opens the Binance-native symbol view: real-time L2 order
   book (`@depth20@100ms`), trade tape (`@trade`), live candles (REST bootstrap
   + tape-derived forming bar), funding rate / next funding / mark basis /
-  open interest, and the **testnet demo order ticket** (see §6). Registry
-  majors (BTC/ETH/… ) keep their full order-flow toolset; 188 additional
-  assets join the palette, search and ←/→ rotation — 287 instruments total.
+  open interest, and the **testnet demo order ticket** (see §6).
+- **Order-flow tabs on EVERY symbol** (2026-11-11) — the Coinglass aggregate
+  toolset (Large Orders · Liq Levels + Stops · Book Walls · CVD · Footprint)
+  runs on all 287 instruments, Tier-2 included: whale resting orders across
+  every exchange that carries the coin (Binance, OKX, Bybit, Coinbase,
+  Bitfinex, Kraken, Crypto.com, Upbit, Gate, Bitget — the support endpoint
+  names them per symbol), liquidation-level clusters over Binance+OKX+Bybit
+  +Bitget(+Hyperliquid), book walls over the liquidity-heatmap aggregate
+  stream (per-coin venue discovery — the stream names a venue without a pair,
+  discovery drops it and caches the winning set), and CVD over up to 13 perp
+  + 9 spot venues. Price precision for non-registry symbols derives from the
+  live price (Binance-style tick spread), and every number stays
+  exchange/API-sourced — never fabricated.
 
 ## 2. Prerequisites
 

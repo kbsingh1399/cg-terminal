@@ -3,12 +3,13 @@ import { cgGet } from "@/lib/cg/client";
 import {
   buildWallsModel,
   decodeRow,
-  fetchAggregateStream,
+  fetchAggregateWithDiscovery,
   WALL_MIN_USD,
   type BookSnapshot,
 } from "@/lib/cg/book-walls";
 import type { KlineRow } from "@/lib/cg/types";
-import { aggVenues, isAsset } from "@/lib/cg/assets";
+import { aggVenues } from "@/lib/cg/assets";
+import { knownSym } from "@/lib/cg/sym-gate";
 import { BoundedMap } from "@/lib/cg/bounded";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,11 @@ export const dynamic = "force-dynamic";
  * Pure API data: NDJSON aggregate stream
  * /liquidity-heatmap/api/liquidity/heatmap/aggregate/stream (server-side
  * venue merge, price-shift aligned) + /api/v2/kline for the candle path.
+ *
+ * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: the venue
+ * set per (coin, market) is DISCOVERED live (the stream names any venue
+ * without a pair; discovery drops it and retries, cached 1h) — every coin
+ * aggregates over exactly the exchanges that carry its book.
  */
 
 const INTERVALS = ["1m", "5m", "15m", "1h", "4h", "1d"] as const;
@@ -47,7 +53,7 @@ const cache = new BoundedMap<{ at: number; body: unknown }>(24);
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!isAsset(sym)) {
+  if (!(await knownSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   const market = sp.get("market") === "spot" ? "spot" : "futures";
@@ -81,19 +87,19 @@ export async function GET(req: NextRequest) {
   if (hit && Date.now() - hit.at < 18_000) return NextResponse.json(hit.body);
 
   try {
-    // per-asset venue list: the full 5-venue futures aggregate only exists
-    // for BTC/ETH (alts = Binance+Hyperliquid, metals = Binance) — a venue
-    // without a (coin, market) heatmap pair kills the whole stream
-    const venues = aggVenues(sym, market);
-    if (!venues.length) {
+    // per-coin venue discovery: the stream itself names any venue without a
+    // (coin, market) heatmap pair — discovery drops it, retries and caches
+    // the winning set (1h). BTC/ETH keep their curated full lists.
+    const candidates = aggVenues(sym, market);
+    if (!candidates.length) {
       return NextResponse.json(
         { ok: false, error: `no ${market} aggregate for ${sym} on the liquidity-heatmap stream — use market=futures` },
         { status: 400 }
       );
     }
-    const stream = await fetchAggregateStream({
+    const { venues, result: stream } = await fetchAggregateWithDiscovery({
       coin: sym,
-      exchanges: venues,
+      exchanges: candidates,
       market,
       interval: API_ITV[interval],
       limit,

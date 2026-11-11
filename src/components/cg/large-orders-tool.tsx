@@ -5,8 +5,7 @@ import LargeOrdersCanvas from "./charts/large-orders-canvas";
 import { usePolling, rowsToCandles, type KlinePayload, type LtoPayload } from "./use-cg-data";
 import type { LtoOrder } from "@/lib/cg/types";
 import { fmtAge, fmtNum, fmtPct, fmtUsd } from "@/lib/cg/format";
-import { leadInstr } from "@/lib/cg/assets";
-import { assetOf } from "@/lib/cg/assets";
+import { leadInstr, symDecs } from "@/lib/cg/assets";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -58,7 +57,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
   const lastPrice = candles.length ? candles[candles.length - 1].c : null;
   // defense-in-depth: never render orders that belong to another symbol
   const groups = ltoQ.data?.symbol === sym ? ltoQ.data.groups : [];
-  const decs = assetOf(sym)?.priceDecs ?? 2;
+  const decs = symDecs(sym, lastPrice);
   const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
 
   const marketOf = (t: number) => (t === 1 ? "futures" : "spot");

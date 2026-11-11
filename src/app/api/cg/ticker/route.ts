@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
-import { assetOf, isAsset } from "@/lib/cg/assets";
+import { assetOf } from "@/lib/cg/assets";
+import { knownSym } from "@/lib/cg/sym-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,8 @@ export const dynamic = "force-dynamic";
  * number of tabs/Antigravity agents stay gentle on upstream.
  *
  * Pure API data: Binance-perp lead venue via Coinglass, same source the
- * charts use — no synthetic values.
+ * charts use — no synthetic values. Tier-2 (Binance top-200) symbols are
+ * accepted since 2026-11-11 via the same Binance_<SYM>USDT lead key.
  */
 
 const TTL = Math.max(1000, Number(process.env.CG_TICKER_TTL_MS ?? 3000) || 3000);
@@ -65,7 +67,7 @@ async function refresh(sym: string): Promise<TickerEntry> {
 
 export async function GET(req: NextRequest) {
   const sym = (req.nextUrl.searchParams.get("sym") ?? "BTC").toUpperCase();
-  if (!isAsset(sym)) {
+  if (!(await knownSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   let e = cache.get(sym);

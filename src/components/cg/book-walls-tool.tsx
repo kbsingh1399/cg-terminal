@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { usePolling, useTicker } from "./use-cg-data";
 import BookHeatCanvas, { type LiveOverlay } from "./charts/book-heat-canvas";
 import { fmtNum } from "@/lib/cg/format";
-import { assetOf } from "@/lib/cg/assets";
+import { symDecs } from "@/lib/cg/assets";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -100,7 +100,7 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
   const lm = lb.data && lb.data.sym === sym && lb.data.grid === grid ? lb.data.model : undefined;
   const liveBook = lm && lb.data ? lb.data : undefined;
   const err = q.error;
-  const decs = assetOf(sym)?.priceDecs ?? 2;
+  const decs = symDecs(sym, tk.price ?? m?.last.price ?? null);
   const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
   const minUsd = q.data?.minWallUsd ?? 100_000;
 

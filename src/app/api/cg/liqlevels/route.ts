@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import { buildLiqModel, liqStats, type RawLiqPayload, type LiqStats } from "@/lib/cg/liq-model";
-import { isAsset, liqVenues, assetOf } from "@/lib/cg/assets";
+import { liqVenues, symDecs } from "@/lib/cg/assets";
+import { knownSym } from "@/lib/cg/sym-gate";
 import { getLivePrice } from "@/lib/live/server-price";
 import type { LiquidationLevel } from "@/lib/cg/types";
 
@@ -10,19 +11,23 @@ export const dynamic = "force-dynamic";
 /**
  * GET /api/cg/liqlevels?sym=BTC&range=3d|7d|30d&lvR=4
  *
- * Aggregated liquidation levels over the four perp venues — Binance, OKX,
- * Bybit, Hyperliquid — using the EXACT model of the live Coinglass
- * liquidation-levels page (ported to src/lib/cg/liq-model.ts): 520-row price
- * grid, unhit levels only, top key levels within ±lvR% with strength
- * normalized to the strongest row, leverage tiers h1/h2/h3.
+ * Aggregated liquidation levels over the perp venues — Binance, OKX, Bybit,
+ * Bitget (+ Hyperliquid where listed; metals keep their curated 3) — using
+ * the EXACT model of the live Coinglass liquidation-levels page (ported to
+ * src/lib/cg/liq-model.ts): 520-row price grid, unhit levels only, top key
+ * levels within ±lvR% with strength normalized to the strongest row,
+ * leverage tiers h1/h2/h3.
  *
  * Pure API data: every value comes from /api/liquidationLevels/v2 per venue.
+ * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: venues
+ * without the pair return no payload (honest 0 in perVenue), never a fake
+ * cluster.
  */
 
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!isAsset(sym)) {
+  if (!(await knownSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   const VENUES = liqVenues(sym);
@@ -62,7 +67,10 @@ export async function GET(req: NextRequest) {
     // candle close can lag minutes behind the market (verified: false
     // "approaching" distances on XRP/ADA). stats.last reports the price used.
     const live = await getLivePrice(sym).catch(() => null);
-    const stats: LiqStats = liqStats(model, lvR, { livePrice: live?.price ?? null, priceDecs: assetOf(sym)?.priceDecs });
+    const stats: LiqStats = liqStats(model, lvR, {
+      livePrice: live?.price ?? null,
+      priceDecs: symDecs(sym, live?.price ?? null),
+    });
 
     return NextResponse.json({
       ok: true,
