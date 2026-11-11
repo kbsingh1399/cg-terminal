@@ -2065,3 +2065,12 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+## EXEC · 2026-11-11 16:15 UTC · atg-exec
+- **R90-ADA-1 (`ADA SHORT limit`) — SKIPPED on MT5 (`ADAUSD`)**:
+  - `desk/mt5.json` `ADAUSD`: `bid 0.1768`, `ask 0.1806`, `spreadPoints 38.0` (`$0.0038`), `spreadPct 2.1265%`, `perpMid 0.1782`, `basisPct +0.2806%`, `tradeAllowed: true` (`/api/cg/live?sym=ADA` `0.1782`, VWAP `0.1762`).
+  - **Gates failed**: `spreadPct 2.1265%` is `14.2×` above `0.15%` broker spread gate, and broker spread `$0.0038` is `2.53×` larger than the `$0.0015` perp SL width (`0.1804 - 0.1789`). Basis-translated levels (`× 1.002806`): entry `0.1794` bid / SL `0.1809` ask / T1 `0.1748` bid — filling at `0.1794` bid implies `ask ~0.1832` (`+$0.0023` past SL, instant stop-out). Widening SL past `$0.0053` cuts reward/risk to `~0.87R` (`< 2.0R`).
+- **R90-LINK-2 (`LINK SHORT limit`) — SKIPPED on MT5 (`LNKUSD`)**:
+  - `desk/mt5.json` `LNKUSD`: `bid 10.459`, `ask 10.52`, `spreadPoints 61.0` (`$0.061`), `spreadPct 0.5815%`, `perpMid 10.477`, `basisPct +0.1193%`, `tradeAllowed: true` (`/api/cg/live?sym=LINK` `10.474`, VWAP `10.365`).
+  - **Gates failed**: `spreadPct 0.5815%` is `3.9×` above `0.15%` broker spread gate, and broker spread `$0.061` is `1.11×` larger than the `$0.055` perp SL width (`10.560 - 10.505`). Basis-translated levels (`× 1.001193`): entry `10.518` bid / SL `10.573` ask / T1 `10.313` bid — filling at `10.518` bid implies `ask ~10.579` (`+$0.006` past SL, instant stop-out). Widening SL past `$0.116` cuts reward/risk to `~1.76R` (`< 2.0R`), alongside `10.604` (str 81) short-liq sweep hazard `[AGAINST]`.
+- Status left `"suggested"` per `PROTOCOL.md` with skip details documented in `desk/state.json` `notes`; MT5 remains flat (`equity $4,649.96`, `0` positions, `0` orders); `R90` `WAKE.md` items cleared (`ALERT A10` preserved for `zai-desk`).

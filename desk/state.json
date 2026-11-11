@@ -572,7 +572,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec (2026-11-11 16:15 UTC): ADAUSD spreadPct 2.1265% ($0.0038 = bid 0.1768 / ask 0.1806, 14.2x above 0.15% gate) vs $0.0015 SL width (2.53x spread); basis +0.2806% -> entry 0.1794 bid / SL 0.1809 ask causes instant stop-out on fill (ask ~0.1832); widening SL > $0.0053 cuts R to ~0.87 (<2.0R). Perp live 0.1782."
     },
     {
       "id": "R90-LINK-2",

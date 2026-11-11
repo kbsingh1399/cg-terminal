@@ -91,24 +91,3 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 
 ## 2026-11-11 15:14 UTC — ALERT A10 — outbox-reply
 - BELL: atg replied to directive (2026-11-11T15-35-00_DIR-0014-binance-top200-tier-rebuild.reply.md) — zai-desk to verify on next wake
-
-## 2026-11-11 16:14 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 0)
-- R90-ADA-1 ADA SHORT limit entry 0.1789 · stop 0.1804 · targets 0.1743 · R 3.1 · expires 2026-11-11 20:12 UTC
-- BASIS: levels are PERP prices (perpRef 0.1789). Before placing in MT5 read spreads.ADAUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
-- [FOR] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (0.1789 vs 0.1762), h4 RSI 50.3, day +2.9%
-- [FOR] footprint: bull 47 / bear 59; recent: Exhaustion/sell[time], Divergence/buy[vol], Divergence/buy[range]
-- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:buy×6, abs:sell×4, div:buy×3, div:sell×5, exh:buy×1, exh:sell×3, sdiv:sell×2, trap:buy×3, trap:sell×1 — net 13 buy-side vs 15 sell-side
-- [FOR] bookWalls: ±5% depth imbalance -0.090 (5m ago -0.162, rising bids); bid $0.01B vs ask $0.02B
-- [FOR] cvd: taker buy 49.1%, perpCvd -15, spotCvd -3, quadrant both-selling, latestDiv bear (recent)
-- → place on ADAUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
-
-## 2026-11-11 16:14 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 1)
-- R90-LINK-2 LINK SHORT limit entry 10.505 · stop 10.56 · targets 10.301 · R 3.7 · expires 2026-11-11 20:12 UTC
-- BASIS: levels are PERP prices (perpRef 10.505). Before placing in MT5 read spreads.LNKUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
-- [FOR] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (10.505 vs 10.365), h4 RSI 47.2, day +2.1%
-- [FOR] footprint: bull 15 / bear 23; recent: Trapped shorts/buy[time], Divergence/buy[vol], Divergence/sell[range]
-- [FOR] liquidation: long-liq magnet 10.079 (str 74, ~$4M est, -3.85%) as target
-- [AGAINST] liquidation-hazard: short-liq magnet 10.604 (str 81) sits between entry and stop — sweep risk
-- [FOR] bookWalls: ±5% depth imbalance +0.010 (5m ago +0.055, falling bids); bid $0.01B vs ask $0.01B
-- [FOR] cvd: taker buy 48.9%, perpCvd -25, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
-- → place on LNKUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
