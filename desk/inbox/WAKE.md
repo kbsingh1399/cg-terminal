@@ -78,3 +78,13 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] bookWalls: ±5% depth imbalance -0.031 (5m ago +0.023, falling bids); bid $0.01B vs ask $0.01B
 - [FOR] cvd: taker buy 48.9%, perpCvd -25, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
 - → place on LNKUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-11 14:12 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 0)
+- R83-BNB-1 BNB SHORT limit entry 682.22 · stop 684.95 · targets 669.7 / 668.58 / 667.09 · R 4.6 · expires 2026-11-11 18:10 UTC
+- BASIS: levels are PERP prices (perpRef 681.31). Before placing in MT5 read spreads.BNBUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (681.31 vs 681.39), h4 RSI 42.6, day +0.0%
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:sell×1, div:buy×1, div:sell×1, sdiv:sell×3 — net 1 buy-side vs 5 sell-side
+- [FOR] liquidation: long-liq magnet 669.70 (str 49, ~$7M est, -1.75%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.019 (5m ago +0.014, rising bids); bid $0.03B vs ask $0.03B
+- [FOR] cvd: taker buy 48.6%, perpCvd -40, spotCvd -6, quadrant both-selling, latestDiv bear (recent)
+- → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
