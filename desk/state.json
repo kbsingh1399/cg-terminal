@@ -568,7 +568,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 18:36 UTC: LNKUSD spreadPct 0.5617% ($0.059 = bid 10.475 / ask 10.534, 3.74x above 0.15% gate) vs $0.072 perp SL width; basis +0.1191% -> entry 10.5115 bid / raw SL 10.5836 puts ask immediately at 10.5705 on fill ($0.013 cushion before SL); widening SL past 10.604 (str 80) sweep hazard to 10.625 cuts spread-adjusted R to T1 to 1.31 (<2.0R), alongside AGAINST microFlow (5 buy vs 3 sell) and 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD)."
     }
   ],
   "positions": [],

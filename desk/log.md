@@ -2225,3 +2225,12 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## EXEC · 2026-11-11 18:36 UTC · atg-exec — R98-LINK-1 triage + 4 manual MT5 limit orders verified
+- **USER MANUAL MT5 PLACEMENTS (`desk/mt5.json` `18:35:17 UTC`, balance/equity `$4,649.96`, `0` positions, `4` pending limits = `4/4` `max_concurrent_positions`) — ALL VERIFIED-COMPLIANT**:
+  1. `XMRUSD` `SELL LIMIT` `#209656134`: `3.70` lots @ `595.77` · SL `602.06` · TP `570.00` — risk `$23.27` (`0.50%` equity ✓), reward `$95.35`, **`4.10R` ✓** (live `589.97 / 590.09`, `spread 0.0203%`, `basis +0.0899%`).
+  2. `XAUUSD` `SELL LIMIT` `#209656712`: `0.01` lots @ `4,019.00` · SL `4,042.00` · TP `3,967.00` — risk `$23.00` (`0.49%` equity ✓), reward `$52.00`, **`2.26R` ✓** (live `3,993.11 / 3,993.71`, `spread 0.015%`, `basis -0.1737%`).
+  3. `BTCUSD` `SELL LIMIT` `#209657041`: `0.01` lots @ `75,340.00` · SL `76,029.00` · TP `73,931.00` — risk `$6.89` (`0.15%` equity ✓, conservative sizing keeping combined crypto-short risk at `$52.69` / `1.13%`), reward `$14.09`, **`2.04R` ✓** (live `74,535.51 / 74,556.49`, `spread 0.0281%`, `basis +0.0486%`).
+  4. `XLMUSD` `SELL LIMIT` `#209657396`: `11.86` lots @ `0.1528` · SL `0.1547` · TP `0.1466` — risk `$22.53` (`0.48%` equity ✓), reward `$73.53`, **`3.26R` ✓** (live `0.14968 / 0.14989`, `spread 0.1402%`, `basis +0.0635%`).
+- **R98-LINK-1 (`LINK SHORT limit 10.499 / SL 10.571 / T1 10.275 / T2 10.079 / R 3.1`, `FOR 5 / AGAINST 2`) — SKIPPED on MT5 (`LNKUSD`)**:
+  - Live `desk/mt5.json` `LNKUSD`: `bid 10.475 / ask 10.534`, `spreadPoints 59.0` (`$0.059`), **`spreadPct 0.5617%`** (`3.74×` above `0.15%` Protocol gate), `perpMid 10.492`, `basisPct +0.1191%`.
+  - Basis-translated levels (`× 1.001191`): entry `10.5115` bid / raw SL `10.5836` ask. Filling SHORT at `10.5115` bid puts live `ask` immediately at `10.5705` (only `$0.013` before stop-out); widening SL past `10.604` (`str 80` short-liq hazard `[AGAINST]`) to `10.625` perp (`10.6377` MT5) cuts spread-adjusted R to T1 (`10.275`) to `1.31R < 2.0R`, alongside `AGAINST` `microFlow` (`net 5 buy vs 3 sell`) and `4/4` `max_concurrent_positions` already occupied. Status left `"suggested"` in `desk/state.json` with `notes`; handled `WAKE.md` queue cleared (`ALERT A10` preserved for `zai-desk`).
