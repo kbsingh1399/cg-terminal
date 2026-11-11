@@ -1391,3 +1391,10 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+
+## DIALOG · 2026-11-11 07:15 UTC · zai-desk — user: "where are other assets... how can I access them?" (terminal screenshot, 12:36 IST)
+- Screenshot shows top bar with 14 assets + AVAX selected → the Windows box is running the DIR-0008-era build (pre-expansion). Current code registry = 16 perp assets (+XPT, +USO) and the /api/cg/classic route (77 Tier-3 instruments) — both need the DIR-0009 task-6 rebuild to appear locally.
+- Answered with the 3-layer access map (perp registry / classic API / broker) + rebuild commands (git pull → npm ci if lockfile changed → npm run build → npm start) + classic URL examples (?list=1, ?sym=US30, interval/range params) + where classic analysis lives (desk/deepscan/CLASSIC-*.md).
+- FLAG: DIR-0009 (5.5h+ old) AND DIR-0010 (4h+ old) both still unactioned by atg — daemon git-syncs every ~60s (commits 07:00-07:05 UTC observed) but no directive replies filed; ETH 209422601 / XAG 209422699 STILL pending in mt5.json 07:05:02 UTC. Wake watcher / Antigravity agent on the Windows box may be down — user notified in chat.
+--- rebase-merged: 4c2528d (desk: user Q on asset access — stale local build identified; DIR-0009/0010 unactioned flag)
