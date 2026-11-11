@@ -260,3 +260,15 @@ TASKS:
 - [FOR] cvd: taker buy 48.7%, perpCvd -36, spotCvd -6, quadrant both-selling, latestDiv bear (stale/none)
 - [FOR] notifications: 6h weighted bias -2.8 (8 events)
 - → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-11 01:41 UTC — new suggested order — place in MT5 (debate FOR 7/AGAINST 0)
+- R40-ADA-1 ADA SHORT limit entry 0.176 · stop 0.1767 · targets 0.1741 · R 2.7 · expires 2026-11-11 05:40 UTC
+- BASIS: levels are PERP prices (perpRef 0.176). Before placing in MT5 read spreads.ADAUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (0.1760 vs 0.1748), h4 RSI 44.1, day +1.2%
+- [FOR] footprint: bull 62 / bear 90; recent: none <6h
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:buy×4, abs:sell×4, div:sell×4, exh:buy×4, exh:sell×3, sdiv:sell×3, trap:buy×1, trap:sell×2 — net 9 buy-side vs 16 sell-side
+- [FOR] liquidation: long-liq magnet 0.1702 (str 97, ~$4M est, -3.54%) as target
+- [FOR] bookWalls: ±5% depth imbalance -0.033 (5m ago -0.033, falling bids); bid $0.02B vs ask $0.02B
+- [FOR] cvd: taker buy 48.8%, perpCvd -19, spotCvd -3, quadrant both-selling, latestDiv bull (stale/none)
+- [FOR] notifications: 6h weighted bias -7.7 (15 events)
+- → place on ADAUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
