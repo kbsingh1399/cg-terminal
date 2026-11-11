@@ -1519,6 +1519,7 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - INTEGRATED (commit a33e841): perpmap.ts verified registry · /api/cg/perpdepth (venues+OI Δ1h/4h/24h+funding+taker flow) · /api/cg/cot (net/z3y/78w history, 6h cache) · /api/cg/cnbc (futures settle/OI/roll+basis) · DerivativesPanel UI (3 panels, auto-hidden when unmapped) · deepscan classic §2–§6 live sections · NATGAS in classic registry. End-to-end verified: USO report carries 4-venue depth + COT z −1.39σ + CNBC CLZ26 basis −0.07%.
 - MULTI-AGENT REVIEW R3 (tech-team-agents): RV-ARCH + RV-DATA → 41 PASS / 6 FAIL, ALL FIXED + re-verified: COT z on oldest record (USO +1.07→−1.39, sign flip), US2000 500→honest 400, SPX500 alias (classic UI now reaches S&P panels), funding 100× (Coinglass rate already %), COT err-cache 6h→5min, deepscan z shadowing, flow USD-columns only, CNBC %-parse.
 - DIR-0012 emitted (Windows rebuild + verify). Research compendium: scripts/research/RESEARCH-DATA-SOURCES-20261111.md. Backlog §6: FRED macro panel (needs free key), Coinbase spot-basis, USO/NATGAS/EURUSD hybrid-engine promotion, COT z as desk scorecard dimension.
+<<<<<<< HEAD
 ## R65 · 2026-11-11 08:51 UTC · zai-desk
 
 **Market**: BTC 73,715.2 (-0.1%)  ETH 2,058.84 (+0.3%)  SOL 83.07 (-0.3%)  XAU 4,064.56 (+0.5%)  XAG 53.090 (+2.7%)
@@ -1571,3 +1572,8 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+### DEEPSCAN · 2026-11-11 09:34 UTC · zai-desk — 360° on-demand deep analysis (XAU+EURUSD(cl)+US30(cl))
+- XAU: desk/deepscan/XAU-20261111-0934.md
+- CLASSIC universe (2): desk/deepscan/CLASSIC-20261111-0934.md — 1 online, watchlist-only (engine v4 pending)
+>>>>>>> 9a211fd (desk(deepscan): 360° deep analysis XAU)
