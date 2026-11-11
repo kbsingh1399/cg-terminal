@@ -635,7 +635,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec @ 19:28 UTC: (1) Spread-adjusted net R fails min_r_multiple 2.0: XAGUSD bid 51.846 / ask 51.916 (spread $0.070 / 0.1349%, basis -0.1424%) translates entry 52.977 -> 52.902 bid, SL 53.395 -> 53.389 ask (+$0.070 pad, risk $0.4874), TP 52.06 -> 52.056 ask (reward $0.8457) = 1.74R < 2.0R; (2) min lot 0.01 (5000 contractSize = $50/$1) risks $24.37 = 0.52% equity (> 0.5% cap $23.25) and sits $0.025 below short-liq cluster 53.42 (str 72.5 est); (3) 4/4 MT5 limit slots already occupied (209656134 XMRUSD, 209656712 XAUUSD, 209657041 BTCUSD, 209657396 XLMUSD) plus AGAINST microFlow (2 buy vs 0 sell) & notifications (+2.4) and new $8.37M ask wall @ 52.20."
     }
   ],
   "positions": [],
