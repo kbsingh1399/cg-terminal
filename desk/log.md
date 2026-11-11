@@ -2191,3 +2191,14 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R97 · 2026-11-11 18:15 UTC · zai-desk
+
+**Market**: XAG 52.110 (+0.8%)
+**Bias (|score|≥2)**: XAG-4(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- XAG SHORT confluence -4.1 — REJECTED: opposite liq magnet 53.420 (str 72, ~$27M est) within 1.2R of entry — wait for sweep
+
+### Positions
+- no open positions
+
