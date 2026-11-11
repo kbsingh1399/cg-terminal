@@ -1,23 +1,47 @@
 {
-  "ts": 1794435087650,
+  "ts": 1794435142445,
   "positioning": {
     "BTC": {
-      "error": "timed out"
+      "fundingPct8h": 0.003675,
+      "oiUsd": 51352019703,
+      "oiDelta1hPct": -0.59,
+      "oiDelta4hPct": -1.18,
+      "oiDelta24hPct": -1.25
     },
     "ETH": {
-      "error": "HTTP Error 502: Bad Gateway"
+      "fundingPct8h": 0.004473,
+      "oiUsd": 24982688993,
+      "oiDelta1hPct": -0.34,
+      "oiDelta4hPct": -0.97,
+      "oiDelta24hPct": -0.16
     },
     "SOL": {
-      "error": "timed out"
+      "fundingPct8h": 0.003181,
+      "oiUsd": 5147184267,
+      "oiDelta1hPct": -0.71,
+      "oiDelta4hPct": -2.08,
+      "oiDelta24hPct": -1.45
     },
     "BNB": {
-      "error": "HTTP Error 502: Bad Gateway"
+      "fundingPct8h": 0.009292,
+      "oiUsd": 1085982923,
+      "oiDelta1hPct": -0.09,
+      "oiDelta4hPct": -0.42,
+      "oiDelta24hPct": -0.3
     },
     "DOGE": {
-      "error": "timed out"
+      "fundingPct8h": 0.003105,
+      "oiUsd": 913720592,
+      "oiDelta1hPct": -0.12,
+      "oiDelta4hPct": -1.96,
+      "oiDelta24hPct": -1.01
     },
     "XAU": {
-      "error": "HTTP Error 502: Bad Gateway"
+      "fundingPct8h": 0.033374,
+      "oiUsd": 1651765758,
+      "oiDelta1hPct": 0.62,
+      "oiDelta4hPct": 3.24,
+      "oiDelta24hPct": 10.78
     }
   }
 }
