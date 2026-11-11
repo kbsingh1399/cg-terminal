@@ -2004,3 +2004,28 @@ User overrode the v1.1 Tier-3 deferral. Executed:
   - Live LTC perp (`/api/cg/live?sym=LTC`, `/api/cg/market?sym=LTC` @ `15:41:13 UTC`): `last 51.35` (`bid 51.34 / ask 51.35`), below suggested entry `51.47` and already above day VWAP `+2σ` (`51.363`).
   - Basis translation (`× 1.010605`): entry `52.02` (SHORT fills at bid), SL `52.24` (triggers on ask), TP `51.26`. With a `$1.21` broker spread (`5.5×` the `$0.22` stop width), filling a SHORT at `52.02` bid puts the live `ask` at `~53.23` — `$0.99` above SL `52.24` — guaranteeing an instant stop-out. Widening SL past the spread collapses R to `~0.52` (below `min_r_multiple 2.0`), alongside the `[AGAINST]` short-liq magnet (`51.94`, str 100) sweep hazard.
   - No MT5 order placed; account remains flat (`$4,649.96`, `0` positions, `0` pending orders).
+## R89 · 2026-11-11 15:55 UTC · zai-desk
+
+**Market**: BTC 73,979.0 (+0.3%)  ETH 2,075.60 (+1.1%)  SOL 84.79 (+1.8%)  XAU 4,009.14 (-0.9%)  XAG 52.360 (+1.3%)
+**Bias (|score|≥2)**: DOGE-5(TREND)  XAG-3(TRANS)  XAU-3(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R89-DOGE-1 DOGE SHORT limit 0.06905 · stop 0.06940 · T1 0.06776 · R 3.7
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (0.06905 vs 0.06820), h4 RSI 44.8, day +1.5%
+      [FOR    ] footprint: bull 25 / bear 36; recent: Divergence/sell[time], Absorption/buy[vol], Divergence/sell[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×1, abs:sell×2, div:sell×3, exh:buy×1, exh:sell×1, sdiv:sell×2, trap:sell×1 — net 2 buy-side vs 9 sell-side
+      [FOR    ] liquidation: long-liq magnet 0.06648 (str 53, ~$5M est, -3.62%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.060 (5m ago +0.021, falling bids); bid $0.03B vs ask $0.04B
+      [FOR    ] cvd: taker buy 47.9%, perpCvd -111, spotCvd -15, quadrant both-selling, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -5.0 (10 events)
+- XAG SHORT confluence -3.3 — REJECTED: opposite liq magnet 53.420 (str 70, ~$26M est) within 1.2R of entry — wait for sweep
+
+### Order lifecycle
+- R75-DOGE-1 EXPIRED (unfilled past expiry)
+- R75-LINK-2 EXPIRED (unfilled past expiry)
+- R83-BNB-1 WITHDRAWN (confluence flipped to +0.7)
+- R88-LTC-1 re-debated: FOR 4/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
