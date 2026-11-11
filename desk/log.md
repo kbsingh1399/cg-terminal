@@ -1135,3 +1135,11 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+## MONITOR · 2026-11-11 03:05 UTC · zai-desk — auto-wake: orders 4h+ PAST EXPIRY, DIR-0010 re-arm emitted
+- Pull clean (ff-only); WAKEUP.md queue EMPTY. Round freshness: last_round_ts = 02:49 UTC (R44, daemon) → FRESH, round skipped (no duplicate R numbers).
+- **ORDER LIFECYCLE BREACH**: ETH 209422601 + XAG 209422699 STILL pending in mt5.json snapshot 02:59:12 UTC — engine expiry 22:58:25 UTC Nov 10 (state.json expiresTs 1794351505324; placed 20:55:53 / 20:57:06 UTC) → ~4.1h overdue; DIR-0007 (armed 22:58) never executed, no reply filed. Account flat (equity 4,649.96, 0 positions) — no financial impact, but 4h discipline breached: orders were left working 5h+ past design life.
+- **ACTION: DIR-0010 emitted** (desk/inbox/2026-11-11T03-02-00_DIR-0010-expiry-cancel-ETH-XAG-rearm.json, AGENT_TASK, high): cancel-if-still-pending BOTH tickets at first poll, state.json atomic update, EXEC log, reply contract; reminds atg that DIR-0009 reply (symbols dump / XPT-USO-UKO specs+feeds / Windows rebuild / atomic writes) is ALSO outstanding since 21:25 UTC.
+- Standing-suggestion sweep (fresh spreads 02:59 UTC): R40-ADA-1 ADAUSD spread 2.1652% (14× the 0.15% gate; basis 0.286% ok) → still BLOCKED; R42-BNB-1 BNBUSD no tick (absent at broker) → UNPLACEABLE. No normalization flags. (R4-DOGE-3 / R7-LTC-1 / R9-ADA-1 no longer standing — superseded by R24-DOGE-1 EXPIRED, R37-BNB-1 WITHDRAWN; current standing list = R40-ADA-1, R42-BNB-1 only.)
+- Broker feed state (expansion verified live): DOGUSD 1.317% spread · LNKUSD 0.550% · XLMUSD 0.118%/basis -0.017% · XMRUSD 0.149%/+0.125% · XPTUSD 0.550% · USOUSD 0.076% · UKOUSD 0.074% — XLM/XMR within gates; XPT/USO/UKO have no perp-lead basis by design (classic Tier-2 next step).
+- Expansion directive status (user 2026-11-11): SHIPPED in prior loops — commits fc6d300..f87f318, deliverables EXPANSION-PLAN-20261110.md v2.0, T3-DATARESEARCH-20261110.md, REVIEW-MULTIAGENT-20261110-R2.md, coverage xlsx; nothing further pending on desk side.
