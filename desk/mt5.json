@@ -1,5 +1,5 @@
 {
-  "ts": 1794357682457,
+  "ts": 1794357742911,
   "error": null,
   "account": {
     "login": 11808165,
@@ -75,14 +75,14 @@
     },
     "BTCUSD": {
       "ok": true,
-      "bid": 73646.36,
-      "ask": 73669.7,
-      "spreadPoints": 2334.0,
-      "spreadPct": 0.0317,
+      "bid": 73624.96,
+      "ask": 73645.68,
+      "spreadPoints": 2072.0,
+      "spreadPct": 0.0281,
       "tradeAllowed": true,
       "asset": "BTC",
-      "perpMid": 73622.9,
-      "basisPct": 0.0477,
+      "perpMid": 73600.1,
+      "basisPct": 0.0479,
       "spec": {
         "contractSize": 1.0,
         "volumeMin": 0.01,
@@ -102,8 +102,8 @@
       "spreadPct": 1.3148,
       "tradeAllowed": true,
       "asset": "DOGE",
-      "perpMid": 0.06842,
-      "basisPct": 0.0438,
+      "perpMid": 0.06839,
+      "basisPct": 0.0877,
       "spec": {
         "contractSize": 1000.0,
         "volumeMin": 0.01,
@@ -117,14 +117,14 @@
     },
     "ETHUSD": {
       "ok": true,
-      "bid": 2053.95,
-      "ask": 2054.5,
+      "bid": 2053.44,
+      "ask": 2053.99,
       "spreadPoints": 55.0,
       "spreadPct": 0.0268,
       "tradeAllowed": true,
       "asset": "ETH",
-      "perpMid": 2053.8,
-      "basisPct": 0.0207,
+      "perpMid": 2053.22,
+      "basisPct": 0.0241,
       "spec": {
         "contractSize": 1.0,
         "volumeMin": 0.01,
@@ -138,14 +138,14 @@
     },
     "LNKUSD": {
       "ok": true,
-      "bid": 10.331,
-      "ask": 10.388,
+      "bid": 10.328,
+      "ask": 10.385,
       "spreadPoints": 57.0,
-      "spreadPct": 0.5502,
+      "spreadPct": 0.5504,
       "tradeAllowed": true,
       "asset": "LINK",
-      "perpMid": 10.349,
-      "basisPct": 0.1015,
+      "perpMid": 10.348,
+      "basisPct": 0.0821,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -159,14 +159,14 @@
     },
     "LTCUSD": {
       "ok": true,
-      "bid": 50.86,
-      "ask": 52.07,
+      "bid": 50.85,
+      "ask": 52.06,
       "spreadPoints": 121.0,
-      "spreadPct": 2.3511,
+      "spreadPct": 2.3516,
       "tradeAllowed": true,
       "asset": "LTC",
-      "perpMid": 50.94,
-      "basisPct": 1.0306,
+      "perpMid": 50.91,
+      "basisPct": 1.0705,
       "spec": {
         "contractSize": 1.0,
         "volumeMin": 0.01,
@@ -226,14 +226,14 @@
     },
     "XAGUSD": {
       "ok": true,
-      "bid": 51.492,
-      "ask": 51.561,
-      "spreadPoints": 69.0,
-      "spreadPct": 0.1339,
+      "bid": 51.499,
+      "ask": 51.559,
+      "spreadPoints": 60.0,
+      "spreadPct": 0.1164,
       "tradeAllowed": true,
       "asset": "XAG",
-      "perpMid": 51.605,
-      "basisPct": -0.1521,
+      "perpMid": 51.615,
+      "basisPct": -0.1666,
       "spec": {
         "contractSize": 5000.0,
         "volumeMin": 0.01,
@@ -253,8 +253,8 @@
       "spreadPct": 0.0107,
       "tradeAllowed": true,
       "asset": "XAU",
-      "perpMid": 4042.41,
-      "basisPct": -0.155,
+      "perpMid": 4042.39,
+      "basisPct": -0.1545,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -268,13 +268,13 @@
     },
     "XLMUSD": {
       "ok": true,
-      "bid": 0.14539,
-      "ask": 0.14556,
+      "bid": 0.14529,
+      "ask": 0.14546,
       "spreadPoints": 17.0,
       "spreadPct": 0.1169,
       "tradeAllowed": true,
       "asset": "XLM",
-      "perpMid": 0.1454,
+      "perpMid": 0.1453,
       "basisPct": 0.0516,
       "spec": {
         "contractSize": 100.0,
@@ -289,14 +289,14 @@
     },
     "XMRUSD": {
       "ok": true,
-      "bid": 560.65,
-      "ask": 561.13,
-      "spreadPoints": 48.0,
-      "spreadPct": 0.0856,
+      "bid": 559.71,
+      "ask": 560.31,
+      "spreadPoints": 60.0,
+      "spreadPct": 0.1071,
       "tradeAllowed": true,
       "asset": "XMR",
-      "perpMid": 560.245,
-      "basisPct": 0.1151,
+      "perpMid": 559.435,
+      "basisPct": 0.1028,
       "spec": {
         "contractSize": 1.0,
         "volumeMin": 0.01,
@@ -310,8 +310,8 @@
     },
     "XPTUSD": {
       "ok": true,
-      "bid": 1542.84,
-      "ask": 1551.44,
+      "bid": 1542.75,
+      "ask": 1551.35,
       "spreadPoints": 860.0,
       "spreadPct": 0.5559,
       "tradeAllowed": true,
@@ -331,14 +331,14 @@
     },
     "XRPUSD": {
       "ok": true,
-      "bid": 1.0541,
-      "ask": 1.0551,
+      "bid": 1.0543,
+      "ask": 1.0553,
       "spreadPoints": 10.0,
       "spreadPct": 0.0948,
       "tradeAllowed": true,
       "asset": "XRP",
-      "perpMid": 1.0549,
-      "basisPct": -0.0284,
+      "perpMid": 1.0553,
+      "basisPct": -0.0474,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -353,46 +353,46 @@
   },
   "positioning": {
     "BTC": {
-      "fundingPct8h": 0.009669,
-      "oiUsd": 51815699846,
-      "oiDelta1hPct": -0.19,
-      "oiDelta4hPct": -0.41,
-      "oiDelta24hPct": -0.28
+      "fundingPct8h": 0.009657,
+      "oiUsd": 51809283440,
+      "oiDelta1hPct": -0.2,
+      "oiDelta4hPct": -0.42,
+      "oiDelta24hPct": -0.3
     },
     "ETH": {
-      "fundingPct8h": 0.000167,
-      "oiUsd": 25021345462,
-      "oiDelta1hPct": 0.03,
-      "oiDelta4hPct": -0.13,
-      "oiDelta24hPct": -3.97
+      "fundingPct8h": 0.000215,
+      "oiUsd": 25025223497,
+      "oiDelta1hPct": 0.04,
+      "oiDelta4hPct": -0.12,
+      "oiDelta24hPct": -3.95
     },
     "SOL": {
-      "fundingPct8h": -0.001033,
-      "oiUsd": 5236835151,
-      "oiDelta1hPct": 0.09,
-      "oiDelta4hPct": 0.09,
-      "oiDelta24hPct": -0.03
+      "fundingPct8h": -0.001029,
+      "oiUsd": 5234700327,
+      "oiDelta1hPct": 0.05,
+      "oiDelta4hPct": 0.05,
+      "oiDelta24hPct": -0.07
     },
     "BNB": {
-      "fundingPct8h": 0.006834,
-      "oiUsd": 1086601752,
-      "oiDelta1hPct": -0.26,
-      "oiDelta4hPct": -0.06,
-      "oiDelta24hPct": -0.74
+      "fundingPct8h": 0.006837,
+      "oiUsd": 1086299202,
+      "oiDelta1hPct": -0.28,
+      "oiDelta4hPct": -0.09,
+      "oiDelta24hPct": -0.76
     },
     "DOGE": {
-      "fundingPct8h": -0.000882,
-      "oiUsd": 926808894,
+      "fundingPct8h": -0.000899,
+      "oiUsd": 926798332,
       "oiDelta1hPct": 0.43,
       "oiDelta4hPct": 1.54,
       "oiDelta24hPct": -0.99
     },
     "XAU": {
-      "fundingPct8h": 0.008045,
-      "oiUsd": 1500522878,
-      "oiDelta1hPct": -0.15,
-      "oiDelta4hPct": 1.15,
-      "oiDelta24hPct": 0.39
+      "fundingPct8h": 0.008028,
+      "oiUsd": 1500973815,
+      "oiDelta1hPct": -0.12,
+      "oiDelta4hPct": 1.18,
+      "oiDelta24hPct": 0.42
     }
   }
 }
