@@ -58,3 +58,15 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] cvd: taker buy 49.4%, perpCvd -1901, spotCvd +198, quadrant spot-bid, latestDiv bear (recent)
 - [FOR] notifications: 6h weighted bias -3.9 (11 events)
 - → place on BTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-11 23:46 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 2)
+- R118-LTC-1 LTC SHORT limit entry 50.96 · stop 51.38 · targets 49.34 / 49.08 · R 3.9 · expires 2026-11-12 03:44 UTC
+- BASIS: levels are PERP prices (perpRef 50.12). Before placing in MT5 read spreads.LTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (50.12 vs 50.85), h4 RSI 40.4, day -1.1%
+- [FOR] footprint: bull 28 / bear 33; recent: Trapped shorts/buy[time], Divergence/buy[vol], Divergence/sell[range]
+- [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, div:buy×3, div:sell×1, exh:buy×1, sdiv:buy×1, trap:buy×1 — net 8 buy-side vs 1 sell-side
+- [FOR] liquidation: long-liq magnet 49.34 (str 51, ~$1M est, -1.57%) as target
+- [FOR] bookWalls: ±5% depth imbalance -0.012 (5m ago -0.048, rising bids); bid $0.01B vs ask $0.01B
+- [FOR] cvd: taker buy 48.6%, perpCvd -16, spotCvd -5, quadrant both-selling, latestDiv bear (recent)
+- [AGAINST] notifications: 6h weighted bias +4.9 (6 events)
+- → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
