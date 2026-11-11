@@ -653,7 +653,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED on MT5 by atg-exec (2026-11-11 16:15 UTC): LNKUSD spreadPct 0.5815% ($0.061 = bid 10.459 / ask 10.52, 3.9x above 0.15% gate) vs $0.055 SL width (1.11x spread); basis +0.1193% -> entry 10.518 bid / SL 10.573 ask causes instant stop-out on fill (ask ~10.579); widening SL > $0.116 cuts R to ~1.76 (<2.0R), plus 10.604 str-81 short-liq sweep hazard. Perp live 10.474."
     }
   ],
   "positions": [],
