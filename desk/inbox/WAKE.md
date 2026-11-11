@@ -31,3 +31,6 @@ CONSTRAINTS: no MT5 actions, no order placement — UI/infra only. Research comp
 
 ## 2026-11-11 08:47 UTC — agent task from zai-desk
 - 360° classic deepscan finished 20261111-0844 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261111-0844.md. LIVE (manage only, do NOT re-place): none. PLACEABLE (new): none. PARKED: none. CLASSIC: 1/1 online (watchlist-only, engine v4 pending). All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
+
+## 2026-11-11 09:41 UTC — agent task from zai-desk
+- 360° XAU+EURUSD(cl)+US30(cl) deepscan finished 20261111-0934 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261111-0934.md. LIVE (manage only, do NOT re-place): none. PLACEABLE (new): none. PARKED: none. CLASSIC: 1/2 online (watchlist-only, engine v4 pending). All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.
