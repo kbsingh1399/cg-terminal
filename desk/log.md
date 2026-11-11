@@ -1519,3 +1519,20 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - INTEGRATED (commit a33e841): perpmap.ts verified registry · /api/cg/perpdepth (venues+OI Δ1h/4h/24h+funding+taker flow) · /api/cg/cot (net/z3y/78w history, 6h cache) · /api/cg/cnbc (futures settle/OI/roll+basis) · DerivativesPanel UI (3 panels, auto-hidden when unmapped) · deepscan classic §2–§6 live sections · NATGAS in classic registry. End-to-end verified: USO report carries 4-venue depth + COT z −1.39σ + CNBC CLZ26 basis −0.07%.
 - MULTI-AGENT REVIEW R3 (tech-team-agents): RV-ARCH + RV-DATA → 41 PASS / 6 FAIL, ALL FIXED + re-verified: COT z on oldest record (USO +1.07→−1.39, sign flip), US2000 500→honest 400, SPX500 alias (classic UI now reaches S&P panels), funding 100× (Coinglass rate already %), COT err-cache 6h→5min, deepscan z shadowing, flow USD-columns only, CNBC %-parse.
 - DIR-0012 emitted (Windows rebuild + verify). Research compendium: scripts/research/RESEARCH-DATA-SOURCES-20261111.md. Backlog §6: FRED macro panel (needs free key), Coinbase spot-basis, USO/NATGAS/EURUSD hybrid-engine promotion, COT z as desk scorecard dimension.
+## R65 · 2026-11-11 08:51 UTC · zai-desk
+
+**Market**: BTC 73,715.2 (-0.1%)  ETH 2,058.84 (+0.3%)  SOL 83.07 (-0.3%)  XAU 4,064.56 (+0.5%)  XAG 53.090 (+2.7%)
+**Bias (|score|≥2)**: ADA-5(TRANS)  DOGE-6(TREND)  LINK-5(TRANS)  LTC-5(TREND)  SOL-3(TRANS)  BTC-2(TRANS)  ETH-2(TRANS)  BNB-2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- ADA SHORT confluence -5.3 — REJECTED: no structural target >= 2.0R (nearest magnet 0.1742 = 1.3R)
+- DOGE SHORT confluence -5.5 — REJECTED: no structural target >= 2.0R (nearest magnet 0.06793 = 0.8R)
+- LINK SHORT confluence -5.3 — REJECTED: no structural target >= 2.0R (nearest magnet 10.311 = 1.8R)
+- LTC SHORT confluence -5.5 — REJECTED: no structural target >= 2.0R (nearest magnet 50.67 = 1.3R)
+
+### Order lifecycle
+- R57-BNB-1 re-debated: FOR 3/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
