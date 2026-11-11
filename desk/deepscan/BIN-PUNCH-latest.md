@@ -1,0 +1,23 @@
+# Binance demo punch — 2026-11-11 16:15:28 UTC
+testnet · wallet $4095.27 → $4095.09 · unrealized -1.80
+
+| sym | dir | score | qty | entry (plan/fill) | SL | TP | R | notional | risk$ | legs |
+|---|---|---|---|---|---|---|---|---|---|---|
+| USELESS | LONG | 8.5 | 1336.0 | 0.14239/– | 0.12708 | 0.1761 | 2.2 | $190.35 | $20.47 | ENTRY:OK, SL:OK, TP:OK |
+| MAGMA | LONG | 8.5 | 704.0 | 0.26509/– | 0.23603 | 0.32904 | 2.2 | $186.76 | $20.46 | ENTRY:OK, SL:OK, TP:OK |
+
+Open positions (testnet truth):
+- MAGMAUSDT 704 @ 0.26526 · lev 20 · uPnL +0.000
+- NEARUSDT 65 @ 3.772 · lev 10 · uPnL +0.000
+- USELESSUSDT 1336 @ 0.1429 · lev 20 · uPnL +0.000
+- PYTHUSDT 4251 @ 0.06823 · lev 20 · uPnL +0.000
+
+Open orders (brackets):
+- #1000000283339250 MAGMAUSDT SELL TAKE_PROFIT_MARKET qty 704 trigger 0.32904 [NEW]
+- #1000000283339244 MAGMAUSDT SELL STOP_MARKET qty 704 trigger 0.23603 [NEW]
+- #1000000283339237 USELESSUSDT SELL TAKE_PROFIT_MARKET qty 1336 trigger 0.1761 [NEW]
+- #1000000283339236 USELESSUSDT SELL STOP_MARKET qty 1336 trigger 0.12708 [NEW]
+- #1000000283338505 NEARUSDT SELL TAKE_PROFIT_MARKET qty 65 trigger 4.459 [NEW]
+- #1000000283338504 NEARUSDT SELL STOP_MARKET qty 65 trigger 3.458 [NEW]
+- #1000000283338494 PYTHUSDT SELL TAKE_PROFIT_MARKET qty 4251 trigger 0.07886 [NEW]
+- #1000000283338491 PYTHUSDT SELL STOP_MARKET qty 4251 trigger 0.06344 [NEW]

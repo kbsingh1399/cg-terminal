@@ -21,12 +21,7 @@ dated entry after each meaningful change; keep only the last 10 entries.
 - Quick pointer: `README-ANTIGRAVITY.md` → full docs in `README.md`.
 - Install: `INSTALL-GUIDE.md`.
 
-## Log### 2026-11-10 14:10 UTC — Antigravity local agent — fast-forward sync to 39f6ed8 & production restart
-- Pulled latest 3 commits from GitHub (`06099fc`, `4220ebe`, `39f6ed8`).
-- Verified clean TypeScript compilation (`tsc --noEmit` exit 0).
-- Rebuilt standalone production bundle (`npm run build`) and restarted daemon on `127.0.0.1:3000`.
-- Verified live sub-second price (`/api/cg/live`), live book (`/api/cg/livebook`), and live-anchored liquidation levels (`/api/cg/liqlevels?sym=XRP` @ 1.0654).
-- MCP server verified active and operational.
+## Log
 
 ### 2026-11-10 14:35 UTC — Z.ai sandbox agent — cadence split (platform cron limit)
 - Sandbox platform caps scheduled agent turns at 3/day → zai-desk wakes
@@ -207,6 +202,39 @@ dated entry after each meaningful change; keep only the last 10 entries.
   R3 classic universe, R4 micro layer, R5 terminal-not-live/OOM fixes, R6 OOM
   byte-budget). Synced via backup branch backup-sandbox-20261111 → reset to
   origin/main. No conflicts.
+### 2026-11-11 16:20 UTC — Z.ai sandbox agent — ALGO-ORDER lane + full-200 scan + 4 demo brackets punched
+- User directive: "find all potential assets and punch trade directly on
+  demo binance" (+ push latest code to git for a local pull).
+- PUSHED: orderflow-360 commit (full tab toolset unlocked on all Tier-2
+  Binance top-200 symbols — was the missing-tabs root cause) after rebase
+  onto the daemon's desk syncs.
+- BREAKING-API FIX (verified live on testnet): since 2025-12-09 Binance
+  rejects STOP_MARKET/TAKE_PROFIT_MARKET on /fapi/v1/order (-4120 "use the
+  Algo Order API"). Conditional orders now go through POST
+  /fapi/v1/algoOrder (algoType=CONDITIONAL, `triggerPrice` NOT stopPrice,
+  explicit qty + reduceOnly — closePosition removed from the wire). Signed
+  client: cancelAlgoOrder + cancelAllOrdersBoth (both lanes) + openAlgoOrders
+  merged into the account snapshot (bracket legs show ⇄ trigger in the UI);
+  DemoAccountPanel ticket gained SL STOP / TP STOP types with trigger input.
+- FAPI BAN ROOT CAUSE FIXED: the 60s probe loop kept EXTENDING real 418 bans
+  (every request during a ban re-arms it). fapi.ts now parses Binance's own
+  "auto-banned until <ts>" body and stays silent past it (+10s margin;
+  exponential fallback capped 15min).
+- FULL-UNIVERSE SCANNER scripts/scan_binance_candidates.py: all 200 assets,
+  1h klines weight-1 per symbol (99 bars), trend-pullback scoring + funding
+  overlay + structural SL/TP ≥2.2R + 0.5% risk sizing, testnet-exchangeInfo
+  pre-flight (testnet lists a NARROWER symbol set — GRAM/PUMP not tradable
+  there). Puncher scripts/punch_binance_demo.py places MARKET entry +
+  STOP_MARKET SL + TAKE_PROFIT_MARKET TP per candidate (max 4 concurrent).
+- PUNCHED (testnet, fake funds, all legs verified NEW): PYTH LONG 4251 @
+  0.06823 SL 0.06344 TP 0.07886 · NEAR LONG 65 @ 3.772 SL 3.458 TP 4.459 ·
+  USELESS LONG 1336 @ 0.1429 SL 0.12708 TP 0.1761 · MAGMA LONG 704 @ 0.26526
+  SL 0.23603 TP 0.32904. Records: desk/deepscan/BIN-SCAN-latest.* and
+  BIN-PUNCH-latest.*. Tab coverage re-verified on Tier-2 syms (liqlevels
+  5 venues · bookwalls · cvd · fp 4 venues · largeorder OK).
+- OPEN: positions ride until SL/TP trigger or user says close; watchlist
+  (ICP, ACT, SOPH, HOT, ICNT shorts + more longs) in BIN-SCAN-latest.md.
+
 ### 2026-11-11 15:35 UTC — Z.ai sandbox agent — BINANCE TOP-200 TIER (Tier-2) + testnet demo trading
 - User directive: "integrate top 200 most liquid assets from binance … first
   we will trade at demo binance account". Shipped as a new Binance-NATIVE

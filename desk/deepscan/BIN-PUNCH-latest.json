@@ -1,0 +1,228 @@
+{
+ "punchedAt": "2026-11-11 16:15:28 UTC",
+ "walletBefore": 4095.27422767,
+ "walletAfter": 4095.08539895,
+ "unrealized": -1.79559944,
+ "positions": [
+  {
+   "symbol": "MAGMAUSDT",
+   "positionAmt": 704,
+   "entryPrice": 0.26526,
+   "markPrice": 0,
+   "unRealizedProfit": 0,
+   "leverage": "20"
+  },
+  {
+   "symbol": "NEARUSDT",
+   "positionAmt": 65,
+   "entryPrice": 3.772,
+   "markPrice": 0,
+   "unRealizedProfit": 0,
+   "leverage": "10"
+  },
+  {
+   "symbol": "USELESSUSDT",
+   "positionAmt": 1336,
+   "entryPrice": 0.1429,
+   "markPrice": 0,
+   "unRealizedProfit": 0,
+   "leverage": "20"
+  },
+  {
+   "symbol": "PYTHUSDT",
+   "positionAmt": 4251,
+   "entryPrice": 0.06823,
+   "markPrice": 0,
+   "unRealizedProfit": 0,
+   "leverage": "20"
+  }
+ ],
+ "openOrders": [
+  {
+   "orderId": 1000000283339250,
+   "symbol": "MAGMAUSDT",
+   "side": "SELL",
+   "type": "TAKE_PROFIT_MARKET",
+   "price": 0,
+   "origQty": 704,
+   "status": "NEW",
+   "time": 0,
+   "reduceOnly": true,
+   "algo": true,
+   "triggerPrice": 0.32904
+  },
+  {
+   "orderId": 1000000283339244,
+   "symbol": "MAGMAUSDT",
+   "side": "SELL",
+   "type": "STOP_MARKET",
+   "price": 0,
+   "origQty": 704,
+   "status": "NEW",
+   "time": 0,
+   "reduceOnly": true,
+   "algo": true,
+   "triggerPrice": 0.23603
+  },
+  {
+   "orderId": 1000000283339237,
+   "symbol": "USELESSUSDT",
+   "side": "SELL",
+   "type": "TAKE_PROFIT_MARKET",
+   "price": 0,
+   "origQty": 1336,
+   "status": "NEW",
+   "time": 0,
+   "reduceOnly": true,
+   "algo": true,
+   "triggerPrice": 0.1761
+  },
+  {
+   "orderId": 1000000283339236,
+   "symbol": "USELESSUSDT",
+   "side": "SELL",
+   "type": "STOP_MARKET",
+   "price": 0,
+   "origQty": 1336,
+   "status": "NEW",
+   "time": 0,
+   "reduceOnly": true,
+   "algo": true,
+   "triggerPrice": 0.12708
+  },
+  {
+   "orderId": 1000000283338505,
+   "symbol": "NEARUSDT",
+   "side": "SELL",
+   "type": "TAKE_PROFIT_MARKET",
+   "price": 0,
+   "origQty": 65,
+   "status": "NEW",
+   "time": 0,
+   "reduceOnly": true,
+   "algo": true,
+   "triggerPrice": 4.459
+  },
+  {
+   "orderId": 1000000283338504,
+   "symbol": "NEARUSDT",
+   "side": "SELL",
+   "type": "STOP_MARKET",
+   "price": 0,
+   "origQty": 65,
+   "status": "NEW",
+   "time": 0,
+   "reduceOnly": true,
+   "algo": true,
+   "triggerPrice": 3.458
+  },
+  {
+   "orderId": 1000000283338494,
+   "symbol": "PYTHUSDT",
+   "side": "SELL",
+   "type": "TAKE_PROFIT_MARKET",
+   "price": 0,
+   "origQty": 4251,
+   "status": "NEW",
+   "time": 0,
+   "reduceOnly": true,
+   "algo": true,
+   "triggerPrice": 0.07886
+  },
+  {
+   "orderId": 1000000283338491,
+   "symbol": "PYTHUSDT",
+   "side": "SELL",
+   "type": "STOP_MARKET",
+   "price": 0,
+   "origQty": 4251,
+   "status": "NEW",
+   "time": 0,
+   "reduceOnly": true,
+   "algo": true,
+   "triggerPrice": 0.06344
+  }
+ ],
+ "trades": [
+  {
+   "sym": "USELESS",
+   "pair": "USELESSUSDT",
+   "direction": "LONG",
+   "score": 8.5,
+   "rank": 59,
+   "plannedEntry": 0.14239,
+   "sl": 0.12708,
+   "tp": 0.1761,
+   "qty": 1336.0,
+   "notional": 190.35,
+   "riskUsd": 20.47,
+   "rMultiple": 2.2,
+   "legs": [
+    {
+     "leg": "ENTRY",
+     "type": "MARKET",
+     "ok": true,
+     "orderId": 273266841,
+     "status": "NEW",
+     "avgPrice": null
+    },
+    {
+     "leg": "SL",
+     "type": "STOP_MARKET",
+     "ok": true,
+     "algoId": 1000000283339236,
+     "trigger": "0.1270800",
+     "status": "NEW"
+    },
+    {
+     "leg": "TP",
+     "type": "TAKE_PROFIT_MARKET",
+     "ok": true,
+     "algoId": 1000000283339237,
+     "trigger": "0.1761000",
+     "status": "NEW"
+    }
+   ]
+  },
+  {
+   "sym": "MAGMA",
+   "pair": "MAGMAUSDT",
+   "direction": "LONG",
+   "score": 8.5,
+   "rank": 70,
+   "plannedEntry": 0.26509,
+   "sl": 0.23603,
+   "tp": 0.32904,
+   "qty": 704.0,
+   "notional": 186.76,
+   "riskUsd": 20.46,
+   "rMultiple": 2.2,
+   "legs": [
+    {
+     "leg": "ENTRY",
+     "type": "MARKET",
+     "ok": true,
+     "orderId": 318955823,
+     "status": "NEW",
+     "avgPrice": null
+    },
+    {
+     "leg": "SL",
+     "type": "STOP_MARKET",
+     "ok": true,
+     "algoId": 1000000283339244,
+     "trigger": "0.2360300",
+     "status": "NEW"
+    },
+    {
+     "leg": "TP",
+     "type": "TAKE_PROFIT_MARKET",
+     "ok": true,
+     "algoId": 1000000283339250,
+     "trigger": "0.3290400",
+     "status": "NEW"
+    }
+   ]
+  }
+ ]
+}

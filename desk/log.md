@@ -2074,3 +2074,23 @@ User overrode the v1.1 Tier-3 deferral. Executed:
   - `desk/mt5.json` `LNKUSD`: `bid 10.459`, `ask 10.52`, `spreadPoints 61.0` (`$0.061`), `spreadPct 0.5815%`, `perpMid 10.477`, `basisPct +0.1193%`, `tradeAllowed: true` (`/api/cg/live?sym=LINK` `10.474`, VWAP `10.365`).
   - **Gates failed**: `spreadPct 0.5815%` is `3.9×` above `0.15%` broker spread gate, and broker spread `$0.061` is `1.11×` larger than the `$0.055` perp SL width (`10.560 - 10.505`). Basis-translated levels (`× 1.001193`): entry `10.518` bid / SL `10.573` ask / T1 `10.313` bid — filling at `10.518` bid implies `ask ~10.579` (`+$0.006` past SL, instant stop-out). Widening SL past `$0.116` cuts reward/risk to `~1.76R` (`< 2.0R`), alongside `10.604` (str 81) short-liq sweep hazard `[AGAINST]`.
 - Status left `"suggested"` per `PROTOCOL.md` with skip details documented in `desk/state.json` `notes`; MT5 remains flat (`equity $4,649.96`, `0` positions, `0` orders); `R90` `WAKE.md` items cleared (`ALERT A10` preserved for `zai-desk`).
+## BIN-PUNCH-1 · 2026-11-11 16:15 UTC · zai-desk · Binance futures TESTNET demo
+
+**User directive**: "find all potential assets and punch trade directly on demo binance".
+
+- Scanned the FULL Binance top-200 universe (192/200 symbols, 1h klines, weight-1
+  calls; 8 failed on the fapi IP ban window — ban-aware backoff added).
+- Template: trend-pullback (EMA stack + RSI zone + EMA20 pocket + volume surge),
+  funding-overlay squeeze penalty, structural SL (swing ± 1.2 ATR), TP ≥ 2.2R,
+  risk 0.5% of the 4,095 USDT demo wallet per trade, max 4 concurrent.
+- Punched 4 LONG brackets (MARKET entry + STOP_MARKET SL + TAKE_PROFIT_MARKET TP,
+  algo/conditional lane, reduce-only, mark-price triggers):
+  1. PYTH LONG 4,251 @ 0.06823 · SL 0.06344 · TP 0.07886 · score 9.26 (entry 248655598)
+  2. NEAR LONG 65 @ 3.772 · SL 3.458 · TP 4.459 · score 8.5 (entry 659749144)
+  3. USELESS LONG 1,336 @ 0.1429 · SL 0.12708 · TP 0.1761 · score 8.5 (entry 273266841)
+  4. MAGMA LONG 704 @ 0.26526 · SL 0.23603 · TP 0.32904 · score 8.5 (entry 318955823)
+- GRAM + PUMP skipped: not tradable on the testnet (narrower symbol set —
+  pre-flight vs testnet exchangeInfo added to the puncher).
+- Records: desk/deepscan/BIN-SCAN-latest.{json,md}, BIN-PUNCH-latest.{json,md}.
+- Note: SL/TP levels derive from mainnet data; testnet fills track the testnet
+  book (USELESS filled 3.5% under the mainnet mid — bracket R still ≥ 2.1).

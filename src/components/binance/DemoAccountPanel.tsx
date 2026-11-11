@@ -39,8 +39,12 @@ interface AcctResp {
     price: number;
     origQty: number;
     status: string;
+    algo?: boolean;
+    triggerPrice?: number;
   }[];
 }
+
+type TicketType = "LIMIT" | "MARKET" | "STOP_MARKET" | "TAKE_PROFIT_MARKET";
 
 function OrderTicket({
   sym,
@@ -56,15 +60,17 @@ function OrderTicket({
   onDone: () => void;
 }) {
   const [side, setSide] = useState<"BUY" | "SELL">("BUY");
-  const [type, setType] = useState<"LIMIT" | "MARKET">("LIMIT");
+  const [type, setType] = useState<TicketType>("LIMIT");
   const [qty, setQty] = useState("");
   const [price, setPrice] = useState("");
+  const [trigger, setTrigger] = useState("");
   const [reduceOnly, setReduceOnly] = useState(false);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<{ ok: boolean; msg: string } | null>(null);
 
   const step = Math.pow(10, -qtyDecs);
   const px = (v: number) => v.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs });
+  const isTrigger = type === "STOP_MARKET" || type === "TAKE_PROFIT_MARKET";
 
   const act = async (body: Record<string, unknown>) => {
     setBusy(true);
@@ -75,16 +81,21 @@ function OrderTicket({
         headers: { "content-type": "application/json" },
         body: JSON.stringify(body),
       });
-      const j = (await res.json()) as { ok: boolean; error?: string; result?: { orderId?: number; status?: string; msg?: string } };
+      const j = (await res.json()) as {
+        ok: boolean;
+        error?: string;
+        result?: { orderId?: number; algoId?: number; status?: string; algoStatus?: string; msg?: string };
+      };
       if (j.ok) {
+        const id = j.result?.orderId ?? j.result?.algoId;
         setResult({
           ok: true,
           msg:
             body.action === "cancelAll"
               ? `all open orders cancelled${j.result?.msg ? ` — ${j.result.msg}` : ""}`
               : body.action === "cancel"
-                ? `cancelled · orderId ${j.result?.orderId ?? "?"} (${j.result?.status ?? "CANCELED"})`
-                : `accepted · orderId ${j.result?.orderId ?? "?"} · status ${j.result?.status ?? "NEW"}`,
+                ? `cancelled · orderId ${id ?? "?"}`
+                : `accepted · id ${id ?? "?"} · ${j.result?.status ?? j.result?.algoStatus ?? "NEW"}`,
         });
       } else {
         setResult({ ok: false, msg: j.error ?? "rejected" });
@@ -107,6 +118,10 @@ function OrderTicket({
       setResult({ ok: false, msg: "enter a positive limit price" });
       return;
     }
+    if (isTrigger && !(Number(trigger) > 0)) {
+      setResult({ ok: false, msg: "enter a positive trigger price (mark-price trigger)" });
+      return;
+    }
     void act({
       action: "place",
       symbol: sym,
@@ -114,6 +129,7 @@ function OrderTicket({
       type,
       quantity: q,
       ...(type === "LIMIT" ? { price: Number(price) } : {}),
+      ...(isTrigger ? { stopPrice: Number(trigger) } : {}),
       reduceOnly,
     });
   };
@@ -138,18 +154,22 @@ function OrderTicket({
         </span>
       </div>
       <div className="flex flex-wrap items-center gap-1.5">
-        <button
-          onClick={() => setType("LIMIT")}
-          className={`rounded px-2.5 py-1 text-[10px] font-semibold ${type === "LIMIT" ? "bg-neutral-700 text-neutral-100" : "bg-neutral-900 text-neutral-500"}`}
-        >
-          LIMIT
-        </button>
-        <button
-          onClick={() => setType("MARKET")}
-          className={`rounded px-2.5 py-1 text-[10px] font-semibold ${type === "MARKET" ? "bg-neutral-700 text-neutral-100" : "bg-neutral-900 text-neutral-500"}`}
-        >
-          MARKET
-        </button>
+        {(["LIMIT", "MARKET", "STOP_MARKET", "TAKE_PROFIT_MARKET"] as TicketType[]).map((t) => (
+          <button
+            key={t}
+            onClick={() => setType(t)}
+            className={`rounded px-2.5 py-1 text-[10px] font-semibold ${type === t ? "bg-neutral-700 text-neutral-100" : "bg-neutral-900 text-neutral-500"}`}
+            title={
+              t === "STOP_MARKET"
+                ? "conditional stop (algo lane) — reduce-only, triggers on mark price"
+                : t === "TAKE_PROFIT_MARKET"
+                  ? "conditional take-profit (algo lane) — reduce-only, triggers on mark price"
+                  : t
+            }
+          >
+            {t === "STOP_MARKET" ? "SL STOP" : t === "TAKE_PROFIT_MARKET" ? "TP STOP" : t}
+          </button>
+        ))}
         <input
           value={qty}
           onChange={(e) => setQty(e.target.value)}
@@ -173,6 +193,18 @@ function OrderTicket({
             >
               mid {mid != null ? px(mid) : "–"}
             </button>
+          </>
+        ) : null}
+        {isTrigger ? (
+          <>
+            <input
+              value={trigger}
+              onChange={(e) => setTrigger(e.target.value)}
+              inputMode="decimal"
+              placeholder="trigger price"
+              className="w-28 rounded border border-amber-800 bg-[#0b0e11] px-2 py-1 font-mono text-[11px] text-amber-200 focus:border-amber-500 focus:outline-none"
+            />
+            <span className="text-[9px] text-neutral-600">mark-price trigger · algo/conditional lane</span>
           </>
         ) : null}
         <label className="flex items-center gap-1 text-[10px] text-neutral-500">
@@ -298,9 +330,15 @@ export default function DemoAccountPanel({
           {(d.openOrders?.length ?? 0) > 0 && (
             <div className="mt-2 space-y-0.5 font-mono text-[10px] tabular-nums text-neutral-400">
               {d.openOrders!.map((o) => (
-                <div key={o.orderId} className="flex justify-between">
+                <div key={`${o.algo ? "algo" : "reg"}-${o.orderId}`} className="flex justify-between">
                   <span>
-                    #{o.orderId} {o.side} {o.type} {o.origQty} @ {o.price} {o.symbol}
+                    #{o.orderId} {o.side} {o.type} {o.origQty}
+                    {o.algo ? (
+                      <span className="text-amber-300"> ⇄ {o.triggerPrice ?? "?"} </span>
+                    ) : (
+                      <span> @ {o.price} </span>
+                    )}
+                    {o.symbol}
                   </span>
                   <span className="text-neutral-600">{o.status}</span>
                 </div>

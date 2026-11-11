@@ -112,6 +112,9 @@ export interface BinanceAccount {
     status: string;
     time: number;
     reduceOnly: boolean;
+    /** true = CONDITIONAL bracket leg (algoId, triggerPrice) */
+    algo?: boolean;
+    triggerPrice?: number;
   }[];
 }
 
@@ -136,7 +139,7 @@ export async function accountSnapshot(): Promise<{ ok: false; error: string } | 
   if (cache.inflight) return cache.inflight;
   cache.inflight = (async () => {
     try {
-      const [acct, orders] = await Promise.all([
+      const [acct, orders, algoOrders] = await Promise.all([
         signed<{
           canTrade: boolean;
           totalWalletBalance: string;
@@ -166,6 +169,19 @@ export async function accountSnapshot(): Promise<{ ok: false; error: string } | 
             reduceOnly?: boolean;
           }[]
         >("GET", "/fapi/v1/openOrders", {}),
+        signed<
+          {
+            algoId: number;
+            symbol: string;
+            side: string;
+            orderType: string;
+            algoStatus: string;
+            triggerPrice: string;
+            quantity: string;
+            bookTime?: number;
+            algoType?: string;
+          }[]
+        >("GET", "/fapi/v1/openAlgoOrders", {}).catch(() => [] as { algoId: number }[]),
       ]);
       const snap: BinanceAccount = {
         ok: true,
@@ -195,17 +211,32 @@ export async function accountSnapshot(): Promise<{ ok: false; error: string } | 
             leverage: p.leverage,
           }))
           .filter((p) => p.positionAmt !== 0),
-        openOrders: (orders ?? []).map((o) => ({
-          orderId: o.orderId,
-          symbol: o.symbol,
-          side: o.side,
-          type: o.type,
-          price: Number(o.price) || 0,
-          origQty: Number(o.origQty) || 0,
-          status: o.status,
-          time: o.time,
-          reduceOnly: !!o.reduceOnly,
-        })),
+        openOrders: [
+          ...(orders ?? []).map((o) => ({
+            orderId: o.orderId,
+            symbol: o.symbol,
+            side: o.side,
+            type: o.type,
+            price: Number(o.price) || 0,
+            origQty: Number(o.origQty) || 0,
+            status: o.status,
+            time: o.time,
+            reduceOnly: !!o.reduceOnly,
+          })),
+          ...(algoOrders ?? []).map((o) => ({
+            orderId: o.algoId,
+            symbol: o.symbol,
+            side: o.side,
+            type: o.orderType,
+            price: 0,
+            origQty: Number(o.quantity) || 0,
+            status: o.algoStatus ?? "NEW",
+            time: o.bookTime ?? 0,
+            reduceOnly: true,
+            algo: true,
+            triggerPrice: Number(o.triggerPrice) || 0,
+          })),
+        ],
       };
       cache.value = snap;
       cache.at = Date.now();
@@ -242,17 +273,49 @@ function gateOrders(): void {
   }
 }
 
+export type OrderType = "LIMIT" | "MARKET" | "STOP_MARKET" | "TAKE_PROFIT_MARKET";
+
 export interface PlaceOrderReq {
   symbol: string; // full pair, e.g. "BTCUSDT"
   side: "BUY" | "SELL";
-  type: "LIMIT" | "MARKET";
+  type: OrderType;
   quantity: number;
   price?: number;
+  /** trigger price for STOP_MARKET / TAKE_PROFIT_MARKET */
+  stopPrice?: number;
   reduceOnly?: boolean;
+}
+
+/** Since 2025-12-09 Binance rejects conditional types on /fapi/v1/order
+ *  (-4120 "use the Algo Order API endpoints") — STOP_MARKET and
+ *  TAKE_PROFIT_MARKET go through POST /fapi/v1/algoOrder with
+ *  algoType=CONDITIONAL, triggerPrice (NOT stopPrice — the old name is
+ *  silently accepted but never fires) and an EXPLICIT quantity with
+ *  reduceOnly (closePosition was removed from the wire). */
+export function isConditionalType(t: string): boolean {
+  return t === "STOP_MARKET" || t === "TAKE_PROFIT_MARKET";
 }
 
 export async function placeOrder(o: PlaceOrderReq): Promise<Record<string, unknown>> {
   gateOrders();
+  if (isConditionalType(o.type)) {
+    if (o.stopPrice == null || !Number.isFinite(o.stopPrice) || o.stopPrice <= 0) {
+      throw new BinanceApiError(`${o.type} requires a positive stopPrice`, -4);
+    }
+    const params: Record<string, string | number | boolean> = {
+      symbol: o.symbol,
+      side: o.side,
+      algoType: "CONDITIONAL",
+      type: o.type,
+      triggerPrice: o.stopPrice,
+      quantity: o.quantity, // brackets always reduce — explicit qty required
+      reduceOnly: true,
+      workingType: "MARK_PRICE", // liquidation-grade triggers
+    };
+    const r = await signed<Record<string, unknown>>("POST", "/fapi/v1/algoOrder", params, 10_000);
+    invalidateAccountCache();
+    return r;
+  }
   const params: Record<string, string | number | boolean> = {
     symbol: o.symbol,
     side: o.side,
@@ -279,9 +342,47 @@ export async function cancelOrder(symbol: string, orderId: number): Promise<Reco
   return r;
 }
 
+/** Cancel a CONDITIONAL (algo) order — DELETE /fapi/v1/algoOrder by algoId. */
+export async function cancelAlgoOrder(symbol: string, algoId: number): Promise<Record<string, unknown>> {
+  gateOrders();
+  const r = await signed<Record<string, unknown>>("DELETE", "/fapi/v1/algoOrder", { symbol, algoId }, 10_000);
+  invalidateAccountCache();
+  return r;
+}
+
 export async function cancelAllOpen(symbol: string): Promise<Record<string, unknown>> {
   gateOrders();
   const r = await signed<Record<string, unknown>>("DELETE", "/fapi/v1/allOpenOrders", { symbol }, 10_000);
   invalidateAccountCache();
   return r;
+}
+
+/** Cancel ALL open orders on a symbol — regular + conditional (algo) lanes. */
+export async function cancelAllOrdersBoth(symbol: string): Promise<Record<string, unknown>> {
+  gateOrders();
+  const out: Record<string, unknown> = {};
+  try {
+    out.regular = await signed<Record<string, unknown>>("DELETE", "/fapi/v1/allOpenOrders", { symbol }, 10_000);
+  } catch (err) {
+    out.regular = err instanceof Error ? err.message : "cancel failed";
+  }
+  try {
+    // no verified bulk algo endpoint on testnet — cancel per algoId
+    const open = await signed<{ algoId?: number }[]>("GET", "/fapi/v1/openAlgoOrders", { symbol }, 10_000);
+    const ids = (Array.isArray(open) ? open : []).map((o) => o.algoId).filter((x): x is number => typeof x === "number");
+    out.algoCancelled = ids.length;
+    out.algo = [];
+    for (const id of ids) {
+      try {
+        const c = await signed<Record<string, unknown>>("DELETE", "/fapi/v1/algoOrder", { symbol, algoId: id }, 10_000);
+        (out.algo as Record<string, unknown>[]).push(c);
+      } catch {
+        /* already gone — best effort */
+      }
+    }
+  } catch (err) {
+    out.algo = err instanceof Error ? err.message : "algo cancel failed";
+  }
+  invalidateAccountCache();
+  return out;
 }

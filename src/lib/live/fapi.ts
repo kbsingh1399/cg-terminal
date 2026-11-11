@@ -33,12 +33,31 @@ export async function fapiFetch(pathAndQuery: string, timeoutMs = 4_000): Promis
     headers: { accept: "application/json" },
   });
   if (res.status === 429 || res.status === 418) {
-    // PROBE-CAPPED backoff: never trust a long Retry-After blindly — real
-    // bans often lift sooner (and hammering is already prevented by the
-    // early check). A 60 s cap means at most one probe request per minute
-    // while banned, and fast recovery the moment upstream forgives us.
-    const waitMs = 60_000;
-    breaker.until = Date.now() + waitMs;
+    // REAL-WINDOW BACKOFF: Binance's 418 body carries the authoritative ban
+    // end ("...auto-banned until 2026-11-11T16:09:25.641Z") and ANY request
+    // made during the ban EXTENDS it — a fixed 60s probe loop can therefore
+    // keep a ban alive forever. Parse the real end and stay silent past it
+    // (+10s margin). Without a parseable end: exponential 60s→120s→240s→…
+    // capped at 15 min, so a hostile/absent header can never pin us down
+    // either. 429 honors Retry-After when sane (≤15 min).
+    let until = 0;
+    if (res.status === 429) {
+      const ra = Number(res.headers.get("retry-after"));
+      until = Number.isFinite(ra) && ra > 0 && ra <= 900 ? Date.now() + ra * 1000 : Date.now() + 60_000;
+    } else {
+      const body = (await res.text().catch(() => "")) as string;
+      const m = body.match(/until (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z)/i);
+      if (m) {
+        const t = Date.parse(m[1]);
+        until = Number.isFinite(t) ? t + 10_000 : 0;
+      }
+      if (!until) {
+        const prev = breaker.until;
+        const step = prev > Date.now() ? Math.min((prev - Date.now()) * 2, 900_000) : 60_000;
+        until = Date.now() + Math.max(60_000, step);
+      }
+    }
+    breaker.until = until;
     breaker.why = `HTTP ${res.status} (weight budget)`;
     throw new FapiBannedError(breaker.until);
   }
