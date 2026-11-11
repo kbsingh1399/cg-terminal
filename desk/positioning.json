@@ -1,47 +1,47 @@
 {
-  "ts": 1794419328874,
+  "ts": 1794419382861,
   "positioning": {
     "BTC": {
-      "fundingPct8h": 0.006587,
-      "oiUsd": 52045576734,
-      "oiDelta1hPct": 0.5,
-      "oiDelta4hPct": 0.59,
-      "oiDelta24hPct": -0.16
+      "fundingPct8h": 0.006595,
+      "oiUsd": 52094664372,
+      "oiDelta1hPct": 0.6,
+      "oiDelta4hPct": 0.68,
+      "oiDelta24hPct": -0.07
     },
     "ETH": {
-      "fundingPct8h": 0.007612,
-      "oiUsd": 25244551840,
-      "oiDelta1hPct": 0.58,
-      "oiDelta4hPct": 0.43,
-      "oiDelta24hPct": 1.36
+      "fundingPct8h": 0.0076,
+      "oiUsd": 25246699728,
+      "oiDelta1hPct": 0.59,
+      "oiDelta4hPct": 0.44,
+      "oiDelta24hPct": 1.37
     },
     "SOL": {
-      "fundingPct8h": 0.003992,
-      "oiUsd": 5264091226,
-      "oiDelta1hPct": 0.6,
-      "oiDelta4hPct": 1.3,
-      "oiDelta24hPct": 1.03
+      "fundingPct8h": 0.003987,
+      "oiUsd": 5263254014,
+      "oiDelta1hPct": 0.58,
+      "oiDelta4hPct": 1.29,
+      "oiDelta24hPct": 1.02
     },
     "BNB": {
       "fundingPct8h": 0.009549,
-      "oiUsd": 1090676548,
-      "oiDelta1hPct": 0.22,
-      "oiDelta4hPct": 0.44,
-      "oiDelta24hPct": 0.86
+      "oiUsd": 1090392652,
+      "oiDelta1hPct": 0.2,
+      "oiDelta4hPct": 0.41,
+      "oiDelta24hPct": 0.83
     },
     "DOGE": {
-      "fundingPct8h": 0.000698,
-      "oiUsd": 932355179,
+      "fundingPct8h": 0.000669,
+      "oiUsd": 932363250,
       "oiDelta1hPct": -0.12,
       "oiDelta4hPct": 0.05,
       "oiDelta24hPct": 2.51
     },
     "XAU": {
-      "fundingPct8h": 0.024907,
-      "oiUsd": 1604305916,
-      "oiDelta1hPct": 2.57,
-      "oiDelta4hPct": 6.85,
-      "oiDelta24hPct": 6.41
+      "fundingPct8h": 0.024932,
+      "oiUsd": 1605306015,
+      "oiDelta1hPct": 2.63,
+      "oiDelta4hPct": 6.91,
+      "oiDelta24hPct": 6.48
     }
   }
 }
