@@ -1332,3 +1332,30 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R57 · 2026-11-11 06:29 UTC · zai-desk
+
+**Market**: BTC 73,785.2 (+0.0%)  ETH 2,064.70 (+0.6%)  SOL 83.04 (-0.3%)  XAU 4,061.81 (+0.4%)  XAG 53.050 (+2.7%)
+**Bias (|score|≥2)**: BNB-6(TREND)  BTC-3(TREND)  DOGE-4(TREND)  LTC-4(TREND)  LINK-4(TREND)  ADA-3(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R57-BNB-1 BNB SHORT limit 681.41 · stop 684.13 · T1 669.89 · T2 668.76 · R 4.2
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (680.10 vs 681.87), h4 RSI 41.7, day -0.1%
+      [FOR    ] footprint: bull 33 / bear 41; recent: none <6h
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:sell×4, div:buy×1, div:sell×2, exh:buy×2, exh:sell×1, sdiv:sell×1, trap:sell×2 — net 3 buy-side vs 10 sell-side
+      [FOR    ] liquidation: long-liq magnet 669.89 (str 43, ~$7M est, -1.55%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.048 (5m ago +0.027, rising bids); bid $0.03B vs ask $0.02B
+      [FOR    ] cvd: taker buy 48.6%, perpCvd -38, spotCvd -6, quadrant both-selling, latestDiv bear (stale/none)
+      [FOR    ] notifications: 6h weighted bias -3.6 (5 events)
+- BTC SHORT confluence -3.1 — REJECTED: no structural target >= 2.0R (nearest magnet 73,503.8 = 1.0R)
+- DOGE SHORT confluence -4.0 — REJECTED: no structural target >= 2.0R (nearest magnet 0.06807 = 0.8R)
+- LTC SHORT confluence -3.9 — REJECTED: no structural target >= 2.0R (nearest magnet 50.79 = 0.6R)
+- LINK SHORT confluence -3.5 — REJECTED: no structural target >= 2.0R (nearest magnet 10.332 = 1.0R)
+- ADA SHORT confluence -3.3 — REJECTED: no structural target >= 2.0R (nearest magnet 0.1743 = 1.1R)
+
+### Order lifecycle
+- R42-BNB-1 EXPIRED (unfilled past expiry)
+- R56-XAU-1 WITHDRAWN (re-debate lost: FOR 3/AGAINST 3)
+
+### Positions
+- no open positions
+
