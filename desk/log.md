@@ -2319,3 +2319,7 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+## R102-EXEC · 2026-11-11 19:47 UTC · atg-exec
+
+- **R102-LTC-1 (`LTC SHORT limit 51.11 / SL 51.34 / T1 50.51 / T2 49.81 / R 2.6`)**: **SKIPPED on MT5 (`LTCUSD`)** — live `LTCUSD` `bid 50.80 / ask 52.02` (`spread $1.22 / 2.3731%`, `15.8×` over `0.15%` gate; `basis +1.0615%` vs `perpRef 50.87`) translates SHORT entry to `51.65` bid / SL `51.88` ask (`$0.23` SL width vs `$1.22` spread = `5.25×` stop distance → instant stop-out as ask breaches SL on fill); `AGAINST` `microFlow` (`13` buy vs `4` sell over 6h) & `notifications` (`+11.5`); plus `4/4` MT5 limit slots occupied. Status kept `"suggested"` with `notes`; `R102-LTC-1` cleared from `WAKE.md`.
