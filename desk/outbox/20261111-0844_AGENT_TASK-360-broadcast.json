@@ -1,0 +1,12 @@
+{
+  "action": "AGENT_TASK",
+  "from": "zai-desk",
+  "ts": "20261111-0844 UTC",
+  "scope": "classic",
+  "instruction": "360° classic deepscan finished 20261111-0844 UTC — broadcast refreshed in desk/inbox/WAKEUP.md (DESK BROADCAST section), digest desk/deepscan/DIGEST-20261111-0844.md. LIVE (manage only, do NOT re-place): none. PLACEABLE (new): none. PARKED: none. CLASSIC: 1/1 online (watchlist-only, engine v4 pending). All candidates are pullback LIMIT orders (never market); broker gates |basis|≤0.5% & spread≤0.15% must be re-verified at placement; await user-approved DIR-* before any MT5 action.",
+  "replyTs": 1794386825109,
+  "status": "dispatched",
+  "result": {
+    "beacon": "desk/inbox/WAKE.md"
+  }
+}
