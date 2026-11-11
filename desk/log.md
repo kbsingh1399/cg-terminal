@@ -2433,3 +2433,20 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R111 · 2026-11-11 21:42 UTC · zai-desk
+
+**Market**: BTC 74,519.7 (+1.0%)  ETH 2,074.68 (+1.1%)  SOL 84.69 (+1.7%)  XAU 3,993.66 (-1.3%)  XAG 51.800 (+0.2%)
+**Bias (|score|≥2)**: LTC-5(TREND)  XAG-3(TREND)  BNB-4(TREND)  DOGE-4(TRANS)  LINK-3(TRANS)  XAU-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R98-LINK-1 re-debated: FOR 4/AGAINST 2 — stands
+- R101-XAG-1 re-debated: FOR 4/AGAINST 2 — stands
+- R102-LTC-1 re-debated: FOR 5/AGAINST 1 — stands
+- R107-BNB-1 re-debated: FOR 7/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
