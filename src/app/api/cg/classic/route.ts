@@ -60,7 +60,25 @@ interface Bar {
   t: number; o: number | null; h: number | null; l: number | null; c: number | null; v: number;
 }
 
-function normalize(sym: string, raw: string): Record<string, unknown> | { error: string } {
+interface NormalizeOk {
+  ok: true;
+  sym: string;
+  price: number | null;
+  prevClose: number | null;
+  chgPct: number | null;
+  currency: unknown;
+  exchange: unknown;
+  tz: unknown;
+  instrumentType: unknown;
+  regularMarketTime: unknown;
+  hasVolume: boolean;
+  nBars: number;
+  bars: Bar[];
+  source: string;
+  fetchedAt: number;
+}
+
+function normalize(sym: string, raw: string): NormalizeOk | { error: string } {
   let j: {
     chart?: {
       result?: Array<{

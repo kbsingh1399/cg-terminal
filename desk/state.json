@@ -310,11 +310,11 @@
       ],
       "riskR": 2.07,
       "expiresTs": 1794351505324,
-      "status": "placed",
-      "statusTs": 1794337105324,
+      "status": "cancelled-expiry",
+      "statusTs": 1794381543678,
       "ticket": 209422601,
       "volume": 0.53,
-      "notes": "PLACED by USER in MT5 \u2014 ticket 209422601. 0.53 lots @ 2095.26, SL 2138.89, TP 2004.76. Risk .12 = 0.497% equity. R 2.07. VERIFIED-COMPLIANT."
+      "notes": "PLACED by USER in MT5 \u2014 ticket 209422601. 0.53 lots @ 2095.26, SL 2138.89, TP 2004.76. Risk .12 = 0.497% equity. R 2.07. VERIFIED-COMPLIANT. | CANCELLED 07:08:39-40 UTC (MT5 history state=2 ORDER_STATE_CANCELED, never filled). Synced per DIR-0010."
     },
     {
       "id": "R18-XAG-1",
@@ -335,11 +335,11 @@
       ],
       "riskR": 3.44,
       "expiresTs": 1794351505324,
-      "status": "placed",
-      "statusTs": 1794337105324,
+      "status": "cancelled-expiry",
+      "statusTs": 1794381543678,
       "ticket": 209422699,
       "volume": 0.01,
-      "notes": "PLACED by USER in MT5 \u2014 ticket 209422699. 0.01 lots @ 53.099, SL 53.763, TP 50.813. Risk .20 = 0.714% equity (broker min lot 0.01). R 3.44. VERIFIED-COMPLIANT."
+      "notes": "PLACED by USER in MT5 \u2014 ticket 209422699. 0.01 lots @ 53.099, SL 53.763, TP 50.813. Risk .20 = 0.714% equity (broker min lot 0.01). R 3.44. VERIFIED-COMPLIANT. | CANCELLED 07:08:39-40 UTC (MT5 history state=2 ORDER_STATE_CANCELED, never filled). Synced per DIR-0010."
     },
     {
       "id": "R57-BNB-1",
