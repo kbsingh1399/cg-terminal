@@ -1,47 +1,23 @@
 {
-  "ts": 1794432228370,
+  "ts": 1794432438904,
   "positioning": {
     "BTC": {
-      "fundingPct8h": 0.004744,
-      "oiUsd": 51645907419,
-      "oiDelta1hPct": -0.02,
-      "oiDelta4hPct": -0.61,
-      "oiDelta24hPct": -0.68
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
     },
     "ETH": {
-      "fundingPct8h": 0.005709,
-      "oiUsd": 25087657120,
-      "oiDelta1hPct": 0.08,
-      "oiDelta4hPct": -0.55,
-      "oiDelta24hPct": 0.26
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
     },
     "SOL": {
-      "fundingPct8h": 0.001479,
-      "oiUsd": 5178557476,
-      "oiDelta1hPct": -0.11,
-      "oiDelta4hPct": -1.48,
-      "oiDelta24hPct": -0.84
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
     },
     "BNB": {
-      "fundingPct8h": 0.009872,
-      "oiUsd": 1087854956,
-      "oiDelta1hPct": 0.09,
-      "oiDelta4hPct": -0.25,
-      "oiDelta24hPct": -0.13
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
     },
     "DOGE": {
-      "fundingPct8h": 0.003695,
-      "oiUsd": 915995783,
-      "oiDelta1hPct": 0.13,
-      "oiDelta4hPct": -1.71,
-      "oiDelta24hPct": -0.76
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
     },
     "XAU": {
-      "fundingPct8h": 0.031618,
-      "oiUsd": 1641710066,
-      "oiDelta1hPct": 0.01,
-      "oiDelta4hPct": 2.61,
-      "oiDelta24hPct": 10.1
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
     }
   }
 }
