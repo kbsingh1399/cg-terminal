@@ -1,23 +1,23 @@
 {
-  "ts": 1794434749767,
+  "ts": 1794434818260,
   "positioning": {
     "BTC": {
       "error": "timed out"
     },
     "ETH": {
-      "error": "timed out"
+      "error": "HTTP Error 502: Bad Gateway"
     },
     "SOL": {
       "error": "timed out"
     },
     "BNB": {
-      "error": "timed out"
+      "error": "HTTP Error 502: Bad Gateway"
     },
     "DOGE": {
       "error": "timed out"
     },
     "XAU": {
-      "error": "timed out"
+      "error": "HTTP Error 502: Bad Gateway"
     }
   }
 }
