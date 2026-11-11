@@ -37,16 +37,11 @@
    never edit the broadcast section by hand.
 
 <!-- 360-BROADCAST-START (desk-managed — latest run wins; atg-exec: read on every poll) -->
-## DESK BROADCAST · 360 classic · 20261110-2108 UTC — latest deepscan result (auto-refreshed by scripts/desk_deepscan.py)
+## DESK BROADCAST · 360 classic · 20261111-0821 UTC — latest deepscan result (auto-refreshed by scripts/desk_deepscan.py)
 
-atg-exec: full justification per trade in desk/deepscan/DIGEST-20261110-2108.md (+ per-asset §9). Do NOT touch MT5 without a user-approved DIR-*. Broker gates re-verified at placement.
+atg-exec: full justification per trade in desk/deepscan/DIGEST-20261111-0821.md (+ per-asset §9). Do NOT touch MT5 without a user-approved DIR-*. Broker gates re-verified at placement.
 
-### LIVE ORDERS (already working — do NOT re-place)
-- ETH: ticket 209422601 (placed) — manage only (fills/expiry/SL per protocol; A1-A6 alerts armed)
-- XAG: ticket 209422699 (placed) — manage only (fills/expiry/SL per protocol; A1-A6 alerts armed)
-
-### CLASSIC UNIVERSE (Tier-3) — 62/77 online (watchlist-only, engine v4 pending) · quotes via /api/cg/classic (Yahoo v8) · NO trade construction
-- strong 4-dim leans (|score| ≥ 3): GER30 LONG, UK100 LONG, FRA40 LONG, EUSTX50 LONG, NTH25 LONG, GBPNZD LONG, NZDCHF SHORT, NFLX SHORT
-- full table: desk/deepscan/DIGEST-20261110-2108.md (classic section) — derivatives dims honestly n/a for this class
+### CLASSIC UNIVERSE (Tier-3) — 1/1 online (watchlist-only, engine v4 pending) · quotes via /api/cg/classic (Yahoo v8) · NO trade construction
+- full table: desk/deepscan/DIGEST-20261111-0821.md (classic section) — derivatives dims honestly n/a for this class
 
 <!-- 360-BROADCAST-END -->
