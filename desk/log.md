@@ -1045,3 +1045,25 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R40 · 2026-11-11 01:40 UTC · zai-desk
+
+**Market**: BTC 73,912.8 (+0.2%)  ETH 2,061.85 (+0.5%)  SOL 83.80 (+0.6%)  XAU 4,055.99 (+0.3%)  XAG 52.550 (+1.7%)
+**Bias (|score|≥2)**: BTC-5(TREND)  ADA-4(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- BTC SHORT confluence -5.1 — REJECTED: no structural target >= 2.0R (nearest magnet 73,479.4 = 1.5R)
+- NEW R40-ADA-1 ADA SHORT limit 0.1760 · stop 0.1767 · T1 0.1741 · R 2.7
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (0.1760 vs 0.1748), h4 RSI 44.1, day +1.2%
+      [FOR    ] footprint: bull 62 / bear 90; recent: none <6h
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×4, abs:sell×4, div:sell×4, exh:buy×4, exh:sell×3, sdiv:sell×3, trap:buy×1, trap:sell×2 — net 9 buy-side vs 16 sell-side
+      [FOR    ] liquidation: long-liq magnet 0.1702 (str 97, ~$4M est, -3.54%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.033 (5m ago -0.033, falling bids); bid $0.02B vs ask $0.02B
+      [FOR    ] cvd: taker buy 48.8%, perpCvd -19, spotCvd -3, quadrant both-selling, latestDiv bull (stale/none)
+      [FOR    ] notifications: 6h weighted bias -7.7 (15 events)
+
+### Order lifecycle
+- R37-BNB-1 WITHDRAWN (confluence flipped to +0.0)
+
+### Positions
+- no open positions
+
