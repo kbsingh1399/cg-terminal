@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Sparkles } from "lucide-react";
 import { usePolling, useTicker } from "@/components/cg/use-cg-data";
 import { useDepth20, useLiveBar, type LiveBar } from "@/lib/binance/sym-feed";
 import { useTradeTape } from "@/lib/live/feed";
@@ -10,6 +11,7 @@ import DepthLadder from "./DepthLadder";
 import TradeTapePanel from "./TradeTapePanel";
 import LiquidationFeed from "./LiquidationFeed";
 import DemoAccountPanel from "./DemoAccountPanel";
+import OraclePanel from "@/components/cg/oracle-panel";
 
 /**
  * BinanceView — the Tier-2 symbol page: REAL-TIME at every level.
@@ -70,15 +72,21 @@ export default function BinanceView({
   rank,
   priceDecs,
   qtyDecs,
+  punchable = true,
 }: {
   sym: string;
   rank: number;
   priceDecs: number;
   qtyDecs: number;
+  punchable?: boolean;
 }) {
   const [presetIdx, setPresetIdx] = useState(2); // 15m
   const iv = PRESETS[presetIdx].iv;
   const [liveBar, setLiveBar] = useState<LiveBar | null>(null);
+  // Athena Oracle confluence panel — collapsed by default so the layout is
+  // unchanged for existing users; while collapsed the panel is unmounted and
+  // therefore polls nothing.
+  const [oracleOpen, setOracleOpen] = useState(false);
   useEffect(() => {
     setLiveBar(null); // never carry the previous symbol's forming bar
   }, [sym]);
@@ -140,7 +148,11 @@ export default function BinanceView({
     };
   }, [mktFailed, pair]);
 
-  const klFailed = !!kl.error || (kl.data != null && kl.data.ok !== true);
+  // EMPTY-PAYLOAD GUARD: `ok:true` with 0 rows (transient flappy upstream
+  // window) must count as FAILED so the browser-direct fallback engages —
+  // otherwise the chart paints a near-empty frame for a whole poll cycle.
+  const klFailed =
+    !!kl.error || (kl.data != null && (kl.data.ok !== true || !(kl.data.rows?.length ?? 0)));
   const [dk, setDk] = useState<[number, number, number, number, number, number, number][] | null>(null);
   useEffect(() => {
     if (!klFailed) {
@@ -170,10 +182,11 @@ export default function BinanceView({
     return () => clearInterval(timer);
   }, []);
 
-  // payload guard: never render a payload that belongs to another symbol
+  // payload guard: never render a payload that belongs to another symbol,
+  // and never prefer an EMPTY server payload over the browser-direct fallback
   const m = mkt.data && mkt.data.sym === sym ? mkt.data : null;
   const bars: Bar[] | null = (() => {
-    if (kl.data && kl.data.ok && kl.data.sym === sym) {
+    if (kl.data && kl.data.ok && kl.data.sym === sym && kl.data.rows.length) {
       return kl.data.rows.map((r) => ({ t: r[0], o: r[1], h: r[2], l: r[3], c: r[4], v: r[5] }));
     }
     if (dk) return dk.map((r) => ({ t: r[0], o: r[1], h: r[2], l: r[3], c: r[4], v: r[5] }));
@@ -218,8 +231,21 @@ export default function BinanceView({
           </button>
         ))}
         <span className="ml-2 text-[10px] text-neutral-600">
-          {sym}USDT · Binance USDT-M perp · liquidity rank #{rank} · candles REST-bootstrapped then WS-live · stats: {statsSrc}
+          {sym}USDT · Binance USDT-M perp · curated #{rank} · candles REST-bootstrapped then WS-live · stats: {statsSrc}
         </span>
+        <button
+          onClick={() => setOracleOpen((v) => !v)}
+          aria-expanded={oracleOpen}
+          title="Athena Oracle — 6-factor confluence score (trend · order-flow · liquidations · whales · walls · funding)"
+          className={`ml-auto flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors ${
+            oracleOpen
+              ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/40"
+              : "text-neutral-400 hover:bg-neutral-900 hover:text-amber-300"
+          }`}
+        >
+          <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+          Oracle
+        </button>
       </div>
 
       {/* derivatives/stats strip */}
@@ -262,20 +288,27 @@ export default function BinanceView({
         </div>
       )}
 
+      {/* Athena Oracle — confluence panel above the chart (toggle in the
+          interval row; unmounted = zero polling while collapsed) */}
+      {oracleOpen && <OraclePanel sym={sym} />}
+
       {/* main grid: chart + book/tape column */}
       <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr]">
-        <div className="space-y-4">
-          <div className="overflow-hidden rounded-lg border border-neutral-800 bg-[#11151a] p-2">
-            <BinanceChart bars={bars} liveBar={liveBar} interval={iv} priceDecs={priceDecs} height={400} />
-            <div className="flex justify-between px-2 pb-1 text-[9px] text-neutral-600">
-              <span>
-                {bars?.length ?? 0} bars · {iv} · UTC · live candle forms from the trade tape (kline stream when the
-                network delivers it) · closed bars re-sync every 60s
-              </span>
-              <span>{liveBar ? `forming O ${px(liveBar.o)} H ${px(liveBar.h)} L ${px(liveBar.l)} C ${px(liveBar.c)}` : "waiting for the live bar…"}</span>
+        <div className="flex flex-col space-y-4">
+          <div className="overflow-hidden rounded-lg border border-neutral-800 bg-[#11151a]">
+            <div className="flex items-center justify-between border-b border-neutral-800/60 px-3 py-1.5">
+              <div className="flex items-baseline gap-2">
+                <span className="font-mono text-xs font-bold text-neutral-100">{sym}USDT</span>
+                <span className="text-[10px] font-semibold text-cyan-300">{iv}</span>
+                <span className="hidden text-[10px] text-neutral-600 sm:inline">Binance USDT-M perp · UTC</span>
+              </div>
+              <span className="text-[10px] text-neutral-600">{bars?.length ?? 0} bars · live candle from the trade tape</span>
+            </div>
+            <div className="p-1">
+              <BinanceChart bars={bars} liveBar={liveBar} interval={iv} priceDecs={priceDecs} height={460} base={sym} />
             </div>
           </div>
-          <DemoAccountPanel sym={sym} qtyDecs={qtyDecs} priceDecs={priceDecs} mid={mid} />
+          <DemoAccountPanel sym={sym} qtyDecs={qtyDecs} priceDecs={priceDecs} mid={mid} punchable={punchable} />
         </div>
         <div className="space-y-4">
           <DepthLadder depth={depth} status={bookStatus} priceDecs={priceDecs} />
@@ -285,11 +318,11 @@ export default function BinanceView({
       </div>
 
       <div className="rounded-lg border border-neutral-800 bg-[#0e1216] p-3 text-[11px] leading-relaxed text-neutral-500">
-        <span className="font-semibold text-neutral-400">Tier-2 Binance-native instrument:</span> every field above is a
+        <span className="font-semibold text-neutral-400">Binance-native instrument:</span> every field above is a
         live Binance USDT-M futures stream or endpoint — book L2 (@depth20@100ms), tape (@trade), candles (@kline),
-        funding/mark (premiumIndex), OI, liquidations (@forceOrder). The order-flow tabs (Large Orders · Liq Levels ·
-        Book Walls · CVD · Footprint) aggregate this symbol across every exchange that carries it — Binance, OKX, Bybit,
-        Bitget, Gate, Coinbase, Kraken, Bitfinex and the rest of the Coinglass venue set, discovered live per symbol.
+        funding/mark (premiumIndex), OI, liquidations (@forceOrder). Overview + Footprint are single-exchange
+        (Binance, the execution venue); the other tabs (Large Orders · Liq Levels · Book Walls · CVD) aggregate this
+        symbol across every exchange that carries it — Binance always the lead, per-venue breakdowns shown.
         Execution is TESTNET-only by server gate.
       </div>
     </div>

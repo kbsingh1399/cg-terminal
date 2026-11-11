@@ -22,7 +22,7 @@ const MAX_ENTRIES = 96;
  * GET /api/binance/klines?sym=1000PEPE&interval=15m&limit=300
  *
  * Server proxy for Binance USDT-M futures klines, restricted to the
- * top-N universe (symbol shape + membership gate — no arbitrary upstream
+ * curated universe (symbol shape + membership gate — no arbitrary upstream
  * symbols), interval allowlist, limit clamped to 1000. 3s per-key cache
  * (a hot chart poller can never exceed ~weight-5 per 3s per view).
  * Rows: [openTime, open, high, low, close, volume, closeTime] — numbers.
@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
   const a = binAssetOf(sym);
   if (!a) {
     return NextResponse.json(
-      { ok: false, error: `${sym} is not in the Binance top-${200} liquidity universe` },
+      { ok: false, error: `${sym} is not in the curated universe` },
       { status: 400 }
     );
   }
@@ -70,6 +70,18 @@ export async function GET(req: NextRequest) {
         ]
       )
       .filter((r) => Number.isFinite(r[0]) && Number.isFinite(r[4]));
+    // EMPTY-PAYLOAD GUARD (2026-11-12 UI bug): the flappy -1003/weight window
+    // can surface as an EMPTY 200 body. Caching/returning that as ok:true made
+    // the Overview chart render 1-2 stale candles with no error and no retry
+    // for a full poll cycle — a "broken terminal" paint. An empty payload is
+    // a soft failure: report it (the client then falls back to its direct
+    // browser fetch) and NEVER poison the cache with it.
+    if (!rows.length) {
+      return NextResponse.json(
+        { ok: false, error: `upstream returned 0 klines for ${a.pair} (transient)` },
+        { status: 502 }
+      );
+    }
     if (cache.size >= MAX_ENTRIES) {
       // evict the stalest entry (small fixed cache, never unbounded)
       let oldestKey: string | null = null;

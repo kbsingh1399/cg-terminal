@@ -161,7 +161,7 @@ export default function StopmapCanvas({
       ctx.stroke();
       ctx.setLineDash([]);
     }
-  }, [model, resizeTick]);
+  }, [model, resizeTick, priceDecs]);
 
   return <canvas ref={ref} style={{ width: "100%", height }} className="rounded-md" />;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import FootprintCanvas, { type FootprintMode, type FootprintUnit } from "./charts/footprint-canvas";
 import { usePolling } from "./use-cg-data";
 import {
@@ -160,7 +160,7 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
     if (!m1Bars.length || !volThr) return null;
     const bars = buildDerivedBars(m1Bars, "vol", volThr);
     return { bt: "vol", label: `Volume ${fmtQty(volThr)} ${sym}`, bars, sigs: computeCgSignals(bars) };
-  }, [m1Bars, volThr]);
+  }, [m1Bars, volThr, sym]);
 
   const rangeSet: SignalSet | null = useMemo(() => {
     if (!m1Bars.length || !rangeThr) return null;
@@ -174,8 +174,10 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
   );
 
   // ---- signals list (their panel logic: type filter, bt filter, top 200) ----
-  const typeOk = (s: CgSignal) =>
-    sigTy === "all" || (sigTy === "div" ? s.t === "div" || s.t === "sdiv" : s.t === sigTy);
+  const typeOk = useCallback(
+    (s: CgSignal) => sigTy === "all" || (sigTy === "div" ? s.t === "div" || s.t === "sdiv" : s.t === sigTy),
+    [sigTy]
+  );
 
   const rows = useMemo(() => {
     const out: { g: CgSignal; set: SignalSet; t: number }[] = [];
@@ -187,7 +189,7 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
     }
     const f = sigBt === "all" ? out : out.filter((r) => r.set.bt === sigBt);
     return f.sort((a, b) => b.t - a.t).slice(0, 200);
-  }, [sets, sigBt, sigTy]);
+  }, [sets, sigBt, typeOk]);
 
   const countByBt = useMemo(() => {
     const m: Record<string, number> = { time: 0, vol: 0, range: 0 };
@@ -195,14 +197,14 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
       m[set.bt] = set.sigs.filter(typeOk).length;
     }
     return m;
-  }, [sets, sigTy]);
+  }, [sets, typeOk]);
 
   const bullCount = rows.filter((r) => r.g.side === "buy").length;
 
   // ---- currently displayed series ----
-  const currentSet = bt === "time" ? timeSet : bt === "vol" ? volSet : rangeSet;
-  const currentBars = currentSet?.bars ?? [];
-  const currentSigs = currentSet?.sigs ?? [];
+  const currentSet = useMemo(() => (bt === "time" ? timeSet : bt === "vol" ? volSet : rangeSet), [bt, timeSet, volSet, rangeSet]);
+  const currentBars = useMemo(() => currentSet?.bars ?? [], [currentSet]);
+  const currentSigs = useMemo(() => currentSet?.sigs ?? [], [currentSet]);
 
   // ---- REAL-TIME DISPLAY OVERLAY (the forming bar moves on every print) ----
   // aggregate bars stay authoritative for history + signals; the LAST bar
@@ -215,13 +217,22 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
     // skipped — the forming bar may slightly undercount for a moment, but it
     // can NEVER show phantom (double-counted) volume. The 8 s resync corrects.
     const cut = Math.max(aggUpdatedAt + 1_500, Date.now() - 40_000);
+    // SANITY ENVELOPE (blowout fix, layer 3): the tape extremes may extend
+    // the aggregate bar, but never more than 25% away from its close — a
+    // 40-second tape window cannot move 25% on any asset in the universe,
+    // so anything wider is garbage and must never fold into h/l (an l=0
+    // overlay bar blew the y-axis out to a 0-baseline — verified live).
+    const saneHi = (v: number | null | undefined, ref: number): number | null =>
+      v != null && Number.isFinite(v) && v > 0 && v <= ref * 1.25 ? v : null;
+    const saneLo = (v: number | null | undefined, ref: number): number | null =>
+      v != null && Number.isFinite(v) && v > 0 && v >= ref * 0.75 ? v : null;
     if (bt === "time") {
       // overlay the forming tf bar directly
       if (forming.barTs !== last.ts || !forming.lastPrice) return currentBars;
       const overlaid: FpBar = {
         ...last,
-        h: Math.max(last.h, forming.hi ?? last.h),
-        l: Math.min(last.l, forming.lo ?? last.l),
+        h: Math.max(last.h, saneHi(forming.hi, last.c) ?? last.h),
+        l: Math.min(last.l, saneLo(forming.lo, last.c) ?? last.l),
         c: forming.lastPrice,
         fp: last.fp ? foldTapeIntoFp(last.fp, forming.tape, cut) : null,
       };
@@ -232,8 +243,8 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
     if (!m1Last || m1Last.ts !== forming.barTs || !forming.lastPrice) return currentBars;
     const m1Overlaid: FpBar = {
       ...m1Last,
-      h: Math.max(m1Last.h, forming.hi ?? m1Last.h),
-      l: Math.min(m1Last.l, forming.lo ?? m1Last.l),
+      h: Math.max(m1Last.h, saneHi(forming.hi, m1Last.c) ?? m1Last.h),
+      l: Math.min(m1Last.l, saneLo(forming.lo, m1Last.c) ?? m1Last.l),
       c: forming.lastPrice,
       fp: m1Last.fp ? foldTapeIntoFp(m1Last.fp, forming.tape, cut) : null,
     };
@@ -788,16 +799,25 @@ function countAll(sets: SignalSet[], typeOk: (s: CgSignal) => boolean): number {
 
 function Stat({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone?: "up" | "down" }) {
   return (
-    <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 px-3 py-2">
-      <div className="truncate text-[10px] uppercase tracking-wide text-neutral-500">{label}</div>
+    <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 px-3 py-2 transition-colors hover:border-neutral-700">
+      <div className="truncate text-[10px] uppercase tracking-wide text-neutral-500" title={label}>
+        {label}
+      </div>
       <div
-        className={`mt-0.5 font-mono text-sm font-semibold ${
+        className={`mt-0.5 truncate font-mono text-sm font-semibold tabular-nums ${
           tone === "up" ? "text-emerald-400" : tone === "down" ? "text-red-400" : "text-neutral-100"
         }`}
+        title={value}
       >
         {value}
       </div>
-      {sub && <div className="truncate text-[10px] text-neutral-500">{sub}</div>}
+      {/* wrap instead of truncate: sub lines carry per-bar-type signal counts
+          the user scans — clipping them ("Volume 500 BT…") hides information */}
+      {sub && (
+        <div className="mt-0.5 line-clamp-2 break-words text-[10px] leading-tight text-neutral-500" title={sub}>
+          {sub}
+        </div>
+      )}
     </div>
   );
 }

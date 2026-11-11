@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet, FAPI } from "@/lib/cg/client";
-import { knownSym } from "@/lib/cg/sym-gate";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
 import type { LtoGroup, LtoSupport } from "@/lib/cg/types";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
  * supported venue, sourced from fapi /api/largeTakerOrder/v3 exactly like the
  * live Coinglass large-orderbook-statistics page.
  *
- * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: the
+ * Curated perps (crypto + TradFi) are members since 2026-11-12: the
  * support/v3 endpoint itself names every exchange (perp + spot) that carries
  * the symbol — Binance, OKX, Bybit, Coinbase, Bitfinex, Kraken, Crypto.com,
  * Upbit, Gate, Bitget … wherever the coin actually trades.
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
   const minVolUsd = Math.max(0, Number(sp.get("minVolUsd") ?? 100_000) || 0);
   const symbol = (sp.get("symbol") ?? "BTC").toUpperCase();
   if (!(await knownSym(symbol))) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${symbol}` }, { status: 400 });
+    return NextResponse.json({ ok: false, error: gateReject(symbol) }, { status: 400 });
   }
   try {
     const support = (await cgGet(

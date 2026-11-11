@@ -31,7 +31,8 @@ import {
 import { loadFpBars } from "./fp-load";
 import { buildMarketSnapshot, type MarketSnapshot } from "./market";
 import { buildLiqModel, liqStats, type RawLiqPayload, type KeyLevel } from "./liq-model";
-import { ASSETS, assetOf, leadInstr, liqVenues } from "./assets";
+import { ASSETS, assetOf, curatedAssetOf, leadInstr, liqVenues } from "./assets";
+import { curatedPerps } from "@/lib/universe/curated";
 import { getLivePrice } from "../live/server-price";
 import { emit, type CgNotification } from "./notify";
 import { fmtAssetPrice } from "./assets";
@@ -593,7 +594,7 @@ export function scannerStatus() {
     enabled: process.env.CG_SCAN !== "off",
     started: S.started,
     ticks: S.ticks,
-    scanAssets: assets.length ? assets : ASSETS.map((a) => a.sym),
+    scanAssets: assets.length ? assets : scanList().map((a) => a.sym),
     signalsCached: [...S.signals.keys()],
     whaleCached: [...S.whale.keys()],
     liqCached: [...S.liq.keys()],
@@ -601,14 +602,34 @@ export function scannerStatus() {
   };
 }
 
+/** The scanner's asset list: the 58 curated perps (crypto + TradFi), plus
+ * any legacy Tier-1 registry sym that is not curated (XPT) so Tier-1 code
+ * paths keep their coverage. CG_SCAN_ASSETS restricts to a subset. */
+function scanList(): { sym: string }[] {
+  const env = (process.env.CG_SCAN_ASSETS ?? "").split(",").map((s) => s.trim().toUpperCase()).filter(Boolean);
+  const curated = curatedPerps().map((c) => ({ sym: c.sym }));
+  const legacy = ASSETS.filter((a) => !curated.some((c) => c.sym === a.sym)).map((a) => ({ sym: a.sym }));
+  const all = [...curated, ...legacy];
+  return env.length ? all.filter((a) => env.includes(a.sym.toUpperCase())) : all;
+}
+
 /** Start the staggered scan loops. Idempotent. */
 export function startScanner() {
   if (S.started || process.env.CG_SCAN === "off") return;
   S.started = true;
-  const assets = (process.env.CG_SCAN_ASSETS ?? "").split(",").map((s) => s.trim().toUpperCase()).filter(Boolean);
-  const list = (assets.length ? ASSETS.filter((a) => assets.includes(a.sym)) : ASSETS).map((a) => a.sym);
-  const fastList = list.filter((s) => assetOf(s)?.tier === "fast");
-  const slowList = list.filter((s) => assetOf(s)?.tier !== "fast");
+  const list = scanList().map((a) => a.sym);
+  // Curated cadence lanes (2026-11-12 consolidation, "no gaps" budget):
+  //   fast  — BTC/ETH/SOL, a 60 s tick → each asset ~every 3 min
+  //   mid   — other crypto (27), a 90 s tick → each ~every 40 min
+  //   slow  — TradFi (28), a 120 s tick → each ~every 56 min
+  // Footprint is the Coinglass aggregate (fpVenues: Binance+OKX+Bybit+HL for
+  // crypto, 3 venues for TradFi), so a scan costs up to 4 orderFlow + 2
+  // kline pages — the fast lane peaks at ~18 upstream calls/min and the
+  // mid/slow lanes amortize to <2/min, well inside the upstream budget.
+  const FAST = ["BTC", "ETH", "SOL"];
+  const fastList = list.filter((s) => FAST.includes(s));
+  const midList = list.filter((s) => !FAST.includes(s) && curatedAssetOf(s)?.kind !== "tradfi-perp");
+  const slowList = list.filter((s) => curatedAssetOf(s)?.kind === "tradfi-perp");
   // round-robin lane over its OWN asset list — no shared index, no skip ticks.
   // Overlap guard (engine.ts poller pattern): a scan that outlives its
   // interval (slow upstream, 429 backoffs) must NOT stack a second concurrent
@@ -635,41 +656,38 @@ export function startScanner() {
     }, firstDelay);
     first.unref?.();
   };
-  // footprint + market, per-tier lanes with the intended cadence:
-  //   fast tier (BTC/ETH/SOL): every 60 s over 3 assets → each ~every 3 min
-  //   slow tier (13 alts/metals incl. XPT/USO): every 90 s → each ~every 19.5 min (2026-11-11 expansion)
-  // combined work rate ≈ 1.67 scans/min — identical to the previous schedule,
-  // but the primary trading assets now refresh 6× more often (they used to be
-  // the SLOWER tier: 18 min vs the alts' 6 min, an inverted design).
-  t(slowList, 90_000, 20_000, async (sym) => {
+  t(slowList, 120_000, 20_000, async (sym) => {
     await scanAssetAll(sym);
   });
-  t(fastList, 60_000, 25_000, async (sym) => {
+  t(midList, 90_000, 25_000, async (sym) => {
     await scanAssetAll(sym);
   });
-  // whale: slow round-robin every 90s over the full list ≈ every ~18 min per asset
+  t(fastList, 60_000, 30_000, async (sym) => {
+    await scanAssetAll(sym);
+  });
+  // whale: round-robin every 90s over the full list ≈ every ~87 min per asset
   t(list, 90_000, 60_000, async (sym) => {
     await scanWhale(sym).catch(() => undefined);
   });
-  // liq clusters + cvd: 3 assets per 5-min tick, rotating through the full
-  // list — same upstream load as before, but every asset gets covered
-  // (a full pass over 12 assets ≈ 20 min) instead of only BTC/ETH/SOL.
+  // liq clusters + cvd: 4 assets per 4-min tick, rotating through the full
+  // list (a full pass over 58 ≈ 60 min) — same upstream load shape as the
+  // old 12-asset schedule, scaled for the curated universe.
   // Same overlap guard as the lanes above, per-symbol: a slow liq/cvd pass
   // for one sym must not stack with the next tick's pass for that sym.
   let laneI = 0;
   const laneBusy = new Set<string>();
   const laneTimer = setInterval(() => {
     if (!list.length) return;
-    for (let k = 0; k < 3; k++) {
+    for (let k = 0; k < 4; k++) {
       const sym = list[(laneI + k) % list.length];
       if (laneBusy.has(sym)) continue; // previous pass for this sym still in flight
       laneBusy.add(sym);
       Promise.allSettled([scanLiq(sym), scanCvd(sym)]).finally(() => laneBusy.delete(sym));
     }
-    laneI = (laneI + 3) % list.length;
-  }, 5 * 60_000);
+    laneI = (laneI + 4) % list.length;
+  }, 4 * 60_000);
   laneTimer.unref?.();
-  // initial pass: prime the fast lane + first slow asset immediately
+  // initial pass: prime the fast lane immediately
   setTimeout(() => {
     scanAssetAll("BTC").catch(() => undefined);
     scanLiq("BTC").catch(() => undefined);

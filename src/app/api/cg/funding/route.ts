@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
-import { isAsset } from "@/lib/cg/assets";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -34,13 +34,16 @@ interface FundingVenue {
  *
  * Funding rates per venue (Binance, OKX, Bybit, Hyperliquid, etc.) + 8h normalized aggregate.
  * Real Coinglass API data from /api/fundingRate/v2/home and /api/fundingRate/chart.
+ * Curated perps are members since 2026-11-12 — verified live: the funding
+ * home list carries every TradFi plain name too (NVDA/XAU 4h intervals,
+ * SOXL/ANTHROPIC 8h, across Binance/OKX/Bybit/KuCoin/MEXC).
  */
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
 
-  if (!isAsset(sym)) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+  if (!(await knownSym(sym))) {
+    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
   }
 
   try {

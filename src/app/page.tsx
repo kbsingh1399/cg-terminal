@@ -13,8 +13,7 @@ import AssetPalette, { type UniAsset } from "@/components/cg/asset-palette";
 import BinanceView from "@/components/binance/BinanceView";
 import BinanceMarkets from "@/components/binance/BinanceMarkets";
 import { fetchUniverseDirect } from "@/lib/binance/direct";
-import { ASSETS } from "@/lib/cg/assets";
-import { CLASSIC_ASSETS } from "@/lib/cg/classic";
+import { CURATED } from "@/lib/universe/curated";
 import EngineStatus from "@/components/cg/engine-status";
 import LivePrice from "@/components/cg/live-price";
 
@@ -30,14 +29,42 @@ const TOOLS: { key: Tool; label: string; sub: string }[] = [
   { key: "alerts", label: "Alerts", sub: "Live notification feed" },
 ];
 
-// Full universe (user directives 2026-11-11): Tier-1 perp registry (order-flow
-// engine) + Tier-2 Binance top-liquidity perps (loaded live from
-// /api/binance/universe — the top-200 by 24h quote volume) + Tier-3 classic
-// registry (Yahoo quotes). Registry duplicates (BTC/ETH/… XAU/XAG/XPT rank in
-// the top-200 too) keep their Tier-1 identity and are dropped from Tier-2.
-const PERP_LIST: UniAsset[] = ASSETS.map(({ sym, name, kind }) => ({ sym, name, kind, classic: false }));
-const CLASSIC_LIST: UniAsset[] = CLASSIC_ASSETS.map(({ sym, name, klass }) => ({ sym, name, kind: klass, classic: true }));
-const REGISTRY_SYMS = new Set(PERP_LIST.map((a) => a.sym));
+// ---------------------------------------------------------------------------
+// THE CURATED 61 — the terminal's complete, fixed universe (user directive
+// 2026-11-12: 30 crypto + 28 TradFi perps + 3 classic, "no gaps" — every
+// perp has working data on all 7 tabs). Canonical list:
+// src/lib/universe/curated.ts. The old 3-tier build (Tier-1 registry +
+// Tier-2 dynamic top-200 + Tier-3 84-instrument classic list) is retired.
+// ---------------------------------------------------------------------------
+const PERP_LIST: UniAsset[] = CURATED.filter((a) => a.kind !== "classic").map((a) => ({
+  sym: a.sym,
+  name: a.name,
+  kind: a.kind === "crypto-perp" ? "crypto-perp" : "tradfi-perp",
+  classic: false,
+  sub: a.sub,
+  aliases: a.aliases ? [...a.aliases] : undefined,
+  punchable: a.punchable,
+}));
+const CLASSIC_LIST: UniAsset[] = CURATED.filter((a) => a.kind === "classic").map((a) => ({
+  sym: a.sym,
+  name: a.name,
+  kind: "classic",
+  classic: true,
+  sub: a.sub,
+  aliases: a.aliases ? [...a.aliases] : undefined,
+  punchable: false,
+}));
+const UNIVERSE: UniAsset[] = [...PERP_LIST, ...CLASSIC_LIST];
+const UNI_OF = new Map(UNIVERSE.map((u) => [u.sym, u]));
+const CURATED_RANK = new Map(PERP_LIST.map((a, i) => [a.sym, i + 1]));
+
+/** display-precision defaults while the enriched universe payload is in
+ * flight (the server's exchangeInfo tick/step precision replaces them). */
+function defaultDecs(sym: string, kind: string): { priceDecs: number; qtyDecs: number } {
+  if (kind === "tradfi-perp") return { priceDecs: 2, qtyDecs: 2 };
+  if (["1000PEPE", "1000SHIB", "VET", "XLM", "ADA"].includes(sym)) return { priceDecs: 6, qtyDecs: 0 };
+  return { priceDecs: 2, qtyDecs: 3 };
+}
 
 interface BinUniAsset {
   sym: string;
@@ -46,20 +73,24 @@ interface BinUniAsset {
   quoteVol24h: number;
   priceDecs: number;
   qtyDecs: number;
+  state?: "trading" | "delisted" | "unverified";
+  punchable?: boolean;
 }
 
 export default function Home() {
   const [tool, setTool] = useState<Tool>("overview");
   const [sym, setSym] = useState<string>("BTC");
   const [paletteOpen, setPaletteOpen] = useState(false);
-  // "markets" = the Binance top-200 grid (BINANCE 200 header button)
+  // "markets" = the curated grid (CURATED 61 header button)
   const [view, setView] = useState<"terminal" | "markets">("terminal");
+  // live enrichment of the fixed membership (tick/step precision + 24h vols)
   const [binList, setBinList] = useState<BinUniAsset[]>([]);
 
-  // Tier-2 universe — server route first (authoritative exchangeInfo
-  // precision, 4h cache); browser-direct fapi fallback when the host is
-  // unavailable (e.g. transient fapi weight ban on a cloud egress IP);
-  // honest retry every 60s while both tiers fail.
+  // Curated universe enrichment — server route first (authoritative
+  // exchangeInfo precision); browser-direct curated fallback when the host
+  // is unavailable (e.g. transient fapi weight ban on a cloud egress IP);
+  // honest retry every 60s while both tiers fail. Membership never changes —
+  // only precision/volumes enrich, so a failure degrades, never blanks.
   useEffect(() => {
     let alive = true;
     let retry: ReturnType<typeof setTimeout> | null = null;
@@ -74,7 +105,7 @@ export default function Home() {
       } catch {
         /* fall through to the direct tier */
       }
-      const d = await fetchUniverseDirect(200).catch(() => null);
+      const d = await fetchUniverseDirect().catch(() => null);
       if (alive && d && d.length > 0) {
         setBinList(d);
         return;
@@ -88,30 +119,19 @@ export default function Home() {
     };
   }, []);
 
-  const BIN_LIST: UniAsset[] = useMemo(
-    () =>
-      binList
-        .filter((a) => !REGISTRY_SYMS.has(a.sym))
-        .map((a) => ({ sym: a.sym, name: `${a.pair} perp`, kind: "binance", classic: false, rank: a.rank })),
-    [binList]
-  );
-
-  const UNIVERSE = useMemo(() => [...PERP_LIST, ...BIN_LIST, ...CLASSIC_LIST], [BIN_LIST]);
-  const UNI_OF = useMemo(() => new Map(UNIVERSE.map((u) => [u.sym, u])), [UNIVERSE]);
-  const BIN_OF = useMemo(
-    () => new Map(binList.filter((a) => !REGISTRY_SYMS.has(a.sym)).map((a) => [a.sym, a])),
-    [binList]
-  );
+  const BIN_OF = useMemo(() => {
+    const m = new Map<string, BinUniAsset>();
+    for (const a of binList) m.set(a.sym, a);
+    return m;
+  }, [binList]);
 
   const uni = UNI_OF.get(sym);
-  const classic = !!uni?.classic;
-  const binance = uni?.kind === "binance";
+  const classic = uni?.kind === "classic";
 
   // deep-link ?sym= — captured ONCE on the first client render (before the
   // URL-sync effect below rewrites the address bar around the default sym)
-  // and applied as soon as the symbol validates against the universe. A
-  // Binance-tier symbol cannot validate before its list loads; if the list
-  // is loaded and the symbol is still unknown, give up (stay on BTC).
+  // and applied immediately: the universe is STATIC now, so a curated symbol
+  // (or any alias, e.g. ?sym=PEPE → 1000PEPE) validates without any fetch.
   const urlSymRef = useRef<string | null>(null);
   if (urlSymRef.current === null && typeof window !== "undefined") {
     urlSymRef.current = new URLSearchParams(window.location.search).get("sym") ?? "";
@@ -124,14 +144,14 @@ export default function Home() {
       urlApplied.current = true;
       return;
     }
-    const up = s.toUpperCase();
-    if (UNI_OF.has(up)) {
-      setSym(up);
-      urlApplied.current = true;
-    } else if (binList.length > 0) {
-      urlApplied.current = true; // unknown symbol — never flip later
-    }
-  }, [binList.length, UNI_OF]);
+    const direct = UNI_OF.has(s.toUpperCase());
+    const alias = direct ? undefined : PERP_LIST.find(
+      (a) => a.aliases?.some((x) => x.toUpperCase() === s.toUpperCase()) || a.name.toUpperCase() === s.toUpperCase()
+    );
+    const hit = direct ? s.toUpperCase() : alias?.sym;
+    if (hit) setSym(hit);
+    urlApplied.current = true; // unknown symbols never flip later — stay on BTC
+  }, []);
 
   // keep the URL shareable
   useEffect(() => {
@@ -140,11 +160,9 @@ export default function Home() {
     window.history.replaceState(null, "", u.toString());
   }, [sym]);
 
-  // classic instruments (indices/FX/equities/commodities) have no perp
-  // order-flow tools → Overview. Tier-2 Binance symbols keep the FULL
-  // toolset since 2026-11-11: aggregated Coinglass order-flow (large orders,
-  // liquidation levels, book walls, CVD, footprint) runs on every top-200
-  // symbol, with BinanceView as its Overview tab.
+  // classic instruments (S&P 500 / Brent / Nasdaq-100) have no perp
+  // order-flow data anywhere → Overview only (the honest methodology).
+  // Every curated perp — crypto AND TradFi — gets the full 7-tab toolset.
   const pick = (s: string) => {
     setSym(s);
     setView("terminal");
@@ -170,14 +188,28 @@ export default function Home() {
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sym, paletteOpen, tool, UNIVERSE]);
+  }, [sym, paletteOpen, tool]);
 
-  // classic instruments are quotes+bars only (Overview); registry perps AND
-  // Tier-2 Binance symbols get the full order-flow toolset
+  // classic instruments are quotes+bars only (Overview); curated perps get
+  // the full order-flow toolset
   const visibleTools = useMemo(
     () => TOOLS.filter((t) => (classic ? t.key === "overview" : true)),
     [classic]
   );
+
+  // BinanceView props — enriched when the universe payload has landed,
+  // curated defaults before that (rank = fixed curated position)
+  const binProps = useMemo(() => {
+    const b = BIN_OF.get(sym);
+    const kind = UNI_OF.get(sym)?.kind ?? "crypto-perp";
+    const d = defaultDecs(sym, kind);
+    return {
+      rank: b?.rank ?? CURATED_RANK.get(sym) ?? 1,
+      priceDecs: b?.priceDecs ?? d.priceDecs,
+      qtyDecs: b?.qtyDecs ?? d.qtyDecs,
+      punchable: b?.punchable ?? UNI_OF.get(sym)?.punchable ?? true,
+    };
+  }, [BIN_OF, sym]);
 
   return (
     <div className="flex min-h-screen flex-col bg-[#0b0e11]">
@@ -193,47 +225,58 @@ export default function Home() {
             <div className="leading-tight">
               <div className="text-sm font-semibold text-neutral-100">Order-Flow Terminal</div>
               <div className="text-[10px] text-neutral-500">
-                {PERP_LIST.length} perp + {BIN_LIST.length > 0 ? BIN_LIST.length : "…"} binance + {CLASSIC_LIST.length} classic ={" "}
-                {UNIVERSE.length} instruments · ←/→ rotate · ⌄ all assets
+                curated {UNIVERSE.length}: 30 crypto + 28 TradFi + 3 classic · ←/→ rotate · ⌄ all assets
               </div>
             </div>
           </div>
 
-          {/* asset switcher: perp quick-bar + ALL-assets palette toggle + Binance-200 grid */}
-          <div className="flex flex-wrap items-center gap-1" role="tablist" aria-label="Asset">
-            {PERP_LIST.map((a) => (
-              <button
-                key={a.sym}
-                role="tab"
-                aria-selected={sym === a.sym}
-                onClick={() => pick(a.sym)}
-                title={a.name}
-                className={`rounded px-2 py-1 text-[11px] font-bold tracking-wide transition-colors ${
-                  sym === a.sym && view === "terminal"
-                    ? a.kind === "metal"
-                      ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/40"
-                      : "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40"
-                    : "text-neutral-500 hover:bg-neutral-900 hover:text-neutral-300"
-                }`}
-              >
-                {a.sym}
-              </button>
-            ))}
+          {/* asset switcher: curated quick-bar (scrollable) + palette toggle + grid */}
+          <div
+            className="relative flex max-w-full items-center gap-1 overflow-x-auto py-0.5 [mask-image:linear-gradient(to_right,transparent,black_16px,black_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            role="tablist"
+            aria-label="Asset"
+          >
+            {PERP_LIST.map((a) => {
+              const tradfi = a.kind === "tradfi-perp";
+              const delisted = BIN_OF.get(a.sym)?.state === "delisted";
+              return (
+                <button
+                  key={a.sym}
+                  role="tab"
+                  aria-selected={sym === a.sym}
+                  onClick={() => pick(a.sym)}
+                  title={`${a.name} · ${a.sub}${delisted ? " · NOT TRADING (flagged)" : ""}`}
+                  className={`shrink-0 rounded px-2 py-1 text-[11px] font-bold tracking-wide transition-colors ${
+                    sym === a.sym && view === "terminal"
+                      ? tradfi
+                        ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/40"
+                        : "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40"
+                      : delisted
+                        ? "text-neutral-700 hover:bg-neutral-900"
+                        : tradfi
+                          ? "text-amber-600/80 hover:bg-neutral-900 hover:text-amber-300"
+                          : "text-neutral-500 hover:bg-neutral-900 hover:text-neutral-300"
+                  }`}
+                >
+                  {a.sym}
+                </button>
+              );
+            })}
             <button
               onClick={() => setView(view === "markets" ? "terminal" : "markets")}
-              title="Binance top-200 liquidity grid — live prices, all USDT-M perpetuals"
-              className={`ml-1 flex items-center gap-1.5 rounded px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors ${
+              title="The curated 61 grid — live prices via the !miniTicker stream"
+              className={`ml-1 shrink-0 rounded px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors ${
                 view === "markets"
                   ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-500/40"
                   : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700"
               }`}
             >
-              BINANCE 200
+              CURATED 61
             </button>
             <button
               onClick={() => setPaletteOpen(true)}
-              title="All assets — search the full universe (crypto perps · binance top-200 · indices · FX · equities · commodities)"
-              className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors ${
+              title="All assets — search the curated universe (crypto perps · TradFi perps · indices · oil)"
+              className={`shrink-0 rounded px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors ${
                 classic
                   ? "bg-sky-500/20 text-sky-300 ring-1 ring-sky-500/40"
                   : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700"
@@ -251,8 +294,10 @@ export default function Home() {
                 <button
                   key={t.key}
                   onClick={() => setTool(t.key)}
-                  className={`rounded-md px-3 py-1.5 text-left transition-colors ${
-                    tool === t.key ? "bg-neutral-800 text-neutral-100" : "text-neutral-400 hover:bg-neutral-900 hover:text-neutral-200"
+                  className={`relative rounded-md px-3 py-1.5 text-left transition-colors after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:rounded-full after:transition-all ${
+                    tool === t.key
+                      ? "bg-neutral-800 text-neutral-100 after:bg-emerald-400"
+                      : "text-neutral-400 after:bg-transparent hover:bg-neutral-900 hover:text-neutral-200"
                   }`}
                   aria-current={tool === t.key ? "page" : undefined}
                 >
@@ -276,24 +321,21 @@ export default function Home() {
           tool === "overview" ? (
             <ClassicOverview sym={sym} />
           ) : null // perp-only tabs are filtered out of visibleTools for classic
-        ) : binance && BIN_OF.has(sym) ? (
-          (() => {
-            const b = BIN_OF.get(sym)!;
-            return (
-              <>
-                {tool === "overview" && <BinanceView sym={b.sym} rank={b.rank} priceDecs={b.priceDecs} qtyDecs={b.qtyDecs} />}
-                {tool === "footprint" && <FootprintTool sym={sym} />}
-                {tool === "large-orders" && <LargeOrdersTool sym={sym} />}
-                {tool === "liquidation-levels" && <LiquidationLevelsTool sym={sym} />}
-                {tool === "book-walls" && <BookWallsTool sym={sym} />}
-                {tool === "cvd" && <CvdTool sym={sym} />}
-                {tool === "alerts" && <AlertsTool sym={sym} tier2 />}
-              </>
-            );
-          })()
         ) : (
           <>
-            {tool === "overview" && <OverviewTool sym={sym} />}
+            {tool === "overview" && (
+              <>
+                {/* Overview = the Binance execution venue (single-exchange
+                    methodology): live book/tape/candles/funding/OI + demo
+                    ticket, stacked with the institution snapshot
+                    (auction VAL/POC/VAH · EMA · RSI · VWAP — also computed
+                    from Binance perp klines via Coinglass). */}
+                <BinanceView sym={sym} rank={binProps.rank} priceDecs={binProps.priceDecs} qtyDecs={binProps.qtyDecs} punchable={binProps.punchable} />
+                <div className="mt-4">
+                  <OverviewTool sym={sym} />
+                </div>
+              </>
+            )}
             {tool === "footprint" && <FootprintTool sym={sym} />}
             {tool === "large-orders" && <LargeOrdersTool sym={sym} />}
             {tool === "liquidation-levels" && <LiquidationLevelsTool sym={sym} />}
@@ -306,13 +348,17 @@ export default function Home() {
 
       <footer className="mt-auto border-t border-neutral-800 px-4 py-3">
         <div className="mx-auto max-w-[1600px] text-[10px] leading-relaxed text-neutral-600">
-          Data sourced live from the Coinglass web API (order-flow aggregates for every asset — whale resting orders across
-          all supported exchanges, liquidation-level clusters, book walls, CVD), the Binance USDT-M futures public market
-          (Tier-2 top-200: REST + fstream WebSocket — book/tape/klines/funding/OI; demo order execution on the futures
-          TESTNET only), Yahoo Finance v8 (Tier-3 classic instruments), and — for microstructure — the free Hyperliquid
-          xyz HIP-3 perps, Lighter DEX L3 order books, and Kraken spot FX depth, for personal analysis. Figures are
-          estimates reported by the upstream providers and are not investment advice. Classic instruments without micro
-          mappings are quotes+bars only — never fabricated.
+          Curated 61 — 30 crypto + 28 TradFi USDT-M perps + 3 classic (S&P 500 · Brent · Nasdaq-100). Data sourced live
+          from the Coinglass web API (order-flow aggregates — whale resting orders across all supported exchanges,
+          liquidation-level clusters, book walls, CVD), the Binance USDT-M futures public market (REST + fstream
+          WebSocket — book/tape/klines/funding/OI; demo order execution on the futures TESTNET only), Yahoo Finance v8
+          (classic instruments), and — for microstructure — the free Hyperliquid xyz HIP-3 perps, Lighter DEX L3 order
+          books, and Kraken spot FX depth, for personal analysis. Footprint uses the Coinglass aggregated method
+          (Binance+OKX+Bybit+Hyperliquid perps, Hyperliquid price-shifted onto the Binance lead) with their exact
+          signal engine — BTC/ETH signal parity is verified by scripts/parity-vs-coinglass.ts. Large Orders · Liq
+          Levels · Book Walls · CVD are multi-exchange aggregates with Binance as the lead. Figures are estimates
+          reported by the upstream providers and are not investment advice. Classic instruments are quotes+bars only —
+          never fabricated.
         </div>
       </footer>
     </div>

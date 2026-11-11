@@ -31,6 +31,21 @@ export default function LiqLevelsCanvas({ candles, levels, lastPrice, tiers, ran
   const [size, setSize] = useState({ w: 900, h: 560 });
   const [hover, setHover] = useState<{ x: number; y: number } | null>(null);
   const [tip, setTip] = useState<{ x: number; y: number; lines: string[] } | null>(null);
+  // user viewport (TradingView-style pan + axis zooms); null = follow bounds
+  const [view, setView] = useState<{ start: number; count: number; pLo: number; pHi: number } | null>(null);
+  const [lastRange, setLastRange] = useState(range);
+  // TradingView-style axis drags: pan (chart) · vzoom (price axis) · hzoom (time axis)
+  const drag = useRef<{
+    x: number;
+    y: number;
+    start: number;
+    count: number;
+    pLo: number;
+    pHi: number;
+    mode: "pan" | "vzoom" | "hzoom";
+    anchorP: number;
+  } | null>(null);
+  const [cursor, setCursor] = useState<"crosshair" | "ns-resize" | "ew-resize" | "grabbing">("crosshair");
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -90,6 +105,14 @@ export default function LiqLevelsCanvas({ candles, levels, lastPrice, tiers, ran
     return { start, count, pLo: pLo - pad, pHi: pHi + pad };
   }, [candles, segs, lastPrice, range]);
 
+  // render-adjust: adopt bounds until the user pans/zooms; a range switch
+  // (3d/7d/30d) re-adopts them (explicit user intent = new window)
+  if (bounds && !view) setView(bounds);
+  if (range !== lastRange) {
+    setLastRange(range);
+    setView(bounds);
+  }
+
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -107,7 +130,7 @@ export default function LiqLevelsCanvas({ candles, levels, lastPrice, tiers, ran
     const plotB = H - TIME_H;
     const plotW = plotR - plotL;
     const plotH = plotB - plotT;
-    const { start, count, pLo, pHi } = bounds;
+    const { start, count, pLo, pHi } = view ?? bounds;
     const barW = plotW / count;
     const yScale = makeScale(pHi, pLo, plotT, plotB);
     const xOfIdx = (i: number) => plotL + (i - start) * barW;
@@ -220,11 +243,59 @@ export default function LiqLevelsCanvas({ candles, levels, lastPrice, tiers, ran
 
     ctx.strokeStyle = COLORS.axis;
     ctx.strokeRect(plotL + 0.5, plotT + 0.5, plotW, plotH);
-  }, [size, candles, bounds, segs, hover, lastPrice]);
+  }, [size, candles, bounds, view, segs, hover, lastPrice]);
 
   useEffect(() => {
     draw();
   }, [draw]);
+
+  // native NON-PASSIVE wheel listener (React 19 registers root wheel
+  // handlers as passive — preventDefault() in an onWheel prop is a no-op)
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      setView((v) => {
+        const b = v ?? bounds;
+        if (!b || !candles.length) return v;
+        const factor = e.deltaY > 0 ? 1.15 : 0.87;
+        const count = Math.round(clamp(b.count * factor, 24, Math.min(1200, candles.length)));
+        const anchor = b.count / 2;
+        const start = Math.round(clamp(b.start + anchor * (1 - count / b.count), 0, Math.max(0, candles.length - count)));
+        return { ...b, count, start };
+      });
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [candles.length, bounds]);
+
+  const onMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      const b = view ?? bounds;
+      if (!b) return;
+      const zone: "pan" | "vzoom" | "hzoom" =
+        e.nativeEvent.offsetX >= size.w - AXIS_W - 6
+          ? "vzoom"
+          : e.nativeEvent.offsetY >= size.h - TIME_H
+            ? "hzoom"
+            : "pan";
+      const priceH = Math.max(1, size.h - TIME_H - 8);
+      const anchorP = b.pHi - ((e.nativeEvent.offsetY - 8) / priceH) * (b.pHi - b.pLo);
+      drag.current = {
+        x: e.clientX,
+        y: e.clientY,
+        start: b.start,
+        count: b.count,
+        pLo: b.pLo,
+        pHi: b.pHi,
+        mode: zone,
+        anchorP,
+      };
+      setCursor(zone === "vzoom" ? "ns-resize" : zone === "hzoom" ? "ew-resize" : "grabbing");
+    },
+    [view, bounds, size]
+  );
 
   // tooltip computed in the event handler (no state mutation inside draw)
   const onMouseMove = useCallback(
@@ -234,16 +305,58 @@ export default function LiqLevelsCanvas({ candles, levels, lastPrice, tiers, ran
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       setHover({ x, y });
+      const d = drag.current;
+      if (d) {
+        const b = view ?? bounds;
+        if (!b || !candles.length) return;
+        const dx = e.clientX - d.x;
+        const dy = e.clientY - d.y;
+        const plotL = 8;
+        const plotR = size.w - AXIS_W - 6;
+        const barW = (plotR - plotL) / d.count;
+        if (d.mode === "vzoom") {
+          const range = d.pHi - d.pLo;
+          const f = Math.exp(dy * 0.0045);
+          const newRange = clamp(range * f, Math.max(d.pLo, 1e-9) * 1e-4, range * 500);
+          const priceH = Math.max(1, size.h - TIME_H - 8);
+          const frac = clamp((d.y - rect.top - 8) / priceH, 0, 1);
+          const pHi = d.anchorP + frac * newRange;
+          setView({ ...b, pHi, pLo: pHi - newRange });
+        } else if (d.mode === "hzoom") {
+          const end = d.start + d.count;
+          const count = Math.round(clamp(d.count * Math.exp(-dx * 0.0045), 24, Math.min(1200, candles.length)));
+          const start = clamp(Math.round(end - count), 0, Math.max(0, candles.length - count));
+          setView({ ...b, start, count });
+        } else {
+          const shift = Math.round(dx / barW);
+          const start = Math.round(clamp(d.start - shift, 0, Math.max(0, candles.length - b.count)));
+          const plotH = Math.max(1, size.h - TIME_H - 16);
+          const priceShift = (dy / plotH) * (d.pHi - d.pLo);
+          setView({ ...b, start, pLo: d.pLo + priceShift, pHi: d.pHi + priceShift });
+        }
+        setTip(null);
+        return;
+      }
+      const zone = x >= size.w - AXIS_W - 6 ? "vzoom" : y >= size.h - TIME_H ? "hzoom" : "pan";
+      setCursor(zone === "vzoom" ? "ns-resize" : zone === "hzoom" ? "ew-resize" : "crosshair");
       if (!bounds) {
         setTip(null);
         return;
       }
+      const v = view ?? bounds;
       const plotT = 8;
       const plotB = size.h - TIME_H;
-      const yScale = makeScale(bounds.pHi, bounds.pLo, plotT, plotB);
+      const yScale = makeScale(v.pHi, v.pLo, plotT, plotB);
+      // horizontal window too (review finding): a level whose drawn segment
+      // is entirely off-screen must not pop a tooltip from its price alone
+      const barW = (size.w - AXIS_W - 6 - 8) / v.count;
+      const xOfIdx = (i: number) => 8 + (i - v.start) * barW;
       let best: Seg | null = null;
       let bestDy = Infinity;
       for (const s of segs) {
+        const sx0 = xOfIdx(s.xStart);
+        const sx1 = xOfIdx(s.xEnd + 1);
+        if (x < Math.max(8, sx0) - 4 || x > Math.min(size.w - AXIS_W - 6, sx1) + 4) continue;
         const dy = Math.abs(toPx(yScale, s.level.price) - y);
         if (dy < bestDy && dy < 14) {
           bestDy = dy;
@@ -267,19 +380,29 @@ export default function LiqLevelsCanvas({ candles, levels, lastPrice, tiers, ran
         setTip(null);
       }
     },
-    [bounds, segs, size.h]
+    [bounds, view, segs, size, candles.length]
   );
 
   return (
     <div ref={wrapRef} className="relative h-full w-full">
       <canvas
         ref={canvasRef}
-        className="h-full w-full cursor-crosshair"
+        className="h-full w-full"
+        style={{ width: "100%", height: "100%", cursor, outline: "none" }}
+        tabIndex={0}
+        onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
+        onMouseUp={() => {
+          drag.current = null;
+          setCursor("crosshair");
+        }}
         onMouseLeave={() => {
+          drag.current = null;
           setHover(null);
           setTip(null);
+          setCursor("crosshair");
         }}
+        onDoubleClick={() => setView(bounds)}
       />
       {tip && (
         <div
@@ -294,7 +417,7 @@ export default function LiqLevelsCanvas({ candles, levels, lastPrice, tiers, ran
         </div>
       )}
       <div className="pointer-events-none absolute right-3 top-2 text-[10px] text-neutral-500">
-        lines above price = short liquidations (red) · below = long liquidations (green) · brightness = intensity
+        drag = pan · wheel = zoom · drag price/time axis = scale · dbl-click = reset
       </div>
     </div>
   );

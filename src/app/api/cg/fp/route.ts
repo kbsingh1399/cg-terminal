@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loadFpBars } from "@/lib/cg/fp-load";
-import { knownSym } from "@/lib/cg/sym-gate";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
 import { parseInterval } from "@/lib/cg/params";
 
 export const dynamic = "force-dynamic";
@@ -17,16 +17,18 @@ export const dynamic = "force-dynamic";
  * always gets a fresh tail while the heavy 300-bar history load keeps its
  * longer TTL. No synthetic data — every value comes from the Coinglass API.
  *
- * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: the venue
- * set (Binance/OKX/Bybit/Bitget ± Hyperliquid) is tried per venue and any
- * exchange without the pair lands in `missing` — the aggregate itself stays
- * honest.
+ * Curated perps are members since 2026-11-12, and the venue set is THE
+ * COINGLASS AGGREGATED METHOD (agg-perp: Binance+OKX+Bybit+Hyperliquid,
+ * fpVenues() in src/lib/cg/assets.ts — Hyperliquid price-shifted onto the
+ * Binance lead kline), so the Footprint tab and its signals match the
+ * Coinglass footprint page 1:1 (BTC/ETH parity: scripts/test-signal-parity.ts).
+ * The live Binance forming overlay (useLiveForming) stays the real-time layer.
  */
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
   if (!(await knownSym(sym))) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
   }
   const itv = parseInterval(sp.get("itv"));
   if (!itv) {

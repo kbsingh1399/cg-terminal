@@ -43,7 +43,7 @@ const SOURCE_COLOR: Record<string, string> = {
   engine: "bg-neutral-500/15 text-neutral-300",
 };
 
-export default function AlertsTool({ sym, tier2 = false }: { sym?: string; tier2?: boolean }) {
+export default function AlertsTool({ sym }: { sym?: string }) {
   const [items, setItems] = useState<Notif[]>([]);
   const [assetFilter, setAssetFilter] = useState<string>(sym ?? "all");
   const [sourceFilter, setSourceFilter] = useState<string>("all");
@@ -117,13 +117,12 @@ export default function AlertsTool({ sym, tier2 = false }: { sym?: string; tier2
 
   return (
     <div className="space-y-3">
-      {tier2 && (
-        <div className="rounded-lg border border-amber-800/50 bg-amber-950/30 px-4 py-2.5 text-[11px] leading-relaxed text-amber-300">
-          <span className="font-semibold">Scanner scope:</span> the notification engine scans the 15 Tier-1 registry
-          assets (BTC · ETH · SOL · … · XAU · XAG · XPT). Tier-2 Binance top-200 symbols are not scanned — switch the
-          filter to All assets for the live feed, or pick a registry symbol for its events.
-        </div>
-      )}
+      <div className="rounded-lg border border-neutral-800 bg-[#11151a]/60 px-4 py-2.5 text-[11px] leading-relaxed text-neutral-400">
+        <span className="font-semibold text-neutral-300">Scanner scope:</span> the notification engine scans all 58
+        curated perps (30 crypto + 28 TradFi). Cadence lanes — fast BTC · ETH · SOL (~every 3 min), mid crypto (~every 40
+        min), slow TradFi (~every 56 min); whale walls and liq/CVD lanes rotate the full list. The 3 classic instruments
+        (SPX500 · UKO · NDX100) have no perp engine — they are quotes+bars only.
+      </div>
       {/* header */}
       <div className="flex flex-wrap items-center gap-3 rounded-lg border border-neutral-800 bg-[#11151a] px-4 py-3">
         <div className="flex items-center gap-2">

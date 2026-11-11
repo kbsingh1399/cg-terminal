@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import { fpVenues } from "@/lib/cg/assets";
-import { knownSym } from "@/lib/cg/sym-gate";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
 import { parseInterval, clampLimit } from "@/lib/cg/params";
 import type { OrderFlowBucket, OrderFlowBar } from "@/lib/cg/types";
 
@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
  * of the requested asset — Binance, OKX, Bybit, Bitget (+ Hyperliquid where
  * listed; metals drop them) — mirroring the "aggregated futures" view on the
  * Coinglass footprint page. Per-venue price buckets are re-gridded onto a
- * common step and summed. Tier-2 (Binance top-200) symbols are accepted
+ * common step and summed. Curated perps (crypto + TradFi) are accepted
  * since 2026-11-11; venues without the pair contribute nothing (venuesOk).
  */
 
@@ -80,7 +80,7 @@ export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
   if (!(await knownSym(sym))) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
   }
   const VENUES = fpVenues(sym).map((v) => v.key);
   const interval = parseInterval(sp.get("interval"));

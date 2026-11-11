@@ -76,7 +76,17 @@ export async function POST(req: NextRequest) {
   const a = binAssetOf(sym);
   if (!a) {
     return NextResponse.json(
-      { ok: false, error: `${sym} is not in the Binance top-liquidity universe` },
+      { ok: false, error: `${sym} is not in the curated universe` },
+      { status: 400 }
+    );
+  }
+  // punchable guard: curated pairs exist on the PRODUCTION book but not every
+  // one is listed on testnet.binancefuture.com (verified 2026-11-12: 14 of
+  // the 58 are not). Live data stays available — only demo execution is
+  // refused, with a message the ticket renders verbatim.
+  if (!a.punchable) {
+    return NextResponse.json(
+      { ok: false, error: `${a.pair} is not listed on the Binance futures TESTNET — live data only, demo orders unavailable` },
       { status: 400 }
     );
   }

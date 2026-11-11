@@ -3,39 +3,34 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 /**
- * AssetPalette — the full-universe switcher (user directive 2026-11-11:
- * "proper toggle rotate between all assets"). One searchable palette over
- * perp registry + Binance top-200 tier + classic registry: type-ahead
- * filter, grouped by class, keyboard navigable (↑/↓ move, Enter picks, Esc
+ * AssetPalette — the CURATED-universe switcher (user directive 2026-11-12:
+ * a fixed 61-asset universe — 30 crypto perps + 28 TradFi perps + 3 classic).
+ * One searchable palette over the curated list: type-ahead filter matching
+ * symbol + name + aliases (resolveCurated semantics), grouped Crypto /
+ * TradFi perps / Classic, keyboard navigable (↑/↓ move, Enter picks, Esc
  * closes). Pure client component — the universe list is passed in by page.tsx.
  */
 
 export interface UniAsset {
   sym: string;
   name: string;
-  kind: string; // crypto | metal | binance | index | fx | equity | commodity
-  classic: boolean; // true = Tier-3 (Yahoo quotes), false = perp engine
-  rank?: number; // Binance tier: liquidity rank in the top-200
+  kind: string; // crypto-perp | tradfi-perp | classic
+  classic: boolean; // true = classic instrument (Yahoo quotes), false = perp engine
+  sub?: string; // curated sub-category ("Semiconductors", "Meme", "Index"…)
+  aliases?: string[]; // search-only alternate names (PEPE, GOLD, WTI…)
+  punchable?: boolean; // demo-tradable on the futures testnet
 }
 
-const KLASS_ORDER = ["crypto", "metal", "binance", "index", "fx", "equity", "commodity"];
+const KLASS_ORDER = ["crypto-perp", "tradfi-perp", "classic"];
 const KLASS_LABEL: Record<string, string> = {
-  crypto: "Crypto perps",
-  metal: "Metals perps",
-  binance: "Binance perps (top-200 liquidity)",
-  index: "Indices",
-  fx: "Forex",
-  equity: "Equities",
-  commodity: "Commodities",
+  "crypto-perp": "Crypto perps (30)",
+  "tradfi-perp": "TradFi perps — stocks · metals · energy (28)",
+  classic: "Classic — indices & oil, no perp (3)",
 };
 const KLASS_COLOR: Record<string, string> = {
-  crypto: "text-emerald-400",
-  metal: "text-amber-400",
-  binance: "text-cyan-400",
-  index: "text-sky-400",
-  fx: "text-violet-400",
-  equity: "text-rose-400",
-  commodity: "text-orange-400",
+  "crypto-perp": "text-emerald-400",
+  "tradfi-perp": "text-amber-400",
+  classic: "text-sky-400",
 };
 
 export default function AssetPalette({
@@ -78,7 +73,12 @@ export default function AssetPalette({
     const s = q.trim().toUpperCase();
     if (!s) return universe;
     return universe.filter(
-      (a) => a.sym.includes(s) || a.name.toUpperCase().includes(s) || a.kind.toUpperCase().startsWith(s)
+      (a) =>
+        a.sym.includes(s) ||
+        a.name.toUpperCase().includes(s) ||
+        a.kind.toUpperCase().startsWith(s) ||
+        (a.sub ?? "").toUpperCase().includes(s) ||
+        (a.aliases ?? []).some((x) => x.toUpperCase().includes(s))
     );
   }, [q, universe]);
 
@@ -147,7 +147,7 @@ export default function AssetPalette({
                 onClose();
               }
             }}
-            placeholder="Search symbol / name / class (e.g. US30, gold, forex, NVDA)…"
+            placeholder="Search symbol / name / alias (e.g. NVDA, gold, PEPE, WTI, Brent)…"
             className="ml-auto w-1/2 rounded-md border border-neutral-700 bg-[#0b0e11] px-3 py-1.5 text-sm text-neutral-100 placeholder:text-neutral-600 focus:border-emerald-600 focus:outline-none"
           />
         </div>
@@ -177,10 +177,13 @@ export default function AssetPalette({
                     <span className={`text-xs font-bold ${KLASS_COLOR[a.kind] ?? "text-neutral-300"}`}>{a.sym}</span>
                     <span className="truncate text-[10px] text-neutral-500">{a.name}</span>
                     {a.classic ? (
-                      <span className="ml-auto shrink-0 rounded bg-neutral-800 px-1 text-[9px] text-neutral-400">T3</span>
-                    ) : a.kind === "binance" && a.rank ? (
-                      <span className="ml-auto shrink-0 rounded bg-cyan-500/10 px-1 text-[9px] font-semibold text-cyan-400">
-                        #{a.rank}
+                      <span className="ml-auto shrink-0 rounded bg-neutral-800 px-1 text-[9px] text-neutral-400">classic</span>
+                    ) : a.punchable === false ? (
+                      <span
+                        className="ml-auto shrink-0 rounded bg-amber-500/10 px-1 text-[9px] font-semibold text-amber-400"
+                        title="live data only — not listed on the Binance futures testnet"
+                      >
+                        live-only
                       </span>
                     ) : null}
                   </button>
@@ -191,9 +194,9 @@ export default function AssetPalette({
         </div>
 
         <div className="border-t border-neutral-800 px-4 py-2 text-[10px] text-neutral-600">
-          T3 = Tier-3 classic instrument — live quote + OHLCV bars (Yahoo v8). #n = Binance top-200 liquidity rank
-          (Tier-2 — live book/tape/klines/funding/OI + testnet demo ticket). Order-flow tabs (footprint · CVD ·
-          liquidations · book walls) exist only for perp-venue assets.
+          Curated 61: 30 crypto + 28 TradFi USDT-M perps + 3 classic. "classic" = S&P 500 / Brent / Nasdaq-100 — live
+          quote + bars (Yahoo v8), order-flow tabs are perp-only and stay hidden. "live-only" = real Binance perp data
+          everywhere, but the symbol is not on the futures testnet (no demo execution).
         </div>
       </div>
     </div>

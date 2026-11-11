@@ -7,15 +7,22 @@ values.
 
 ## Assets covered
 
-BTC · ETH · SOL · BNB · XRP · ADA · AVAX · DOGE · LINK · LTC (crypto perps,
-Binance+OKX+Bybit+Hyperliquid aggregated) and XAU (gold) · XAG (silver) as
-USDT perps (Binance+OKX+Bybit — Hyperliquid does not list metals).
+CURATED 61 (user directive 2026-11-12, "no gaps"): 30 crypto USDT-M perps
+(BTC ETH BNB SOL XRP ADA DOGE TRX LINK LTC AVAX DOT NEAR UNI ATOM XLM ETC
+FIL ICP HBAR APT ARB OP SUI SEI INJ TIA VET 1000PEPE 1000SHIB) + 28 TradFi
+USDT-M TRADIFI perps under the plain names (XAU NVDA SNDK SOXL SPCX GOOGL MU
+SKHY XAG CL INTC CRCL MSTR QQQ ANTHROPIC AAPL TSLA DRAM KORU META NBIS MSFT
+AMZN AMD COIN NFLX AVGO TSM) + 3 classic (SPX500 UKO NDX100 — Yahoo quotes,
+order-flow tabs intentionally hidden). Canonical list:
+`src/lib/universe/curated.ts`. Overview + Footprint are single-exchange
+(Binance, the execution venue); Large Orders · Liq Levels · Book Walls · CVD
+are multi-exchange aggregates with Binance as the lead.
 
 ## MCP tools (after you register `mcp/server.mjs`)
 
 | Tool | What it gives you |
 | --- | --- |
-| `list_assets` | the 12 assets + engine/scanner/feed health |
+| `list_assets` | legacy Tier-1 registry + engine/scanner/feed health (the full curated 61 rides in `curated`/`curatedClassic`; the scanner iterates all 58 curated perps) |
 | `market_snapshot` | price, auction VAL/POC/VAH (session 8h / UTC day / UTC month), EMA 13/89/233 + RSI(14) on m15/h1/h4/d1, day VWAP ±1σ/2σ/3σ |
 | `signals` | Coinglass-exact footprint signals: Absorption / Divergence / Strong Divergence / Trap / Exhaustion on 15m time bars, auto volume bars and auto range bars |
 | `notifications` | the live event feed (cursor-based). Sources: `footprint`, `indicators`, `whale-orders`, `liqlevels`, `cvd`, `engine` |

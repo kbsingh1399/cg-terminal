@@ -92,11 +92,17 @@ export default function BookHeatCanvas({
     const edgeX = padL + plotW;
 
     const maxCell = Math.max(1, ...strip.flatMap((s) => s.cells.map((c) => c[1])), ...(live ? live.cells.map((c) => c[1]) : []));
+    // perceptual heat ramp: pow(0.38) lifts the mid range hard so wall
+    // clusters stand out from the flat deep-blue field (the 0.5 gamma left
+    // everything a similar navy — unreadable wall detail). Math.max(0,·)
+    // guards a garbage negative payload from producing rgba(NaN,…) (which
+    // silently keeps the previous fillStyle).
+    const heat = (usd: number) => Math.min(1, Math.max(0, Math.pow(usd / maxCell, 0.38)));
     for (const s of strip) {
       const x = xOf(s.t);
       for (const [price, usd] of s.cells) {
-        const k = Math.min(1, Math.pow(usd / maxCell, 0.5));
-        ctx.fillStyle = `rgba(${Math.round(30 + 130 * k)},${Math.round(60 + 60 * k)},${Math.round(220 - 60 * k)},${(0.25 + 0.65 * k).toFixed(3)})`;
+        const k = heat(usd);
+        ctx.fillStyle = `rgba(${Math.round(24 + 150 * k)},${Math.round(52 + 150 * k)},${Math.round(226 - 30 * k)},${(0.22 + 0.7 * k).toFixed(3)})`;
         const yy = yOf(price);
         ctx.fillRect(x - bw / 2, yy - 2, bw, 4.5);
       }
@@ -143,8 +149,8 @@ export default function BookHeatCanvas({
     if (live && live.cells.length) {
       const lw = Math.max(bw * 0.9, 5);
       for (const [price, usd] of live.cells) {
-        const k = Math.min(1, Math.pow(usd / maxCell, 0.5));
-        ctx.fillStyle = `rgba(${Math.round(30 + 130 * k)},${Math.round(60 + 60 * k)},${Math.round(220 - 60 * k)},${(0.3 + 0.7 * k).toFixed(3)})`;
+        const k = heat(usd);
+        ctx.fillStyle = `rgba(${Math.round(24 + 150 * k)},${Math.round(52 + 150 * k)},${Math.round(226 - 30 * k)},${(0.3 + 0.7 * k).toFixed(3)})`;
         const yy = yOf(price);
         ctx.fillRect(edgeX - lw, yy - 2, lw, 4.5);
       }

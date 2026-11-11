@@ -38,7 +38,18 @@ export default function LargeOrdersCanvas({
   const [size, setSize] = useState({ w: 900, h: 560 });
   const [view, setView] = useState<{ start: number; count: number; pLo: number; pHi: number } | null>(null);
   const [hover, setHover] = useState<{ x: number; y: number } | null>(null);
-  const drag = useRef<{ x: number; start: number } | null>(null);
+  // TradingView-style axis drags: pan (chart) · vzoom (price axis) · hzoom (time axis)
+  const drag = useRef<{
+    x: number;
+    y: number;
+    start: number;
+    count: number;
+    pLo: number;
+    pHi: number;
+    mode: "pan" | "vzoom" | "hzoom";
+    anchorP: number;
+  } | null>(null);
+  const [cursor, setCursor] = useState<"crosshair" | "ns-resize" | "ew-resize" | "grabbing">("crosshair");
   const [inited, setInited] = useState(false);
   const [lastResetKey, setLastResetKey] = useState(resetKey);
 
@@ -169,7 +180,9 @@ export default function LargeOrdersCanvas({
       for (const o of visible) {
         const y = toPx(yScale, o.price);
         const x = xOfTs(o.createTime / 1000);
-        if (x < plotL) continue;
+        // clamp BOTH edges (review finding): a wall placed after the visible
+        // window painted leftward across the price-axis gutter
+        if (x < plotL || x > plotR) continue;
         const len = clamp(14 + (o.quoteVol / maxQ) * 60, 10, 80);
         const thick = clamp(1.5 + (o.quoteVol / maxQ) * 3.5, 1.2, 4.5);
         ctx.strokeStyle = o.side === 2 ? COLORS.green : COLORS.red; // side2 = bid, side1 = ask
@@ -329,9 +342,28 @@ export default function LargeOrdersCanvas({
 
   const onMouseDown = useCallback(
     (e: React.MouseEvent) => {
-      if (view) drag.current = { x: e.clientX, start: view.start };
+      if (!view) return;
+      const zone: "pan" | "vzoom" | "hzoom" =
+        e.nativeEvent.offsetX >= size.w - AXIS_W - 6
+          ? "vzoom"
+          : e.nativeEvent.offsetY >= size.h - TIME_H
+            ? "hzoom"
+            : "pan";
+      const priceH = Math.max(1, size.h - TIME_H - (showImbalance ? IMB_H : 0) - 8);
+      const anchorP = view.pHi - ((e.nativeEvent.offsetY - 8) / priceH) * (view.pHi - view.pLo);
+      drag.current = {
+        x: e.clientX,
+        y: e.clientY,
+        start: view.start,
+        count: view.count,
+        pLo: view.pLo,
+        pHi: view.pHi,
+        mode: zone,
+        anchorP,
+      };
+      setCursor(zone === "vzoom" ? "ns-resize" : zone === "hzoom" ? "ew-resize" : "grabbing");
     },
-    [view]
+    [view, size, showImbalance]
   );
 
   const onMouseMove = useCallback(
@@ -342,17 +374,47 @@ export default function LargeOrdersCanvas({
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       setHover({ x, y });
-      if (drag.current) {
-        const plotL = 8;
-        const plotR = size.w - AXIS_W - 6;
-        const barW = (plotR - plotL) / view.count;
-        const shift = Math.round((e.clientX - drag.current.x) / barW);
-        const start = Math.round(clamp(drag.current.start - shift, 0, Math.max(0, candles.length - view.count)));
-        setView({ ...view, start });
+      const d = drag.current;
+      if (!d) {
+        const zone = x >= size.w - AXIS_W - 6 ? "vzoom" : y >= size.h - TIME_H ? "hzoom" : "pan";
+        setCursor(zone === "vzoom" ? "ns-resize" : zone === "hzoom" ? "ew-resize" : "crosshair");
+        return;
+      }
+      const dx = e.clientX - d.x;
+      const dy = e.clientY - d.y;
+      const plotL = 8;
+      const plotR = size.w - AXIS_W - 6;
+      const barW = (plotR - plotL) / d.count;
+      if (d.mode === "vzoom") {
+        // TradingView price-scale drag: zoom anchored at the grab price
+        const range = d.pHi - d.pLo;
+        const f = Math.exp(dy * 0.0045);
+        const newRange = clamp(range * f, Math.max(d.pLo, 1e-9) * 1e-4, range * 500);
+        const priceH = Math.max(1, size.h - TIME_H - (showImbalance ? IMB_H : 0) - 8);
+        const frac = clamp((d.y - rect.top - 8) / priceH, 0, 1);
+        const pHi = d.anchorP + frac * newRange;
+        setView({ ...view, pHi, pLo: pHi - newRange });
+      } else if (d.mode === "hzoom") {
+        // time-axis drag: bar-count scaling anchored at the right edge
+        const end = d.start + d.count;
+        const count = Math.round(clamp(d.count * Math.exp(-dx * 0.0045), 12, Math.min(400, candles.length)));
+        const start = clamp(Math.round(end - count), 0, Math.max(0, candles.length - count));
+        setView({ ...view, start, count });
+      } else {
+        const shift = Math.round(dx / barW);
+        const start = Math.round(clamp(d.start - shift, 0, Math.max(0, candles.length - view.count)));
+        const plotH = Math.max(1, size.h - TIME_H - (showImbalance ? IMB_H : 0) - 16);
+        const priceShift = (dy / plotH) * (d.pHi - d.pLo);
+        setView({ ...view, start, pLo: d.pLo + priceShift, pHi: d.pHi + priceShift });
       }
     },
-    [view, candles.length, size]
+    [view, candles.length, size, showImbalance]
   );
+
+  const onMouseUp = useCallback(() => {
+    drag.current = null;
+    setCursor("crosshair");
+  }, []);
 
   const onDoubleClick = useCallback(() => setView(defaultView), [defaultView]);
 
@@ -360,18 +422,21 @@ export default function LargeOrdersCanvas({
     <div ref={wrapRef} className="relative h-full w-full">
       <canvas
         ref={canvasRef}
-        className="h-full w-full cursor-crosshair"
+        className="h-full w-full"
+        style={{ width: "100%", height: "100%", cursor, outline: "none" }}
+        tabIndex={0}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
-        onMouseUp={() => (drag.current = null)}
+        onMouseUp={onMouseUp}
         onMouseLeave={() => {
           drag.current = null;
           setHover(null);
+          setCursor("crosshair");
         }}
         onDoubleClick={onDoubleClick}
       />
       <div className="pointer-events-none absolute right-3 top-2 text-[10px] text-neutral-500">
-        drag to pan · scroll to zoom · double-click to reset
+        drag = pan · wheel = zoom · drag price/time axis = scale · dbl-click = reset
       </div>
     </div>
   );

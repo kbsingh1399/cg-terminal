@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildWallsModel, WALL_MIN_USD, type BookSnapshot } from "@/lib/cg/book-walls";
-import { isAsset } from "@/lib/cg/assets";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
 import { fapiFetch, FapiBannedError, fapiBanned } from "@/lib/live/fapi";
 
 export const dynamic = "force-dynamic";
@@ -241,8 +241,8 @@ function ensurePoller(sym: string, grid: number, band: number): Ring {
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!isAsset(sym)) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+  if (!(await knownSym(sym))) {
+    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
   }
   const band = [0.5, 1, 2, 5].includes(Number(sp.get("band"))) ? Number(sp.get("band")) : 5;
   const gridRaw = Number(sp.get("grid") ?? 0);

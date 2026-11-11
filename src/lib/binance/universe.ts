@@ -1,29 +1,33 @@
 import { fapiFetch } from "@/lib/live/fapi";
+import { curatedPerps, type CuratedAsset } from "@/lib/universe/curated";
 
 /**
- * Binance top-liquidity universe — Tier-2 of the terminal.
+ * CURATED Binance universe — the terminal's FIXED 58-perp membership.
  *
- * User directive 2026-11-11: "integrate top 200 most liquid assets from
- * binance in our terminal". Source of truth is the Binance USDT-M futures
- * market itself (the same venue that leads every Coinglass aggregate and
- * the browser live feed): every USDT perpetual with status TRADING, ranked
- * by rolling 24h quote volume, top N (default 200).
+ * User directive 2026-11-12 ("no gaps"): the palette is a curated 61 (30
+ * crypto perps + 28 TradFi perps + 3 classic). This module serves the 58
+ * perps through the same exported interface the old dynamic top-200 used
+ * (getUniverse / isBinanceSym / binAssetOf / binAssets / getQuotes), so
+ * every existing route and component keeps working — membership is just no
+ * longer dynamic. The canonical list lives in
+ * src/lib/universe/curated.ts (DO NOT re-derive it here).
  *
- * This tier is Binance-NATIVE (public market data, no API key, no
- * Coinglass dependency):
- *   - universe refresh  : /fapi/v1/exchangeInfo (weight 1) +
- *                         /fapi/v1/ticker/24hr (weight 40) every 4h
- *   - grid quotes       : /fapi/v1/ticker/bookTicker all-symbols (weight 10,
- *                         5s TTL) — REST fallback for browsers that cannot
- *                         hold the fstream WebSocket
- *   - per-symbol realtime: browser WS (fstream) — depth20/kline/trades are
- *                         handled client-side, not here.
+ * Both Binance USDT-M contract types are members:
+ *   - PERPETUAL           (crypto: BTCUSDT, SOLUSDT, 1000PEPEUSDT …)
+ *   - TRADIFI_PERPETUAL   (TradFi plain names: NVDAUSDT, XAUUSDT, CLUSDT,
+ *                          ANTHROPICUSDT … — real perps, verified TRADING)
  *
- * Registry assets (src/lib/cg/assets.ts) that also rank in the top-N keep
- * their Tier-1 identity (full order-flow toolset); the UI dedupes them from
- * this list. priceDecs/qtyDecs are derived from the live PRICE_FILTER
- * tickSize / LOT_SIZE stepSize so every rendered price and demo order
- * respects the exchange's own precision.
+ * The live enrichment loop (exchangeInfo + ticker/24hr, every 4h) is kept
+ * but only ENRICHES: priceDecs/qtyDecs from the live PRICE_FILTER tickSize /
+ * LOT_SIZE stepSize (so demo orders respect the exchange's own precision),
+ * quoteVol24h from the rolling 24h volume, and delisting detection — a
+ * curated pair that is missing or not TRADING keeps its slot, flagged
+ * state:"delisted", never silently dropped. Rank is the CURATED position,
+ * not a volume rank (the palette order is editorial, not a leaderboard).
+ *
+ * Membership is STATIC (built from CURATED at module load), so isBinanceSym
+ * / binAssetOf answer correctly even while the first enrichment is still in
+ * flight or when fapi is down entirely (defaults serve, the state marks it).
  *
  * Failure semantics (mirror the cg client): errors keep the last good list
  * serving (marked), with a 30s retry backoff so a down/banned upstream can
@@ -31,29 +35,41 @@ import { fapiFetch } from "@/lib/live/fapi";
  */
 
 export interface BinAsset {
-  /** terminal symbol = base asset, e.g. "1000PEPE" */
+  /** terminal symbol = base asset, e.g. "1000PEPE" or the TradFi plain name "NVDA" */
   sym: string;
-  /** full Binance pair, e.g. "1000PEPEUSDT" */
+  /** full Binance pair, e.g. "1000PEPEUSDT" / "NVDAUSDT" */
   pair: string;
-  /** 1..N by 24h quote volume */
+  /** position in the CURATED order (1-based, fixed) */
   rank: number;
+  /** rolling 24h quote volume (live; 0 until the first enrichment lands) */
   quoteVol24h: number;
   priceDecs: number;
   qtyDecs: number;
   onboard: number;
+  /** curated metadata (static, from src/lib/universe/curated.ts) */
+  kind: "crypto-perp" | "tradfi-perp";
+  name: string;
+  category: "Crypto" | "TradFi";
+  /** sub-category label ("Semiconductors", "Metal", "Meme" …) */
+  sub: string;
+  /** Binance SPOT B-token leg (NVDABUSDT) or XAUTUSDT for gold, if any */
+  spotPair?: string;
+  /** tradable on futures TESTNET (demo order execution) */
+  punchable: boolean;
+  origin: "user" | "fill";
+  /** live exchange status from the enrichment loop */
+  state: "trading" | "delisted" | "unverified";
 }
 
 export interface UniverseState {
   state: "boot" | "ready" | "error";
   at: number;
   n: number;
-  scannedPairs?: number;
+  /** curated pairs currently missing/not-TRADING on fapi (flagged, not dropped) */
+  delisted?: string[];
   err?: string;
 }
 
-const DEFAULT_N = 200;
-const MAX_N = 400;
-const MIN_N = 10;
 const MAX_AGE_MS = 4 * 60 * 60 * 1000;
 const ERROR_BACKOFF_MS = 30_000;
 const QUOTES_TTL_MS = 5_000;
@@ -71,9 +87,45 @@ interface UState {
   quotesInflight: Promise<void> | null;
 }
 
+/** static default display precision before the first enrichment lands
+ * (enrichment replaces these with the exchange's own tick/step precision). */
+function staticDefaults(c: CuratedAsset): { priceDecs: number; qtyDecs: number } {
+  if (c.kind === "tradfi-perp") return { priceDecs: 2, qtyDecs: 2 };
+  // sub-cent crypto majors keep a sane default; exchangeInfo corrects on boot
+  if (c.sym === "1000PEPE" || c.sym === "1000SHIB" || c.sym === "VET" || c.sym === "XLM" || c.sym === "ADA")
+    return { priceDecs: 6, qtyDecs: 0 };
+  return { priceDecs: 2, qtyDecs: 3 };
+}
+
+function fromCurated(c: CuratedAsset, i: number, prev?: BinAsset): BinAsset {
+  const d = staticDefaults(c);
+  return {
+    sym: c.sym,
+    pair: c.pair ?? `${c.sym}USDT`,
+    rank: i + 1,
+    quoteVol24h: prev?.quoteVol24h ?? 0,
+    priceDecs: prev?.priceDecs ?? d.priceDecs,
+    qtyDecs: prev?.qtyDecs ?? d.qtyDecs,
+    onboard: prev?.onboard ?? 0,
+    kind: c.kind === "crypto-perp" ? "crypto-perp" : "tradfi-perp",
+    name: c.name,
+    category: c.category,
+    sub: c.sub,
+    ...(c.spotPair ? { spotPair: c.spotPair } : {}),
+    punchable: c.punchable,
+    origin: c.origin,
+    state: prev?.state ?? "unverified",
+  };
+}
+
+/** build the fixed membership ONCE from the canonical registry */
+function staticAssets(prev?: Map<string, BinAsset>): BinAsset[] {
+  return curatedPerps().map((c, i) => fromCurated(c, i, prev?.get(c.pair)));
+}
+
 const g = globalThis as unknown as { __binUniverse?: UState };
 const S: UState = (g.__binUniverse ??= {
-  assets: [],
+  assets: staticAssets(),
   bySym: new Map(),
   byPair: new Map(),
   st: { state: "boot", at: 0, n: 0 },
@@ -83,16 +135,23 @@ const S: UState = (g.__binUniverse ??= {
   quotes: null,
   quotesInflight: null,
 });
+if (S.bySym.size === 0) {
+  S.bySym = new Map(S.assets.map((a) => [a.sym, a]));
+  S.byPair = new Map(S.assets.map((a) => [a.pair, a]));
+  S.st = { state: "boot", at: 0, n: S.assets.length };
+}
 
 export interface BinQuote {
   last: number;
   bid: number;
   ask: number;
-}
-
-export function universeTarget(): number {
-  const n = Number(process.env.BIN_UNIVERSE_N ?? DEFAULT_N) || DEFAULT_N;
-  return Math.min(MAX_N, Math.max(MIN_N, Math.floor(n)));
+  /** 24h enrichment (quotes route, shared ticker/24hr batch) — optional
+   *  fields: absent when the batch tier fails, present for the grid's
+   *  chg/range/vol REST fallback columns. */
+  chgPct?: number;
+  high?: number;
+  low?: number;
+  quoteVol?: number;
 }
 
 /** "0.00010000" → 4 decimals (trailing zeros trimmed before counting). */
@@ -122,13 +181,17 @@ async function refresh(): Promise<void> {
         filters?: { filterType: string; tickSize?: string; stepSize?: string }[];
       }[];
     };
-    const perps = new Map<string, { priceDecs: number; qtyDecs: number; onboard: number }>();
+    // BOTH perp families are members: crypto PERPETUAL + TradFi
+    // TRADIFI_PERPETUAL (plain names — the old !== "PERPETUAL" filter is what
+    // used to exclude NVDA/XAU/CL from every route).
+    const perps = new Map<string, { status: string; priceDecs: number; qtyDecs: number; onboard: number }>();
     for (const s of info.symbols ?? []) {
-      if (s.status !== "TRADING" || s.contractType !== "PERPETUAL") continue;
       if (s.quoteAsset !== "USDT" || s.symbol.includes("_")) continue; // no delivery contracts
+      if (s.contractType !== "PERPETUAL" && s.contractType !== "TRADIFI_PERPETUAL") continue;
       const pf = (s.filters ?? []).find((f) => f.filterType === "PRICE_FILTER");
       const ls = (s.filters ?? []).find((f) => f.filterType === "LOT_SIZE");
       perps.set(s.symbol, {
+        status: s.status,
         priceDecs: decsFromStep(pf?.tickSize),
         qtyDecs: decsFromStep(ls?.stepSize),
         onboard: s.onboardDate ?? 0,
@@ -136,22 +199,36 @@ async function refresh(): Promise<void> {
     }
     const tickers = tickRes as { symbol: string; quoteVolume: string }[];
     if (!Array.isArray(tickers) || tickers.length === 0) throw new Error("ticker/24hr returned no rows");
-    const rows = tickers
-      .filter((t) => perps.has(t.symbol))
-      .map((t) => ({ pair: t.symbol, vol: Number(t.quoteVolume) || 0 }))
-      .sort((a, b) => b.vol - a.vol)
-      .slice(0, universeTarget());
-    if (rows.length === 0) throw new Error("no TRADING USDT perpetuals matched");
-    S.assets = rows.map((r, i) => ({
-      sym: r.pair.replace(/USDT$/, ""),
-      pair: r.pair,
-      rank: i + 1,
-      quoteVol24h: r.vol,
-      ...perps.get(r.pair)!,
-    }));
+    const vols = new Map<string, number>();
+    for (const t of tickers) vols.set(t.symbol, Number(t.quoteVolume) || 0);
+
+    // enrich the FIXED membership — never re-rank, never drop: a curated pair
+    // that fapi no longer carries (or is not TRADING) keeps its slot flagged
+    // state:"delisted" so the UI can label it honestly.
+    const prevByPair = S.byPair;
+    const delisted: string[] = [];
+    S.assets = curatedPerps().map((c, i) => {
+      const pair = c.pair ?? `${c.sym}USDT`;
+      const meta = perps.get(pair);
+      const base = fromCurated(c, i, prevByPair.get(pair));
+      const vol = vols.get(pair);
+      return {
+        ...base,
+        quoteVol24h: vol != null ? vol : 0,
+        ...(meta
+          ? { priceDecs: meta.priceDecs, qtyDecs: meta.qtyDecs, onboard: meta.onboard, state: meta.status === "TRADING" ? ("trading" as const) : ("delisted" as const) }
+          : { state: "delisted" as const }),
+      };
+    });
+    for (const a of S.assets) if (a.state === "delisted") delisted.push(a.sym);
     S.bySym = new Map(S.assets.map((a) => [a.sym, a]));
     S.byPair = new Map(S.assets.map((a) => [a.pair, a]));
-    S.st = { state: "ready", at: Date.now(), n: S.assets.length, scannedPairs: tickers.length };
+    S.st = {
+      state: "ready",
+      at: Date.now(),
+      n: S.assets.length,
+      ...(delisted.length ? { delisted } : {}),
+    };
   } catch (err) {
     // keep the last good list serving — the state marks it
     S.st = {
@@ -173,28 +250,26 @@ async function ensureRefreshing(): Promise<void> {
 }
 
 /**
- * Cached universe state. Boot: blocks on the first refresh (a cold boot
- * costs one exchangeInfo + one 24hr call, ~1-2s). Ready: serves instantly,
- * kicks a background re-rank when older than 4h. Error: keeps serving the
- * last good list and retries at most once per 30s.
+ * Cached universe state. Boot: blocks on the first enrichment (a cold boot
+ * costs one exchangeInfo + one 24hr call, ~1-2s) — membership itself is
+ * static, so even a failed first refresh serves the full list with defaults.
+ * Ready: serves instantly, kicks a background re-enrich when older than 4h.
+ * Error: keeps serving the last good list and retries at most once per 30s.
  */
 export async function getUniverse(): Promise<UniverseState> {
   const now = Date.now();
-  if (S.st.state === "boot" || (S.assets.length === 0 && now - S.lastAttempt >= ERROR_BACKOFF_MS)) {
+  if (S.st.state === "boot" || (S.st.state === "error" && now - S.lastAttempt >= ERROR_BACKOFF_MS)) {
     await ensureRefreshing();
-  } else if (
-    S.st.state === "ready" &&
-    now - S.st.at > MAX_AGE_MS &&
-    !S.refreshing
-  ) {
-    void ensureRefreshing(); // background re-rank — stale list keeps serving
-  } else if (S.st.state === "error" && now - S.lastAttempt >= ERROR_BACKOFF_MS && !S.refreshing) {
-    void ensureRefreshing();
+  } else if (S.st.state === "ready" && now - S.st.at > MAX_AGE_MS && !S.refreshing) {
+    void ensureRefreshing(); // background re-enrich — stale list keeps serving
   }
   return { ...S.st, n: S.assets.length };
 }
 
-/** Membership test (sync) — only meaningful after a getUniverse() await. */
+/**
+ * Membership test (sync). Membership is the static curated set, so this is
+ * authoritative at any time — no getUniverse() await required.
+ */
 export function isBinanceSym(sym: string): boolean {
   return S.bySym.has(sym.toUpperCase());
 }

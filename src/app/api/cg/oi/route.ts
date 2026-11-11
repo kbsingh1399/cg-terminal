@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
-import { isAsset } from "@/lib/cg/assets";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -30,13 +30,16 @@ interface OiPoint {
  *
  * Open interest per venue (Binance, OKX, Bybit, Hyperliquid, etc.) + 1h/4h/24h deltas.
  * Real Coinglass API data from /api/openInterest/v3/chart.
+ * Curated perps are members since 2026-11-12 — verified live: the OI chart
+ * carries every TradFi plain name too (NVDA 13 venues, XAU 12, CL 10 —
+ * Binance/OKX/Bybit/Gate/Bitget lead).
  */
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
 
-  if (!isAsset(sym)) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+  if (!(await knownSym(sym))) {
+    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
   }
 
   try {

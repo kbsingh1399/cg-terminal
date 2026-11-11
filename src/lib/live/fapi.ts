@@ -51,10 +51,17 @@ export async function fapiFetch(pathAndQuery: string, timeoutMs = 4_000): Promis
         const t = Date.parse(m[1]);
         until = Number.isFinite(t) ? t + 10_000 : 0;
       }
-      if (!until) {
+      // STALE-BAN CLAMP (fix 2026-11-12): shared egress IPs get 418 bodies
+      // with a PAST "until" timestamp (flappy window). A past value used to
+      // be stored as-is — banned-forever-by-throw with a breaker that never
+      // engages and never recovers. Clamp: a parsed future window is
+      // respected; anything else (past/unparseable) becomes the short 60s
+      // flappy window, matching the -1003-in-200 policy below.
+      if (!until || until <= Date.now()) until = Date.now() + 60_000;
+      if (!m) {
         const prev = breaker.until;
         const step = prev > Date.now() ? Math.min((prev - Date.now()) * 2, 900_000) : 60_000;
-        until = Date.now() + Math.max(60_000, step);
+        until = Math.max(until, Date.now() + step);
       }
     }
     breaker.until = until;
@@ -62,5 +69,46 @@ export async function fapiFetch(pathAndQuery: string, timeoutMs = 4_000): Promis
     throw new FapiBannedError(breaker.until);
   }
   if (res.status !== 200) throw new Error(`fapi HTTP ${res.status}`);
-  return res.json();
+  const body = (await res.json().catch(() => null)) as unknown;
+  // -1003-in-200 gap (verified live 2026-11-11): Binance serves
+  // {"code":-1003,"msg":"… IP banned until <epoch-ms> …"} with HTTP 200 —
+  // the old code returned that object to parsers as if it were data (klines
+  // then crashed on .map, market silently lost the section). Shared
+  // cloud egress IPs get these FLAPPY: requests intermittently pass DURING
+  // the claimed window (4/5 sampled OK mid-"ban"). So: one quick retry, and
+  // if it also refuses, a SHORT 60s breaker window — never the hours-long
+  // epoch in the body, which is demonstrably unreliable.
+  if (isBanBody(body)) {
+    await new Promise((r) => setTimeout(r, 400));
+    const b2 = fapiBanned();
+    if (b2.banned) throw new FapiBannedError(b2.until);
+    const res2 = await fetch(`${FAPI}${pathAndQuery}`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(timeoutMs),
+      headers: { accept: "application/json" },
+    });
+    if (res2.status === 429 || res2.status === 418) {
+      breaker.until = Date.now() + 60_000;
+      breaker.why = `HTTP ${res2.status} (weight budget, flappy window)`;
+      throw new FapiBannedError(breaker.until);
+    }
+    if (res2.status !== 200) throw new Error(`fapi HTTP ${res2.status}`);
+    const body2 = (await res2.json().catch(() => null)) as unknown;
+    if (isBanBody(body2)) {
+      breaker.until = Date.now() + 60_000;
+      breaker.why = "code -1003 in HTTP 200 (flappy IP window)";
+      throw new FapiBannedError(breaker.until);
+    }
+    return body2;
+  }
+  return body;
+}
+
+function isBanBody(body: unknown): body is { code: number; msg?: string } {
+  return (
+    !!body &&
+    typeof body === "object" &&
+    !Array.isArray(body) &&
+    (body as { code?: unknown }).code === -1003
+  );
 }

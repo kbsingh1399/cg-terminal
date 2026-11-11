@@ -24,7 +24,8 @@ import { decodeRow, fetchAggregateStream, rebin, type BookSnapshot } from "./boo
 import { append, lastTs, markPoll, markBackfilling, stat, gapCount } from "./store";
 import { startMemWatch } from "./memwatch";
 import type { KlineRow } from "./types";
-import { ASSETS, aggVenues, leadInstr, liqVenues } from "./assets";
+import { ASSETS, aggVenues, isCuratedPerp, leadInstr, liqVenues } from "./assets";
+import { curatedPerps } from "@/lib/universe/curated";
 import { startScanner } from "./scan";
 
 const STEP_MS = 900_000; // m15 master step
@@ -132,11 +133,23 @@ async function pollKline() {
   }
 }
 
-/** round-robin kline poller for every asset of the registry */
+/** The engine's continuity list: the 58 curated perps + any legacy Tier-1
+ * registry sym that is not curated (XPT) — Tier-1 code paths keep their
+ * series continuity. */
+function continuitySyms(): string[] {
+  const curated = curatedPerps().map((c) => c.sym);
+  const legacy = ASSETS.map((a) => a.sym).filter((s) => !isCuratedPerp(s));
+  return [...curated, ...legacy];
+}
+
+/** round-robin kline poller for every asset of the curated universe */
 let assetPollIdx = 0;
 async function pollAssetKlines() {
-  const list = ASSETS.map((a) => leadInstr(a.sym));
-  for (let k = 0; k < 2; k++) {
+  const list = continuitySyms().map((s) => leadInstr(s));
+  // 3 assets per 60s tick → a full pass over the 59 instruments ≈ 20 min;
+  // every poll fetches a 96-bar (24h) page so m15 continuity never gaps
+  // (store dedups by bar timestamp), freshness just staggers.
+  for (let k = 0; k < 3; k++) {
     const inst = list[assetPollIdx % list.length];
     assetPollIdx++;
     const name = `kline:${inst}:m15`;
@@ -368,11 +381,11 @@ async function backfillKlineAndFlows(days: number) {
   }
 }
 
-/** backfill m15 klines for every registered asset (continuity on boot) */
+/** backfill m15 klines for the curated universe (continuity on boot) */
 async function backfillAllAssets(days: number) {
   const backMs = days * 86_400_000;
-  for (const a of ASSETS) {
-    const inst = leadInstr(a.sym);
+  for (const sym of continuitySyms()) {
+    const inst = leadInstr(sym);
     const name = `kline:${inst}:m15`;
     const stored = lastTs(name, keyKline) ?? 0;
     const targetFrom = Math.max(Date.now() - backMs, stored);
@@ -540,12 +553,12 @@ export function engineStatus() {
     stat("lto:open", keyLto),
     stat("liqlevels:3d", keyLiq),
   ];
-  // per-asset kline continuity
+  // per-asset kline continuity (curated universe + legacy Tier-1 extras)
   const assetSeries: { asset: string; count: number; lastTs: number | null; lastError: string | null; gaps: number }[] = [];
-  for (const a of ASSETS) {
-    if (a.sym === "BTC") continue;
-    const s = stat(`kline:${leadInstr(a.sym)}:m15`, keyKline);
-    assetSeries.push({ asset: a.sym, count: s.count, lastTs: s.lastTs, lastError: s.lastError, gaps: gapCount(`kline:${leadInstr(a.sym)}:m15`, keyKline, STEP_MS) });
+  for (const sym of continuitySyms()) {
+    if (sym === "BTC") continue;
+    const s = stat(`kline:${leadInstr(sym)}:m15`, keyKline);
+    assetSeries.push({ asset: sym, count: s.count, lastTs: s.lastTs, lastError: s.lastError, gaps: gapCount(`kline:${leadInstr(sym)}:m15`, keyKline, STEP_MS) });
   }
   // per-instrument flows
   const flowNames = engine.instrumentKeys ?? [];

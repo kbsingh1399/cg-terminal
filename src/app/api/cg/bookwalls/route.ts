@@ -9,7 +9,7 @@ import {
 } from "@/lib/cg/book-walls";
 import type { KlineRow } from "@/lib/cg/types";
 import { aggVenues } from "@/lib/cg/assets";
-import { knownSym } from "@/lib/cg/sym-gate";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
 import { BoundedMap } from "@/lib/cg/bounded";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +27,7 @@ export const dynamic = "force-dynamic";
  * /liquidity-heatmap/api/liquidity/heatmap/aggregate/stream (server-side
  * venue merge, price-shift aligned) + /api/v2/kline for the candle path.
  *
- * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: the venue
+ * Curated perps (crypto + TradFi) are members since 2026-11-12: the venue
  * set per (coin, market) is DISCOVERED live (the stream names any venue
  * without a pair; discovery drops it and retries, cached 1h) — every coin
  * aggregates over exactly the exchanges that carry its book.
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
   if (!(await knownSym(sym))) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
   }
   const market = sp.get("market") === "spot" ? "spot" : "futures";
   const rawItv = sp.get("interval") ?? "m15";

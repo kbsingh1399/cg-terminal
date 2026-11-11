@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildMarketSnapshot } from "@/lib/cg/market";
-import { isAsset } from "@/lib/cg/assets";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -11,12 +11,14 @@ export const dynamic = "force-dynamic";
  * month), Fib-prime EMA 13/89/233, RSI(14) — m15/h1/h4/d1 — and day-anchored
  * VWAP ±1σ/2σ/3σ (UTC day open anchor, timezone-independent).
  *
- * Pure API data: computed from live Binance-perp klines via Coinglass.
+ * Pure API data: computed from live Binance-perp klines via Coinglass
+ * (leadInstr → Binance_<SYM>USDT — works for every curated perp, crypto and
+ * TradFi plain names alike, all verified TRADING with kline history).
  */
 export async function GET(req: NextRequest) {
   const sym = (req.nextUrl.searchParams.get("sym") ?? "BTC").toUpperCase();
-  if (!isAsset(sym)) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+  if (!(await knownSym(sym))) {
+    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
   }
   try {
     const snap = await buildMarketSnapshot(sym);

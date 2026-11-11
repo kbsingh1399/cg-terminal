@@ -23,6 +23,43 @@ dated entry after each meaningful change; keep only the last 10 entries.
 
 ## Log
 
+### 2026-11-12 07:20 UTC — Z.ai sandbox agent — footprint = Coinglass aggregate (verified parity) + UI/hardening round
+
+- **Footprint methodology REVERTED to the Coinglass aggregated method** (user
+  directive): fpVenues() now returns agg-perp (Binance+OKX+Bybit+Hyperliquid
+  for crypto; 3 venues for curated TradFi; XMR drops its dead OKX key).
+  Overview stays Binance execution-venue.
+- **Signal parity PROVEN**: scripts/parity-vs-coinglass.ts runs Coinglass's
+  OWN engine (ey extracted verbatim from their page bundle,
+  scripts/cg-ey-verbatim.js) on our aggregate — BTC 21/18/3 and ETH 22/26/2
+  signals across time/vol/range sets, every field identical. PARITY PASS.
+- **UI fixes (user screenshot + critic round)**: footprint default view is
+  width-aware (~58px/bar, measured-gate + history-growth re-adopt, never
+  stuck at the 8-bar live lane), buy/sell digits render at 44px+ cells,
+  perceptual tints; CVD price axis was INVERTED (pHi→bottom) — fixed;
+  TradingView axis-drag zoom added to Large Orders + Liq Levels; book-heat
+  contrast ramp; stat cards wrap instead of clipping.
+- **0-baseline blowout ROOT-CAUSED and fixed 3 layers deep**: WS frames with
+  p=0/NaN (trade + bookTicker) entered the tape unchecked → forming.lo=0 →
+  l=0 overlay bar → y-axis 0→70,000. Guards: feed.ts sanity gates,
+  forming.ts 0.25–4× band, overlay 25% envelope. LATEST PRICE 0.0 also gone.
+- **Klines empty-payload guard**: route 502s (never caches) a 0-row payload;
+  BinanceView treats empty as failed → browser-direct fallback engages.
+- **client.ts hardening (ported from flash-3.8 branch review)**: true-LRU,
+  ttlMs=0 never pollutes the cache, host 429 cooldown with capped extensions,
+  concurrency gate with correct baton-pass, inflight lane partition.
+- **Curated grid dead columns fixed**: !miniTicker@arr connects-but-delivers-
+  nothing on this egress → grid now trusts the WS only after data (tick>0)
+  and /api/binance/quotes is enriched with the shared t24 batch (chg/high/
+  low/vol) — all four columns live, badge honestly says REST · 5s.
+- Multi-agent round: code review (2 majors fixed: dead defaultView, semaphore
+  overshoot), E2E battery (76×200 + 36×clean-400 pass; 1 transient fapi ban),
+  visual critic (CVD inversion + blowout confirmed & fixed).
+- OPEN: Binance futures testnet keys lost with sandbox recycle (.env now has
+  only DATABASE_URL) — demo order panel shows "not configured" until keys
+  are re-added. DOGE m15 ts=1794251700 has one anomalous upstream fp grid
+  (clamped visually, signals unaffected — data-quality ticket).
+
 ### 2026-11-10 14:35 UTC — Z.ai sandbox agent — cadence split (platform cron limit)
 - Sandbox platform caps scheduled agent turns at 3/day → zai-desk wakes
   scheduled 01:00/09:00/17:00 IST (cron job 521117) + runs a round on

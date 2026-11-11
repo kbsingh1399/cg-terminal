@@ -59,30 +59,63 @@ export default function FootprintCanvas({
   const [size, setSize] = useState({ w: 900, h: 560 });
   const [view, setView] = useState<{ start: number; count: number; pLo: number; pHi: number } | null>(null);
   const [hover, setHover] = useState<{ x: number; y: number; bi: number } | null>(null);
-  const drag = useRef<{ x: number; y: number; start: number; pLo: number; pHi: number } | null>(null);
+  // TradingView-style axis drags: pan (chart) · vzoom (price axis) · hzoom (time axis)
+  const drag = useRef<{
+    x: number;
+    y: number;
+    start: number;
+    count: number;
+    pLo: number;
+    pHi: number;
+    mode: "pan" | "vzoom" | "hzoom";
+    anchorP: number;
+  } | null>(null);
+  const [cursor, setCursor] = useState<"crosshair" | "ns-resize" | "ew-resize" | "grabbing">("crosshair");
+  // MEASURED GATE: the ResizeObserver hasn't fired during the first render,
+  // so `size` is still the {900×560} fallback — initializing the view then
+  // locks the width-aware bar count to the fallback width forever (the
+  // `inited` flag never re-runs). Wait for a real measurement before the
+  // first default view (review finding: defaultView was dead on arrival).
+  const [measured, setMeasured] = useState(false);
   const [inited, setInited] = useState(false);
+  // set on the first user pan/zoom/wheel: once the user has an opinion about
+  // the viewport, the history-growth re-adopt must never steal it. (STATE,
+  // not a ref — the render-adjust below reads it, and the React Compiler
+  // forbids ref reads during render.)
+  const [userTouched, setUserTouched] = useState(false);
   const [lastResetKey, setLastResetKey] = useState(resetKey);
   const [lastJumpKey, setLastJumpKey] = useState("");
 
-  // bar price extremes (Fp row grid + candle range)
+  // bar price extremes. Footprint rows MUST lie inside the candle range
+  // (every trade of a bar prints within [low, high]) — upstream grids that
+  // extend beyond it (garbage extents, e.g. a ladder reported from 0) are
+  // clamped so one bad payload can never squash the y-scale to 0–90k.
   const merged = useMemo(
     () =>
       bars.map((b) => {
         let pLo = b.l;
         let pHi = b.h;
-        if (b.fp) {
-          pLo = Math.min(pLo, b.fp.lo);
-          pHi = Math.max(pHi, b.fp.lo + b.fp.b.length * b.fp.tick);
+        if (b.fp && Number.isFinite(b.fp.lo) && b.fp.tick > 0) {
+          const gridLo = Math.max(b.fp.lo, b.l);
+          const gridHi = Math.min(b.fp.lo + b.fp.b.length * b.fp.tick, b.h);
+          if (gridHi > gridLo) {
+            pLo = Math.min(pLo, gridLo);
+            pHi = Math.max(pHi, gridHi);
+          }
         }
         return { ...b, pLo, pHi };
       }),
     [bars]
   );
 
-  // default view: last 40 bars, full price range
+  // default view: enough bars to keep footprint NUMBERS readable at the
+  // current width (target ~58px per bar — Coinglass's default zoom shows the
+  // buy/sell digits; a 40-bar default squeezed cells to ~25px and the chart
+  // looked like a candle skeleton), full price range
   const defaultView = useMemo(() => {
     if (!merged.length) return null;
-    const count = Math.min(40, merged.length);
+    const plotW = Math.max(240, size.w - (showProfile ? PROFILE_W + 20 : AXIS_W + 16));
+    const count = Math.min(clamp(Math.floor(plotW / 58), 12, 28), merged.length);
     const start = Math.max(0, merged.length - count);
     let pLo = Infinity;
     let pHi = -Infinity;
@@ -92,20 +125,28 @@ export default function FootprintCanvas({
     }
     const pad = (pHi - pLo) * 0.05 || 1;
     return { start, count, pLo: pLo - pad, pHi: pHi + pad };
-  }, [merged]);
+  }, [merged, size.w, showProfile]);
 
-  // render-adjust pattern: init/reset the viewport without effects
-  if (!inited && defaultView) {
+  // render-adjust pattern: init/reset the viewport without effects.
+  // HISTORY-GROWTH RE-ADOPT: the fast live lane (≤8 bars) often renders
+  // before the heavy 300-bar history lands — a view initialized from it
+  // stayed stuck at 8 bars forever (inited is one-way). Until the user
+  // actually pans/zooms (userTouched), the view re-adopts the default
+  // whenever the default count grows — the chart settles at the proper
+  // width-aware zoom the moment history arrives.
+  if ((!inited || (!userTouched && view && defaultView && defaultView.count > view.count)) && defaultView && measured) {
     setInited(true);
     setView(defaultView);
   }
   if (resetKey !== lastResetKey) {
     setLastResetKey(resetKey);
+    setUserTouched(false); // a bar-type/symbol switch is a fresh start
     setView(defaultView);
   }
   // jump-to-bar (signal click): center the view on the target bar
   if (jump && jump.key !== lastJumpKey && defaultView) {
     setLastJumpKey(jump.key);
+    setUserTouched(true); // an explicit navigation is user intent
     const idx = merged.findIndex((b) => b.ts === jump.ts);
     if (idx >= 0) {
       setView((v) => {
@@ -121,21 +162,25 @@ export default function FootprintCanvas({
     }
   }
   // live follow (render-adjust): the real-time forming bar must never clip —
-  // when live prints extend past the visible price range, expand it; when a
-  // new bar appends while the tail is on screen, keep the tail on screen.
-  // Manual pan/zoom into history is never stolen.
+  // when live prints extend past the visible price range (and the live bar
+  // is actually on screen), expand it; when a new bar appends while the tail
+  // is on screen, keep the tail on screen. Manual pan/zoom into history —
+  // on EITHER axis — is never stolen.
   if (view && merged.length) {
     const last = merged[merged.length - 1];
+    const liveOnScreen = view.start + view.count >= merged.length - 1;
     let { pLo, pHi, start, count } = view;
     let changed = false;
-    if (last.pLo < pLo) {
-      pLo = last.pLo - (pHi - pLo) * 0.02;
-      changed = true;
-    }
-    if (last.pHi > pHi) {
-      const span = pHi - pLo;
-      pHi = last.pHi + span * 0.02;
-      changed = true;
+    if (liveOnScreen) {
+      if (last.pLo < pLo) {
+        pLo = last.pLo - (pHi - pLo) * 0.02;
+        changed = true;
+      }
+      if (last.pHi > pHi) {
+        const span = pHi - pLo;
+        pHi = last.pHi + span * 0.02;
+        changed = true;
+      }
     }
     if (count < merged.length && start + count >= merged.length - 1 && start + count < merged.length) {
       start = Math.max(0, merged.length - count);
@@ -149,9 +194,11 @@ export default function FootprintCanvas({
     if (!el) return;
     const ro = new ResizeObserver(() => {
       setSize({ w: el.clientWidth, h: el.clientHeight });
+      setMeasured(true);
     });
     ro.observe(el);
     setSize({ w: el.clientWidth, h: el.clientHeight });
+    setMeasured(true);
     return () => ro.disconnect();
   }, []);
 
@@ -302,26 +349,30 @@ export default function FootprintCanvas({
         const yBot = toPx(yScale, r.pLo);
         const h = Math.max(2, yBot - yTop - 1);
         const total = r.buy + r.sell;
-        const intensity = total / maxVol;
 
-        // background tint (two halves: sell left red, buy right green)
-        ctx.fillStyle = `rgba(246,70,93,${(intensity * 0.55).toFixed(3)})`;
+        // background tint (two halves: sell left red, buy right green).
+        // Perceptual scaling: raw intensity leaves low-volume rows nearly
+        // invisible on dark backgrounds — pow(0.62) lifts the mid range the
+        // way Coinglass's own cell shading reads.
+        const intensity = Math.pow(total / maxVol, 0.62);
+        ctx.fillStyle = `rgba(246,70,93,${(intensity * 0.5).toFixed(3)})`;
         ctx.fillRect(x0, yTop, cellTextW / 2, h);
-        ctx.fillStyle = `rgba(14,203,129,${(intensity * 0.55).toFixed(3)})`;
+        ctx.fillStyle = `rgba(14,203,129,${(intensity * 0.5).toFixed(3)})`;
         ctx.fillRect(x0 + cellTextW / 2, yTop, cellTextW / 2, h);
 
-        // texts
-        if (h >= 10 && cellW > 56) {
-          ctx.font = "9px ui-monospace, monospace";
+        // texts — two size tiers so digits appear as early as possible
+        if (h >= 9 && cellW >= 44) {
+          const fs = cellW >= 56 ? 9 : 8;
+          ctx.font = `${fs}px ui-monospace, monospace`;
           ctx.textBaseline = "middle";
           const sellTxt = modeText(r, "sell", mode);
           const buyTxt = modeText(r, "buy", mode);
           ctx.fillStyle = "#ff8ba0";
           ctx.textAlign = "left";
-          ctx.fillText(sellTxt, x0 + 3, yTop + h / 2);
+          ctx.fillText(sellTxt, x0 + 2, yTop + h / 2);
           ctx.fillStyle = "#5fe3a8";
           ctx.textAlign = "right";
-          ctx.fillText(buyTxt, x0 + cellTextW - 3, yTop + h / 2);
+          ctx.fillText(buyTxt, x0 + cellTextW - 2, yTop + h / 2);
         }
 
         // volume proportion bar at bottom of cell
@@ -557,6 +608,7 @@ export default function FootprintCanvas({
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
+      setUserTouched(true);
       setView((v) => {
         if (!v || !merged.length) return v;
         const factor = e.deltaY > 0 ? 1.15 : 0.87;
@@ -574,9 +626,28 @@ export default function FootprintCanvas({
   const onMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (!view) return;
-      drag.current = { x: e.clientX, y: e.clientY, start: view.start, pLo: view.pLo, pHi: view.pHi };
+      setUserTouched(true);
+      const zone: "pan" | "vzoom" | "hzoom" =
+        e.nativeEvent.offsetX >= size.w - AXIS_W - 6
+          ? "vzoom"
+          : e.nativeEvent.offsetY >= size.h - TIME_H
+            ? "hzoom"
+            : "pan";
+      const priceH = Math.max(1, size.h - TIME_H - 8);
+      const anchorP = view.pHi - ((e.nativeEvent.offsetY - 8) / priceH) * (view.pHi - view.pLo);
+      drag.current = {
+        x: e.clientX,
+        y: e.clientY,
+        start: view.start,
+        count: view.count,
+        pLo: view.pLo,
+        pHi: view.pHi,
+        mode: zone,
+        anchorP,
+      };
+      setCursor(zone === "vzoom" ? "ns-resize" : zone === "hzoom" ? "ew-resize" : "grabbing");
     },
-    [view]
+    [view, size]
   );
 
   const onMouseMove = useCallback(
@@ -591,14 +662,36 @@ export default function FootprintCanvas({
       const barW = (plotR - plotL) / view.count;
       const bi = Math.floor((x - plotL) / barW) + view.start;
       setHover({ x, y, bi: clamp(bi, 0, merged.length - 1) });
-      if (drag.current) {
-        const dx = e.clientX - drag.current.x;
-        const dy = e.clientY - drag.current.y;
+      const d = drag.current;
+      if (!d) {
+        const zone = x >= size.w - AXIS_W - 6 ? "vzoom" : y >= size.h - TIME_H ? "hzoom" : "pan";
+        setCursor(zone === "vzoom" ? "ns-resize" : zone === "hzoom" ? "ew-resize" : "crosshair");
+        return;
+      }
+      const dx = e.clientX - d.x;
+      const dy = e.clientY - d.y;
+      if (d.mode === "vzoom") {
+        // TradingView price-scale drag: zoom anchored at the grab price
+        const range = d.pHi - d.pLo;
+        const f = Math.exp(dy * 0.0045);
+        const newRange = clamp(range * f, Math.max(d.pLo, 1e-9) * 1e-4, range * 500);
+        const priceH = Math.max(1, size.h - TIME_H - 8);
+        const frac = clamp((d.y - el.getBoundingClientRect().top - 8) / priceH, 0, 1);
+        const pHi = d.anchorP + frac * newRange;
+        setView({ ...view, pHi, pLo: pHi - newRange });
+      } else if (d.mode === "hzoom") {
+        // time-axis drag: bar-count scaling anchored at the right edge
+        // (absolute math from the GRAB-time count — never compounding)
+        const end = d.start + d.count;
+        const count = Math.round(clamp(d.count * Math.exp(-dx * 0.0045), 8, Math.min(400, merged.length)));
+        const start = clamp(Math.round(end - count), 0, Math.max(0, merged.length - count));
+        setView({ ...view, start, count });
+      } else {
         const barsShift = Math.round(dx / barW);
-        const start = Math.round(clamp(drag.current.start - barsShift, 0, Math.max(0, merged.length - view.count)));
-        const plotH = size.h - TIME_H - 16;
-        const priceShift = (dy / plotH) * (drag.current.pHi - drag.current.pLo);
-        setView({ ...view, start, pLo: drag.current.pLo + priceShift, pHi: drag.current.pHi + priceShift });
+        const start = Math.round(clamp(d.start - barsShift, 0, Math.max(0, merged.length - view.count)));
+        const plotH = Math.max(1, size.h - TIME_H - 16);
+        const priceShift = (dy / plotH) * (d.pHi - d.pLo);
+        setView({ ...view, start, pLo: d.pLo + priceShift, pHi: d.pHi + priceShift });
       }
     },
     [view, merged.length, size, showProfile]
@@ -606,6 +699,7 @@ export default function FootprintCanvas({
 
   const onMouseUp = useCallback(() => {
     drag.current = null;
+    setCursor("crosshair");
   }, []);
 
   const onMouseLeave = useCallback(() => {
@@ -621,14 +715,36 @@ export default function FootprintCanvas({
     onHoverBar?.(b ?? null);
   }, [hover, merged, onHoverBar]);
 
-  const onDoubleClick = useCallback(() => setView(defaultView), [defaultView]);
+  const onDoubleClick = useCallback(() => {
+    setUserTouched(false); // reset = re-adopt the default behavior
+    setView(defaultView);
+  }, [defaultView]);
+
+  // keyboard: Home/End jump the window to the newest/oldest bars without
+  // touching the price scale (TradingView chart-nav convention)
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Home" && e.key !== "End") return;
+      e.preventDefault();
+      setView((v) => {
+        if (!v || !merged.length) return v;
+        const start = e.key === "End" ? Math.max(0, merged.length - v.count) : 0;
+        return { ...v, start };
+      });
+    };
+    el.addEventListener("keydown", onKey);
+    return () => el.removeEventListener("keydown", onKey);
+  }, [merged.length]);
 
   return (
     <div ref={wrapRef} className="relative h-full w-full">
       <canvas
         ref={canvasRef}
-        className="h-full w-full cursor-crosshair"
-        style={{ width: "100%", height: "100%" }}
+        className="h-full w-full"
+        style={{ width: "100%", height: "100%", cursor, outline: "none" }}
+        tabIndex={0}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
@@ -636,7 +752,7 @@ export default function FootprintCanvas({
         onDoubleClick={onDoubleClick}
       />
       <div className="pointer-events-none absolute right-3 top-2 text-[10px] text-neutral-500">
-        drag to pan · scroll to zoom · double-click to reset
+        drag = pan · wheel = zoom · drag price/time axis = scale · dbl-click = reset
       </div>
     </div>
   );

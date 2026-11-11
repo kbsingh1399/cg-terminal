@@ -24,7 +24,7 @@ respected under all conditions.
 | Tab | Content |
 | --- | --- |
 | **Overview** | live price, auction **VAL/POC/VAH** (session 8h · UTC day · UTC month), **EMA 13/89/233** + **RSI(14)** on 15m/1H/4H/1D, **day VWAP ±1σ/2σ/3σ** (anchored at the UTC day open — identical for IST or UTC viewers) |
-| **Footprint** | Coinglass-exact signal engine on all three bar types (15m time · auto volume · auto range): Absorption, Divergence, Strong Divergence, Trap, Exhaustion |
+| **Footprint** | Coinglass-exact signal engine on all three bar types (15m time · auto volume · auto range): Absorption, Divergence, Strong Divergence, Trap, Exhaustion — on the **Coinglass aggregated method** (Binance+OKX+Bybit+Hyperliquid perps, Hyperliquid price-shifted onto the Binance lead kline); signal parity vs their own page engine is machine-verified for BTC/ETH (`scripts/parity-vs-coinglass.ts`) |
 | **Large Orders** | whale resting orders ("Open orders") across all supported exchanges, perp + spot, All / Perp / Spot / Invert |
 | **Liq Levels + Stops** | 3D/7D/30D liquidation clusters, ±4%, per-asset venue set (metals: Binance+OKX+Bybit), plus the liquidation-heatmap stops map (BTC-only, see §8) |
 | **Book Walls** | aggregate order-book depth, bid/ask walls, imbalance, wall events — per-asset aggregate venues (BTC/ETH 5-venue, alts Binance+Hyperliquid, metals Binance) |

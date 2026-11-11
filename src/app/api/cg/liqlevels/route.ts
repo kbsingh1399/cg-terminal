@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import { buildLiqModel, liqStats, type RawLiqPayload, type LiqStats } from "@/lib/cg/liq-model";
 import { liqVenues, symDecs } from "@/lib/cg/assets";
-import { knownSym } from "@/lib/cg/sym-gate";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
 import { getLivePrice } from "@/lib/live/server-price";
 import type { LiquidationLevel } from "@/lib/cg/types";
 
@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic";
  * leverage tiers h1/h2/h3.
  *
  * Pure API data: every value comes from /api/liquidationLevels/v2 per venue.
- * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: venues
+ * Curated perps (crypto + TradFi) are members since 2026-11-12: venues
  * without the pair return no payload (honest 0 in perVenue), never a fake
  * cluster.
  */
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
   if (!(await knownSym(sym))) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
   }
   const VENUES = liqVenues(sym);
   const rangeRaw = sp.get("range") ?? "3d";

@@ -134,21 +134,35 @@ function openConnection() {
     const d = m.data;
     if (!d) return;
     if (d.e === "bookTicker") {
+      const bid = Number(d.b);
+      const ask = Number(d.a);
+      // SANITY GATE (2026-11-12 blowout fix): a malformed/reconnect frame
+      // with an empty b/a parses to 0/NaN and used to zero the live price
+      // ("LATEST PRICE 0.0") and poison every mid-based widget downstream.
+      if (!(bid > 0) || !(ask > 0) || ask < bid || !Number.isFinite(bid) || !Number.isFinite(ask)) return;
       S.quote = {
         sym: String(d.s).replace(/USDT$/, ""),
-        bid: Number(d.b),
-        ask: Number(d.a),
-        mid: (Number(d.b) + Number(d.a)) / 2,
-        bidQty: Number(d.B),
-        askQty: Number(d.A),
+        bid,
+        ask,
+        mid: (bid + ask) / 2,
+        bidQty: Number(d.B) || 0,
+        askQty: Number(d.A) || 0,
         t: Number(d.T) || Date.now(),
       };
       notifyQuote();
     } else if (d.e === "trade") {
+      const p = Number(d.p);
+      const q = Number(d.q);
+      // SANITY GATE (2026-11-12 blowout fix): a p=0/NaN print used to set
+      // the forming bar's low to 0, folding an l=0 bar into the footprint
+      // series and blowing the y-axis out to a 0-baseline (0→70,000 with
+      // all cells crushed off the top). Non-positive/non-finite prices and
+      // quantities never enter the tape.
+      if (!(p > 0) || !(q >= 0) || !Number.isFinite(p) || !Number.isFinite(q)) return;
       const tr: LiveTrade = {
         sym: String(d.s).replace(/USDT$/, ""),
-        p: Number(d.p),
-        q: Number(d.q),
+        p,
+        q,
         buy: d.m === false, // m=true → buyer is maker → taker sold
         t: Number(d.T) || Date.now(),
       };

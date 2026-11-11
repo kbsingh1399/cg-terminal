@@ -51,12 +51,14 @@ function OrderTicket({
   qtyDecs,
   priceDecs,
   mid,
+  punchable,
   onDone,
 }: {
   sym: string;
   qtyDecs: number;
   priceDecs: number;
   mid: number | null;
+  punchable: boolean;
   onDone: () => void;
 }) {
   const [side, setSide] = useState<"BUY" | "SELL">("BUY");
@@ -136,6 +138,12 @@ function OrderTicket({
 
   return (
     <div className="mt-3 border-t border-neutral-800 pt-3">
+      {!punchable && (
+        <div className="mb-2 rounded border border-amber-800/50 bg-amber-950/30 px-2 py-1.5 text-[10px] leading-relaxed text-amber-300">
+          {sym}USDT is NOT listed on the futures testnet — live data only, demo order execution unavailable for this
+          symbol (the server refuses it too).
+        </div>
+      )}
       <div className="mb-2 flex items-center gap-1.5">
         <button
           onClick={() => setSide("BUY")}
@@ -213,7 +221,8 @@ function OrderTicket({
         </label>
         <button
           onClick={submit}
-          disabled={busy}
+          disabled={busy || !punchable}
+          title={punchable ? undefined : "not on the Binance futures testnet — live data only"}
           className={`rounded px-3 py-1 text-[11px] font-bold text-black disabled:opacity-50 ${
             side === "BUY" ? "bg-emerald-500 hover:bg-emerald-400" : "bg-rose-500 hover:bg-rose-400"
           }`}
@@ -222,9 +231,9 @@ function OrderTicket({
         </button>
         <button
           onClick={() => void act({ action: "cancelAll", symbol: sym })}
-          disabled={busy}
+          disabled={busy || !punchable}
           className="rounded border border-neutral-700 px-2.5 py-1 text-[10px] text-neutral-400 hover:bg-neutral-800 disabled:opacity-50"
-          title="cancel every open order on this pair (testnet)"
+          title={punchable ? "cancel every open order on this pair (testnet)" : "not on the futures testnet"}
         >
           cancel all {sym}USDT
         </button>
@@ -248,11 +257,13 @@ export default function DemoAccountPanel({
   qtyDecs,
   priceDecs,
   mid,
+  punchable = true,
 }: {
   sym: string;
   qtyDecs: number;
   priceDecs: number;
   mid: number | null;
+  punchable?: boolean;
 }) {
   const q = usePolling<AcctResp>("/api/binance/account", 15_000);
   const d = q.data;
@@ -282,7 +293,8 @@ export default function DemoAccountPanel({
 
       {d && !d.ok && (
         <div className="rounded border border-dashed border-neutral-800 p-3 text-[11px] leading-relaxed text-neutral-500">
-          {d.error ?? "account unavailable"}. Market data for the top-200 works without keys; add futures-testnet keys in
+          {d.error ?? "account unavailable"}. Market data for the curated universe works without keys; add
+          futures-testnet keys in
           <span className="font-mono text-neutral-400"> .env </span>
           (BINANCE_API_KEY / BINANCE_API_SECRET / BINANCE_MODE=testnet — from https://testnet.binancefuture.com) to enable
           demo trading.
@@ -347,7 +359,7 @@ export default function DemoAccountPanel({
           )}
 
           {d.mode === "testnet" && d.canTrade && (
-            <OrderTicket sym={sym} qtyDecs={qtyDecs} priceDecs={priceDecs} mid={mid} onDone={q.refresh} />
+            <OrderTicket sym={sym} qtyDecs={qtyDecs} priceDecs={priceDecs} mid={mid} punchable={punchable} onDone={q.refresh} />
           )}
           {d.mode !== "testnet" && (
             <div className="mt-3 rounded border border-amber-800/50 bg-amber-950/30 p-2 text-[10px] text-amber-300">

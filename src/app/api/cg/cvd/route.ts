@@ -12,7 +12,8 @@ import {
   type TickerRow,
 } from "@/lib/cg/cvd";
 import type { KlineRow } from "@/lib/cg/types";
-import { knownSym } from "@/lib/cg/sym-gate";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
+import { pinCvdInstruments } from "@/lib/cg/assets";
 import { BoundedMap } from "@/lib/cg/bounded";
 
 export const dynamic = "force-dynamic";
@@ -26,10 +27,13 @@ export const dynamic = "force-dynamic";
  * (src/lib/cg/cvd.ts) over per-venue taker flows (#bs_usd klines).
  *
  * Pure API data: /api/select/coins/tickers + /api/v2/kline (#kline, #bs_usd).
- * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: instrument
- * discovery is keyword-driven and covers every venue that lists the coin
- * (13 perp venues incl. Binance/OKX/Bybit/Gate/Bitget/Bitfinex/Kraken + 9
- * spot venues incl. Coinbase and Crypto.com).
+ * Curated perps are members since 2026-11-12. CRYPTO syms use instrument
+ * discovery (keyword-driven, covers every venue that lists the coin — 13
+ * perp venues incl. Binance/OKX/Bybit/Gate/Bitget/Bitfinex/Kraken + 9 spot
+ * venues). TRADFI syms never keyword-resolve (keyword=MUB returns the
+ * MUBARAK memecoin — verified trap): their instruments are PINNED via
+ * pinCvdInstruments() (Binance/OKX/Bybit/Bitget/Gate perps + the Binance
+ * B-token spot leg, all verified live on #bs_usd).
  */
 
 const ITVS: Record<string, { api: string; ms: number }> = {
@@ -65,16 +69,25 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (t: T, i: number) =
 
 async function buildCvd(sym: string, itvKey: string, limit: number): Promise<{ inst: CvdInstrument[]; priceKey: string; series: CvdSeries; loaded: { key: string; ok: boolean }[]; itv: { api: string; ms: number } }> {
   const itv = ITVS[itvKey];
-  // 1) instruments (their er(): FUTURES + SPOT tickers, per-venue best)
-  const [fut, spot] = await Promise.all([
-    cgGet(`/api/select/coins/tickers?type=FUTURES&keyword=${encodeURIComponent(sym)}`, 120_000) as Promise<TickerRow[] | { data: TickerRow[] }>,
-    cgGet(`/api/select/coins/tickers?type=SPOT&keyword=${encodeURIComponent(sym)}`, 120_000)
-      .then((d) => d as TickerRow[] | { data: TickerRow[] })
-      .catch(() => [] as TickerRow[]),
-  ]);
-  const futRows = Array.isArray(fut) ? fut : ((fut as { data?: TickerRow[] }).data ?? []);
-  const spotRows = Array.isArray(spot) ? spot : ((spot as { data?: TickerRow[] }).data ?? []);
-  const { inst, priceKey } = pickInstruments(futRows, spotRows, sym);
+  // 1) instruments — TRADFI: pinned keys (never keyword discovery, see the
+  //    route doc); CRYPTO: their er() (FUTURES + SPOT tickers, per-venue best)
+  const pinned = pinCvdInstruments(sym);
+  let inst: CvdInstrument[];
+  let priceKey: string;
+  if (pinned) {
+    inst = pinned.map((p) => ({ key: p.key, venue: p.venue, kind: p.kind, instrumentId: p.key, volUsd: 0, price: 0 }));
+    priceKey = pinned[0]?.key ?? `Binance_${sym}USDT`;
+  } else {
+    const [fut, spot] = await Promise.all([
+      cgGet(`/api/select/coins/tickers?type=FUTURES&keyword=${encodeURIComponent(sym)}`, 120_000) as Promise<TickerRow[] | { data: TickerRow[] }>,
+      cgGet(`/api/select/coins/tickers?type=SPOT&keyword=${encodeURIComponent(sym)}`, 120_000)
+        .then((d) => d as TickerRow[] | { data: TickerRow[] })
+        .catch(() => [] as TickerRow[]),
+    ]);
+    const futRows = Array.isArray(fut) ? fut : ((fut as { data?: TickerRow[] }).data ?? []);
+    const spotRows = Array.isArray(spot) ? spot : ((spot as { data?: TickerRow[] }).data ?? []);
+    ({ inst, priceKey } = pickInstruments(futRows, spotRows, sym));
+  }
   if (!inst.length || !priceKey) throw new Error("no CVD instruments");
 
   // 2) price candles (their C(): <priceKey>#kline)
@@ -124,7 +137,7 @@ export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
   if (!(await knownSym(sym))) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
   }
   const rawItv = sp.get("itv") ?? "m15";
   const itvKey = ITVS[rawItv] ? rawItv : (NORMALIZE[rawItv] ?? "m15");

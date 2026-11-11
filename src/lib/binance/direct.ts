@@ -15,6 +15,8 @@
  * Every helper returns null on any failure — callers never fake data.
  */
 
+import { curatedPerps } from "@/lib/universe/curated";
+
 export interface DirectMarket {
   ticker?: { last: number; chgPct: number; high: number; low: number; quoteVol: number; vwap: number; nTrades: number };
   mark?: { markPrice: number; indexPrice: number; fundingRatePct: number; nextFundingMs: number };
@@ -123,28 +125,60 @@ export interface DirectUniverseAsset {
   quoteVol24h: number;
   priceDecs: number;
   qtyDecs: number;
+  state: "trading" | "delisted" | "unverified";
+  kind: "crypto-perp" | "tradfi-perp";
+  name: string;
+  category: "Crypto" | "TradFi";
+  sub: string;
+  punchable: boolean;
+}
+
+/** default display precision before any live quote arrives (the server's
+ * exchangeInfo enrichment replaces these with tick/step precision). */
+function directDefaults(sym: string, kind: "crypto-perp" | "tradfi-perp"): { priceDecs: number; qtyDecs: number } {
+  if (kind === "tradfi-perp") return { priceDecs: 2, qtyDecs: 2 };
+  if (["1000PEPE", "1000SHIB", "VET", "XLM", "ADA"].includes(sym)) return { priceDecs: 6, qtyDecs: 0 };
+  return { priceDecs: 2, qtyDecs: 3 };
 }
 
 /**
- * Universe fallback, browser-side: one /fapi/v1/ticker/24hr call (all
- * symbols). Perpetual filter approximates the server's exchangeInfo gate
- * (USDT quote, no "_" delivery contracts); re-ranked by quote volume.
+ * Universe fallback, browser-side: the CURATED 58 (static membership — never
+ * a dynamic re-rank; the top-200 era is over). One /fapi/v1/ticker/24hr call
+ * (all symbols) live-enriches quoteVol24h + a price-hint for the decimal
+ * heuristic when it succeeds; when fapi is unreachable from the browser too,
+ * the STATIC curated list still serves with zero volumes (rank = curated
+ * position) so the palette and the ticket never go blank.
  */
-export async function fetchUniverseDirect(n: number): Promise<DirectUniverseAsset[] | null> {
-  const all = (await jget("/fapi/v1/ticker/24hr", 15_000)) as { symbol?: string; quoteVolume?: string; lastPrice?: string }[] | null;
-  if (!Array.isArray(all) || all.length === 0) return null;
-  const rows = all
-    .filter((t) => typeof t.symbol === "string" && t.symbol.endsWith("USDT") && !t.symbol.includes("_"))
-    .map((t) => ({ pair: t.symbol as string, vol: Number(t.quoteVolume) || 0, last: Number(t.lastPrice) || 0 }))
-    .sort((a, b) => b.vol - a.vol)
-    .slice(0, n);
-  if (rows.length === 0) return null;
-  return rows.map((r, i) => ({
-    sym: r.pair.replace(/USDT$/, ""),
-    pair: r.pair,
-    rank: i + 1,
-    quoteVol24h: r.vol,
-    priceDecs: decsHeuristic(r.last),
-    qtyDecs: 3,
-  }));
+export async function fetchUniverseDirect(): Promise<DirectUniverseAsset[] | null> {
+  const all = (await jget("/fapi/v1/ticker/24hr", 15_000).catch(() => null)) as
+    | { symbol?: string; quoteVolume?: string; lastPrice?: string }[]
+    | null;
+  const volOf = new Map<string, number>();
+  const lastOf = new Map<string, number>();
+  if (Array.isArray(all)) {
+    for (const t of all) {
+      if (typeof t.symbol !== "string") continue;
+      volOf.set(t.symbol, Number(t.quoteVolume) || 0);
+      lastOf.set(t.symbol, Number(t.lastPrice) || 0);
+    }
+  }
+  return curatedPerps().map((c, i) => {
+    const pair = c.pair ?? `${c.sym}USDT`;
+    const d = directDefaults(c.sym, c.kind === "crypto-perp" ? "crypto-perp" : "tradfi-perp");
+    const last = lastOf.get(pair) ?? 0;
+    return {
+      sym: c.sym,
+      pair,
+      rank: i + 1,
+      quoteVol24h: volOf.get(pair) ?? 0,
+      priceDecs: last > 0 ? decsHeuristic(last) : d.priceDecs,
+      qtyDecs: d.qtyDecs,
+      state: all ? (volOf.has(pair) ? ("trading" as const) : ("delisted" as const)) : ("unverified" as const),
+      kind: c.kind === "crypto-perp" ? ("crypto-perp" as const) : ("tradfi-perp" as const),
+      name: c.name,
+      category: c.category,
+      sub: c.sub,
+      punchable: c.punchable,
+    };
+  });
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSignalsSnapshot, type SignalSetInfo } from "@/lib/cg/scan";
-import { isAsset } from "@/lib/cg/assets";
+import { knownSym, gateReject } from "@/lib/cg/sym-gate";
 import { loadFpBars } from "@/lib/cg/fp-load";
 import { autoThreshold, buildDerivedBars, computeCgSignals, cgSigName, cgSigText, type FpBar } from "@/lib/cg/cg-signals";
 
@@ -18,8 +18,8 @@ export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
   const bt = sp.get("bt") ?? "all";
-  if (!isAsset(sym)) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+  if (!(await knownSym(sym))) {
+    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
   }
   let snap = getSignalsSnapshot(sym);
   let computed = false;

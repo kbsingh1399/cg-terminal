@@ -84,6 +84,14 @@ export function useLiveForming(sym: string, itv: string): FormingAcc | null {
     const stepS = stepMs / 1000;
     const barTs = Math.floor(tr.t / stepMs) * stepS;
     const a = storeOf(sym, itv, stepMs);
+    // SANITY BAND (blowout fix, layer 2): one insane exchange print (p≈0 or
+    // p≈∞) must never seed hi/lo — reject prints outside (0.25×, 4×) of the
+    // accumulator's current state. No liquid asset in the universe moves 4×
+    // in a 40 s tape window; the 8 s aggregate resync picks up genuine
+    // extremes anyway.
+    const ref = a.lastPrice ?? tr.p;
+    if (ref > 0 && Number.isFinite(ref) && (tr.p < ref * 0.25 || tr.p > ref * 4)) return;
+    if (!Number.isFinite(tr.p) || !(tr.p > 0)) return;
     if (!a.barTs || a.barTs !== barTs) {
       if (a.barTs && barTs < a.barTs) return; // stale out-of-order print
       a.barTs = barTs;

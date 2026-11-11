@@ -1,25 +1,41 @@
 /**
- * Multi-asset registry — the perp-scanned assets of the terminal.
+ * Multi-asset registry — venue derivations for the CURATED universe.
  *
- * All venue instruments are REAL Coinglass instrument ids (verified live):
- *   - 12 crypto perps: BTC ETH SOL BNB XRP ADA AVAX DOGE LINK LTC XLM XMR
- *     (Binance + OKX + Bybit + Hyperliquid aggregated futures)
- *   - 3 metals: XAU (gold) / XAG (silver) / XPT (platinum) — USDT perps on
- *     the crypto venues; Hyperliquid does not carry them, so footprints
- *     aggregate over 1-3 venues.
+ * 2026-11-12 consolidation ("no gaps" directive): the terminal universe is
+ * the curated 61 (src/lib/universe/curated.ts — 30 crypto + 28 TradFi perps
+ * + 3 classic). This module keeps the legacy Tier-1 table below (XPT still
+ * works in Tier-1 code paths even though it left the palette) and derives
+ * every venue instrument key per symbol, curated-aware:
+ *
+ *   fpVenues()     — THE COINGLASS AGGREGATED METHOD (agg-perp): Binance +
+ *                    OKX + Bybit + Hyperliquid perps merged (their default
+ *                    footprint aggregate; Hyperliquid price-shifted onto the
+ *                    Binance lead). Curated TradFi drops Hyperliquid (no HL
+ *                    equity/metal markets). Verified live: /api/orderFlow on
+ *                    the plain TradFi names works on Binance/OKX/Bybit keys
+ *                    only (Gate/Bitget/tradeXYZ/MEXC/Lighter → 20001).
+ *   liqVenues()    — multi-venue aggregate. TradFi gets PINNED seed keys
+ *                    (Binance/OKX/Bybit/Bitget/Gate — all five verified live
+ *                    2026-11-12 on NVDA/MU/XAU: ~1.5-2k rows each). Crypto
+ *                    keeps the live candidate set (missing[] stays honest).
+ *   aggVenues()    — liquidity-heatmap stream candidates. TradFi is seeded
+ *                    Binance-only (verified: every other venue 20001s the
+ *                    futures heatmap pair for plain names); crypto keeps
+ *                    per-coin discovery (the stream names + the route prunes).
+ *   pinCvdInstruments() — TradFi CVD instruments are PINNED (never keyword-
+ *                    discovered: keyword=MUB returns the MUBARAK memecoin —
+ *                    verified trap). Crypto keeps keyword discovery (verified
+ *                    safe for every curated crypto sym incl. 1000PEPE).
+ *
+ * All venue instruments are REAL Coinglass instrument ids (verified live).
  *
  * USO REMOVED 2026-11-11 (DIR-0009 critical finding): OKX USO-USDT-SWAP
  * tracks the United States Oil Fund ETF (~$141), a +63% underlying mismatch
  * vs broker USOUSD WTI (~$86) — wrong-instrument data is worse than no data;
  * WTI now lives in src/lib/cg/classic.ts on Yahoo CL=F.
- *
- * Tier-3 instruments (14 indices · 48 FX · 19 equities · UKO + USO) have NO
- * perp data anywhere — they live in src/lib/cg/classic.ts (Yahoo-backed quotes)
- * and never enter this perp registry.
- *
- * Every downstream route derives its instrument keys from this table so
- * adding a new asset is a one-line change.
  */
+
+import { CURATED_BY_SYM, type CuratedAsset } from "@/lib/universe/curated";
 
 export interface AssetCfg {
   sym: string;
@@ -90,6 +106,26 @@ export function isAsset(sym: string): boolean {
   return bySym.has(sym.toUpperCase());
 }
 
+// ---------------------------------------------------------------------------
+// Curated membership helpers (src/lib/universe/curated.ts is canonical)
+// ---------------------------------------------------------------------------
+
+/** curated perp entry for a terminal sym (undefined for classic/unknown). */
+export function curatedAssetOf(sym: string): CuratedAsset | undefined {
+  const c = CURATED_BY_SYM.get(sym.toUpperCase());
+  return c && c.kind !== "classic" ? c : undefined;
+}
+
+/** true for the 58 curated perp syms (crypto + TradFi alike) — static. */
+export function isCuratedPerp(sym: string): boolean {
+  return curatedAssetOf(sym) !== undefined;
+}
+
+/** true for the 28 curated TradFi perp syms (NVDA, XAU, CL …). */
+export function isCuratedTradfi(sym: string): boolean {
+  return curatedAssetOf(sym)?.kind === "tradfi-perp";
+}
+
 /** Centralized lead-instrument derivation — the ONLY place that builds the
  *  kline/lead key (multi-agent review A2: 5 call sites hardcoded
  *  `Binance_${sym}USDT`). Unknown symbols keep the legacy Binance form. */
@@ -97,15 +133,23 @@ export function leadInstr(sym: string): string {
   return assetOf(sym)?.leadKey(sym) ?? `Binance_${sym.toUpperCase()}USDT`;
 }
 
-/** Perp aggregation venues for a symbol — mirrors the fp route's VENUES.
- * The registry's LEAD instrument goes first (fp-load merges onto keys[0]);
- * the lead-override mechanism is currently unused (every listed asset leads
- * on Binance since the USO removal) but stays for future non-Binance leads.
- * 2026-11-11 (Tier-2 unlock): unknown symbols join as-is — venues without a
- * pair fail per-venue and land in `missing` (live-verified: ARIA aggregates
- * Binance+Bybit). Bitget is deliberately NOT here: the /api/orderFlow
- * endpoint carries no Bitget instrument keys (verified on BTC and ARIA);
- * Bitget DOES serve liquidationLevels/v2, CVD flows and LTO orders. */
+/** Footprint venues for a symbol — THE COINGLASS AGGREGATED METHOD (agg-perp).
+ *
+ * User directive 2026-11-12: the Footprint tab must keep the same aggregated
+ * methodology Coinglass's footprint page uses — their `agg-perp` market is
+ * exactly [binance-perp, okx-perp, bybit-perp, hyperliquid-perp] (verified in
+ * their published page bundle, footprint-page.pretty.js `C` table), with the
+ * lead kline from venues[0] (Binance) and USD-quote venues (Hyperliquid)
+ * price-shifted onto the lead level before merging (their eM loader — our
+ * fp-load.ts is a 1:1 port). Signals run on the merged aggregate, so BTC/ETH
+ * signal counts/types match their page 1:1 (see scripts/test-signal-parity.ts).
+ *
+ * CURATED TradFi (NVDA, XAU, CL …) uses the same aggregate minus Hyperliquid
+ * (HL carries no equity/metal markets — live-verified; /api/orderFlow on the
+ * plain TradFi names works on Binance/OKX/Bybit keys, Gate/Bitget/tradeXYZ/
+ * MEXC/Lighter → 20001).
+ *
+ * Legacy metals (XPT) keep the 3-venue USDT set (no HL market). */
 export function fpVenues(sym: string): { id: string; key: string; usd: boolean }[] {
   const s = sym.toUpperCase();
   const a = assetOf(s);
@@ -114,7 +158,16 @@ export function fpVenues(sym: string): { id: string; key: string; usd: boolean }
     { id: "okx-perp", key: `OKX_${s}-USDT-SWAP`, usd: false },
     { id: "bybit-perp", key: `Bybit_${s}USDT`, usd: false },
   ];
-  if (!a || a.hl) venues.push({ id: "hyperliquid-perp", key: `Hyperliquid_${s}-USD`, usd: true });
+  // XMR has NO OKX-USDT-SWAP (verified live, comment in the registry above):
+  // constructing the dead key only burns an upstream 20001 per load — drop it
+  // (the aggregate stays honest through the route's missing[] reporting).
+  if (s === "XMR") venues.splice(1, 1);
+  // Hyperliquid joins the aggregate for every crypto perp (curated or legacy
+  // registry) — exactly Coinglass's agg-perp membership — but never for
+  // curated TradFi or registry metals (no HL markets there).
+  if (!isCuratedTradfi(s) && (!a || a.hl)) {
+    venues.push({ id: "hyperliquid-perp", key: `Hyperliquid_${s}-USD`, usd: true });
+  }
   const lead = a?.leadKey(s);
   const li = venues.findIndex((v) => v.key === lead);
   if (li > 0) venues.unshift(...venues.splice(li, 1));
@@ -122,11 +175,26 @@ export function fpVenues(sym: string): { id: string; key: string; usd: boolean }
 }
 
 /** Liquidation-levels venues for a symbol (aggregate).
- * 2026-11-11 (Tier-2 unlock): Bitget joins the crypto candidates (registry +
- * top-200); a venue without the pair returns no payload and shows 0 rows in
- * perVenue — never breaks the aggregate. Metals keep their curated 3. */
+ *
+ * CURATED TradFi gets PINNED seed instrument keys — never keyword discovery
+ * (keyword=MUB returns the MUBARAK memecoin, verified). Live-verified
+ * 2026-11-12 on NVDA/MU/XAU: all five seeds below return ~1.5-2k rows on
+ * /api/liquidationLevels/v2 (Gate's id form is <S>_USDT with an underscore).
+ * CURATED crypto keeps the candidate set — a venue without the pair returns
+ * no payload and shows 0 rows in perVenue, never breaking the aggregate
+ * (live: Bitget/Hyperliquid miss on 1000PEPE, Binance/Bybit carry it).
+ * Legacy metals (XPT) keep their curated 3. */
 export function liqVenues(sym: string): { name: string; key: string }[] {
   const s = sym.toUpperCase();
+  if (isCuratedTradfi(s)) {
+    return [
+      { name: "Binance", key: `Binance_${s}USDT` },
+      { name: "OKX", key: `OKX_${s}-USDT-SWAP` },
+      { name: "Bybit", key: `Bybit_${s}USDT` },
+      { name: "Bitget", key: `Bitget_${s}USDT_UMCBL` },
+      { name: "Gate", key: `Gate_${s}_USDT` },
+    ];
+  }
   const a = assetOf(s);
   const metal = a?.kind === "metal";
   const v = [
@@ -142,16 +210,25 @@ export function liqVenues(sym: string): { name: string; key: string }[] {
 /**
  * Liquidity-heatmap AGGREGATE-stream venues per asset (live-verified against
  * capi.coinglass.com): BTC and ETH keep their curated full sets. Every other
- * crypto asset (registry alts + Tier-2 top-200) gets the FULL candidate list —
- * the route's resolveAggVenues() probes the stream once per (coin, market),
- * drops venues the stream itself rejects ("No supported … pair for COIN on X")
- * and caches the pruned set, so each coin aggregates over every venue that
- * actually carries its book (Binance/OKX/Gate/Bitget/Hyperliquid futures;
- * + Coinbase/Kraken/Bitfinex spot). Metals stay Binance-only (no spot books).
+ * curated CRYPTO asset gets the FULL candidate list — the route's discovery
+ * probes the stream once per (coin, market), drops venues the stream itself
+ * rejects ("No supported … pair for COIN on X") and caches the pruned set
+ * (live-verified 2026-11-12: VET converges to Binance, TIA/SUI/SEI/INJ to
+ * Binance+Hyperliquid — discovery handles every curated crypto coin).
+ *
+ * CURATED TradFi is seeded BINANCE-ONLY (live-verified: OKX, Gate, Bitget
+ * AND Hyperliquid all 20001 the futures heatmap pair for NVDA/XAU/XAG/CL/
+ * ANTHROPIC/… — seeding them would only burn four probe streams per coin).
+ * The B-token SPOT books are not heatmap pairs either → spot stays empty
+ * (honest 400 "use market=futures", same contract as legacy metals).
+ * Legacy metals (XPT) stay Binance-only (no spot books).
  */
 export function aggVenues(sym: string, market: "futures" | "spot"): string[] {
   const s = sym.toUpperCase();
   const a = assetOf(s);
+  if (isCuratedTradfi(s)) {
+    return market === "futures" ? ["Binance"] : [];
+  }
   if (market === "futures") {
     if (s === "BTC" || s === "ETH") return ["Binance", "OKX", "Gate", "Bitget", "Hyperliquid"];
     if (s === "USO") return []; // USO left the perp registry 2026-11-11 (ETF mismatch) — kept as a guard: honest 400, never a stream error
@@ -161,6 +238,43 @@ export function aggVenues(sym: string, market: "futures" | "spot"): string[] {
   if (s === "BTC" || s === "ETH") return ["Binance", "Coinbase", "OKX", "Bitget", "Gate", "Kraken", "Bitfinex"];
   if (a?.kind === "metal") return []; // no spot books for metals on the stream
   return ["Binance", "Coinbase", "OKX", "Bitget", "Gate", "Kraken", "Bitfinex"];
+}
+
+export interface PinnedCvdInstrument {
+  key: string;
+  venue: string;
+  kind: "perp" | "spot";
+}
+
+/**
+ * PINNED CVD instruments for curated TradFi syms (the /api/cg/cvd route).
+ *
+ * Coinglass keyword discovery is a TRAP for plain TradFi names — keyword=MUB
+ * returns the MUBARAK memecoin (verified) — so the CVD route must never
+ * keyword-resolve them. Instead the perp legs are constructed explicitly
+ * (live-verified 2026-11-12 on NVDA/MU/XAU/CL/ANTHROPIC: all five venues
+ * serve #bs_usd) and the SPOT leg uses the Binance B-token (Binance_SPOT_
+ * NVDABUSDT / Binance_SPOT_MUBUSDT / Binance_SPOT_XAUTUSDT — all verified
+ * live on #bs_usd) so the spot-vs-futures quadrant stays honest for stocks.
+ * Binance is always first (the priceKey lead).
+ *
+ * Curated crypto returns undefined → the route keeps keyword discovery
+ * (verified safe for every curated crypto sym, incl. 1000PEPE/1000SHIB
+ * whose per-venue instrument ids differ, e.g. OKX lists PEPE-USDT-SWAP).
+ */
+export function pinCvdInstruments(sym: string): PinnedCvdInstrument[] | undefined {
+  const c = curatedAssetOf(sym);
+  if (!c || c.kind !== "tradfi-perp") return undefined;
+  const s = c.sym;
+  const inst: PinnedCvdInstrument[] = [
+    { key: `Binance_${s}USDT`, venue: "Binance", kind: "perp" },
+    { key: `OKX_${s}-USDT-SWAP`, venue: "OKX", kind: "perp" },
+    { key: `Bybit_${s}USDT`, venue: "Bybit", kind: "perp" },
+    { key: `Bitget_${s}USDT_UMCBL`, venue: "Bitget", kind: "perp" },
+    { key: `Gate_${s}_USDT`, venue: "Gate", kind: "perp" },
+  ];
+  if (c.spotPair) inst.push({ key: `Binance_SPOT_${c.spotPair}`, venue: "Binance", kind: "spot" });
+  return inst;
 }
 
 export function fmtAssetPrice(v: number | null | undefined, sym: string): string {

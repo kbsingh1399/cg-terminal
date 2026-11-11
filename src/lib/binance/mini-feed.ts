@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 /**
  * Binance all-market mini-ticker feed — the REAL-TIME engine of the
- * top-200 markets grid.
+ * curated markets grid.
  *
  * ONE WebSocket stream (`!miniTicker@arr` on fstream.binance.com) pushes a
  * batch of 24h rolling-window mini tickers for EVERY futures symbol every
