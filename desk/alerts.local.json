@@ -3,7 +3,24 @@
     "A10": 1794410063418,
     "A6": 1794336827979
   },
-  "prevOrders": [],
+  "prevOrders": [
+    {
+      "ticket": 209656134,
+      "symbol": "XMRUSD"
+    },
+    {
+      "ticket": 209656712,
+      "symbol": "XAUUSD"
+    },
+    {
+      "ticket": 209657041,
+      "symbol": "BTCUSD"
+    },
+    {
+      "ticket": 209657396,
+      "symbol": "XLMUSD"
+    }
+  ],
   "prevPositions": [],
   "prevOutboxFiles": [
     "2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md",
