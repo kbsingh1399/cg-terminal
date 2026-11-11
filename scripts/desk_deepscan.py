@@ -1342,16 +1342,62 @@ def classic_report(sym):
           f"- {anchor_name}: **{pf(anchor)}** · ±1σ {pf(sd)} · z {z:+.2f}σ" + (f" · vol-POC {pf(poc24)}" if poc24 else ""),
           f"- 24h range {pf(lo24)} – {pf(hi24)} (pos {rpos*100:.0f}th pct) · 5d extremes {pf(lo5)} – {pf(hi5)}",
           f"- EMA20 {pf(e20)} vs EMA50 {pf(e50)} · RSI(14) 15m {rsi:.0f}", "",
-          "## §2–§6 derivatives dimensions — n/a for this class (honest gaps)",
-          "- footprint Δ / taker flow: n/a — no perp order-flow exists for a cash instrument",
-          "- liquidation magnets: n/a — no leveraged-perp liquidation data (Coinglass carries none)",
-          "- orderbook walls: n/a — MT5 DOM on CFD brokers is synthetic bid/ask levels, not a real book",
-          "- CVD: n/a — no venue taker split; broker tick-volume delta possible daemon-side only",
-          "- whale LTO / stopmap / notifications: n/a — no crypto-venue data",
-          "- funding/OI: n/a — cash instrument. Classic analogs (researched, not integrated): "
-          "CFTC COT positioning (semiweekly since late-2026: Mon data→Wed release, Wed data→Fri 15:30 ET) "
-          "for index/commodity/FX futures; OANDA v20 OrderBook/PositionBook (free practice token) for FX majors; "
-          "short-interest + options put/call for equities", ""]
+          "## §2–§6 derivatives dimensions — partial coverage (2026-11-11 upgrade)"]
+    # /perpdepth, /cot, /cnbc — live-verified sources; 400 = no mapping
+    # (self-documenting: the 400 body lists the covered registry).
+    dep = cot = fut = None
+    try:
+        dep = get(f"/perpdepth?sym={sym}", timeout=40)
+    except Exception:
+        dep = None
+    try:
+        cot = get(f"/cot?sym={sym}", timeout=40)
+    except Exception:
+        cot = None
+    try:
+        fut = get(f"/cnbc?syms={sym}", timeout=40)
+    except Exception:
+        fut = None
+    fut_q = ((fut or {}).get("quotes") or {}).get(sym) if (fut or {}).get("ok") else None
+    oi = (dep or {}).get("oi") or {}
+    ncm = (cot or {}).get("noncomm") or {}
+
+    if dep and dep.get("ok"):
+        vs = dep.get("venues") or []
+        vrows = " · ".join(f"{v['id']} {v['close']}" + (f" (vol24h {v['vol24h']/1e6:.1f}M)" if v.get("vol24h") else "") for v in vs if v.get("close") is not None)
+        fund = (dep.get("funding") or {}).get("venues") or []
+        fund_s = " · ".join(f"{f['exchange']} {f['ratePct']:+.4f}%/{f.get('intervalH') or '?'}h" for f in fund[:6])
+        lead = dep.get("lead") or {}
+        L += ["### perp market depth (Coinglass — live-verified venues)",
+              f"- lead **{lead.get('venue')}** close {pf(lead.get('close') or price)} · liquidity: **{str(dep.get('liquidity','?')).upper()}**"
+              + (f" · {dep.get('note')}" if dep.get("note") else ""),
+              f"- venues: {vrows or 'n/a'}",
+              (f"- open interest: {oi.get('last'):,.0f}" if oi.get("last") is not None else "- open interest: n/a"),
+              (f"- Δ OI: 1h {oi.get('d1h')}% · 4h {oi.get('d4h')}% · 24h {oi.get('d24h')}%" if oi.get("d4h") is not None else "- Δ OI: n/a"),
+              (f"- taker flow 15m: {dep.get('takerFlow15mUsd'):+,.0f} USD ({dep.get('flowVenue')})" if dep.get("takerFlow15mUsd") is not None else "- taker flow: n/a on this venue"),
+              (f"- funding: {fund_s}" if fund_s else "- funding: none published upstream"),
+              "- liq levels / walls / CVD / whale LTO: n/a — not served upstream for this class (probed 2026-11-11, never faked)",
+              ""]
+    else:
+        L += ["### perp market depth: n/a — no verified perp venues for this symbol"
+              + (f" ({str(dep.get('error'))[:80]})" if dep else " (route unreachable)"), ""]
+    if cot and cot.get("ok") and ncm.get("net") is not None:
+        cot_z = cot.get("z3y")  # named cot_z — `z` is the §1 session z-score (RV-ARCH M2 shadowing)
+        L += ["### CFTC COT positioning (Legacy Futures-Only, weekly)",
+              f"- {cot.get('contract')} as of {cot.get('asOf')}: large-spec net **{ncm['net']:+,}** (chg wk {(ncm.get('netChgWk') or 0):+,}) · commercial net {((cot.get('commercial') or {}).get('net') or 0):+,}",
+              f"- contract OI {int(float(cot.get('openInterest') or 0)):,} · spec %OI L/S {ncm.get('pctOILong')}/{ncm.get('pctOIShort')}"
+              + (f" · 3y z **{cot_z:+.2f}σ**" if cot_z is not None else " · z n/a"),
+              ""]
+    else:
+        L += ["### CFTC COT: n/a — no COT contract mapped for this symbol", ""]
+    if fut_q and fut_q.get("ok"):
+        L += ["### futures reference (CNBC front-month)",
+              f"- {fut_q.get('name')}: last {fut_q.get('last')} · settle {fut_q.get('settle')} · OI {(fut_q.get('openInterest') or 0):,} · active {fut_q.get('activeContract')} · expiry {fut_q.get('expiry')}"
+              + (f" · futures−cash basis {((fut_q.get('last') or price)/price - 1)*100:+.2f}%" if fut_q.get("last") else ""),
+              ""]
+    else:
+        L += ["### futures reference: n/a — no CNBC symbol mapped (or empty quote)", ""]
+    L += ["- residual honest gaps (all classes): footprint Δ (no perp books for cash instruments) · liquidation magnets (no leveraged-perp data) · orderbook walls (CFD DOM is synthetic) · CVD (no venue taker split) · whale LTO/stopmap (crypto-venue only)", ""]
     try:
         mt = json.loads((DESK / "mt5.json").read_text())
         mt_age = (now_ms - mt.get("ts", 0)) / 60000

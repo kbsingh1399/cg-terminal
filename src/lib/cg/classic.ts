@@ -28,7 +28,7 @@ export interface ClassicCfg {
   sym: string;        // desk symbol (FundedNext naming)
   name: string;
   klass: ClassicKlass;
-  broker: string;     // FundedNext MT5 ticker
+  broker: string | null; // FundedNext MT5 ticker (null = not listed at broker, watchlist only)
   yahoo: string;      // Yahoo chart API ticker
   volume: boolean;    // live-verified: bars carry volume?
   note?: string;
@@ -60,7 +60,8 @@ export const CLASSIC_ASSETS: ClassicCfg[] = [
   { sym: "AUS200", name: "ASX 200", klass: "index", broker: "AUS200", yahoo: "^AXJO", volume: false },
   // ---- commodities with no perp data (2 · WTI + Brent) ----
   { sym: "UKO", name: "Brent Crude", klass: "commodity", broker: "UKOUSD", yahoo: "BZ=F", volume: true, note: "zero Coinglass perp data — Yahoo Brent futures are the reference market" },
-  { sym: "USO", name: "WTI Crude Oil", klass: "commodity", broker: "USOUSD", yahoo: "CL=F", volume: true, note: "MOVED from perp registry 2026-11-11 (DIR-0009): OKX USO-USDT-SWAP is the USO ETF (+63% mismatch) — WTI rides Yahoo CL=F" },
+  { sym: "USO", name: "WTI Crude Oil", klass: "commodity", broker: "USOUSD", yahoo: "CL=F", volume: true, note: "MOVED from perp registry 2026-11-11 (DIR-0009): OKX USO-USDT-SWAP is the USO ETF (+63% mismatch) — WTI rides Yahoo CL=F; real WTI perp depth (Binance CLUSDT etc.) via /api/cg/perpdepth" },
+  { sym: "NATGAS", name: "Natural Gas (Henry Hub)", klass: "commodity", broker: null, yahoo: "NG=F", volume: true, note: "added 2026-11-11: 3-venue perp market (Binance/Bitget/tradeXYZ) with funding+flow — NOT listed at FundedNext (watchlist only, no execution)" },
   // ---- forex (48 · full MT5 broker coverage after DIR-0009 reconciliation) ----
   fx("EURUSD"), fx("GBPUSD"), fx("USDJPY"), fx("USDCHF"), fx("AUDUSD"), fx("USDCAD"),
   fx("NZDUSD"), fx("EURGBP"), fx("EURJPY"), fx("EURCHF"), fx("EURAUD"), fx("EURCAD"),

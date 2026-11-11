@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { usePolling } from "./use-cg-data";
+import DerivativesPanel from "./derivatives-panel";
 
 /**
  * ClassicOverview — the Tier-3 instrument snapshot (indices · FX · equities ·
@@ -362,12 +363,15 @@ export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
         </div>
       )}
 
+      {/* derivatives add-ons: perp depth / COT / CNBC futures — hidden when unmapped */}
+      <DerivativesPanel sym={sym} cashPrice={price} />
+
       {/* honest scope note */}
       <div className="rounded-lg border border-neutral-800 bg-[#0e1216] p-3 text-[11px] leading-relaxed text-neutral-500">
         <span className="font-semibold text-neutral-400">Tier-3 instrument (watchlist-only):</span> quote + OHLCV bars via
-        Yahoo v8. No perp venues exist for this class — footprint, CVD, liquidation levels, book walls, funding and OI
-        are <span className="text-neutral-400">n/a by design, never fabricated</span>. The desk deepscan prints this
-        class with a reduced scorecard; no trade construction (engine v4 pending session/VWAP gates).
+        Yahoo v8; 14 instruments additionally carry verified perp/COT/futures-references panels above. Footprint, CVD,
+        liquidation levels and book walls are <span className="text-neutral-400">n/a by design where no perp venues exist, never fabricated</span>. The desk
+        deepscan prints this class with a reduced scorecard; no trade construction (engine v4 pending session/VWAP gates).
         {d?.note ? <span className="block pt-1 text-neutral-600">note: {d.note}</span> : null}
       </div>
     </div>

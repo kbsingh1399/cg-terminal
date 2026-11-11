@@ -1,0 +1,314 @@
+{
+ "retry_found": {
+  "WTI/USOIL": [
+   {
+    "venue": "OKX",
+    "key": "OKX_USO-USDT-SWAP",
+    "close": "140.93",
+    "vol": "167.8292"
+   }
+  ],
+  "HK": [
+   {
+    "venue": "Bitget",
+    "key": "Bitget_HSIUSDT_UMCBL",
+    "close": "24292",
+    "vol": "0"
+   }
+  ],
+  "AUS": [
+   {
+    "venue": "Bitget",
+    "key": "Bitget_ASXUSDT_UMCBL",
+    "close": "36.89",
+    "vol": "34711.32"
+   }
+  ],
+  "JPY": [
+   {
+    "venue": "Bitget",
+    "key": "Bitget_USDJPYUSDT_UMCBL",
+    "close": "158.92",
+    "vol": "0"
+   },
+   {
+    "venue": "Bybit",
+    "key": "Bybit_USDJPYUSDT",
+    "close": "158.649",
+    "vol": "30.78"
+   },
+   {
+    "venue": "tradeXYZ",
+    "key": "tradeXYZ_JPY-USD",
+    "close": "158.81",
+    "vol": "0"
+   }
+  ]
+ },
+ "surface": {
+  "SP500": {
+   "key": "tradeXYZ_SP500-USD",
+   "oi_kline": {
+    "status": 200,
+    "ok": true,
+    "last": [
+     1794384000,
+     "55117.22",
+     "55120.22",
+     "55103.38",
+     55110.5
+    ]
+   },
+   "liq_levels": {
+    "status": 200,
+    "ok": false,
+    "n": 0
+   },
+   "lto": {
+    "status": 200,
+    "type": "NoneType",
+    "ok": false
+   },
+   "order_flow": {
+    "status": 200,
+    "ok": false
+   },
+   "funding_chart": {
+    "status": 404,
+    "ok": false,
+    "type": "NoneType"
+   }
+  },
+  "NDX100": {
+   "key": "Bitget_NDX100USDT_UMCBL",
+   "oi_kline": {
+    "status": 200,
+    "ok": true,
+    "last": [
+     1794384000,
+     "92.2",
+     "92.2",
+     92.1966,
+     92.1966
+    ]
+   },
+   "liq_levels": {
+    "status": 200,
+    "ok": false,
+    "n": 0
+   },
+   "lto": {
+    "status": 200,
+    "type": "NoneType",
+    "ok": false
+   },
+   "order_flow": {
+    "status": 200,
+    "ok": false
+   },
+   "funding_chart": {
+    "status": 404,
+    "ok": false,
+    "type": "NoneType"
+   }
+  },
+  "JP225": {
+   "key": "tradeXYZ_JP225-USD",
+   "oi_kline": {
+    "status": 200,
+    "ok": true,
+    "last": [
+     1794384000,
+     "39.61",
+     "39.61",
+     39.54686,
+     39.54686
+    ]
+   },
+   "liq_levels": {
+    "status": 200,
+    "ok": false,
+    "n": 0
+   },
+   "lto": {
+    "status": 200,
+    "type": "NoneType",
+    "ok": false
+   },
+   "order_flow": {
+    "status": 200,
+    "ok": false
+   },
+   "funding_chart": {
+    "status": 404,
+    "ok": false,
+    "type": "NoneType"
+   }
+  },
+  "HSI": {
+   "key": "Bitget_HSIUSDT_UMCBL",
+   "oi_kline": {
+    "status": 200,
+    "ok": true,
+    "last": [
+     1794384000,
+     "1.85",
+     1.8545999999999963,
+     "1.85",
+     1.8545999999999963
+    ]
+   },
+   "liq_levels": {
+    "status": 200,
+    "ok": false,
+    "n": 0
+   },
+   "lto": {
+    "status": 200,
+    "type": "NoneType",
+    "ok": false
+   },
+   "order_flow": {
+    "status": 200,
+    "ok": false
+   },
+   "funding_chart": {
+    "status": 404,
+    "ok": false,
+    "type": "NoneType"
+   }
+  },
+  "BRENTOIL": {
+   "key": "tradeXYZ_BRENTOIL-USD",
+   "oi_kline": {
+    "status": 200,
+    "ok": true,
+    "last": [
+     1794384000,
+     "3378252.46",
+     "3378252.46",
+     3374545.6599999983,
+     3374545.6599999983
+    ]
+   },
+   "liq_levels": {
+    "status": 200,
+    "ok": false,
+    "n": 0
+   },
+   "lto": {
+    "status": 200,
+    "type": "NoneType",
+    "ok": false
+   },
+   "order_flow": {
+    "status": 200,
+    "ok": false
+   },
+   "funding_chart": {
+    "status": 404,
+    "ok": false,
+    "type": "NoneType"
+   }
+  },
+  "NATGAS": {
+   "key": "Binance_NATGASUSDT",
+   "oi_kline": {
+    "status": 200,
+    "ok": true,
+    "last": [
+     1794384000,
+     "6345561.4",
+     6365859.7,
+     "6345561.4",
+     6365859.7
+    ]
+   },
+   "liq_levels": {
+    "status": 200,
+    "ok": false,
+    "n": 0
+   },
+   "lto": {
+    "status": 200,
+    "type": "NoneType",
+    "ok": false
+   },
+   "order_flow": {
+    "status": 200,
+    "ok": true
+   },
+   "funding_chart": {
+    "status": 404,
+    "ok": false,
+    "type": "NoneType"
+   }
+  },
+  "EURUSD": {
+   "key": "Bybit_EURUSDUSDT",
+   "oi_kline": {
+    "status": 200,
+    "ok": true,
+    "last": [
+     1794384000,
+     "348667.8",
+     "348676.2",
+     "340585.2",
+     348676.2
+    ]
+   },
+   "liq_levels": {
+    "status": 200,
+    "ok": false,
+    "n": 0
+   },
+   "lto": {
+    "status": 200,
+    "type": "NoneType",
+    "ok": false
+   },
+   "order_flow": {
+    "status": 200,
+    "ok": true
+   },
+   "funding_chart": {
+    "status": 404,
+    "ok": false,
+    "type": "NoneType"
+   }
+  },
+  "GOLD": {
+   "key": "tradeXYZ_GOLD-USD",
+   "oi_kline": {
+    "status": 200,
+    "ok": true,
+    "last": [
+     1794384000,
+     "73605.87",
+     73617.3604,
+     "73604.43",
+     73617.3604
+    ]
+   },
+   "liq_levels": {
+    "status": 200,
+    "ok": false,
+    "n": 0
+   },
+   "lto": {
+    "status": 200,
+    "type": "NoneType",
+    "ok": false
+   },
+   "order_flow": {
+    "status": 200,
+    "ok": false
+   },
+   "funding_chart": {
+    "status": 404,
+    "ok": false,
+    "type": "NoneType"
+   }
+  }
+ }
+}

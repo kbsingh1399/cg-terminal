@@ -1,0 +1,166 @@
+{
+ "SP500": [
+  {
+   "venue": "tradeXYZ",
+   "key": "tradeXYZ_SP500-USD",
+   "close": "7567.9",
+   "vol": "153095.0502"
+  },
+  {
+   "venue": "Bitget",
+   "key": "Bitget_SP500USDT_UMCBL",
+   "close": "7580.7",
+   "vol": "30.32"
+  }
+ ],
+ "SPX": [
+  {
+   "venue": "Bitget",
+   "key": "Bitget_SPXUSDT_UMCBL",
+   "close": "0.3748",
+   "vol": "208.282"
+  },
+  {
+   "venue": "Binance",
+   "key": "Binance_SPXUSDT",
+   "close": "0.3746",
+   "vol": "9241.9831"
+  },
+  {
+   "venue": "OKX",
+   "key": "OKX_SPX-USDT-SWAP",
+   "close": "0.3747",
+   "vol": "2143.4804"
+  },
+  {
+   "venue": "Bybit",
+   "key": "Bybit_SPXUSDT",
+   "close": "0.3743",
+   "vol": "8768.6476"
+  }
+ ],
+ "NDX100": [
+  {
+   "venue": "Bitget",
+   "key": "Bitget_NDX100USDT_UMCBL",
+   "close": "28216",
+   "vol": "0"
+  }
+ ],
+ "JP225": [
+  {
+   "venue": "tradeXYZ",
+   "key": "tradeXYZ_JP225-USD",
+   "close": "61399",
+   "vol": "2403.2517"
+  },
+  {
+   "venue": "Bitget",
+   "key": "Bitget_JP225USDT_UMCBL",
+   "close": "61394",
+   "vol": "18.4182"
+  },
+  {
+   "venue": "OKX",
+   "key": "OKX_JP225-USDT-SWAP",
+   "close": "61476",
+   "vol": "6.1476"
+  }
+ ],
+ "HSI": [
+  {
+   "venue": "Bitget",
+   "key": "Bitget_HSIUSDT_UMCBL",
+   "close": "24292",
+   "vol": "0"
+  }
+ ],
+ "GOLD": [
+  {
+   "venue": "tradeXYZ",
+   "key": "tradeXYZ_GOLD-USD",
+   "close": "4057.9",
+   "vol": "5138.72216"
+  }
+ ],
+ "SILVER": [
+  {
+   "venue": "tradeXYZ",
+   "key": "tradeXYZ_SILVER-USD",
+   "close": "53.036",
+   "vol": "16444.34547"
+  }
+ ],
+ "PLATINUM": [
+  {
+   "venue": "tradeXYZ",
+   "key": "tradeXYZ_PLATINUM-USD",
+   "close": "1562.3",
+   "vol": "0"
+  }
+ ],
+ "BRENTOIL": [
+  {
+   "venue": "tradeXYZ",
+   "key": "tradeXYZ_BRENTOIL-USD",
+   "close": "90.634",
+   "vol": "565954.02665"
+  }
+ ],
+ "NATGAS": [
+  {
+   "venue": "tradeXYZ",
+   "key": "tradeXYZ_NATGAS-USD",
+   "close": "3.5498",
+   "vol": "134927.28566"
+  },
+  {
+   "venue": "Bitget",
+   "key": "Bitget_NATGASUSDT_UMCBL",
+   "close": "3.54",
+   "vol": "23995.3884"
+  },
+  {
+   "venue": "Binance",
+   "key": "Binance_NATGASUSDT",
+   "close": "3.54",
+   "vol": "294026.5066"
+  }
+ ],
+ "EURUSD": [
+  {
+   "venue": "Bitget",
+   "key": "Bitget_EURUSDUSDT_UMCBL",
+   "close": "1.1165",
+   "vol": "426.95"
+  },
+  {
+   "venue": "Bybit",
+   "key": "Bybit_EURUSDUSDT",
+   "close": "1.1155",
+   "vol": "13960.1997"
+  }
+ ],
+ "EUR": [
+  {
+   "venue": "tradeXYZ",
+   "key": "tradeXYZ_EUR-USD",
+   "close": "1.1158",
+   "vol": "1953.29054"
+  }
+ ],
+ "GBPUSD": [
+  {
+   "venue": "Bitget",
+   "key": "Bitget_GBPUSDUSDT_UMCBL",
+   "close": "1.3335",
+   "vol": "0"
+  },
+  {
+   "venue": "Bybit",
+   "key": "Bybit_GBPUSDUSDT",
+   "close": "1.3355",
+   "vol": "0"
+  }
+ ]
+}

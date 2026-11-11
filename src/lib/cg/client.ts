@@ -8,7 +8,7 @@ import { cgHeaders, decryptCgResponse } from "./crypto";
 const CAPI = "https://capi.coinglass.com";
 const FAPI = "https://fapi.coinglass.com";
 
-export { FAPI };
+export { FAPI, CAPI };
 
 interface CacheEntry {
   at: number;
