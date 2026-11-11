@@ -493,7 +493,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED by atg-exec @ 15:58 UTC: DOGUSD spread 1.3053% (0.00090, bid 0.0685/ask 0.0694, 90 pts) exceeds Protocol gate (>0.15%); spread is 2.57x the 0.00035 SL width (0.06940-0.06905), so filling a SHORT at bid 0.06905 implies immediate ask ~0.06995 > SL 0.06940 (instant stop-out). Widening SL cuts R to ~1.03 vs min 2.0R."
     }
   ],
   "positions": [],

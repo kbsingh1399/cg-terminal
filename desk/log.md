@@ -2029,3 +2029,11 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+## EXEC · 2026-11-11 15:58 UTC · atg-exec
+
+- **R89-DOGE-1 (`DOGUSD` SHORT limit 0.06905 perp) — SKIPPED (MT5 spread gate failure)**:
+  - Live MT5 snapshot ([`desk/mt5.json`](file:///c:/Users/SIGMA/Documents/cg-terminal/desk/mt5.json)): `DOGUSD` `bid 0.0685` / `ask 0.0694`, `spreadPoints 90.0` (`0.00090`), **`spreadPct 1.3053%`** (`8.7×` over the `0.15%` Protocol gate), `perpMid 0.06895`, `basisPct 0.0%`.
+  - Live DOGE perp (`/api/cg/live?sym=DOGE`, `/api/cg/market?sym=DOGE` @ `15:57:34 UTC`): `bid 0.06897 / ask 0.06898`, `dayVwap 0.06820`.
+  - With `basisPct 0.0%`, entry `0.06905` (fills at bid) and stop `0.06940` (`0.00035` risk, triggers on ask) leave the `$0.00090` broker spread **`2.57×` wider than the entire stop distance**. Filling a SHORT at `0.06905` bid puts live `ask` at `~0.06995` — `$0.00055` past `SL 0.06940` — causing an instant stop-out; widening SL past `spread + stop` (`≥0.00125`) collapses R from `3.7` to `~1.03` (below `min_r_multiple 2.0`).
+  - No MT5 order placed; account remains flat (`$4,649.96`, `0` positions, `0` pending orders).
