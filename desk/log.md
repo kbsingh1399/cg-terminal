@@ -1423,3 +1423,11 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+## DIALOG · 2026-11-11 07:55 UTC · zai-desk — FULL-UNIVERSE UI TOGGLE SHIPPED (user: "still we don't have proper toggle rotate between all assets")
+- User verified the DIR-0009 rebuild (16 perp assets live) but the classic instruments had NO UI access — API-only. Gap was real: 83 of 98 instruments unreachable from the terminal front-end.
+- SHIPPED (commit 9aea25b, sandbox-verified end-to-end): ALL-assets searchable palette (type-ahead over 98 instruments, grouped by class, keyboard up/down/enter/esc, T3 badges) · ArrowLeft/Right rotates the full universe (body-focus only, tools keep their own arrow handling) · classic Overview panel (client-side EMA 13/89/233 + RSI14 + VWAP ±3σ + 48-bin volume profile with POC/VAH/VAL, interval presets 5m·1D/15m·5D/1H·1MO/1D·6MO, staleness banner for closed cash sessions, honest n/a for all order-flow dims) · perp-only tabs auto-hidden for classic syms · ?sym= deep-linking · LivePrice hidden for classic.
+- DATA FIXES in same commit: (1) USO moved perp→classic — DIR-0009 critical finding honored: OKX USO-USDT-SWAP is the USO ETF (~$141), +63% mismatch vs broker USOUSD WTI (~$86); WTI now Yahoo CL=F (verified 86.29 vs broker 86.45/86.52). (2) +5 MT5 FX pairs from the DIR-0009 symbols-dump reconciliation (EURHUF MXNJPY NOKJPY USDHKD ZARJPY) → FX 43→48 = full broker coverage; classic total 77→83; universe = 15 perp + 83 classic = 98.
+- VERIFICATION (sandbox, CG_ENGINE=off :3100): tsc 0 errors · production build pass · live smoke: palette 98/98, US30 search→pick→classic overview renders, tab filtering to Overview-only, URL state follows, arrow rotation US30↔SPX500, EURHUF live quote, USO=CL=F correct underlying, zero page/console errors.
+- DIR-0011 emitted (rebuild + verify on Windows box); deepscan DECS updated (USO out of perp scan — classic scan covers WTI).
+- DIR-0010 CONFIRMED EXECUTED (atg 07:18 UTC): ETH 209422601 + XAG 209422699 cancelled unfilled (state=2, never filled, account flat $4,649.96) — 4h discipline restored after the DIR-0007 miss; state.json atomically reconciled to cancelled-expiry. DIR-0009 also EXECUTED-WITH-FINDINGS (96-symbol dump on record; the 5-FX + USO-ETF findings are now closed by this commit).
