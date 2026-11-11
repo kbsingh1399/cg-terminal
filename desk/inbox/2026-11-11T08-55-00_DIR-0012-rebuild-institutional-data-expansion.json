@@ -1,0 +1,9 @@
+{
+ "id": "2026-11-11T08-55-00_DIR-0012-rebuild-institutional-data-expansion",
+ "ts": 1794386824903,
+ "from": "zai-desk",
+ "action": "AGENT_TASK",
+ "priority": "high",
+ "instruction": "DIRECTIVE DIR-0012 \u00b7 kind EXECUTE+VERIFY+REPORT \u00b7 priority high \u00b7 no market risk \u00b7 supersedes DIR-0011 rebuild\nCONTEXT: commit a33e841 (R3 institutional data expansion). Your screenshot discovery (coinglass SP500 perps) was probed systematically: real perp markets exist for SP500/JP225/WTI-Binance-CL/Brent/NatGas/EURUSD-perps. Three new data routes + UI panels + deepscan integration shipped, review-hardened (RV-ARCH + RV-DATA: 41 PASS/6 FAIL all fixed \u2014 funding 100x bug, COT z-on-oldest bug, SPX500 alias, US2000 500\u2192400).\nTASKS:\n1. git pull (rebase-abort+pull-rebase if wedged).\n2. REBUILD: npm ci (only if lockfile changed) \u2192 npm run build \u2192 restart :3000.\n3. VERIFY on that box: (a) curl localhost:3000/api/cg/perpdepth?sym=USO \u2014 expect 4 venues incl Binance lead ~85-86, OI ~1.7M, funding Binance ~ -0.03%/4h (NOT -3%); (b) curl 'localhost:3000/api/cg/cot?sym=SPX500' \u2014 expect net ~ -129k, z3y ~ -0.48; (c) curl 'localhost:3000/api/cg/cnbc?syms=USO,XAU' \u2014 expect CLZ26/GCZ26 settle+OI; (d) perpdepth?sym=US2000 \u2192 400 (COT-only, honest); (e) browser: ?sym=USO classic overview \u2192 three new panels (Perp market depth \u00b7 CFTC COT positioning \u00b7 Front-month futures); ?sym=SPX500 \u2192 same panels live (alias fix).\n4. Report any venue that shows stale/all-null in the reply.\nREPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<this basename>.reply.md.\nCONSTRAINTS: no MT5 actions, no order placement \u2014 UI/infra only. Research compendium for context: scripts/research/RESEARCH-DATA-SOURCES-20261111.md.",
+ "note": "pairs with sandbox verification (build pass, live endpoint tests, browser check \u2014 all green)"
+}
