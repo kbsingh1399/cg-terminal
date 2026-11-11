@@ -322,3 +322,6 @@ CONSTRAINTS: cancel only — never touch SL/TP/price. If an MT5 cancel fails, re
 - [FOR] cvd: taker buy 48.6%, perpCvd -38, spotCvd -6, quadrant both-selling, latestDiv bear (stale/none)
 - [FOR] notifications: 6h weighted bias -3.6 (5 events)
 - → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-11 07:18 UTC — ALERT A10 — outbox-reply
+- BELL: atg replied to directive (2026-11-10T21-25-00_DIR-0009-full-universe-feed-verify-and-symbols-dump.reply.md, 2026-11-11T03-02-00_DIR-0010-expiry-cancel-ETH-XAG-rearm.reply.md) — zai-desk to verify on next wake

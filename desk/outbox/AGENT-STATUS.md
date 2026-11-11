@@ -1,24 +1,17 @@
 # AGENT STATUS — atg-exec (local execution & verification brain)
 
-- **Timestamp**: 2026-11-10 20:36 UTC
+- **Timestamp**: 2026-11-11 07:18 UTC
 - **Agent**: atg-exec (Antigravity on local Windows host)
 - **Directives Completed & Armed**:
-  - `DIR-0001` (cancel old ADA): DONE ✓
-  - `DIR-0002` (execute BTC): SUPERSEDED by user role split, PLACED manually & VERIFIED ✓
-  - `DIR-0003` (broker symbols): RESOLVED via FundedNext audit (`DOGUSD`, `LNKUSD`, `XLMUSD`, `XMRUSD`) ✓
-  - `DIR-0004` (build funding & OI endpoints): EXECUTED & VERIFIED LIVE ✓
-  - `DIR-0005` (BTC expiry cancel): EXECUTED — ticket cancelled and confirmed removed from MT5 ✓
-  - `DIR-0006` (local alerts engine): EXECUTED & ACTIVE (rules A1–A10 live with audio bells) ✓
-  - `DIR-0007` (ETH/XAG 4h expiry discipline): ARMED for 22:58:00 UTC (DEFERRED) ✓
-  - `DIR-0008` (terminal rebuild & 14-asset feed verify): EXECUTED & VERIFIED LIVE ✓
+  - `DIR-0001`..`DIR-0008`: COMPLETED ✓
+  - `DIR-0009` (terminal rebuild, 16+77 universe verify, 96-symbol MT5 dump, feed verify): EXECUTED-WITH-FINDINGS ✓ (Fixed TS build error in `src/app/api/cg/classic/route.ts`; flagged `USO` ETF $140.97 vs MT5 `USOUSD` WTI $86.49 underlying mismatch)
+  - `DIR-0010` (ETH `209422601` / XAG `209422699` expiry cancel re-arm): EXECUTED-EXTERNAL ✓ (Cancelled at 07:08:39–40 UTC, zero fills, `state.json` atomically synced)
 - **Terminal & Infra Health**:
-  - Standalone Next.js production server active on `http://127.0.0.1:3000` (PID active).
-  - 14 assets served: `BTC`, `ETH`, `SOL`, `BNB`, `XRP`, `ADA`, `AVAX`, `DOGE`, `LINK`, `LTC`, `XLM`, `XMR`, `XAU`, `XAG`.
-  - Desk daemon active on 45s cycle with alerts engine evaluating all events.
-  - Reactive wake watcher active via `scripts/wake_watcher.py`.
+  - Standalone Next.js production server rebuilt and live on `http://127.0.0.1:3000`.
+  - `/api/cg/assets`: 16 perp assets (`BTC, ETH, SOL, BNB, XRP, ADA, AVAX, DOGE, LINK, LTC, XLM, XMR, XAU, XAG, XPT, USO`).
+  - `/api/cg/classic?list=1`: 77 classic instruments (`14` indices, `43` FX, `19` equities, `1` commodity).
+  - Desk daemon (`scripts/desk_daemon.mjs`) active on 45s cycle.
+  - Reactive wake watcher (`scripts/wake_watcher.py`) active.
 - **Current Live MT5 State**:
-  - Account: Balance $4,649.96, Equity $4,649.96, 0 open positions.
-  - Active Pending Order 1: Ticket `209422601` (ETHUSD SELL LIMIT 0.53 @ 2,095.26, SL 2,138.89, TP 2,004.76 — 2.07R, 0.497% risk).
-  - Active Pending Order 2: Ticket `209422699` (XAGUSD SELL LIMIT 0.01 @ 53.099, SL 53.763, TP 50.813 — 3.44R, 0.714% risk).
-  - Expiry Window: ~2.3 hours remaining until 22:58 UTC.
-  - Live Broker Feeds Verified: `DOGUSD` (ok), `LNKUSD` (ok), `XLMUSD` (ok, tradeable), `XMRUSD` (ok).
+  - Account: Balance $4,649.96, Equity $4,649.96, 0 open positions, 0 pending orders.
+  - Standing `R57-BNB-1` (BNB SHORT): BLOCKED (BNB is NOT listed on FundedNext MT5).
