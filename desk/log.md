@@ -2094,3 +2094,20 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - Records: desk/deepscan/BIN-SCAN-latest.{json,md}, BIN-PUNCH-latest.{json,md}.
 - Note: SL/TP levels derive from mainnet data; testnet fills track the testnet
   book (USELESS filled 3.5% under the mainnet mid — bracket R still ≥ 2.1).
+## R91 · 2026-11-11 16:29 UTC · zai-desk
+
+**Market**: BTC 74,301.7 (+0.7%)  ETH 2,079.14 (+1.3%)  SOL 84.84 (+1.8%)  XAU 4,009.33 (-0.9%)  XAG 52.260 (+1.1%)
+**Bias (|score|≥2)**: XAG-5(TREND)  ADA-3(TREND)  DOGE-4(TREND)  LINK-3(TREND)  LTC-3(TREND)  XAU-2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R88-LTC-1 re-debated: FOR 5/AGAINST 2 — stands
+- R89-DOGE-1 re-debated: FOR 6/AGAINST 0 — stands
+- R90-ADA-1 re-debated: FOR 4/AGAINST 1 — stands
+- R90-LINK-2 re-debated: FOR 6/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
