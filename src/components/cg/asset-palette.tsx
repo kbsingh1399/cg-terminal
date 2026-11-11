@@ -5,22 +5,24 @@ import { useEffect, useMemo, useRef, useState } from "react";
 /**
  * AssetPalette — the full-universe switcher (user directive 2026-11-11:
  * "proper toggle rotate between all assets"). One searchable palette over
- * perp registry + classic registry (98 instruments): type-ahead filter,
- * grouped by class, keyboard navigable (↑/↓ move, Enter picks, Esc closes).
- * Pure client component — the universe list is passed in by page.tsx.
+ * perp registry + Binance top-200 tier + classic registry: type-ahead
+ * filter, grouped by class, keyboard navigable (↑/↓ move, Enter picks, Esc
+ * closes). Pure client component — the universe list is passed in by page.tsx.
  */
 
 export interface UniAsset {
   sym: string;
   name: string;
-  kind: string; // crypto | metal | index | fx | equity | commodity
+  kind: string; // crypto | metal | binance | index | fx | equity | commodity
   classic: boolean; // true = Tier-3 (Yahoo quotes), false = perp engine
+  rank?: number; // Binance tier: liquidity rank in the top-200
 }
 
-const KLASS_ORDER = ["crypto", "metal", "index", "fx", "equity", "commodity"];
+const KLASS_ORDER = ["crypto", "metal", "binance", "index", "fx", "equity", "commodity"];
 const KLASS_LABEL: Record<string, string> = {
   crypto: "Crypto perps",
   metal: "Metals perps",
+  binance: "Binance perps (top-200 liquidity)",
   index: "Indices",
   fx: "Forex",
   equity: "Equities",
@@ -29,6 +31,7 @@ const KLASS_LABEL: Record<string, string> = {
 const KLASS_COLOR: Record<string, string> = {
   crypto: "text-emerald-400",
   metal: "text-amber-400",
+  binance: "text-cyan-400",
   index: "text-sky-400",
   fx: "text-violet-400",
   equity: "text-rose-400",
@@ -173,9 +176,13 @@ export default function AssetPalette({
                   >
                     <span className={`text-xs font-bold ${KLASS_COLOR[a.kind] ?? "text-neutral-300"}`}>{a.sym}</span>
                     <span className="truncate text-[10px] text-neutral-500">{a.name}</span>
-                    {a.classic && (
+                    {a.classic ? (
                       <span className="ml-auto shrink-0 rounded bg-neutral-800 px-1 text-[9px] text-neutral-400">T3</span>
-                    )}
+                    ) : a.kind === "binance" && a.rank ? (
+                      <span className="ml-auto shrink-0 rounded bg-cyan-500/10 px-1 text-[9px] font-semibold text-cyan-400">
+                        #{a.rank}
+                      </span>
+                    ) : null}
                   </button>
                 ))}
               </div>
@@ -184,7 +191,8 @@ export default function AssetPalette({
         </div>
 
         <div className="border-t border-neutral-800 px-4 py-2 text-[10px] text-neutral-600">
-          T3 = Tier-3 classic instrument — live quote + OHLCV bars (Yahoo v8); order-flow tabs (footprint · CVD ·
+          T3 = Tier-3 classic instrument — live quote + OHLCV bars (Yahoo v8). #n = Binance top-200 liquidity rank
+          (Tier-2 — live book/tape/klines/funding/OI + testnet demo ticket). Order-flow tabs (footprint · CVD ·
           liquidations · book walls) exist only for perp-venue assets.
         </div>
       </div>

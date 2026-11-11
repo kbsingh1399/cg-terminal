@@ -1,5 +1,6 @@
 import { cgGet } from "../cg/client";
-import { assetOf, leadInstr } from "../cg/assets";
+import { assetOf, isAsset, leadInstr } from "../cg/assets";
+import { binAssetOf } from "../binance/universe";
 import { fapiFetch } from "./fapi";
 
 /**
@@ -40,13 +41,21 @@ async function refresh(sym: string): Promise<LivePrice> {
     const bid = Number(d.bidPrice);
     const ask = Number(d.askPrice);
     if (Number.isFinite(bid) && Number.isFinite(ask) && bid > 0 && ask > 0) {
-      const e: LivePrice = { ...base, bid, ask, price: +(((bid + ask) / 2).toFixed(assetOf(sym)?.priceDecs ?? 2)) };
+      const decs = binAssetOf(sym)?.priceDecs ?? assetOf(sym)?.priceDecs ?? 2;
+      const e: LivePrice = { ...base, bid, ask, price: +(((bid + ask) / 2).toFixed(decs)) };
       cache.set(sym, e);
       return e;
     }
     throw new Error("fapi bad payload");
   } catch (err) {
     const why = err instanceof Error ? err.message : "fetch failed";
+    // Binance-tier symbols have NO Coinglass fallback (outside the perp
+    // registry) — an fapi failure is an honest error, never a fake price
+    if (!isAsset(sym)) {
+      const e: LivePrice = { ...base, err: why };
+      cache.set(sym, e);
+      return e;
+    }
     return refreshViaCoinglass(sym, base, why);
   }
 }

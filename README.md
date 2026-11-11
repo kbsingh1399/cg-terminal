@@ -43,6 +43,16 @@ Under the hood:
   `GET /api/cg/ticker?sym=BTC` (1 s-safe, shared upstream cache).
 - **MCP server** (`mcp/server.mjs`) — 10 tools incl. `analyze_setup` for
   one-call trade formulation.
+- **Binance top-200 tier** (2026-11-11) — every TRADING USDT-M perpetual on
+  Binance, ranked by rolling 24h quote volume, top 200 (auto re-ranked every
+  4h). The `BINANCE 200` header button opens the live markets grid
+  (browser `!miniTicker@arr` WebSocket, 1s push; server REST fallback at 5s);
+  clicking an asset opens the Binance-native symbol view: real-time L2 order
+  book (`@depth20@100ms`), trade tape (`@trade`), live candles (REST bootstrap
+  + tape-derived forming bar), funding rate / next funding / mark basis /
+  open interest, and the **testnet demo order ticket** (see §6). Registry
+  majors (BTC/ETH/… ) keep their full order-flow toolset; 188 additional
+  assets join the palette, search and ←/→ rotation — 287 instruments total.
 
 ## 2. Prerequisites
 
@@ -186,6 +196,39 @@ tool, the route venue sets and the per-asset thresholds all derive from that
 single registry. Adding a feed = one poller in `engine.ts` + one scanner in
 `scan.ts`.
 
+### Binance top-200 tier (Tier-2) + demo trading
+
+```
+Binance USDT-M futures public market data (no API key)
+        │
+src/lib/binance/universe.ts     top-200 by 24h quote volume
+                                (exchangeInfo + ticker/24hr, 4h refresh,
+                                stale-serve + 30s error backoff)
+src/lib/binance/signed.ts       TESTNET-gated signed client
+src/app/api/binance/*           universe · quotes · klines · market ·
+                                account · order
+        │
+ ┌──────┴──────────────────────────────────────────────┐
+ │ mini-feed.ts    browser !miniTicker@arr → 200-grid   │
+ │ sym-feed.ts     browser @depth20@100ms / @kline /    │
+ │                 @forceOrder for the active symbol    │
+ │ direct.ts       browser-direct fapi fallbacks        │
+ │                 (CORS is open) when the host IP is   │
+ │                 fapi-banned                          │
+ └──────┬──────────────────────────────────────────────┘
+        │
+ BinanceMarkets (grid) · BinanceView (book/tape/candles/
+ funding/OI) · DemoAccountPanel (testnet order ticket)
+```
+
+**Demo trading safety gate**: order placement is refused server-side unless
+`BINANCE_MODE=testnet` — a mainnet key can be *read* via
+`/api/binance/account` but can never trade through this terminal. Credentials
+live only in `.env` (gitignored): `BINANCE_API_KEY` / `BINANCE_API_SECRET` /
+`BINANCE_MODE` (futures testnet keys: https://testnet.binancefuture.com).
+Quantities/prices are rounded to the exchange's own tick/step precision from
+the live exchangeInfo registry before submission.
+
 ## 7. Security & troubleshooting
 
 Local trust model, layered:
@@ -204,6 +247,7 @@ Local trust model, layered:
 | `EADDRINUSE :3000` | another app holds the port: `npm run dev -- -p 3100` and set `TERMINAL_URL=http://localhost:3100` for MCP |
 | market/footprint tab empty for >2 min | Coinglass rate-limits anonymous bursts — reload; the engine retries automatically (429s back off via Retry-After) |
 | stopmap error `code 40000` | that heatmap window needs a Coinglass login upstream (anonymous = 24h view). XAU/XAG stopmap is login-only |
+| Binance stats show `browser-direct (host fapi-banned)` | the terminal host's egress IP carries a transient Binance weight ban (429/418) — data still flows browser-direct; the shared breaker re-probes every 60s and recovers automatically |
 | `node: command not found` | install Node 20+ and reopen the terminal |
 | MCP tool says `fetch failed` | the terminal isn't running — start it first (`npm run dev`) |
 | Windows PowerShell `cp` error | use `copy .env.example .env` |

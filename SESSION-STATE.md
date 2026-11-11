@@ -28,37 +28,6 @@ dated entry after each meaningful change; keep only the last 10 entries.
 - Verified live sub-second price (`/api/cg/live`), live book (`/api/cg/livebook`), and live-anchored liquidation levels (`/api/cg/liqlevels?sym=XRP` @ 1.0654).
 - MCP server verified active and operational.
 
-### 2026-11-10 14:05 UTC — Z.ai sandbox agent — full sync confirmed, log created
-- Verified `origin/main` == local HEAD `4220ebe` (`git push`: Everything
-  up-to-date). Clean tree, no stash, single branch.
-- Latest two commits since the first push (`67f9c46`):
-  - `06099fc` `scripts/scan_opportunities.py` (cross-asset signal scan).
-  - `4220ebe` signal-integrity fix: liq clusters + whale walls anchored to
-    LIVE price (`src/lib/live/server-price.ts`, shared 250 ms fapi bookTicker
-    w/ TTL), plausible() wall filter (asks below market / bids above market
-    rejected — 32 stale walls purged from the 6h feed), priceDecs-aware liq
-    dedup + cluster display. Fixes XRP/ADA false alerts. `tsc --noEmit` clean.
-- Added this `SESSION-STATE.md` to make cross-agent handoff explicit.
-- OPEN: cross-asset trading-opportunity report — round-1 scan done; awaiting
-  live-price + indicator confluence pass (RSI/VWAP/POC/CVD) on top candidates.
-
-### 2026-11-10 14:25 UTC — Z.ai sandbox agent — TRADE DESK created (zai ↔ atg coordination)
-- New `desk/` layer: `PROTOCOL.md` (operating contract: roles, field
-  ownership, order lifecycle suggested→placed→filled→closed, risk rules,
-  git discipline), `state.json` (machine truth: config/analysis/orders/
-  positions/closed), `log.md` (append-only journal).
-- New `scripts/desk_round.sh` + `desk_round.py`: 15-min round = pull
-  --rebase → terminal health (auto-boot npm run dev ≤150s) → 12-asset
-  confluence scoring (notif bias recency-weighted, footprint signals,
-  h4/d1 EMA trend, VWAP regime, RSI modifier) → order lifecycle
-  (expire/withdraw) → position verdicts → commit+push.
-- Round R1 executed live: BTC SHORT suggested 74,644.9 stop 75,025.6
-  T1 74,066 R1.5 (confluence -5.0). Watch: DOGE/ADA/AVAX shorts (R too
-  small), XAU/XAG constructive (+2.0). Full detail in desk/log.md.
-- AGENTS.md now points local agents at the desk protocol.
-- zai 15-min cadence starts now (cron). atg: pull desk/PROTOCOL.md, wire
-  MT5 execution + positions[] mirroring.
-
 ### 2026-11-10 14:35 UTC — Z.ai sandbox agent — cadence split (platform cron limit)
 - Sandbox platform caps scheduled agent turns at 3/day → zai-desk wakes
   scheduled 01:00/09:00/17:00 IST (cron job 521117) + runs a round on
@@ -238,3 +207,40 @@ dated entry after each meaningful change; keep only the last 10 entries.
   R3 classic universe, R4 micro layer, R5 terminal-not-live/OOM fixes, R6 OOM
   byte-budget). Synced via backup branch backup-sandbox-20261111 → reset to
   origin/main. No conflicts.
+### 2026-11-11 15:35 UTC — Z.ai sandbox agent — BINANCE TOP-200 TIER (Tier-2) + testnet demo trading
+- User directive: "integrate top 200 most liquid assets from binance … first
+  we will trade at demo binance account". Shipped as a new Binance-NATIVE
+  tier (public market data, no Coinglass dependency, no API key for data):
+  universe engine src/lib/binance/universe.ts (every TRADING USDT-M perp
+  ranked by 24h quoteVolume, top 200, exchangeInfo tick/step precision,
+  4h refresh, stale-serve + 30s backoff) + 6 routes /api/binance/{universe,
+  quotes,klines,market,account,order} + browser WS libs mini-feed
+  (!miniTicker@arr 1s grid) & sym-feed (@depth20@100ms L2, @kline,
+  @forceOrder liq feed) + UI: BinanceMarkets grid, BinanceView (book/tape/
+  candles/funding/OI/mark-basis), palette group + rank badges → universe =
+  15 perp + 188 binance + 84 classic = 287 instruments.
+- REAL-TIME AT ALL LEVELS: grid 1s WS; active symbol sub-100ms bookTicker/
+  trade (existing ladder), L2 book @100ms, tape per-print, candles REST
+  bootstrap + TAPE-DERIVED forming bar (sandbox egress gets @kline frames
+  filtered — @trade/@depth/bookTicker flow; the forming bar builds from the
+  tape, kline stream overlays where networks deliver it), funding/OI 3s
+  server cache. Browser-direct fapi fallbacks (CORS open) for
+  universe/klines/market when the HOST IP is fapi-banned (recurring sandbox
+  418s) — user's own IP keeps serving.
+- DEMO TRADING: keys verified as futures TESTNET (fapi /fapi/v2/account 200,
+  canTrade, ~4096 USDT fake). src/lib/binance/signed.ts + HARD GATE: orders
+  refused unless BINANCE_MODE=testnet (mainnet key = read-only). .env only
+  (gitignored). Order route rounds qty/price to exchange precision.
+  /api/cg/live now accepts binance-tier syms (no cg fallback outside
+  registry — honest error instead).
+- VERIFIED: tsc clean, eslint 0/0, endpoint battery 23/23
+  (scripts/binance_tier_verify.py: universe 200 ranked, quotes 200, klines
+  shape+400s, market funding/OI, cg/live ZEC, account testnet, ORDER
+  ROUND-TRIP place→NEW→visible→cancelAll→clean), browser E2E zero console
+  errors: grid LIVE·WS 1s, ZEC view book live + tape 111/s + forming bar +
+  funding/OI live, palette 287/287 with rank badges, UI order ticket
+  round-trip (orderId 2996983296 NEW → cancelAll clean).
+  Evidence: download/verify-binance-200-grid.png, verify-binance-view-zec.png.
+- OPEN: DIR-0014 (atg local rebuild + local .env testnet keys for the demo
+  panel). ZEC #3 at $3.1B 24h vol + INIT/JCT/AGT/ARIA new listings riding
+  the top-200 — universe auto re-ranks every 4h.

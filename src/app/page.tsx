@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import FootprintTool from "@/components/cg/footprint-tool";
 import LargeOrdersTool from "@/components/cg/large-orders-tool";
 import LiquidationLevelsTool from "@/components/cg/liquidation-levels-tool";
@@ -10,6 +10,9 @@ import OverviewTool from "@/components/cg/overview-tool";
 import ClassicOverview from "@/components/cg/classic-overview";
 import AlertsTool from "@/components/cg/alerts-tool";
 import AssetPalette, { type UniAsset } from "@/components/cg/asset-palette";
+import BinanceView from "@/components/binance/BinanceView";
+import BinanceMarkets from "@/components/binance/BinanceMarkets";
+import { fetchUniverseDirect } from "@/lib/binance/direct";
 import { ASSETS } from "@/lib/cg/assets";
 import { CLASSIC_ASSETS } from "@/lib/cg/classic";
 import EngineStatus from "@/components/cg/engine-status";
@@ -27,28 +30,108 @@ const TOOLS: { key: Tool; label: string; sub: string }[] = [
   { key: "alerts", label: "Alerts", sub: "Live notification feed" },
 ];
 
-// Full universe (user directive 2026-11-11: toggle/rotate between ALL assets):
-// perp registry (order-flow engine) + classic registry (Tier-3 Yahoo quotes).
+// Full universe (user directives 2026-11-11): Tier-1 perp registry (order-flow
+// engine) + Tier-2 Binance top-liquidity perps (loaded live from
+// /api/binance/universe — the top-200 by 24h quote volume) + Tier-3 classic
+// registry (Yahoo quotes). Registry duplicates (BTC/ETH/… XAU/XAG/XPT rank in
+// the top-200 too) keep their Tier-1 identity and are dropped from Tier-2.
 const PERP_LIST: UniAsset[] = ASSETS.map(({ sym, name, kind }) => ({ sym, name, kind, classic: false }));
 const CLASSIC_LIST: UniAsset[] = CLASSIC_ASSETS.map(({ sym, name, klass }) => ({ sym, name, kind: klass, classic: true }));
-const UNIVERSE = [...PERP_LIST, ...CLASSIC_LIST];
-const UNI_OF = new Map(UNIVERSE.map((u) => [u.sym, u]));
+const REGISTRY_SYMS = new Set(PERP_LIST.map((a) => a.sym));
+
+interface BinUniAsset {
+  sym: string;
+  pair: string;
+  rank: number;
+  quoteVol24h: number;
+  priceDecs: number;
+  qtyDecs: number;
+}
 
 export default function Home() {
   const [tool, setTool] = useState<Tool>("overview");
   const [sym, setSym] = useState<string>("BTC");
   const [paletteOpen, setPaletteOpen] = useState(false);
+  // "markets" = the Binance top-200 grid (BINANCE 200 header button)
+  const [view, setView] = useState<"terminal" | "markets">("terminal");
+  const [binList, setBinList] = useState<BinUniAsset[]>([]);
+
+  // Tier-2 universe — server route first (authoritative exchangeInfo
+  // precision, 4h cache); browser-direct fapi fallback when the host is
+  // unavailable (e.g. transient fapi weight ban on a cloud egress IP);
+  // honest retry every 60s while both tiers fail.
+  useEffect(() => {
+    let alive = true;
+    let retry: ReturnType<typeof setTimeout> | null = null;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/binance/universe");
+        const j = (await res.json()) as { ok: boolean; assets?: BinUniAsset[] };
+        if (alive && j.ok && Array.isArray(j.assets)) {
+          setBinList(j.assets);
+          return;
+        }
+      } catch {
+        /* fall through to the direct tier */
+      }
+      const d = await fetchUniverseDirect(200).catch(() => null);
+      if (alive && d && d.length > 0) {
+        setBinList(d);
+        return;
+      }
+      if (alive) retry = setTimeout(load, 60_000);
+    };
+    void load();
+    return () => {
+      alive = false;
+      if (retry) clearTimeout(retry);
+    };
+  }, []);
+
+  const BIN_LIST: UniAsset[] = useMemo(
+    () =>
+      binList
+        .filter((a) => !REGISTRY_SYMS.has(a.sym))
+        .map((a) => ({ sym: a.sym, name: `${a.pair} perp`, kind: "binance", classic: false, rank: a.rank })),
+    [binList]
+  );
+
+  const UNIVERSE = useMemo(() => [...PERP_LIST, ...BIN_LIST, ...CLASSIC_LIST], [BIN_LIST]);
+  const UNI_OF = useMemo(() => new Map(UNIVERSE.map((u) => [u.sym, u])), [UNIVERSE]);
+  const BIN_OF = useMemo(
+    () => new Map(binList.filter((a) => !REGISTRY_SYMS.has(a.sym)).map((a) => [a.sym, a])),
+    [binList]
+  );
+
   const uni = UNI_OF.get(sym);
   const classic = !!uni?.classic;
+  const binance = uni?.kind === "binance";
 
-  // deep-link ?sym= on mount (validated against the universe)
+  // deep-link ?sym= — captured ONCE on the first client render (before the
+  // URL-sync effect below rewrites the address bar around the default sym)
+  // and applied as soon as the symbol validates against the universe. A
+  // Binance-tier symbol cannot validate before its list loads; if the list
+  // is loaded and the symbol is still unknown, give up (stay on BTC).
+  const urlSymRef = useRef<string | null>(null);
+  if (urlSymRef.current === null && typeof window !== "undefined") {
+    urlSymRef.current = new URLSearchParams(window.location.search).get("sym") ?? "";
+  }
+  const urlApplied = useRef(false);
   useEffect(() => {
-    const s = new URLSearchParams(window.location.search).get("sym");
-    if (s) {
-      const up = s.toUpperCase();
-      if (UNI_OF.has(up)) setSym(up);
+    if (urlApplied.current) return;
+    const s = urlSymRef.current;
+    if (!s) {
+      urlApplied.current = true;
+      return;
     }
-  }, []);
+    const up = s.toUpperCase();
+    if (UNI_OF.has(up)) {
+      setSym(up);
+      urlApplied.current = true;
+    } else if (binList.length > 0) {
+      urlApplied.current = true; // unknown symbol — never flip later
+    }
+  }, [binList.length, UNI_OF]);
 
   // keep the URL shareable
   useEffect(() => {
@@ -57,10 +140,12 @@ export default function Home() {
     window.history.replaceState(null, "", u.toString());
   }, [sym]);
 
-  // perp-only tools don't exist for classic instruments → force Overview
+  // perp-only tools don't exist for classic/Binance-tier instruments → Overview
   const pick = (s: string) => {
     setSym(s);
-    if (UNI_OF.get(s)?.classic && tool !== "overview") setTool("overview");
+    setView("terminal");
+    const u = UNI_OF.get(s);
+    if ((u?.classic || u?.kind === "binance") && tool !== "overview") setTool("overview");
   };
 
   // keyboard rotate (the "toggle rotate"): ←/→ cycle the whole universe when
@@ -81,9 +166,12 @@ export default function Home() {
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sym, paletteOpen, tool]);
+  }, [sym, paletteOpen, tool, UNIVERSE]);
 
-  const visibleTools = useMemo(() => TOOLS.filter((t) => !classic || t.key === "overview"), [classic]);
+  const visibleTools = useMemo(
+    () => TOOLS.filter((t) => (classic || binance ? t.key === "overview" : true)),
+    [classic, binance]
+  );
 
   return (
     <div className="flex min-h-screen flex-col bg-[#0b0e11]">
@@ -99,13 +187,13 @@ export default function Home() {
             <div className="leading-tight">
               <div className="text-sm font-semibold text-neutral-100">Order-Flow Terminal</div>
               <div className="text-[10px] text-neutral-500">
-                {PERP_LIST.length} perp + {CLASSIC_LIST.length} classic = {UNIVERSE.length} instruments · ←/→ rotate ·
-                ⌄ all assets
+                {PERP_LIST.length} perp + {BIN_LIST.length > 0 ? BIN_LIST.length : "…"} binance + {CLASSIC_LIST.length} classic ={" "}
+                {UNIVERSE.length} instruments · ←/→ rotate · ⌄ all assets
               </div>
             </div>
           </div>
 
-          {/* asset switcher: perp quick-bar + ALL-assets palette toggle */}
+          {/* asset switcher: perp quick-bar + ALL-assets palette toggle + Binance-200 grid */}
           <div className="flex flex-wrap items-center gap-1" role="tablist" aria-label="Asset">
             {PERP_LIST.map((a) => (
               <button
@@ -115,7 +203,7 @@ export default function Home() {
                 onClick={() => pick(a.sym)}
                 title={a.name}
                 className={`rounded px-2 py-1 text-[11px] font-bold tracking-wide transition-colors ${
-                  sym === a.sym
+                  sym === a.sym && view === "terminal"
                     ? a.kind === "metal"
                       ? "bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/40"
                       : "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40"
@@ -126,9 +214,20 @@ export default function Home() {
               </button>
             ))}
             <button
-              onClick={() => setPaletteOpen(true)}
-              title="All assets — search all 98 instruments (indices · FX · equities · commodities)"
+              onClick={() => setView(view === "markets" ? "terminal" : "markets")}
+              title="Binance top-200 liquidity grid — live prices, all USDT-M perpetuals"
               className={`ml-1 flex items-center gap-1.5 rounded px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors ${
+                view === "markets"
+                  ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-500/40"
+                  : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700"
+              }`}
+            >
+              BINANCE 200
+            </button>
+            <button
+              onClick={() => setPaletteOpen(true)}
+              title="All assets — search the full universe (crypto perps · binance top-200 · indices · FX · equities · commodities)"
+              className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors ${
                 classic
                   ? "bg-sky-500/20 text-sky-300 ring-1 ring-sky-500/40"
                   : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700"
@@ -138,23 +237,25 @@ export default function Home() {
             </button>
           </div>
 
-          {!classic && <LivePrice sym={sym} />}
+          {view === "terminal" && !classic && <LivePrice sym={sym} />}
 
-          <nav className="flex flex-wrap gap-1.5" aria-label="Tools">
-            {visibleTools.map((t) => (
-              <button
-                key={t.key}
-                onClick={() => setTool(t.key)}
-                className={`rounded-md px-3 py-1.5 text-left transition-colors ${
-                  tool === t.key ? "bg-neutral-800 text-neutral-100" : "text-neutral-400 hover:bg-neutral-900 hover:text-neutral-200"
-                }`}
-                aria-current={tool === t.key ? "page" : undefined}
-              >
-                <div className="text-xs font-semibold">{t.label}</div>
-                <div className="hidden text-[10px] text-neutral-500 sm:block">{t.sub}</div>
-              </button>
-            ))}
-          </nav>
+          {view === "terminal" && (
+            <nav className="flex flex-wrap gap-1.5" aria-label="Tools">
+              {visibleTools.map((t) => (
+                <button
+                  key={t.key}
+                  onClick={() => setTool(t.key)}
+                  className={`rounded-md px-3 py-1.5 text-left transition-colors ${
+                    tool === t.key ? "bg-neutral-800 text-neutral-100" : "text-neutral-400 hover:bg-neutral-900 hover:text-neutral-200"
+                  }`}
+                  aria-current={tool === t.key ? "page" : undefined}
+                >
+                  <div className="text-xs font-semibold">{t.label}</div>
+                  <div className="hidden text-[10px] text-neutral-500 sm:block">{t.sub}</div>
+                </button>
+              ))}
+            </nav>
+          )}
           <div className="ml-auto hidden md:block">
             <EngineStatus />
           </div>
@@ -163,10 +264,17 @@ export default function Home() {
 
       {/* tool content */}
       <main className="mx-auto w-full max-w-[1600px] flex-1 px-4 py-4">
-        {classic ? (
+        {view === "markets" ? (
+          <BinanceMarkets onPick={pick} />
+        ) : classic ? (
           tool === "overview" ? (
             <ClassicOverview sym={sym} />
           ) : null // perp-only tabs are filtered out of visibleTools for classic
+        ) : binance && BIN_OF.has(sym) ? (
+          (() => {
+            const b = BIN_OF.get(sym)!;
+            return <BinanceView sym={b.sym} rank={b.rank} priceDecs={b.priceDecs} qtyDecs={b.qtyDecs} />;
+          })()
         ) : (
           <>
             {tool === "overview" && <OverviewTool sym={sym} />}
@@ -182,11 +290,12 @@ export default function Home() {
 
       <footer className="mt-auto border-t border-neutral-800 px-4 py-3">
         <div className="mx-auto max-w-[1600px] text-[10px] leading-relaxed text-neutral-600">
-          Data sourced live from the Coinglass web API (perp assets), Yahoo Finance v8 (Tier-3 classic instruments),
-          and — for microstructure — the free Hyperliquid xyz HIP-3 perps, Lighter DEX L3 order books, and Kraken spot
-          FX depth, for personal analysis. Figures are estimates reported by the upstream providers and are not
-          investment advice. Microstructure panels are signal-market context only (execution stays at the broker);
-          classic instruments without micro mappings are quotes+bars only — never fabricated.
+          Data sourced live from the Coinglass web API (Tier-1 perp assets), the Binance USDT-M futures public market
+          (Tier-2 top-200: REST + fstream WebSocket — book/tape/klines/funding/OI; demo order execution on the futures
+          TESTNET only), Yahoo Finance v8 (Tier-3 classic instruments), and — for microstructure — the free Hyperliquid
+          xyz HIP-3 perps, Lighter DEX L3 order books, and Kraken spot FX depth, for personal analysis. Figures are
+          estimates reported by the upstream providers and are not investment advice. Classic instruments without micro
+          mappings are quotes+bars only — never fabricated.
         </div>
       </footer>
     </div>

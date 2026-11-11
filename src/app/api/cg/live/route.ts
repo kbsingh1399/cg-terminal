@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAsset } from "@/lib/cg/assets";
 import { getLivePrice, TTL } from "@/lib/live/server-price";
+import { getUniverse, isBinanceSym } from "@/lib/binance/universe";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,10 @@ export const dynamic = "force-dynamic";
  * Tier 2 fallback: Coinglass m1 forming-candle close (the old /api/cg/ticker
  * source). The response always names its source — no silent mixing.
  *
+ * Binance-tier symbols (top-200 universe) are accepted since 2026-11-11 —
+ * the fapi bookTicker path is identical; their Tier-2 fallback is an honest
+ * error (no Coinglass fallback outside the registry).
+ *
  * The cache lives in src/lib/live/server-price.ts so the scanner lanes
  * (liq clusters, whale walls) anchor to the very same price.
  */
@@ -25,7 +30,11 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   const sym = (req.nextUrl.searchParams.get("sym") ?? "BTC").toUpperCase();
   if (!isAsset(sym)) {
-    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+    // Binance-tier membership requires the universe map (cached, cheap)
+    await getUniverse();
+    if (!isBinanceSym(sym)) {
+      return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+    }
   }
   const e = await getLivePrice(sym);
   const ok = e.price != null;
