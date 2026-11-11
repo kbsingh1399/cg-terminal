@@ -46,3 +46,14 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 
 ## 2026-11-11 11:27 UTC — ALERT A10 — outbox-reply
 - BELL: atg replied to directive (2026-11-11T09-50-00_DIR-0013-rebuild-r4-microstructure-layer.reply.md) — zai-desk to verify on next wake
+
+## 2026-11-11 11:37 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 1)
+- R74-ADA-1 ADA SHORT limit entry 0.1761 · stop 0.1769 · targets 0.1741 · R 2.6 · expires 2026-11-11 15:34 UTC
+- BASIS: levels are PERP prices (perpRef 0.1761). Before placing in MT5 read spreads.ADAUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (0.1761 vs 0.1752), h4 RSI 44.4, day +1.3%
+- [FOR] footprint: bull 50 / bear 60; recent: none <6h
+- [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×9, abs:sell×8, div:buy×2, div:sell×1, exh:buy×7, exh:sell×5, trap:buy×2, trap:sell×3 — net 20 buy-side vs 17 sell-side
+- [FOR] liquidation: long-liq magnet 0.1706 (str 46, ~$2M est, -3.19%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.005 (5m ago -0.002, rising bids); bid $0.02B vs ask $0.02B
+- [FOR] cvd: taker buy 48.9%, perpCvd -17, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
+- → place on ADAUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
