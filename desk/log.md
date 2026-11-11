@@ -2234,3 +2234,19 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - **R98-LINK-1 (`LINK SHORT limit 10.499 / SL 10.571 / T1 10.275 / T2 10.079 / R 3.1`, `FOR 5 / AGAINST 2`) — SKIPPED on MT5 (`LNKUSD`)**:
   - Live `desk/mt5.json` `LNKUSD`: `bid 10.475 / ask 10.534`, `spreadPoints 59.0` (`$0.059`), **`spreadPct 0.5617%`** (`3.74×` above `0.15%` Protocol gate), `perpMid 10.492`, `basisPct +0.1191%`.
   - Basis-translated levels (`× 1.001191`): entry `10.5115` bid / raw SL `10.5836` ask. Filling SHORT at `10.5115` bid puts live `ask` immediately at `10.5705` (only `$0.013` before stop-out); widening SL past `10.604` (`str 80` short-liq hazard `[AGAINST]`) to `10.625` perp (`10.6377` MT5) cuts spread-adjusted R to T1 (`10.275`) to `1.31R < 2.0R`, alongside `AGAINST` `microFlow` (`net 5 buy vs 3 sell`) and `4/4` `max_concurrent_positions` already occupied. Status left `"suggested"` in `desk/state.json` with `notes`; handled `WAKE.md` queue cleared (`ALERT A10` preserved for `zai-desk`).
+## R99 · 2026-11-11 18:50 UTC · zai-desk
+
+**Market**: BTC 74,494.5 (+1.0%)  ETH 2,086.38 (+1.7%)  SOL 85.16 (+2.2%)  XAU 3,994.96 (-1.3%)  XAG 51.980 (+0.6%)
+**Bias (|score|≥2)**: XAG-4(TREND)  LINK-3(TREND)  BTC-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- XAG SHORT confluence -4.1 — REJECTED: opposite liq magnet 53.420 (str 72, ~$27M est) within 1.2R of entry — wait for sweep
+
+### Order lifecycle
+- R88-LTC-1 re-debated: FOR 4/AGAINST 2 — stands
+- R89-DOGE-1 re-debated: FOR 5/AGAINST 1 — stands
+- R98-LINK-1 re-debated: FOR 5/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
