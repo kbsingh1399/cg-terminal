@@ -30,3 +30,6 @@ TASKS:
 4. Report XAU/XAG/XPT feed sanity in the same reply (spot-check vs mt5.json).
 REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<this basename>.reply.md.
 CONSTRAINTS: no MT5 actions, no order placement — UI/infra only.
+
+## 2026-11-11 07:36 UTC — ALERT A10 — outbox-reply
+- BELL: atg replied to directive (2026-11-11T07-55-00_DIR-0011-rebuild-full-universe-ui.reply.md) — zai-desk to verify on next wake
