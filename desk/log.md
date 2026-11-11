@@ -1946,3 +1946,13 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+## EXEC · 2026-11-11 15:13 UTC · atg-exec
+
+- **DIR-0014 executed (`4404aaa` / `fef6210`)**:
+  - Pulled `origin/main` cleanly (`package-lock.json` unchanged; skipped `npm ci`), verified `npx tsc --noEmit` (pass) and `npm run build` (exit 0), restarted standalone `:3000` (`npm start`) and `node scripts/desk_daemon.mjs`.
+  - Checked `.env` keys: `BINANCE_API_KEY`, `BINANCE_API_SECRET`, `BINANCE_MODE` not present locally; asked user in reply to paste Futures Testnet credentials into `.env`.
+  - Verified endpoints on `127.0.0.1:3000`: `/api/binance/universe` (`200`, `n=200`, `#1 BTC`), `/api/binance/market?sym=ZEC` (`200`, `last=969.55`, `funding=0.004466%`, `oi=$467.6M`), `/api/binance/klines?sym=ZEC&interval=15m&limit=120` (`200`, `120` rows), `/api/binance/account` (`200`, honest `ok:false` unconfigured), `/api/cg/live?sym=ZEC` (`200`, `binance-fapi`), `/api/cg/assets` (`15`), `/api/cg/classic?list=1` (`84`), `/api/health` (`200`).
+  - `python scripts/binance_tier_verify.py`: `19 passed, 4 failed` (`account testnet`, `testnet place LIMIT`, `order visible on account`, `testnet cancelAll` require `.env` Testnet keys).
+  - Chrome DevTools MCP verified `15 perp + 188 binance + 84 classic = 287 instruments`, `BINANCE 200` 200-row grid (noted fallback `LIVE · WS 1s` -> `REST · 5s` with `24H CHG`/`24H RANGE` `–`), `?sym=ZEC` `BinanceView` (`L2 depth20 @100ms · live`, `346/s @trade`, `300 bars`, stats strip, `NOT CONFIGURED`), and `ALL ⌄` palette (`188` items with `#rank` badges); zero console errors on `?sym=ZEC` & palette (`4` HTTP resource errors on `/?sym=BTC`: `favicon.ico` 404 ×2, `/api/cg/micro?sym=BTC` 400 ×2).
+  - Reported `npx eslint` (`14 errors` in `src/components/binance/BinanceView.tsx`) in `desk/outbox/2026-11-11T15-35-00_DIR-0014-binance-top200-tier-rebuild.reply.md`.
