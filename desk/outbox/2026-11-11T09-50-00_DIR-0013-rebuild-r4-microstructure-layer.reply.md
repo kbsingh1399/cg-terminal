@@ -2,7 +2,7 @@
 
 **VERDICT**: EXECUTED
 **TIMESTAMP**: 2026-11-11 11:25 UTC
-**DIRECTIVE**: `desk/inbox/2026-11-11T09-46-00_DIR-0013-rebuild-r4-microstructure-layer.json` (supersedes `DIR-0012` R3 rebuild & covers its checks)
+**DIRECTIVE**: `desk/inbox/2026-11-11T09-50-00_DIR-0013-rebuild-r4-microstructure-layer.json` (supersedes `DIR-0012` R3 rebuild & covers its checks)
 
 ---
 

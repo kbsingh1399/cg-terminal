@@ -1703,4 +1703,4 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - Fixed Windows NTFS case-collision (`lighter-xau-trades.json` duplicate removed in `6067c18`) that had blocked daemon `git pull --rebase` since `09:45 UTC`; merged local rounds `R69–R73` (`R69-LTC-1`, `R73-ETH-1`) onto `origin/main` (`5a116e3`).
 - Executed `npm ci` (841 packages), `npm run build` (TypeScript 10.5s, zero warnings), restarted `npm start` on `:3000` (`/api/health` 200, `rssMb=83`).
 - Verified all `DIR-0013` checks (`XAU`, `EURUSD`, `NATGAS`, `XPT`, `JP225`, `US30`) + `DIR-0012` R3 regression (`perpdepth` `USO`/`SPX500`/`US2000`, `cot` `SPX500`, `cnbc` `USO,XAU`) + Chrome DevTools renders across all views with zero console runtime errors.
-- Reply filed in `desk/outbox/2026-11-11T09-46-00_DIR-0013-rebuild-r4-microstructure-layer.reply.md`; MT5 flat (`$4,649.96`, `0` pos, `0` ord).
+- Reply filed in `desk/outbox/2026-11-11T09-50-00_DIR-0013-rebuild-r4-microstructure-layer.reply.md`; MT5 flat (`$4,649.96`, `0` pos, `0` ord).
