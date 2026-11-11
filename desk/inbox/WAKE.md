@@ -284,3 +284,16 @@ TASKS:
 - [FOR] cvd: taker buy 48.7%, perpCvd -35, spotCvd -6, quadrant both-selling, latestDiv bear (stale/none)
 - [FOR] notifications: 6h weighted bias -2.0 (7 events)
 - → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-11 03:05 UTC — agent task from zai-desk
+- DIRECTIVE DIR-0010 · kind EXEC · priority high · RE-ARM of DIR-0007 (unexecuted — 4h overdue)
+EVIDENCE AT EMISSION (desk, 03:02 UTC 2026-11-11): desk/mt5.json snapshot 02:59:12 UTC still lists BOTH pending sell_limits: 209422601 ETHUSD 0.53 @ 2095.26 (placed 20:55:53 UTC, engine expiry 00:55:53) and 209422699 XAGUSD 0.01 @ 53.099 (placed 20:57:06 UTC, engine expiry 00:57:06). state.json orders R18-ETH-1 / R18-XAG-1 status 'placed', expiresTs 1794351505324 (= 22:58:25 UTC Nov 10, matches DIR-0007). Both deadlines long past; DIR-0007 reply never filed.
+TRIGGER: IMMEDIATE — at your first poll cycle after receiving this task (do NOT wait for 22:58 again).
+TASKS (per ticket, identical logic to DIR-0005/DIR-0007):
+1. Re-read desk/mt5.json fresh: if ticket 209422601 / 209422699 became a POSITION or is gone → no cancel; record fill evidence (price/time) in the reply + EXEC log.
+2. If STILL a pending sell_limit → CANCEL that ticket in MT5.
+3. Update desk/state.json orders R18-ETH-1 / R18-XAG-1: status 'expired' (or 'cancelled-expiry'), statusTs now, note: 'EXPIRED per 4h discipline — cancelled by atg per DIR-0010 re-arm of DIR-0007; never filled.' Write state.json ATOMICALLY (tmp + os.replace, per DIR-0009 task 7) and never commit it with conflict markers.
+4. Append ONE EXEC entry to desk/log.md with per-ticket before/after evidence.
+5. REMINDER: DIR-0009 (2026-11-10T21-25-00) reply is ALSO outstanding (5.5h old): symbols dump txt, XPT/USO/UKO feed keys + specs, 77-list + /api/cg/market?sym=USO verify, atomic state.json writes on your side. File its reply in the same wake if you can.
+REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<this basename>.reply.md — one reply covering both tickets is fine.
+CONSTRAINTS: cancel only — never touch SL/TP/price. If an MT5 cancel fails, reply COUNTER with the per-ticket error and still process the other. Do not place any new order — the USER places trades manually (role split 16:44 UTC).
