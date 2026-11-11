@@ -13,12 +13,16 @@ export { FAPI, CAPI };
 interface CacheEntry {
   at: number;
   data: unknown;
+  /** raw response bytes — powers the byte-budget eviction below */
+  bytes?: number;
 }
 
 /** on globalThis: dev mode can instantiate this module per route bundle —
  *  one shared cache keeps TTL politeness intact (project convention). */
-const gC = globalThis as unknown as { __cgClientCache?: Map<string, CacheEntry>; __cgClientInflight?: Map<string, Promise<unknown>> };
+const gC = globalThis as unknown as { __cgClientCache?: Map<string, CacheEntry>; __cgClientInflight?: Map<string, Promise<unknown>>; __cgClientCacheBytes?: { n: number } };
 const cache = (gC.__cgClientCache ??= new Map());
+/** running total of cached raw bytes — the OOM guard reads this (debug/mem route) */
+const cacheBytes = (gC.__cgClientCacheBytes ??= { n: 0 });
 /** in-flight request coalescing: N concurrent misses for one URL = 1 fetch */
 const inflight = (gC.__cgClientInflight ??= new Map());
 
@@ -28,13 +32,26 @@ const inflight = (gC.__cgClientInflight ??= new Map());
  * eviction keeps the newest entries — they are the ones likely to be re-hit.
  */
 const CACHE_MAX = Math.max(50, Number(process.env.CG_CLIENT_CACHE_MAX ?? 800) || 800);
+/**
+ * BYTE budget (R6 OOM fix): an 800-ENTRY cap alone allowed hundreds of
+ * multi-MB payloads (stopmap ~3-6MB, orderflow ~1-3MB, liqlevels/largeorder
+ * ~0.4MB) to pile up to GBs and get the process kernel-OOM-killed. Entries
+ * are now also evicted oldest-first once the cache holds more than this
+ * many raw bytes (~96MB default).
+ */
+const CACHE_MAX_BYTES = Math.max(8_000_000, Number(process.env.CG_CLIENT_CACHE_BYTES ?? 96_000_000) || 96_000_000);
 
-function cacheSet(url: string, data: unknown) {
-  if (cache.size >= CACHE_MAX) {
+function cacheSet(url: string, data: unknown, rawBytes = 0) {
+  // evict while EITHER cap is exceeded (entries or bytes) — oldest first
+  while (cache.size >= CACHE_MAX || (cacheBytes.n + rawBytes > CACHE_MAX_BYTES && cache.size > 0)) {
     const oldest = cache.keys().next().value;
-    if (oldest !== undefined) cache.delete(oldest);
+    if (oldest === undefined) break;
+    const evicted = cache.get(oldest);
+    cacheBytes.n -= evicted?.bytes ?? 0;
+    cache.delete(oldest);
   }
-  cache.set(url, { at: Date.now(), data });
+  cacheBytes.n += rawBytes;
+  cache.set(url, { at: Date.now(), data, bytes: rawBytes });
 }
 
 async function rawGet(url: string, cacheTs: string): Promise<{ status: number; headers: Record<string, string>; bodyText: string }> {
@@ -84,12 +101,12 @@ async function cgGetInner(pathAndQuery: string, ttlMs: number, host: string): Pr
   const body = parsed as { code?: string; msg?: string; data?: unknown };
   if (body && typeof body === "object" && "data" in body && typeof (body as { data?: unknown }).data !== "string") {
     if (body.code !== "0" && Number(body.code) !== 0) throw new Error(`upstream code ${body.code}: ${body.msg ?? ""}`);
-    cacheSet(url, body.data);
+    cacheSet(url, body.data, resp.bodyText.length);
     return body.data;
   }
   // Encrypted responses carry a string data field
   const data = decryptCgResponse({ status: resp.status, headers: resp.headers, bodyText: resp.bodyText }, cacheTs, url);
-  cacheSet(url, data);
+  cacheSet(url, data, resp.bodyText.length);
   return data;
 }
 
