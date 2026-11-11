@@ -1,5 +1,5 @@
 {
-  "ts": 1794381206291,
+  "ts": 1794381283076,
   "error": null,
   "account": {
     "login": 11808165,
@@ -21,10 +21,10 @@
   "spreads": {
     "ADAUSD": {
       "ok": true,
-      "bid": 0.172,
-      "ask": 0.1758,
+      "bid": 0.1719,
+      "ask": 0.1757,
       "spreadPoints": 38.0,
-      "spreadPct": 2.1852,
+      "spreadPct": 2.1864,
       "tradeAllowed": true,
       "asset": "ADA",
       "perpMid": null,
@@ -50,10 +50,10 @@
     },
     "BTCUSD": {
       "ok": true,
-      "bid": 73601.43,
-      "ask": 73630.7,
-      "spreadPoints": 2927.0,
-      "spreadPct": 0.0398,
+      "bid": 73591.77,
+      "ask": 73615.75,
+      "spreadPoints": 2398.0,
+      "spreadPct": 0.0326,
       "tradeAllowed": true,
       "asset": "BTC",
       "perpMid": null,
@@ -92,8 +92,8 @@
     },
     "ETHUSD": {
       "ok": true,
-      "bid": 2054.6,
-      "ask": 2055.15,
+      "bid": 2054.1,
+      "ask": 2054.65,
       "spreadPoints": 55.0,
       "spreadPct": 0.0268,
       "tradeAllowed": true,
@@ -113,10 +113,10 @@
     },
     "LNKUSD": {
       "ok": true,
-      "bid": 10.23,
-      "ask": 10.288,
-      "spreadPoints": 58.0,
-      "spreadPct": 0.5654,
+      "bid": 10.223,
+      "ask": 10.279,
+      "spreadPoints": 56.0,
+      "spreadPct": 0.5463,
       "tradeAllowed": true,
       "asset": "LINK",
       "perpMid": null,
@@ -134,10 +134,10 @@
     },
     "LTCUSD": {
       "ok": true,
-      "bid": 50.36,
-      "ask": 51.57,
-      "spreadPoints": 121.0,
-      "spreadPct": 2.3742,
+      "bid": 50.33,
+      "ask": 51.53,
+      "spreadPoints": 120.0,
+      "spreadPct": 2.3562,
       "tradeAllowed": true,
       "asset": "LTC",
       "perpMid": null,
@@ -159,8 +159,8 @@
     },
     "UKOUSD": {
       "ok": true,
-      "bid": 94.546,
-      "ask": 94.618,
+      "bid": 94.586,
+      "ask": 94.658,
       "spreadPoints": 72.0,
       "spreadPct": 0.0761,
       "tradeAllowed": true,
@@ -180,10 +180,10 @@
     },
     "USOUSD": {
       "ok": true,
-      "bid": 86.478,
-      "ask": 86.547,
-      "spreadPoints": 69.0,
-      "spreadPct": 0.0798,
+      "bid": 86.529,
+      "ask": 86.597,
+      "spreadPoints": 68.0,
+      "spreadPct": 0.0786,
       "tradeAllowed": true,
       "asset": "USO",
       "perpMid": null,
@@ -201,8 +201,8 @@
     },
     "XAGUSD": {
       "ok": true,
-      "bid": 53.043,
-      "ask": 53.098,
+      "bid": 53.047,
+      "ask": 53.102,
       "spreadPoints": 55.0,
       "spreadPct": 0.1036,
       "tradeAllowed": true,
@@ -222,8 +222,8 @@
     },
     "XAUUSD": {
       "ok": true,
-      "bid": 4062.35,
-      "ask": 4062.73,
+      "bid": 4061.63,
+      "ask": 4062.01,
       "spreadPoints": 38.0,
       "spreadPct": 0.0094,
       "tradeAllowed": true,
@@ -243,14 +243,14 @@
     },
     "XLMUSD": {
       "ok": true,
-      "bid": 0.14409,
-      "ask": 0.14424,
+      "bid": 0.14399,
+      "ask": 0.14414,
       "spreadPoints": 15.0,
-      "spreadPct": 0.104,
+      "spreadPct": 0.1041,
       "tradeAllowed": true,
       "asset": "XLM",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 0.1441,
+      "basisPct": -0.0243,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -264,14 +264,14 @@
     },
     "XMRUSD": {
       "ok": true,
-      "bid": 568.2,
-      "ask": 568.32,
-      "spreadPoints": 12.0,
-      "spreadPct": 0.0211,
+      "bid": 567.58,
+      "ask": 568.3,
+      "spreadPoints": 72.0,
+      "spreadPct": 0.1268,
       "tradeAllowed": true,
       "asset": "XMR",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 567.105,
+      "basisPct": 0.1472,
       "spec": {
         "contractSize": 1.0,
         "volumeMin": 0.01,
@@ -285,14 +285,14 @@
     },
     "XPTUSD": {
       "ok": true,
-      "bid": 1566.19,
-      "ask": 1574.47,
-      "spreadPoints": 828.0,
-      "spreadPct": 0.5273,
+      "bid": 1564.81,
+      "ask": 1573.41,
+      "spreadPoints": 860.0,
+      "spreadPct": 0.5481,
       "tradeAllowed": true,
       "asset": "XPT",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 1571.47,
+      "basisPct": -0.1502,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -306,14 +306,14 @@
     },
     "XRPUSD": {
       "ok": true,
-      "bid": 1.052,
-      "ask": 1.053,
+      "bid": 1.0518,
+      "ask": 1.0528,
       "spreadPoints": 10.0,
       "spreadPct": 0.095,
       "tradeAllowed": true,
       "asset": "XRP",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 1.0528,
+      "basisPct": -0.0475,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -328,22 +328,46 @@
   },
   "positioning": {
     "BTC": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.009283,
+      "oiUsd": 51660355251,
+      "oiDelta1hPct": -0.31,
+      "oiDelta4hPct": 0.09,
+      "oiDelta24hPct": -0.56
     },
     "ETH": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.004864,
+      "oiUsd": 25114565968,
+      "oiDelta1hPct": -0.54,
+      "oiDelta4hPct": 0.27,
+      "oiDelta24hPct": -4.27
     },
     "SOL": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.004587,
+      "oiUsd": 5124480221,
+      "oiDelta1hPct": -1.2,
+      "oiDelta4hPct": -1.36,
+      "oiDelta24hPct": -3.93
     },
     "BNB": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.009068,
+      "oiUsd": 1078545282,
+      "oiDelta1hPct": -0.46,
+      "oiDelta4hPct": -0.36,
+      "oiDelta24hPct": -1.39
     },
     "DOGE": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": -0.000545,
+      "oiUsd": 915000013,
+      "oiDelta1hPct": -1.41,
+      "oiDelta4hPct": -1.19,
+      "oiDelta24hPct": -2.32
     },
     "XAU": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 7.5e-05,
+      "oiUsd": 1516498950,
+      "oiDelta1hPct": -0.48,
+      "oiDelta4hPct": -0.01,
+      "oiDelta24hPct": -1.88
     }
   }
 }
