@@ -91,3 +91,15 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 
 ## 2026-11-11 15:14 UTC — ALERT A10 — outbox-reply
 - BELL: atg replied to directive (2026-11-11T15-35-00_DIR-0014-binance-top200-tier-rebuild.reply.md) — zai-desk to verify on next wake
+
+## 2026-11-11 18:35 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 2)
+- R98-LINK-1 LINK SHORT limit entry 10.499 · stop 10.571 · targets 10.275 / 10.079 · R 3.1 · expires 2026-11-11 22:33 UTC
+- BASIS: levels are PERP prices (perpRef 10.499). Before placing in MT5 read spreads.LNKUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (10.499 vs 10.386), h4 RSI 47.0, day +2.0%
+- [FOR] footprint: bull 17 / bear 21; recent: Absorption/sell[time], Divergence/buy[vol], Absorption/buy[range]
+- [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×3, abs:sell×1, div:buy×1, div:sell×1, sdiv:sell×1, trap:buy×1 — net 5 buy-side vs 3 sell-side
+- [FOR] liquidation: long-liq magnet 10.079 (str 56, ~$3M est, -3.94%) as target
+- [AGAINST] liquidation-hazard: short-liq magnet 10.604 (str 80) sits between entry and stop — sweep risk
+- [FOR] bookWalls: ±5% depth imbalance +0.007 (5m ago +0.029, falling bids); bid $0.01B vs ask $0.01B
+- [FOR] cvd: taker buy 49.0%, perpCvd -23, spotCvd -3, quadrant both-selling, latestDiv bear (recent)
+- → place on LNKUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
