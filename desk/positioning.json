@@ -1,35 +1,47 @@
 {
-  "ts": 1794436027348,
+  "ts": 1794436080257,
   "positioning": {
     "BTC": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.003858,
+      "oiUsd": 51279410212,
+      "oiDelta1hPct": -0.03,
+      "oiDelta4hPct": -1.05,
+      "oiDelta24hPct": -1.13
     },
     "ETH": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.004175,
+      "oiUsd": 25045326668,
+      "oiDelta1hPct": 0.43,
+      "oiDelta4hPct": -0.25,
+      "oiDelta24hPct": 0.5
     },
     "SOL": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.002454,
+      "oiUsd": 5138084360,
+      "oiDelta1hPct": -0.12,
+      "oiDelta4hPct": -1.28,
+      "oiDelta24hPct": -1.21
     },
     "BNB": {
       "fundingPct8h": 0.009293,
-      "oiUsd": 1084762735,
-      "oiDelta1hPct": -0.01,
+      "oiUsd": 1084728429,
+      "oiDelta1hPct": -0.02,
       "oiDelta4hPct": -0.43,
-      "oiDelta24hPct": -0.3
+      "oiDelta24hPct": -0.31
     },
     "DOGE": {
-      "fundingPct8h": 0.003109,
-      "oiUsd": 913579311,
-      "oiDelta1hPct": 0.29,
-      "oiDelta4hPct": -1.33,
-      "oiDelta24hPct": -0.39
+      "fundingPct8h": 0.003069,
+      "oiUsd": 913721300,
+      "oiDelta1hPct": 0.31,
+      "oiDelta4hPct": -1.32,
+      "oiDelta24hPct": -0.37
     },
     "XAU": {
       "fundingPct8h": 0.031317,
-      "oiUsd": 1646632054,
-      "oiDelta1hPct": -0.12,
-      "oiDelta4hPct": 2.55,
-      "oiDelta24hPct": 10.37
+      "oiUsd": 1646054474,
+      "oiDelta1hPct": -0.15,
+      "oiDelta4hPct": 2.51,
+      "oiDelta24hPct": 10.33
     }
   }
 }
