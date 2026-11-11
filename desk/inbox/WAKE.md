@@ -91,14 +91,3 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 
 ## 2026-11-11 15:14 UTC — ALERT A10 — outbox-reply
 - BELL: atg replied to directive (2026-11-11T15-35-00_DIR-0014-binance-top200-tier-rebuild.reply.md) — zai-desk to verify on next wake
-
-## 2026-11-11 15:40 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 1)
-- R88-LTC-1 LTC SHORT limit entry 51.47 · stop 51.69 · targets 50.72 · R 3.4 · expires 2026-11-11 19:38 UTC
-- BASIS: levels are PERP prices (perpRef 51.47). Before placing in MT5 read spreads.LTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
-- [FOR] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (51.47 vs 50.93), h4 RSI 49.6, day +1.5%
-- [FOR] footprint: bull 22 / bear 35; recent: Absorption/buy[time], Trapped shorts/buy[vol], Absorption/sell[range]
-- [FOR] liquidation: long-liq magnet 49.74 (str 73, ~$1M est, -3.24%) as target
-- [AGAINST] liquidation-hazard: short-liq magnet 51.94 (str 100) sits between entry and stop — sweep risk
-- [FOR] bookWalls: ±5% depth imbalance -0.112 (5m ago -0.009, falling bids); bid $0.01B vs ask $0.01B
-- [FOR] cvd: taker buy 48.4%, perpCvd -19, spotCvd -4, quadrant both-selling, latestDiv bear (recent)
-- → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md

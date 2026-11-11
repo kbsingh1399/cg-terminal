@@ -1996,3 +1996,11 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+
+## EXEC · 2026-11-11 15:42 UTC · atg-exec
+
+- **R88-LTC-1 (`LTCUSD` SHORT limit 51.47 perp) — SKIPPED (MT5 spread/basis gate failure)**:
+  - Live MT5 snapshot ([`desk/mt5.json`](file:///c:/Users/SIGMA/Documents/cg-terminal/desk/mt5.json) `15:40:17 UTC`): `LTCUSD` `bid 51.33` / `ask 52.54`, `spreadPoints 121.0`, **`spreadPct 2.3298%` (`$1.21`)**, `perpMid 51.39`, **`basisPct +1.0605%`**.
+  - Live LTC perp (`/api/cg/live?sym=LTC`, `/api/cg/market?sym=LTC` @ `15:41:13 UTC`): `last 51.35` (`bid 51.34 / ask 51.35`), below suggested entry `51.47` and already above day VWAP `+2σ` (`51.363`).
+  - Basis translation (`× 1.010605`): entry `52.02` (SHORT fills at bid), SL `52.24` (triggers on ask), TP `51.26`. With a `$1.21` broker spread (`5.5×` the `$0.22` stop width), filling a SHORT at `52.02` bid puts the live `ask` at `~53.23` — `$0.99` above SL `52.24` — guaranteeing an instant stop-out. Widening SL past the spread collapses R to `~0.52` (below `min_r_multiple 2.0`), alongside the `[AGAINST]` short-liq magnet (`51.94`, str 100) sweep hazard.
+  - No MT5 order placed; account remains flat (`$4,649.96`, `0` positions, `0` pending orders).

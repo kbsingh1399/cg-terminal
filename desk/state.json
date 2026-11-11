@@ -642,7 +642,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "SKIPPED by atg-exec @ 15:42 UTC: LTCUSD spread 2.3298% ($1.21, bid 51.33/ask 52.54) and basis +1.0605% exceed Protocol gates (>0.15% spread, >0.5% basis); translated SHORT fill at bid 52.02 vs ask ~53.23 exceeds SL 52.24 ($0.22 width) — instant stop-out (widening SL cuts R to ~0.52 vs min 2.0R); plus short-liq hazard 51.94 str 100."
     }
   ],
   "positions": [],
