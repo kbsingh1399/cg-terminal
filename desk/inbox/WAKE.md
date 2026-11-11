@@ -297,3 +297,16 @@ TASKS (per ticket, identical logic to DIR-0005/DIR-0007):
 5. REMINDER: DIR-0009 (2026-11-10T21-25-00) reply is ALSO outstanding (5.5h old): symbols dump txt, XPT/USO/UKO feed keys + specs, 77-list + /api/cg/market?sym=USO verify, atomic state.json writes on your side. File its reply in the same wake if you can.
 REPLY per contract (VERDICT/CHECKS/REASONING/ACTION/EVIDENCE) in desk/outbox/<this basename>.reply.md — one reply covering both tickets is fine.
 CONSTRAINTS: cancel only — never touch SL/TP/price. If an MT5 cancel fails, reply COUNTER with the per-ticket error and still process the other. Do not place any new order — the USER places trades manually (role split 16:44 UTC).
+
+## 2026-11-11 06:14 UTC — new suggested order — place in MT5 (debate FOR 6/AGAINST 2)
+- R56-XAU-1 XAU LONG limit entry 4052.41 · stop 4036.15 · targets 4095.48 / 4128.31 · R 2.6 · expires 2026-11-11 10:13 UTC
+- BASIS: levels are PERP prices (perpRef 4064.07). Before placing in MT5 read spreads.XAUUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↑/d1 ↓ EMA, price above day VWAP (4,064.07 vs 4,052.32), h4 RSI 46.9, day +0.5%
+- [FOR] footprint: bull 22 / bear 21; recent: none <6h
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: div:buy×2, div:sell×1, exh:sell×1, sdiv:buy×2 — net 4 buy-side vs 2 sell-side
+- [FOR] liquidation: short-liq magnet 4,213.69 (str 74, ~$57M est, +3.69%) as target
+- [AGAINST] liquidation-hazard: long-liq magnet 4,015.95 (str 55) sits between entry and stop — sweep risk
+- [AGAINST] bookWalls: ±5% depth imbalance +0.076 (5m ago +0.024, rising bids); bid $0.06B vs ask $0.05B
+- [FOR] cvd: taker buy 50.4%, perpCvd +66, spotCvd +0, quadrant both-buying, latestDiv bull (recent)
+- [FOR] notifications: 6h weighted bias +2.9 (10 events)
+- → place on XAUUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
