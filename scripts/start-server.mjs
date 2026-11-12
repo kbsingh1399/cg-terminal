@@ -14,6 +14,14 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
+if (typeof process.loadEnvFile === "function" && existsSync(".env")) {
+  try {
+    process.loadEnvFile(".env");
+  } catch (err) {
+    console.warn("⚠️ Could not load .env file:", err.message);
+  }
+}
+
 const server = join(process.cwd(), ".next", "standalone", "server.js");
 if (!existsSync(server)) {
   console.error("✗ .next/standalone/server.js not found — run `npm run build` first");
