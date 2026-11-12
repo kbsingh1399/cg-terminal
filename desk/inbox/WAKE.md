@@ -216,3 +216,52 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] bookWalls: ±5% depth imbalance +0.061 (5m ago +0.080, falling bids); bid $0.03B vs ask $0.02B
 - [FOR] cvd: taker buy 49.2%, perpCvd -24, spotCvd +1, quadrant spot-bid, latestDiv bear (recent)
 - → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 08:21 UTC — new suggested order — place in MT5 (debate FOR 4/AGAINST 2)
+- R148-BNB-1 BNB SHORT limit entry 674.61 · stop 677.5 · targets 664.11 / 659.79 · R 3.6 · expires 2026-11-12 12:19 UTC
+- BASIS: levels are PERP prices (perpRef 673.75). Before placing in MT5 read spreads.BNBUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (673.75 vs 677.27), h4 RSI 37.2, day -0.9%
+- [AGAINST] footprint: bull 29 / bear 22; recent: Exhaustion/buy[time], Absorption/sell[vol], Exhaustion/buy[range]
+- [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:sell×3, div:buy×2, exh:buy×2 — net 4 buy-side vs 3 sell-side
+- [FOR] liquidation: long-liq magnet 669.87 (str 44, ~$8M est, -0.62%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.066 (5m ago +0.068, falling bids); bid $0.03B vs ask $0.02B
+- [FOR] cvd: taker buy 49.3%, perpCvd -23, spotCvd +1, quadrant spot-bid, latestDiv bear (recent)
+- → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 09:12 UTC — new suggested order — place in MT5 (debate FOR 7/AGAINST 2)
+- R151-BTC-1 BTC SHORT limit entry 73580.9 · stop 73874.4 · targets 72234.2 · R 4.6 · expires 2026-11-12 13:11 UTC
+- BASIS: levels are PERP prices (perpRef 73393.1). Before placing in MT5 read spreads.BTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (73,393.1 vs 73,716.1), h4 RSI 37.4, day -0.8%
+- [FOR] footprint: bull 20 / bear 21; recent: Divergence/buy[vol], Absorption/buy[range]
+- [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, abs:sell×2, div:buy×1, trap:buy×2 — net 5 buy-side vs 2 sell-side
+- [AGAINST] largeOrders: ask wall $25.6M @ 74,614.0 within 2% opposes
+- [FOR] liquidation: long-liq magnet 72,234.2 (str 52, ~$774M est, -1.60%) as target
+- [FOR] stops(BTC heatmap): 24h liq exposure below $457M vs above $538M
+- [FOR] bookWalls: ±5% depth imbalance +0.100 (5m ago +0.106, falling bids); bid $1.29B vs ask $1.05B
+- [FOR] cvd: taker buy 49.6%, perpCvd -1225, spotCvd +270, quadrant spot-bid, latestDiv bear (recent)
+- [FOR] notifications: 6h weighted bias -9.9 (11 events)
+- → place on BTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 09:30 UTC — new suggested order — place in MT5 (debate FOR 4/AGAINST 2)
+- R152-LTC-1 LTC SHORT limit entry 50.01 · stop 50.25 · targets 49.29 / 49.06 · R 2.9 · expires 2026-11-12 13:28 UTC
+- BASIS: levels are PERP prices (perpRef 49.48). Before placing in MT5 read spreads.LTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (49.48 vs 49.84), h4 RSI 36.5, day -1.5%
+- [AGAINST] footprint: bull 43 / bear 35; recent: Bear div/sell[time], Divergence/sell[vol], Exhaustion/buy[range]
+- [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, div:buy×1, div:sell×1, exh:buy×3, sdiv:sell×1, trap:buy×2 — net 8 buy-side vs 2 sell-side
+- [FOR] liquidation: long-liq magnet 49.29 (str 54, ~$1M est, -0.48%) as target
+- [FOR] bookWalls: ±5% depth imbalance -0.034 (5m ago +0.058, falling bids); bid $0.01B vs ask $0.01B
+- [FOR] cvd: taker buy 49.1%, perpCvd -10, spotCvd -3, quadrant both-selling, latestDiv bear (recent)
+- → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 09:48 UTC — new suggested order — place in MT5 (debate FOR 7/AGAINST 1)
+- R153-AVAX-1 AVAX SHORT limit entry 8.663 · stop 8.701 · targets 8.575 / 8.558 · R 2.3 · expires 2026-11-12 13:46 UTC
+- BASIS: levels are PERP prices (perpRef 8.663). Before placing in MT5 read spreads.AVAXUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (8.663 vs 8.590), h4 RSI 57.7, day +1.8%
+- [FOR] footprint: bull 29 / bear 35; recent: Absorption/sell[time], Absorption/sell[vol], Absorption/buy[range]
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:buy×3, abs:sell×4, div:buy×1, div:sell×2, exh:buy×2, exh:sell×1, trap:buy×1, trap:sell×2 — net 7 buy-side vs 9 sell-side
+- [FOR] liquidation: long-liq magnet 8.370 (str 72, ~$3M est, -3.46%) as target
+- [AGAINST] liquidation-hazard: short-liq magnet 8.760 (str 77) sits between entry and stop — sweep risk
+- [FOR] bookWalls: ±5% depth imbalance +0.045 (5m ago +0.031, rising bids); bid $0.01B vs ask $0.01B
+- [FOR] cvd: taker buy 49.6%, perpCvd -17, spotCvd +5, quadrant spot-bid, latestDiv bear (recent)
+- [FOR] notifications: 6h weighted bias -1.0 (6 events)
+- → place on AVAXUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md

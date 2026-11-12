@@ -3161,3 +3161,146 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R148 · 2026-11-12 08:19 UTC · zai-desk
+
+**Market**: BTC 73,568.9 (-0.6%)  ETH 2,048.97 (-0.3%)  SOL 82.92 (-0.4%)  XAU 3,963.22 (-0.6%)  XAG 51.530 (+0.3%)
+**Bias (|score|≥2)**: BTC-4(TREND)  XAG-2(TRANS)  BNB-3(TREND)  XRP-2(TREND)  ADA-2(TRANS)  LINK-2(TRANS)  LTC-2(TREND)  XAU-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R148-BNB-1 BNB SHORT limit 674.61 · stop 677.50 · T1 664.11 · T2 659.79 · R 3.6
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (673.75 vs 677.27), h4 RSI 37.2, day -0.9%
+      [AGAINST] footprint: bull 29 / bear 22; recent: Exhaustion/buy[time], Absorption/sell[vol], Exhaustion/buy[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:sell×3, div:buy×2, exh:buy×2 — net 4 buy-side vs 3 sell-side
+      [FOR    ] liquidation: long-liq magnet 669.87 (str 44, ~$8M est, -0.62%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.066 (5m ago +0.068, falling bids); bid $0.03B vs ask $0.02B
+      [FOR    ] cvd: taker buy 49.3%, perpCvd -23, spotCvd +1, quadrant spot-bid, latestDiv bear (recent)
+
+### Order lifecycle
+- R137-BTC-1 re-debated: FOR 5/AGAINST 2 — stands
+- R144-XRP-2 re-debated: FOR 3/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
+## R149 · 2026-11-12 08:36 UTC · zai-desk
+
+**Market**: BTC 73,503.9 (-0.6%)  ETH 2,047.14 (-0.4%)  SOL 82.84 (-0.5%)  XAU 3,956.46 (-0.7%)  XAG 51.440 (+0.2%)
+**Bias (|score|≥2)**: BTC-4(TREND)  XAG-2(TREND)  DOGE-2(TREND)  BNB-3(TREND)  XRP-2(TREND)  ADA-2(TRANS)  LINK-2(TREND)  LTC-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R137-BTC-1 re-debated: FOR 6/AGAINST 2 — stands
+- R144-XRP-2 re-debated: FOR 3/AGAINST 1 — stands
+- R148-BNB-1 re-debated: FOR 4/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
+## R150 · 2026-11-12 08:53 UTC · zai-desk
+
+**Market**: BTC 73,584.4 (-0.5%)  ETH 2,050.01 (-0.3%)  SOL 82.98 (-0.3%)  XAU 3,942.71 (-1.1%)  XAG 50.990 (-0.7%)
+**Bias (|score|≥2)**: XAG-3(TREND)  BTC-4(TREND)  BNB-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- XAG SHORT confluence -3.4 — REJECTED: opposite liq magnet 51.656 (str 69, ~$18M est) within 1.2R of entry — wait for sweep
+
+### Order lifecycle
+- R137-BTC-1 re-debated: FOR 6/AGAINST 2 — stands
+- R144-XRP-2 re-debated: FOR 3/AGAINST 2 — stands
+- R148-BNB-1 re-debated: FOR 4/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
+## R151 · 2026-11-12 09:11 UTC · zai-desk
+
+**Market**: BTC 73,393.1 (-0.8%)  ETH 2,042.81 (-0.6%)  SOL 82.77 (-0.5%)  XAU 3,940.46 (-1.1%)  XAG 51.110 (-0.5%)
+**Bias (|score|≥2)**: BTC-6(TREND)  XAG-3(TREND)  BNB-4(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R151-BTC-1 BTC SHORT limit 73,580.9 · stop 73,874.4 · T1 72,234.2 · R 4.6
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (73,393.1 vs 73,716.1), h4 RSI 37.4, day -0.8%
+      [FOR    ] footprint: bull 20 / bear 21; recent: Divergence/buy[vol], Absorption/buy[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, abs:sell×2, div:buy×1, trap:buy×2 — net 5 buy-side vs 2 sell-side
+      [AGAINST] largeOrders: ask wall $25.6M @ 74,614.0 within 2% opposes
+      [FOR    ] liquidation: long-liq magnet 72,234.2 (str 52, ~$774M est, -1.60%) as target
+      [FOR    ] stops(BTC heatmap): 24h liq exposure below $457M vs above $538M
+      [FOR    ] bookWalls: ±5% depth imbalance +0.100 (5m ago +0.106, falling bids); bid $1.29B vs ask $1.05B
+      [FOR    ] cvd: taker buy 49.6%, perpCvd -1225, spotCvd +270, quadrant spot-bid, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -9.9 (11 events)
+- XAG SHORT confluence -3.4 — REJECTED: opposite liq magnet 51.652 (str 71, ~$22M est) within 1.2R of entry — wait for sweep
+
+### Order lifecycle
+- R137-BTC-1 EXPIRED (unfilled past expiry)
+- R144-XRP-2 re-debated: FOR 3/AGAINST 2 — stands
+- R148-BNB-1 re-debated: FOR 5/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
+## R152 · 2026-11-12 09:28 UTC · zai-desk
+
+**Market**: BTC 73,395.8 (-0.8%)  ETH 2,044.31 (-0.5%)  SOL 82.94 (-0.3%)  XAU 3,944.52 (-1.0%)  XAG 51.220 (-0.3%)
+**Bias (|score|≥2)**: BTC-6(TREND)  XAG-3(TREND)  DOGE-3(TREND)  BNB-4(TREND)  LTC-3(TREND)  LINK-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R152-LTC-1 LTC SHORT limit 50.01 · stop 50.25 · T1 49.29 · T2 49.06 · R 2.9
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (49.48 vs 49.84), h4 RSI 36.5, day -1.5%
+      [AGAINST] footprint: bull 43 / bear 35; recent: Bear div/sell[time], Divergence/sell[vol], Exhaustion/buy[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, div:buy×1, div:sell×1, exh:buy×3, sdiv:sell×1, trap:buy×2 — net 8 buy-side vs 2 sell-side
+      [FOR    ] liquidation: long-liq magnet 49.29 (str 54, ~$1M est, -0.48%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.034 (5m ago +0.058, falling bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 49.1%, perpCvd -10, spotCvd -3, quadrant both-selling, latestDiv bear (recent)
+
+### Order lifecycle
+- R144-XRP-2 re-debated: FOR 3/AGAINST 2 — stands
+- R148-BNB-1 re-debated: FOR 5/AGAINST 2 — stands
+- R151-BTC-1 re-debated: FOR 6/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
+## R153 · 2026-11-12 09:46 UTC · zai-desk
+
+**Market**: BTC 73,368.8 (-0.8%)  ETH 2,044.41 (-0.5%)  SOL 83.00 (-0.3%)  XAU 3,949.73 (-0.9%)  XAG 51.280 (-0.2%)
+**Bias (|score|≥2)**: BTC-6(TREND)  DOGE-3(TRANS)  BNB-4(TREND)  LTC-4(TREND)  AVAX-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R153-AVAX-1 AVAX SHORT limit 8.663 · stop 8.701 · T1 8.575 · T2 8.558 · R 2.3
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (8.663 vs 8.590), h4 RSI 57.7, day +1.8%
+      [FOR    ] footprint: bull 29 / bear 35; recent: Absorption/sell[time], Absorption/sell[vol], Absorption/buy[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×3, abs:sell×4, div:buy×1, div:sell×2, exh:buy×2, exh:sell×1, trap:buy×1, trap:sell×2 — net 7 buy-side vs 9 sell-side
+      [FOR    ] liquidation: long-liq magnet 8.370 (str 72, ~$3M est, -3.46%) as target
+      [AGAINST] liquidation-hazard: short-liq magnet 8.760 (str 77) sits between entry and stop — sweep risk
+      [FOR    ] bookWalls: ±5% depth imbalance +0.045 (5m ago +0.031, rising bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 49.6%, perpCvd -17, spotCvd +5, quadrant spot-bid, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -1.0 (6 events)
+
+### Order lifecycle
+- R144-XRP-2 WITHDRAWN (confluence flipped to +1.3)
+- R148-BNB-1 re-debated: FOR 6/AGAINST 1 — stands
+- R151-BTC-1 re-debated: FOR 6/AGAINST 1 — stands
+- R152-LTC-1 re-debated: FOR 5/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
+## R154 · 2026-11-12 10:04 UTC · zai-desk
+
+**Market**: BTC 73,458.0 (-0.7%)  ETH 2,046.45 (-0.4%)  SOL 83.17 (-0.1%)  XAU 3,952.40 (-0.8%)  XAG 51.260 (-0.2%)
+**Bias (|score|≥2)**: XAG-2(TREND)  LTC-4(TREND)  BTC-4(TREND)  BNB-4(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- none meeting the gates this round
+
+### Order lifecycle
+- R148-BNB-1 re-debated: FOR 6/AGAINST 1 — stands
+- R151-BTC-1 re-debated: FOR 5/AGAINST 2 — stands
+- R152-LTC-1 re-debated: FOR 4/AGAINST 2 — stands
+- R153-AVAX-1 re-debated: FOR 5/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
