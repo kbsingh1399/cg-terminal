@@ -24,11 +24,18 @@ export const dynamic = "force-dynamic";
  *   c) OI x price 4-quadrant map from the same OI chart (hourly dateList /
  *      priceList / per-venue OI series) at now-1h/4h/24h.
  *   d) Spot-perp basis (Binance spot vs perp last price) and the
- *      BTC/ETH/SOL Coinbase USD premium.
+ *      BTC/ETH/SOL Coinbase premium: coinbasePremiumBps =
+ *      (Coinbase USD − Binance USDT) / Binance USDT × 10⁴ — positive means
+ *      Coinbase spot leads higher (US institutional bid).
  *
- * Freshness telemetry reports the OLDEST contributing payload timestamp;
- * Coinglass payloads carry no data timestamp, so those are stamped with the
- * moment WE received them (never later than truth) via the local TTL cache.
+ * Freshness telemetry is SPLIT (2026-11-12): fastDataAt/fastAgeMs cover the
+ * real-time legs (ticker/spot/coinbase basis) and slowDataAt/slowAgeMs the
+ * bucket-stamped legs (15m/1h/4h L/S rows, hourly OI chart, funding home);
+ * the headline dataAt/ageMs/stale follow the fast legs when any succeeded so
+ * healthy 1-second basis data is never masked as stale by an hourly bucket
+ * timestamp. Coinglass payloads carry no data timestamp, so those are stamped
+ * with the moment WE received them (never later than truth) via the local TTL
+ * cache.
  */
 
 // ───────────────────────── local TTL cache + coalescing ─────────────────────
@@ -192,6 +199,12 @@ interface Telemetry {
   ageMs: number | null;
   stale: boolean;
   source: string;
+  /** real-time legs (fapi ticker / Binance spot / Coinbase basis) — null when every fast leg failed */
+  fastDataAt: number | null;
+  fastAgeMs: number | null;
+  /** bucket-stamped legs (15m/1h/4h L/S rows, hourly OI chart, funding home) */
+  slowDataAt: number | null;
+  slowAgeMs: number | null;
 }
 
 const COINBASE_SYMS = new Set(["BTC", "ETH", "SOL"]);
@@ -206,14 +219,28 @@ const LS_ENDPOINTS = {
 } as const;
 type LsKey = keyof typeof LS_ENDPOINTS;
 
-function telemetryOf(stamps: number[], source: string): Telemetry {
-  const dataAt = stamps.length > 0 ? Math.min(...stamps) : null;
-  const ageMs = dataAt != null ? Date.now() - dataAt : null;
-  // Binance /futures/data rows are bucket-stamped (15m/1h/4h): the 4h taker
-  // row's dataAs-of is its bucket END, so a healthy response can legitimately
-  // be ~1h old. The stale flag therefore uses the bucket cadence (75 min),
-  // not a flat 60s — dataAt/ageMs stay exact and honest either way.
-  return { dataAt, ageMs, stale: ageMs != null ? ageMs > 75 * 60_000 : false, source };
+/**
+ * Freshness split (2026-11-12 fix): the old single min() over every stamp let
+ * the OI chart's hourly bucket stamp (legitimately up to 60 min old) mask a
+ * perfectly healthy 1-second spot/ticker/basis leg as "43 minutes stale".
+ * The two families are now reported separately and the headline dataAt/ageMs
+ * follows the FAST legs whenever any succeeded (the slow legs stay visible in
+ * slowDataAt/slowAgeMs). `stale` judges liveness: fast legs should be seconds
+ * old — 10 min quiet means the route's real-time core is dead; when only
+ * bucket legs remain, the 4h row's data-as-of is its bucket end so healthy
+ * age fits inside the 75-min bucket cadence.
+ */
+function telemetryOf(fast: number[], slow: number[], source: string): Telemetry {
+  const fastDataAt = fast.length > 0 ? Math.min(...fast) : null;
+  const slowDataAt = slow.length > 0 ? Math.min(...slow) : null;
+  const dataAt = fastDataAt ?? slowDataAt;
+  const now = Date.now();
+  const ageMs = dataAt != null ? now - dataAt : null;
+  const fastAgeMs = fastDataAt != null ? now - fastDataAt : null;
+  const slowAgeMs = slowDataAt != null ? now - slowDataAt : null;
+  const stale =
+    fastAgeMs != null ? fastAgeMs > 10 * 60_000 : slowAgeMs != null ? slowAgeMs > 75 * 60_000 : true;
+  return { dataAt, ageMs, stale, fastDataAt, fastAgeMs, slowDataAt, slowAgeMs, source };
 }
 
 function classifyQuadrant(oiUp: boolean, pxUp: boolean): Quadrant {
@@ -283,7 +310,7 @@ export async function GET(req: NextRequest) {
       supported: false,
       sym,
       reason: `classic instrument ${sym} has no perpetual positioning data`,
-      ...telemetryOf([], "none"),
+      ...telemetryOf([], [], "none"),
     });
   }
 
@@ -638,8 +665,13 @@ export async function GET(req: NextRequest) {
     if (!COINBASE_SYMS.has(cgSym)) {
       basis.coinbaseReason = "Coinbase premium tracked for BTC/ETH/SOL only";
     } else if (coinbase && spot) {
+      // Coinbase Premium Index = (Coinbase USD − Binance USDT) / Binance USDT × 10⁴
+      // (2026-11-12 sign fix: the previous (Binance − Coinbase)/Coinbase form was
+      // INVERTED — it read "Coinbase discount" whenever Coinbase led higher).
+      // POSITIVE ⇒ Coinbase spot leads higher (US institutional bid);
+      // NEGATIVE ⇒ Coinbase trades at a discount (US supply / risk-off flow).
       basis.coinbasePremiumBps = Number(
-        (((spot.data.price - coinbase.data.price) / coinbase.data.price) * 10_000).toFixed(2)
+        (((coinbase.data.price - spot.data.price) / spot.data.price) * 10_000).toFixed(2)
       );
     } else {
       basis.coinbaseReason = coinbase
@@ -649,16 +681,24 @@ export async function GET(req: NextRequest) {
     notes.push(
       "fundingImpliedAprPct is the funding-implied carry (oiWeightedRate8h annualized) — NOT a basis APR"
     );
+    if (basis.coinbasePremiumBps != null) {
+      notes.push(
+        `coinbasePremiumBps = (Coinbase ${cgSym}-USD − Binance ${spotPair ?? pair}) / Binance × 10⁴ = ${basis.coinbasePremiumBps > 0 ? "+" : ""}${basis.coinbasePremiumBps} bps — positive = Coinbase leading higher (US institutional bid)`
+      );
+    }
 
-    // ── freshness telemetry: oldest contributing payload ──
+    // ── freshness telemetry: fast legs (ticker/spot/coinbase — the basis core)
+    //    vs slow legs (bucket-stamped L/S rows + hourly OI chart + funding home) ──
 
-    const stamps: number[] = [];
-    for (const p of Object.values(ls)) if (p) stamps.push(p.dataAt);
-    if (ticker) stamps.push(ticker.dataAt);
-    if (fundingHome) stamps.push(fundingHome.dataAt);
-    if (oiChart) stamps.push(oiChart.dataAt);
-    if (spot) stamps.push(spot.dataAt);
-    if (coinbase) stamps.push(coinbase.dataAt);
+    const fastStamps: number[] = [];
+    if (ticker) fastStamps.push(ticker.dataAt);
+    if (spot) fastStamps.push(spot.dataAt);
+    if (coinbase) fastStamps.push(coinbase.dataAt);
+
+    const slowStamps: number[] = [];
+    for (const p of Object.values(ls)) if (p) slowStamps.push(p.dataAt);
+    if (fundingHome) slowStamps.push(fundingHome.dataAt);
+    if (oiChart) slowStamps.push(oiChart.dataAt);
 
     const srcParts: string[] = [];
     if (Object.values(ls).some((x) => x)) srcParts.push("binance-fapi/ls-ratios");
@@ -679,7 +719,11 @@ export async function GET(req: NextRequest) {
       oiQuadrant,
       basis,
       notes,
-      ...telemetryOf(stamps, srcParts.length > 0 ? srcParts.join("+") : "none"),
+      ...telemetryOf(
+        fastStamps,
+        slowStamps,
+        srcParts.length > 0 ? srcParts.join("+") : "none"
+      ),
     });
   } catch (e) {
     return NextResponse.json(

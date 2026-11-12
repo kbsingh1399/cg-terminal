@@ -172,24 +172,62 @@ export function leadInstr(sym: string): string {
  * plain TradFi names works on Binance/OKX/Bybit keys, Gate/Bitget/tradeXYZ/
  * MEXC/Lighter → 20001).
  *
- * Legacy metals (XPT) keep the 3-venue USDT set (no HL market). */
+ * Legacy metals (XPT) keep the 3-venue USDT set (no HL market).
+ *
+ * 1000-multiples (1000SHIB/1000PEPE) and VET need per-venue key forms and
+ * exclusions — see FP_KEY_FORMS / NO_*_PERP below (live-verified 2026-11-12
+ * against the real /api/orderFlow + /api/v2/kline endpoints). */
+/** Per-venue instrument KEY FORMS for 1000-multiple assets (live-verified
+ *  2026-11-12 against Coinglass /api/orderFlow + /api/v2/kline — see
+ *  scripts/probe-fp-1000x.ts raw output):
+ *    OKX         lists the PLAIN base          SHIB-USDT-SWAP / PEPE-USDT-SWAP
+ *    Bybit       PEPE keeps the 1000-prefix    1000PEPEUSDT, but SHIB renames
+ *                to the suffix form           SHIB1000USDT
+ *    Hyperliquid uses the k-form              kSHIB-USD / kPEPE-USD
+ *  Without these forms every non-Binance fp leg 40001s and the aggregate
+ *  silently degrades to binance-only (exactly the 1000SHIB missing[] bug). */
+const FP_KEY_FORMS: Record<string, { okx?: string; bybit?: string; hl?: string }> = {
+  "1000SHIB": { okx: "SHIB-USDT-SWAP", bybit: "SHIB1000USDT", hl: "kSHIB-USD" },
+  "1000PEPE": { okx: "PEPE-USDT-SWAP", bybit: "1000PEPEUSDT", hl: "kPEPE-USD" },
+};
+
+/** Venue EXCLUSIONS for symbols with genuinely dead keys (live-verified
+ *  40001, scripts/probe-fp-1000x.ts + probe-fp-1000x-liq.ts):
+ *  XMR has no OKX USDT-SWAP; VET has no OKX swap, no Hyperliquid market and
+ *  no Bitget liq-levels (Binance+Bybit only). Constructing dead keys only
+ *  burns upstream 40001s on every load — drop them (the aggregate stays
+ *  honest through each route's missing[] reporting). */
+const NO_OKX_PERP = new Set(["XMR", "VET"]);
+const NO_HL_MARKET = new Set(["VET"]);
+const NO_BITGET_LIQ = new Set(["VET", "1000SHIB", "1000PEPE"]);
+
+/** liquidationLevels/v2 key forms + dead legs (live-verified 2026-11-12,
+ *  scripts/probe-fp-1000x-liq.ts): the endpoint's venue coverage differs from
+ *  orderFlow — kPEPE orderFlow works but kPEPE liq-levels 40001s
+ *  ("price/OI row unavailable"), Bitget carries no SHIB/PEPE levels at all. */
+const LIQ_KEY_FORMS: Record<string, { okx?: string; bybit?: string; hl?: string; dropHl?: boolean }> = {
+  "1000SHIB": { okx: "SHIB-USDT-SWAP", bybit: "SHIB1000USDT", hl: "kSHIB-USD" },
+  "1000PEPE": { okx: "PEPE-USDT-SWAP", dropHl: true },
+};
+
 export function fpVenues(sym: string): { id: string; key: string; usd: boolean }[] {
   const s = resolveCgSym(sym);
   const a = assetOf(s);
+  const kf = FP_KEY_FORMS[s];
   const venues: { id: string; key: string; usd: boolean }[] = [
     { id: "binance-perp", key: `Binance_${s}USDT`, usd: false },
-    { id: "okx-perp", key: `OKX_${s}-USDT-SWAP`, usd: false },
-    { id: "bybit-perp", key: `Bybit_${s}USDT`, usd: false },
+    { id: "okx-perp", key: `OKX_${kf?.okx ?? `${s}-USDT-SWAP`}`, usd: false },
+    { id: "bybit-perp", key: `Bybit_${kf?.bybit ?? `${s}USDT`}`, usd: false },
   ];
-  // XMR has NO OKX-USDT-SWAP (verified live, comment in the registry above):
-  // constructing the dead key only burns an upstream 20001 per load — drop it
-  // (the aggregate stays honest through the route's missing[] reporting).
-  if (s === "XMR") venues.splice(1, 1);
+  // XMR/VET have NO OKX-USDT-SWAP (live-verified 40001): constructing the
+  // dead key only burns an upstream error per load — drop it (the aggregate
+  // stays honest through the route's missing[] reporting).
+  if (NO_OKX_PERP.has(s)) venues.splice(1, 1);
   // Hyperliquid joins the aggregate for every crypto perp (curated or legacy
   // registry) — exactly Coinglass's agg-perp membership — but never for
-  // curated TradFi or registry metals (no HL markets there).
-  if (!isCuratedTradfi(s) && (!a || a.hl)) {
-    venues.push({ id: "hyperliquid-perp", key: `Hyperliquid_${s}-USD`, usd: true });
+  // curated TradFi, registry metals, or VET (no HL market, verified).
+  if (!isCuratedTradfi(s) && !NO_HL_MARKET.has(s) && (!a || a.hl)) {
+    venues.push({ id: "hyperliquid-perp", key: `Hyperliquid_${kf?.hl ?? `${s}-USD`}`, usd: true });
   }
   const lead = a?.leadKey(s);
   const li = venues.findIndex((v) => v.key === lead);
@@ -206,6 +244,8 @@ export function fpVenues(sym: string): { id: string; key: string; usd: boolean }
  * CURATED crypto keeps the candidate set — a venue without the pair returns
  * no payload and shows 0 rows in perVenue, never breaking the aggregate
  * (live: Bitget/Hyperliquid miss on 1000PEPE, Binance/Bybit carry it).
+ * 1000-multiples use LIQ_KEY_FORMS (the endpoint's venue coverage differs
+ * from orderFlow — verified 2026-11-12) and VET drops its dead legs.
  * Legacy metals (XPT) keep their curated 3. */
 export function liqVenues(sym: string): { name: string; key: string }[] {
   const s = resolveCgSym(sym);
@@ -220,13 +260,17 @@ export function liqVenues(sym: string): { name: string; key: string }[] {
   }
   const a = assetOf(s);
   const metal = a?.kind === "metal";
+  const kf = LIQ_KEY_FORMS[s];
   const v = [
     { name: "Binance", key: `Binance_${s}USDT` },
-    { name: "OKX", key: `OKX_${s}-USDT-SWAP` },
-    { name: "Bybit", key: `Bybit_${s}USDT` },
+    { name: "OKX", key: `OKX_${kf?.okx ?? `${s}-USDT-SWAP`}` },
+    { name: "Bybit", key: `Bybit_${kf?.bybit ?? `${s}USDT`}` },
   ];
-  if (!metal) v.push({ name: "Bitget", key: `Bitget_${s}USDT_UMCBL` });
-  if (!a || a.hl) v.push({ name: "Hyperliquid", key: `Hyperliquid_${s}-USD` });
+  if (NO_OKX_PERP.has(s)) v.splice(1, 1); // XMR/VET: no OKX USDT-SWAP (verified)
+  if (!metal && !NO_BITGET_LIQ.has(s)) v.push({ name: "Bitget", key: `Bitget_${s}USDT_UMCBL` });
+  if ((!a || a.hl) && !NO_HL_MARKET.has(s) && !kf?.dropHl) {
+    v.push({ name: "Hyperliquid", key: `Hyperliquid_${kf?.hl ?? `${s}-USD`}` });
+  }
   return v;
 }
 

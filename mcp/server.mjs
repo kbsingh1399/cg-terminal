@@ -560,20 +560,29 @@ async function toolAnalyzeSetup(args) {
 }
 
 async function toolAlphaScreener(args) {
-  const sector = args?.sector ? String(args.sector).toLowerCase() : null;
+  const kindFilter = args?.kind ? String(args.kind).toLowerCase() : null; // crypto-perp | tradfi-perp | classic
+  const gradeMin = args?.gradeMin ? String(args.gradeMin).toUpperCase() : null; // A | A+
   const d = await api(`/api/cg/screener`);
   if (!d?.ok) throw new Error(d?.error || "screener failed");
-  let rows = Array.isArray(d.crypto) ? d.crypto : [];
-  if (sector) rows = rows.filter((r) => String(r.sector || "").toLowerCase() === sector);
-  rows = [...rows].sort((a, b) => Math.abs(b.confluence?.score ?? 0) - Math.abs(a.confluence?.score ?? 0));
+  let rows = Array.isArray(d.rows) ? d.rows : [];
+  if (kindFilter) rows = rows.filter((r) => r.kind === kindFilter);
+  if (gradeMin) {
+    const rank = { "A+": 4, A: 3, B: 2, SKIP: 1 };
+    const min = rank[gradeMin] ?? 3;
+    rows = rows.filter((r) => (rank[r.m1m2?.grade] ?? 0) >= min);
+  }
+  rows = [...rows].sort((a, b) => (b.m1m2?.evR ?? -Infinity) - (a.m1m2?.evR ?? -Infinity));
+  const radar = d.radar ?? {};
   const lines = [
-    `Alpha Screener — ${rows.length} Tier-1 assets (${d.warmCount}/${d.totalCount} warmed) · TradFi core: ${(d.tradfi || []).length}`,
+    `Alpha Screener — ${rows.length}/${d.totalCount} Curated-61 rows (${d.warmCount} warm) · radar ${radar.statesCached ?? 0}/${radar.universeSize ?? 61} swept (${radar.fresh5m ?? 0} fresh <5m, ${radar.errors ?? 0} err) · source: ${d.source}`,
     ...rows.slice(0, 20).map((r) => {
-      const conf = r.confluence ? `${r.confluence.bias} ${r.confluence.score} (${r.confluence.readiness})` : "cold";
+      const m = r.m1m2;
+      const model = m ? `${m.activeModel} ${m.grade} ${m.direction}${m.evR != null ? ` EV${m.evR >= 0 ? "+" : ""}${m.evR}R` : ""}` : "warming";
       const chg = r.chg24hPct != null ? `${r.chg24hPct >= 0 ? "+" : ""}${r.chg24hPct}%` : "–";
       const vw = r.vwapZ != null ? `z=${r.vwapZ}` : "";
       const mag = r.liqMagnet ? `mag:${r.liqMagnet.side}@${r.liqMagnet.distPct}%` : "";
-      return `${r.sym.padEnd(9)} px=${r.price ?? "–"} (${chg}) · 4h=${r.ema4h ?? "–"} · ${conf} ${vw} ${mag}`.trim();
+      const liq5 = r.liq5m ? `liq5m=$${Math.round((r.liq5m.usd ?? 0) / 1000)}k(${r.liq5m.side[0]})` : "";
+      return `${r.sym.padEnd(9)} px=${r.price ?? "–"} (${chg}) · ${model} · ${vw} ${mag} ${liq5}`.trim();
     }),
   ];
   return { text: lines.join("\n"), data: d };

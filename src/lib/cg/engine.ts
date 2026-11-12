@@ -29,6 +29,7 @@ import { curatedPerps } from "@/lib/universe/curated";
 import { startScanner } from "./scan";
 import { ensurePaperBook } from "./paperbook";
 import { ensureLiqCollector } from "./liq-live";
+import { ensureNarrativeRadar } from "./narrative";
 import { parseLiqLevelsPayload, type RawLiqLevel } from "./liq-model";
 
 const STEP_MS = 900_000; // m15 master step
@@ -594,6 +595,10 @@ export function ensureEngine(): { started: boolean; startedAt: number; bootDone:
   // live liquidation collector — Binance + Bybit + OKX prints, per-asset
   // journals (data/cg-liq) — booted here so it runs even before first API hit
   ensureLiqCollector();
+  // narrative radar — progressive M1/M2 verdict sweep over the Curated-61
+  // (12 s/asset ≈ 12 min cycle) powering the screener's live radar columns;
+  // it also arms Virtual Book tickets (the paperbook sweep defers to it)
+  ensureNarrativeRadar();
   // never let an unexpected rejection kill the host process
   process.on?.("unhandledRejection", (r) => console.warn("[cg-engine] unhandled rejection:", r));
   return engine;

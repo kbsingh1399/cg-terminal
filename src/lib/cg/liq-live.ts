@@ -191,6 +191,12 @@ interface CollectorState {
   tape: LiqPrint[];
   /** recent dedupe keys (venue|asset|side|t|px|qty) */
   seen: Map<string, number>;
+  /** in-memory per-asset journal row counts (compaction trigger — the
+   *  2026-11-12 cascade fix: a high-throughput cascade must NEVER hit the
+   *  disk with readFileSync+split per event, it would block the event loop
+   * and drop live frames; counts are seeded once during hydrate() and then
+   * maintained by ingest() in O(1)) */
+  journalCounts: Map<string, number>;
   /** bybit symbol map (asset → resolved symbol) + okx ctVal (instId → ctVal×ctMult) */
   bybitSymbols: Map<string, string>;
   okxCtVal: Map<string, number>;
@@ -234,6 +240,7 @@ function col(): G {
       rings: new Map(),
       tape: [],
       seen: new Map(),
+      journalCounts: new Map(),
       bybitSymbols: new Map(),
       okxCtVal: new Map(),
       universeEvents: 0,
@@ -276,23 +283,26 @@ function ingest(p: LiqPrint) {
   if (S.tape.length > 1_000) S.tape.length = 1_000;
 
   // per-asset append-only journal (bounded compaction, same convention as
-  // cg-series: rewrite atomically past 1.2× cap, keep the newest tail)
+  // cg-series: rewrite atomically past 1.2× cap, keep the newest tail).
+  // ROW COUNTING (2026-11-12 cascade fix): the old per-event
+  // readFileSync(f).split("\n") counter re-read the whole journal on EVERY
+  // print — during a liquidation cascade (hundreds of prints/minute across
+  // venues) that synchronous disk I/O blocked the event loop and dropped
+  // live frames. The count now lives in memory (seeded by hydrate(), +1 per
+  // append, reset to the ring tail on compaction) — ingest() is O(1) sync.
   try {
     fs.mkdirSync(CG_LIQ_DIR, { recursive: true });
     const f = journalFile(p.asset);
-    let rows = 1;
-    try {
-      rows = 1 + fs.readFileSync(f, "utf8").split("\n").filter((l) => l.trim()).length;
-    } catch {
-      /* first row */
-    }
+    const rows = (S.journalCounts.get(p.asset) ?? 0) + 1;
     if (rows > JOURNAL_MAX_ROWS * 1.2) {
       const ringText = ring.map((r) => JSON.stringify(r)).join("\n") + "\n";
       const tmp = `${f}.tmp`;
       fs.writeFileSync(tmp, ringText, "utf8");
       fs.renameSync(tmp, f);
+      S.journalCounts.set(p.asset, ring.length);
     } else {
       fs.appendFileSync(f, `${JSON.stringify(p)}\n`, "utf8");
+      S.journalCounts.set(p.asset, rows);
     }
   } catch (e) {
     if (!S.writeWarned) {
@@ -328,8 +338,12 @@ async function hydrate() {
       const lines = text.split("\n");
       const start = Math.max(0, lines.length - JOURNAL_MAX_ROWS);
       const ring: LiqPrint[] = [];
-      for (const line of lines.slice(start)) {
+      let fileRows = 0;
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
         if (!line.trim()) continue;
+        fileRows++; // true on-disk row count (a journal can sit at up to 1.2× cap between compactions)
+        if (i < start) continue; // older than the hydrate slice — counted, not replayed
         try {
           const p = JSON.parse(line) as LiqPrint;
           if (p.t >= cutoff) ring.push(p);
@@ -337,6 +351,11 @@ async function hydrate() {
           /* skip corrupt line */
         }
       }
+      // seed the in-memory journal row counter (ingest()'s compaction
+      // trigger). Events ingested before hydrate finished are already in the
+      // file and in the count (single-threaded: read+set cannot interleave
+      // with ingest).
+      S.journalCounts.set(asset, fileRows);
       if (ring.length) {
         ring.sort((a, b) => a.t - b.t);
         S.rings.set(asset, ring.length > RING_MAX ? ring.slice(-RING_MAX) : ring);
@@ -603,7 +622,13 @@ function resolveBybitAsset(pair: string): string | undefined {
   return undefined;
 }
 
-/** okx instId → asset (1000-forms + plain forms) */
+/** okx instId → asset (1000-forms + plain forms + k-unit plain form).
+ *  OKX lists k-unit coins under the PLAIN base with a large ctVal
+ *  (verified live: SHIB-USDT-SWAP ctVal = 1,000,000 SHIB · PEPE-USDT-SWAP
+ *  ctVal = 10,000,000 PEPE — sz is in contracts, the notional math
+ *  sz × ctVal × bkPx is exact), while the terminal asset is the 1000-form
+ *  (1000SHIB/1000PEPE). Without the `1000${base}` fallback those prints
+ *  were silently dropped. */
 function resolveOkxAsset(instId: string): string | undefined {
   if (!instId.endsWith("-USDT-SWAP")) return undefined;
   const base = instId.slice(0, -"-USDT-SWAP".length);
@@ -614,6 +639,8 @@ function resolveOkxAsset(instId: string): string | undefined {
     const hit = TERMINAL_PERP_ASSETS.find((a) => a.sym === stripped);
     if (hit) return hit.sym;
   }
+  const kForm = TERMINAL_PERP_ASSETS.find((a) => a.sym === `1000${base}`);
+  if (kForm) return kForm.sym;
   return undefined;
 }
 
@@ -697,6 +724,77 @@ function winStats(ring: LiqPrint[], sinceMs: number): LiqStatsWin {
       if (p.usd > (out.largestUsd ?? 0)) out.largestUsd = p.usd;
     }
     if (out.lastAt == null) out.lastAt = p.t;
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// cascade read model — trailing-5-minute rolling windows for the
+// notification scanner (pure in-memory ring walk: zero upstream quota)
+// ---------------------------------------------------------------------------
+
+export interface LiqWin5m {
+  sym: string;
+  /** trailing-5m USD notional (prints with computable USD only) */
+  usd: number;
+  /** prints whose venue notional was NOT computable (OKX ctVal cold) — the true USD is ≥ usd */
+  unknownUsdPrints: number;
+  count: number;
+  longUsd: number;
+  shortUsd: number;
+  largestUsd: number | null;
+  largestPrice: number | null;
+  /** latest print's execution price (the cascade-time price) */
+  lastPrice: number | null;
+  lastAt: number | null;
+  /** venue → trailing-5m USD */
+  venueUsd: Partial<Record<LiqVenue, number>>;
+}
+
+/** per-asset trailing-5m liquidation stats. Rings are t-ascending, so the
+ *  tail walk stops at the window edge — O(prints inside the window). */
+export function liqWindows5m(nowMs = Date.now()): LiqWin5m[] {
+  const S = col();
+  const cutoff = nowMs - 5 * 60_000;
+  const out: LiqWin5m[] = [];
+  for (const { sym } of TERMINAL_PERP_ASSETS) {
+    const ring = S.rings.get(sym);
+    if (!ring || !ring.length) continue;
+    const w: LiqWin5m = {
+      sym,
+      usd: 0,
+      unknownUsdPrints: 0,
+      count: 0,
+      longUsd: 0,
+      shortUsd: 0,
+      largestUsd: null,
+      largestPrice: null,
+      lastPrice: null,
+      lastAt: null,
+      venueUsd: {},
+    };
+    for (let i = ring.length - 1; i >= 0; i--) {
+      const p = ring[i];
+      if (p.t < cutoff) break;
+      w.count++;
+      if (p.usd != null) {
+        w.usd += p.usd;
+        if (p.side === "long") w.longUsd += p.usd;
+        else w.shortUsd += p.usd;
+        w.venueUsd[p.venue] = (w.venueUsd[p.venue] ?? 0) + p.usd;
+        if (p.usd > (w.largestUsd ?? 0)) {
+          w.largestUsd = p.usd;
+          w.largestPrice = p.price;
+        }
+      } else {
+        w.unknownUsdPrints++;
+      }
+      if (w.lastAt == null) {
+        w.lastPrice = p.price;
+        w.lastAt = p.t;
+      }
+    }
+    if (w.count) out.push(w);
   }
   return out;
 }

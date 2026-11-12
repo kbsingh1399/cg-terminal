@@ -95,14 +95,18 @@ export default function CvdCanvas({
     [candles]
   );
 
-  // reset the viewport when the model identity changes (symbol/interval)
-  useEffect(() => {
-    const key = `${model.n}:${candles[0]?.[0] ?? 0}:${mode}:${showDelta}:${showRatio}`;
-    if (key === modelKey) return;
-    setModelKey(key);
-    setView(null); // re-fit below
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [model, mode, showDelta, showRatio]);
+  // reset the viewport when the model identity changes (symbol/interval).
+  // Render-phase adjustment (react-hooks/set-state-in-effect): the guarded
+  // previous-key pattern resets state the moment the new model first
+  // renders — no effect cascade. `modelChanged` also gates the render-adjust
+  // block below: the old view must not re-queue a grow over the queued null
+  // in the same pass (the immediate re-render re-fits instead).
+  const nextModelKey = `${model.n}:${candles[0]?.[0] ?? 0}:${mode}:${showDelta}:${showRatio}`;
+  const modelChanged = nextModelKey !== modelKey;
+  if (modelChanged) {
+    setModelKey(nextModelKey);
+    setView(null); // re-fit below in the immediate re-render
+  }
 
   const padL = 8;
   const plotR = Math.max(padL + 60, size.w - AXIS_W);
@@ -127,20 +131,23 @@ export default function CvdCanvas({
   }, [clean]);
 
   // render-adjust: fit once, and grow the window when new bars append while
-  // the tail is on screen (live follow — manual history views are untouched)
-  if (!view && clean.length) {
-    const v = fitView();
-    if (v) setView(v);
-  } else if (view && clean.length) {
-    const end = view.start + view.count;
-    if (view.count < clean.length && end >= clean.length - 1 && end < clean.length) {
-      const start = Math.max(0, clean.length - view.count);
-      let pLo = view.pLo;
-      let pHi = view.pHi;
-      const lastC = clean[clean.length - 1];
-      if (lastC[3] < pLo) pLo = lastC[3] - (pHi - pLo) * 0.02;
-      if (lastC[2] > pHi) pHi = lastC[2] + (pHi - pLo) * 0.02;
-      setView({ ...view, start, pLo, pHi });
+  // the tail is on screen (live follow — manual history views are untouched).
+  // Skipped on the model-change pass — the reset above owns that render.
+  if (!modelChanged) {
+    if (!view && clean.length) {
+      const v = fitView();
+      if (v) setView(v);
+    } else if (view && clean.length) {
+      const end = view.start + view.count;
+      if (view.count < clean.length && end >= clean.length - 1 && end < clean.length) {
+        const start = Math.max(0, clean.length - view.count);
+        let pLo = view.pLo;
+        let pHi = view.pHi;
+        const lastC = clean[clean.length - 1];
+        if (lastC[3] < pLo) pLo = lastC[3] - (pHi - pLo) * 0.02;
+        if (lastC[2] > pHi) pHi = lastC[2] + (pHi - pLo) * 0.02;
+        setView({ ...view, start, pLo, pHi });
+      }
     }
   }
 

@@ -138,6 +138,139 @@ const vo2 = normalizeOkx(
 );
 check("okx: ctVal scaling 3×0.01 BTC", vo2[0]?.qtyBase === 0.03 && Math.abs(vo2[0].usd - 2160) < 0.01, JSON.stringify(vo2));
 
+// --- resolveOkxAsset (exact mirror of src/lib/cg/liq-live.ts, 2026-11-12 fix) ---
+// OKX lists k-unit coins under the PLAIN base with a large ctVal (verified
+// live: SHIB-USDT-SWAP ctVal=1,000,000 SHIB · PEPE-USDT-SWAP ctVal=10,000,000)
+// while the terminal asset is the 1000-form — without the `1000${base}`
+// fallback those prints were silently dropped.
+const TERMINAL_PERP_ASSETS = [
+  "BTC", "ETH", "SOL", "BNB", "XRP", "DOGE", "NVDA", "1000PEPE", "1000SHIB",
+].map((sym) => ({ sym }));
+function resolveOkxAsset(instId) {
+  if (!instId.endsWith("-USDT-SWAP")) return undefined;
+  const base = instId.slice(0, -"-USDT-SWAP".length);
+  const direct = TERMINAL_PERP_ASSETS.find((a) => a.sym === base);
+  if (direct) return direct.sym;
+  if (base.startsWith("1000")) {
+    const stripped = base.slice(4);
+    const hit = TERMINAL_PERP_ASSETS.find((a) => a.sym === stripped);
+    if (hit) return hit.sym;
+  }
+  const kForm = TERMINAL_PERP_ASSETS.find((a) => a.sym === `1000${base}`);
+  if (kForm) return kForm.sym;
+  return undefined;
+}
+check("okx-resolve: BTC direct", resolveOkxAsset("BTC-USDT-SWAP") === "BTC");
+check("okx-resolve: NVDA direct (TradFi perp)", resolveOkxAsset("NVDA-USDT-SWAP") === "NVDA");
+check("okx-resolve: SHIB → 1000SHIB (k-unit plain form, was DROPPED before the fix)", resolveOkxAsset("SHIB-USDT-SWAP") === "1000SHIB", String(resolveOkxAsset("SHIB-USDT-SWAP")));
+check("okx-resolve: PEPE → 1000PEPE (k-unit plain form, was DROPPED before the fix)", resolveOkxAsset("PEPE-USDT-SWAP") === "1000PEPE", String(resolveOkxAsset("PEPE-USDT-SWAP")));
+check("okx-resolve: 1000SHIB direct (if OKX ever lists the prefixed form)", resolveOkxAsset("1000SHIB-USDT-SWAP") === "1000SHIB");
+check("okx-resolve: unknown dropped", resolveOkxAsset("SOMECOIN-USDT-SWAP") === undefined);
+check("okx-resolve: non-swap dropped", resolveOkxAsset("BTC-USDT") === undefined);
+
+// --- cascade trigger matrix (exact mirror of scanLiqCascades in src/lib/cg/scan.ts) ---
+const LIQ_CASCADE_MAJORS = new Set(["BTC", "ETH", "SOL"]);
+const LIQ_MAJOR_ABS_USD = 1_500_000;
+const LIQ_MAJOR_CONC_USD = 500_000;
+const LIQ_MAJOR_CONC_SHARE = 0.8;
+const LIQ_MAJOR_CONC_COUNT = 5;
+const LIQ_ALT_ABS_USD = 200_000;
+const LIQ_ALT_SHARE = 0.75;
+const LIQ_ALT_OI_PCT = 0.0015;
+const LIQ_ALT_OI_FETCH_FLOOR_USD = 50_000;
+const LIQ_ALT_OI_MIN_COUNT = 3;
+function cascadeTrigger(w, oiUsd) {
+  const totalUsd = w.longUsd + w.shortUsd;
+  if (totalUsd <= 0) return { triggered: false, threshold: "" };
+  const longShare = w.longUsd / totalUsd;
+  const domShare = Math.max(longShare, 1 - longShare);
+  const domSide = domShare >= 0.55 ? (longShare >= 0.5 ? "long" : "short") : "mixed";
+  const isMajor = LIQ_CASCADE_MAJORS.has(w.sym);
+  let triggered = false;
+  let threshold = "";
+  if (isMajor) {
+    if (totalUsd >= LIQ_MAJOR_ABS_USD) {
+      triggered = true;
+      threshold = "major ≥$1.5M/5m";
+    } else if (totalUsd >= LIQ_MAJOR_CONC_USD && domShare >= LIQ_MAJOR_CONC_SHARE && w.count >= LIQ_MAJOR_CONC_COUNT) {
+      triggered = true;
+      threshold = "major concentrated";
+    }
+  } else if (domShare >= LIQ_ALT_SHARE) {
+    if (totalUsd >= LIQ_ALT_ABS_USD) {
+      triggered = true;
+      threshold = "alt ≥$200k/5m + 75% single-side";
+    } else if (totalUsd >= LIQ_ALT_OI_FETCH_FLOOR_USD && w.count >= LIQ_ALT_OI_MIN_COUNT) {
+      if (oiUsd != null && totalUsd >= oiUsd * LIQ_ALT_OI_PCT) {
+        triggered = true;
+        threshold = "alt ≥0.15% of OI";
+      }
+    }
+  }
+  return { triggered, threshold, domSide, domShare, totalUsd };
+}
+const w = (sym, longUsd, shortUsd, count) => ({ sym, longUsd, shortUsd, count });
+let ct = cascadeTrigger(w("BTC", 800_000, 900_000, 22), null); // $1.7M mixed
+check("cascade: BTC $1.7M mixed → major abs triggers (no side condition)", ct.triggered && ct.domSide === "mixed" && ct.threshold.includes("1.5M"), JSON.stringify(ct));
+ct = cascadeTrigger(w("BTC", 580_000, 40_000, 6), null); // $620k, 93.5% long, 6 prints
+check("cascade: BTC $620k 94% one side 6 prints → concentrated", ct.triggered && ct.threshold.includes("concentrated"), JSON.stringify(ct));
+ct = cascadeTrigger(w("BTC", 460_000, 60_000, 9), null); // 88% but only $520k → conc OK
+check("cascade: BTC $520k 88% 9 prints → concentrated triggers", ct.triggered, JSON.stringify(ct));
+ct = cascadeTrigger(w("BTC", 400_000, 80_000, 9), null); // $480k < $500k
+check("cascade: BTC $480k 83% → below both major paths, no alert", !ct.triggered, JSON.stringify(ct));
+ct = cascadeTrigger(w("BTC", 420_000, 40_000, 3), null); // 91% but only 3 prints
+check("cascade: BTC $460k 91% 3 prints → print-count gate blocks", !ct.triggered, JSON.stringify(ct));
+ct = cascadeTrigger(w("BTC", 900_000, 300_000, 10), null); // $1.2M but 75% < 80% and < $1.5M
+check("cascade: BTC $1.2M 75% → below both major paths, no alert", !ct.triggered, JSON.stringify(ct));
+ct = cascadeTrigger(w("DOGE", 210_000, 10_000, 14), null); // $220k, 95% long
+check("cascade: DOGE $220k 95% one side → alt abs triggers", ct.triggered && ct.domSide === "long" && ct.threshold.includes("200k"), JSON.stringify(ct));
+ct = cascadeTrigger(w("DOGE", 120_000, 90_000, 14), null); // $210k but 57%
+check("cascade: DOGE $210k 57% split → side gate blocks", !ct.triggered, JSON.stringify(ct));
+ct = cascadeTrigger(w("DOGE", 59_000, 1_000, 5), 30_000_000); // $60k = 0.20% of $30M OI
+check("cascade: DOGE $60k 98% 5 prints vs $30M OI (0.20% ≥ 0.15%) → OI path triggers", ct.triggered && ct.threshold.includes("OI"), JSON.stringify(ct));
+ct = cascadeTrigger(w("DOGE", 59_000, 1_000, 5), 100_000_000); // $60k = 0.06% of $100M OI
+check("cascade: DOGE $60k vs $100M OI (0.06% < 0.15%) → no alert", !ct.triggered, JSON.stringify(ct));
+ct = cascadeTrigger(w("DOGE", 59_000, 1_000, 2), 30_000_000); // OI path but 2 prints
+check("cascade: DOGE OI path with 2 prints → count gate blocks", !ct.triggered, JSON.stringify(ct));
+ct = cascadeTrigger(w("DOGE", 30_000, 25_000, 20), 30_000_000); // $55k but 55% split
+check("cascade: DOGE $55k 55% split → side gate blocks OI path", !ct.triggered, JSON.stringify(ct));
+ct = cascadeTrigger(w("NVDA", 260_000, 20_000, 9), null); // TradFi perp, alt rules
+check("cascade: NVDA $280k 93% → alt abs triggers (TradFi perps share the alt tier)", ct.triggered, JSON.stringify(ct));
+
+// --- journalCounts arithmetic (exact mirror of ingest()'s compaction trigger) ---
+const JOURNAL_MAX_ROWS = 20_000;
+const RING_MAX = 3_000;
+const journalCounts = new Map();
+const rings = new Map(); // per-asset ring, like the collector's rings Map
+function ingestCount(asset) {
+  const ring = rings.get(asset);
+  ring.push(1);
+  if (ring.length > RING_MAX) ring.splice(0, ring.length - RING_MAX);
+  const rows = (journalCounts.get(asset) ?? 0) + 1;
+  if (rows > JOURNAL_MAX_ROWS * 1.2) {
+    // compaction rewrites the file with the in-memory ring tail
+    journalCounts.set(asset, ring.length);
+    return "compact";
+  }
+  journalCounts.set(asset, rows);
+  return "append";
+}
+// BTC: hydrate seeded 19,900 rows from the file; the ring is warm at cap
+rings.set("BTC", new Array(RING_MAX).fill(1));
+journalCounts.set("BTC", 19_900);
+let allAppend = true;
+for (let i = 0; i < 4_100; i++) if (ingestCount("BTC") !== "append") allAppend = false;
+check("journalCounts: 19,900 + 4,100 = exactly 24,000 → no compaction (strictly-greater line)", allAppend && journalCounts.get("BTC") === 24_000, String(journalCounts.get("BTC")));
+check("journalCounts: append #4,101 (24,001 > 24,000) compacts to the ring tail", ingestCount("BTC") === "compact" && journalCounts.get("BTC") === RING_MAX, String(journalCounts.get("BTC")));
+check("journalCounts: post-compaction appends count from the tail (3,001)", ingestCount("BTC") === "append" && journalCounts.get("BTC") === RING_MAX + 1, String(journalCounts.get("BTC")));
+// ETH boundary: 23,999 seeded, full ring — compact exactly at 24,001, never at 24,000
+rings.set("ETH", new Array(RING_MAX).fill(1));
+journalCounts.set("ETH", 23_999);
+const ethResults = [];
+for (let i = 0; i < 5; i++) ethResults.push(ingestCount("ETH"));
+check("journalCounts: 23,999+1=24,000 appends (NOT > 24,000 — no compaction), then compact at 24,001", ethResults[0] === "append" && ethResults[1] === "compact" && ethResults.slice(2).every((c) => c === "append"), JSON.stringify(ethResults));
+check("journalCounts: ETH post-compaction counter restarts from its own ring tail (3,003)", journalCounts.get("ETH") === RING_MAX + 3, String(journalCounts.get("ETH")));
+
 // --- probability math sanity (probability.ts) ---
 function normCdf(x) {
   const sign = x < 0 ? -1 : 1;

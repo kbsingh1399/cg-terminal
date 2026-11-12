@@ -164,7 +164,13 @@ export default function BinanceChart({
     if (!last || lb.t > last.t) return [...arr, lb];
     return arr;
   }, [restBars, liveBar]);
-  barsRef.current = bars;
+  // refs are synced in a passive effect (react-hooks/refs: no ref writes
+  // during render). Declared before every reader below (fit effect, draw
+  // effect, wheel/pointer handlers), so they always observe the committed
+  // bars — effects run in declaration order within the same commit.
+  useEffect(() => {
+    barsRef.current = bars;
+  }, [bars]);
 
   // geometry (recomputed each render — cheap)
   const plotL = 6;
@@ -176,7 +182,12 @@ export default function BinanceChart({
   const plotW = plotR - plotL;
   const priceH = Math.max(1, priceBot - plotT);
   const geomRef = useRef({ plotL, plotR, plotT, plotB, priceBot, plotW, priceH });
-  geomRef.current = { plotL, plotR, plotT, plotB, priceBot, plotW, priceH };
+  // geometry re-derives every render (cheap); the mirror syncs in an effect
+  // (react-hooks/refs) — runs before every geomRef reader (fit/draw effects
+  // and the interaction handlers, which only ever fire after commit).
+  useEffect(() => {
+    geomRef.current = { plotL, plotR, plotT, plotB, priceBot, plotW, priceH };
+  });
 
   const fitView = useCallback((bw: number, arr: Bar[]): View | null => {
     if (!arr.length) return null;
@@ -199,11 +210,21 @@ export default function BinanceChart({
   }, []);
 
   // reset on mount + interval/symbol switches (bars arrive async — the
-  // follow effect below performs the first fit when they land)
+  // follow effect below performs the first fit when they land).
+  // SET-STATE-IN-EFFECT FIX (react-hooks 7): the view STATE resets during
+  // render via the guarded previous-key pattern (React docs "adjust state
+  // when a prop changes" — no effect cascade); the synchronous mirrors
+  // (viewRef/autoYRef) reset in a ref-only effect, which runs BEFORE the
+  // fit effect below by declaration order.
+  const resetKey = `${interval}|${base ?? ""}`;
+  const [appliedResetKey, setAppliedResetKey] = useState(resetKey);
+  if (appliedResetKey !== resetKey) {
+    setAppliedResetKey(resetKey);
+    setView(null);
+  }
   useEffect(() => {
-    commit(null);
+    viewRef.current = null;
     autoYRef.current = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [interval, base]);
 
   // live tick: pin the right edge while following; auto price range while

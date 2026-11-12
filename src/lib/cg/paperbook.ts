@@ -42,7 +42,7 @@ import { hlXyzSnapshot } from "./micro";
 import { hlCoinOf } from "../binance/aliases";
 import { isClassic } from "./classic";
 import { CURATED } from "@/lib/universe/curated";
-import { buildNarrative, type NarrativeVerdict } from "./narrative";
+import { buildNarrative, narrativeRadarStates, type NarrativeVerdict } from "./narrative";
 import { emit } from "./notify";
 import { resolveDataRoot } from "./store";
 
@@ -853,12 +853,25 @@ async function sweepPass() {
   const list = sweepList();
   if (!list.length) return;
   const now = Date.now();
+  // RADAR DEDUP (WS2 2026-11-12): the narrative radar (12 s/asset) already
+  // builds the verdict AND arms the ticket for every Curated-61 asset — a
+  // fresh radar state means this sweep would duplicate the exact upstream
+  // work, so skip it. This sweep remains as the fallback loop when the radar
+  // is disabled (CG_RADAR=off).
+  let radarStates: Map<string, { generatedAt: number }> | null = null;
+  try {
+    radarStates = narrativeRadarStates();
+  } catch {
+    radarStates = null;
+  }
   let picked = 0;
   let idx = PB.sweepIdx;
   const results: { at: number; sym: string; result: string }[] = [];
   while (picked < SWEEP_PER_TICK && idx < PB.sweepIdx + list.length) {
     const sym = list[idx % list.length];
     idx++;
+    const radarAt = radarStates?.get(sym)?.generatedAt ?? 0;
+    if (now - radarAt < 15 * 60_000) continue; // radar covered it (built + armed)
     const last = PB.lastArmAt.get(sym) ?? 0;
     if (now - last < SWEEP_SYM_DEDUP_MS) continue;
     PB.lastArmAt.set(sym, now);

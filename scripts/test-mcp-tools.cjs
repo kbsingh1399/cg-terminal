@@ -65,7 +65,7 @@ function record(name, ok, note) {
   const tl = await rpc("tools/list");
   const names = (tl.result?.tools ?? []).map((t) => t.name);
   console.log("tools/list:", names.join(", "));
-  record("tools/list has 20 tools", names.length === 20, `${names.length} tools`);
+  record("tools/list has 21 tools", names.length === 21, `${names.length} tools`); // 21 since liq_live (live multi-venue liquidation collector)
 
   const expectOk = async (name, args, check, label) => {
     const r = await call(name, args);

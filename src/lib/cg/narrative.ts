@@ -37,6 +37,7 @@ import { classicOf } from "./classic";
 import { fetchBinCandles } from "./fallbacks";
 import { resolveCgSym } from "../binance/aliases";
 import { isCuratedPerp } from "./assets";
+import { curatedPerps, curatedClassic } from "@/lib/universe/curated";
 import { buildProbability, type SetupProbability } from "./probability";
 import type { PbStats } from "./paperbook";
 
@@ -90,6 +91,10 @@ export interface NarrativeVerdict {
   beta: { vs: string; b24h: number | null; b7d: number | null }[];
   /** structural odds for the quoted setup (fill · T1-first · mean-revert · EV in R) */
   probability: SetupProbability | null;
+  /** quantified context for screener/radar consumers (exact measured values) */
+  context: { vwapZ: number | null; rvol: number | null; atrH1: number | null; price: number | null };
+  /** OI-weighted funding + OI×price quadrant summary from /api/cg/quant */
+  quant: { fundingAprPct: number | null; oiQuadrant4h: string | null; oiDelta4hPct: number | null } | null;
   generatedAt: number;
 }
 
@@ -105,6 +110,7 @@ interface QuantLite {
   takerRatio: number | null;
   quadrant1h: string | null;
   quadrant4h: string | null;
+  oiDelta4hPct: number | null;
   coinbasePremiumBps: number | null;
   basisPct: number | null;
   dataAt: number | null;
@@ -126,7 +132,7 @@ async function fetchQuantLite(sym: string): Promise<QuantLite | null> {
       supported?: boolean;
       lsRatios?: Record<string, { global?: { ratio?: number } | null; topPositions?: { ratio?: number } | null; taker?: { buySellRatio?: number } | null }>;
       funding?: { annualizedAprPct?: number | null };
-      oiQuadrant?: Record<string, { quadrant?: string } | null>;
+      oiQuadrant?: Record<string, { quadrant?: string; oiDeltaPct?: number } | null>;
       basis?: { coinbasePremiumBps?: number | null; basisPct?: number | null };
       dataAt?: number;
     };
@@ -139,6 +145,7 @@ async function fetchQuantLite(sym: string): Promise<QuantLite | null> {
       takerRatio: ls1h?.taker?.buySellRatio ?? null,
       quadrant1h: j.oiQuadrant?.["1h"]?.quadrant ?? null,
       quadrant4h: j.oiQuadrant?.["4h"]?.quadrant ?? null,
+      oiDelta4hPct: j.oiQuadrant?.["4h"]?.oiDeltaPct ?? null,
       coinbasePremiumBps: j.basis?.coinbasePremiumBps ?? null,
       basisPct: j.basis?.basisPct ?? null,
       dataAt: j.dataAt ?? null,
@@ -322,6 +329,8 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       freshness: { worstAgeMs: Number.MAX_SAFE_INTEGER, staleFields: ["market"], dataAt: 0, ageMs: 0, stale: true, source: "none" },
       beta: [],
       probability: null,
+      context: { vwapZ: null, rvol: null, atrH1: null, price: null },
+      quant: null,
       generatedAt: Date.now(),
     };
   }
@@ -870,6 +879,175 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
     },
     beta,
     probability,
+    context: { vwapZ: z, rvol: market.vol.rvolHour, atrH1: atr, price },
+    quant: quant ? { fundingAprPct: quant.fundingAprPct, oiQuadrant4h: quant.quadrant4h, oiDelta4hPct: quant.oiDelta4hPct } : null,
     generatedAt: Date.now(),
   };
+}
+
+// ---------------------------------------------------------------------------
+// NARRATIVE RADAR (WS2, 2026-11-12) — progressive M1/M2 sweep across the
+// Curated-61 for the screener's live radar columns.
+//
+// One buildNarrative per 12 s tick → a full 61-asset sweep ≈ 12 min. Every
+// upstream read goes through the module caches (market snapshot 12 s TTL,
+// fp-load snapshot cache, quant route 30 s cache, beta 5 min cache) so the
+// sweep adds NO burst load — it warms progressively exactly like the scan
+// lanes. The sweep ALSO re-arms Virtual Book tickets through the same
+// hash-idempotent armFromVerdict("sweep") path the route uses, so setups a
+// human never opened still get their virtual PnL/SL/TP tracked (61-asset
+// coverage directive). Failures are honest counters in radarStatus — never
+// silent.
+// ---------------------------------------------------------------------------
+
+export interface NarrativeRadarLite {
+  sym: string;
+  regime: Regime;
+  activeModel: ActiveModel;
+  direction: Direction;
+  grade: Grade;
+  confidence: number;
+  bestR: number | null;
+  vwapZ: number | null;
+  rvol: number | null;
+  pFill: number | null;
+  pT1: number | null;
+  evR: number | null;
+  pMeanRevert: number | null;
+  oiQuadrant4h: string | null;
+  oiDelta4hPct: number | null;
+  fundingAprPct: number | null;
+  generatedAt: number;
+}
+
+interface RadarState {
+  started: boolean;
+  idx: number;
+  busy: boolean;
+  lastTickAt: number | null;
+  built: number;
+  skipped: number;
+  errors: number;
+  lastError: string | null;
+  lastErrorAt: number | null;
+  states: Map<string, NarrativeRadarLite>;
+}
+
+const gRadar = globalThis as unknown as { __cgNarrativeRadar?: RadarState };
+const RADAR: RadarState = (gRadar.__cgNarrativeRadar ??= {
+  started: false,
+  idx: 0,
+  busy: false,
+  lastTickAt: null,
+  built: 0,
+  skipped: 0,
+  errors: 0,
+  lastError: null,
+  lastErrorAt: null,
+  states: new Map(),
+});
+
+const RADAR_STEP_MS = 12_000;
+
+function radarList(): string[] {
+  // curated order: 30 crypto → 28 TradFi perps → 3 classics (the terminal palette order)
+  return [...curatedPerps().map((c) => c.sym), ...curatedClassic().map((c) => c.sym)];
+}
+
+/** read model for the screener: sym → lite verdict (null-safe when cold) */
+export function narrativeRadarStates(): Map<string, NarrativeRadarLite> {
+  return RADAR.states;
+}
+
+export function narrativeRadarStatus() {
+  const list = radarList();
+  const now = Date.now();
+  let fresh5m = 0;
+  let fresh30m = 0;
+  for (const s of RADAR.states.values()) {
+    if (now - s.generatedAt < 5 * 60_000) fresh5m++;
+    if (now - s.generatedAt < 30 * 60_000) fresh30m++;
+  }
+  return {
+    started: RADAR.started,
+    universeSize: list.length,
+    nextSym: list.length ? list[RADAR.idx % list.length] : null,
+    lastTickAt: RADAR.lastTickAt,
+    lastTickAgeMs: RADAR.lastTickAt != null ? now - RADAR.lastTickAt : null,
+    stepMs: RADAR_STEP_MS,
+    sweepMinutes: list.length ? Number(((list.length * RADAR_STEP_MS) / 60_000).toFixed(1)) : null,
+    built: RADAR.built,
+    skipped: RADAR.skipped,
+    errors: RADAR.errors,
+    lastError: RADAR.lastError,
+    lastErrorAt: RADAR.lastErrorAt,
+    statesCached: RADAR.states.size,
+    fresh5m,
+    fresh30m,
+    source: "narrative radar — progressive buildNarrative sweep over Curated-61 (12 s/asset, cached upstreams)",
+    dataAt: RADAR.lastTickAt,
+    ageMs: RADAR.lastTickAt != null ? now - RADAR.lastTickAt : null,
+    stale: RADAR.started && (RADAR.lastTickAt == null || now - RADAR.lastTickAt > 5 * 60_000),
+  };
+}
+
+async function radarTick() {
+  const list = radarList();
+  if (!list.length || RADAR.busy) return;
+  RADAR.busy = true;
+  const sym = list[RADAR.idx % list.length];
+  RADAR.idx = (RADAR.idx + 1) % list.length;
+  RADAR.lastTickAt = Date.now();
+  try {
+    const v = await buildNarrative(sym);
+    if (!v || v.ok !== true || v.supported === false) {
+      RADAR.skipped++;
+      return;
+    }
+    RADAR.states.set(sym, {
+      sym,
+      regime: v.regime,
+      activeModel: v.activeModel,
+      direction: v.direction,
+      grade: v.grade,
+      confidence: v.confidence,
+      bestR: v.plan?.bestR ?? null,
+      vwapZ: v.context?.vwapZ ?? null,
+      rvol: v.context?.rvol ?? null,
+      pFill: v.probability?.pFill ?? null,
+      pT1: v.probability?.pT1 ?? null,
+      evR: v.probability?.evR ?? null,
+      pMeanRevert: v.probability?.pMeanRevert ?? null,
+      oiQuadrant4h: v.quant?.oiQuadrant4h ?? null,
+      oiDelta4hPct: v.quant?.oiDelta4hPct ?? null,
+      fundingAprPct: v.quant?.fundingAprPct ?? null,
+      generatedAt: v.generatedAt,
+    });
+    RADAR.built++;
+    try {
+      // 61-asset Virtual Book coverage: arm/refresh the paper ticket for this
+      // setup (hash-idempotent, freshness-gated inside armFromVerdict)
+      const { armFromVerdict } = await import("./paperbook");
+      armFromVerdict(v, "sweep");
+    } catch {
+      /* arming must never break the radar */
+    }
+  } catch (e) {
+    RADAR.errors++;
+    RADAR.lastError = e instanceof Error ? e.message : String(e);
+    RADAR.lastErrorAt = Date.now();
+  } finally {
+    RADAR.busy = false;
+  }
+}
+
+/** boot the radar (idempotent — engine boot + screener route call this) */
+export function ensureNarrativeRadar(): { started: boolean } {
+  if (RADAR.started || process.env.CG_RADAR === "off") return { started: false };
+  RADAR.started = true;
+  const timer = setInterval(() => {
+    void radarTick();
+  }, RADAR_STEP_MS);
+  timer.unref?.();
+  return { started: true };
 }

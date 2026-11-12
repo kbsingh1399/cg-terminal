@@ -31,6 +31,8 @@ import {
 import { loadFpBars } from "./fp-load";
 import { buildMarketSnapshot, type MarketSnapshot } from "./market";
 import { buildLiqModel, liqStats, type RawLiqPayload, type KeyLevel } from "./liq-model";
+import { ensureLiqCollector, liqWindows5m } from "./liq-live";
+import { fetchBinOi } from "./fallbacks";
 import { ASSETS, assetOf, curatedAssetOf, leadInstr, liqVenues } from "./assets";
 import { curatedPerps } from "@/lib/universe/curated";
 import { getLivePrice } from "../live/server-price";
@@ -581,6 +583,213 @@ async function scanCvd(sym: string) {
 }
 
 // ---------------------------------------------------------------------------
+// Liquidation cascades (2026-11-12 directive) — liq-live 5-minute rolling
+// windows → tier/OI-normalized HIGH-severity alerts.
+//
+// Trigger matrix (NOT a flat $1M — normalization by market tier and OI):
+//   majors (BTC/ETH/SOL): ≥ $1.5M / 5m, or ≥ $500k when single-side ≥ 80%
+//                         with ≥ 5 prints (concentrated cascade)
+//   alts + TradFi perps : (≥ $200k / 5m OR ≥ 0.15% of OI) with ≥ 75%
+//                         single-side → long_cascade vs short_cascade
+//
+// Data sources: the trailing-5m windows come from liq-live's in-memory rings
+// (ZERO Coinglass quota); OI is fetched only for near-threshold alt windows
+// via Binance fapi (free public API, 10-min cache) — never Coinglass. The
+// M1/M2 context reuses this scanner's own market snapshots (EMA stacks for
+// the M1 pullback gate, day-VWAP σ for the M2 ±2σ exhaustion zone) and the
+// cascade's own print price, so no extra upstream call is made. Dedupe is
+// per asset+side on 5-minute wall-clock buckets (Math.floor(now/300_000)).
+// ---------------------------------------------------------------------------
+
+const LIQ_CASCADE_MAJORS = new Set(["BTC", "ETH", "SOL"]);
+const LIQ_MAJOR_ABS_USD = 1_500_000;
+const LIQ_MAJOR_CONC_USD = 500_000;
+const LIQ_MAJOR_CONC_SHARE = 0.8;
+const LIQ_MAJOR_CONC_COUNT = 5;
+const LIQ_ALT_ABS_USD = 200_000;
+const LIQ_ALT_SHARE = 0.75;
+const LIQ_ALT_OI_PCT = 0.0015;
+/** alt windows below this never fetch OI (0.15% of OI ≥ $50k → OI ≥ $33M) */
+const LIQ_ALT_OI_FETCH_FLOOR_USD = 50_000;
+/** OI-relative path floor on print count — a single print is noise at OI scale */
+const LIQ_ALT_OI_MIN_COUNT = 3;
+
+interface CascadeState {
+  /** "sym|side|bucket" → bucket ms — one alert max per asset+side per 5m bucket */
+  notified: Map<string, number>;
+  /** sym → { at, oiUsd } — Binance fapi OI, 10-min TTL */
+  oi: Map<string, { at: number; oiUsd: number }>;
+  oiBusy: Set<string>;
+  /** honest liveness telemetry for the /api/cg/assets scanner status */
+  lastScanAt: number | null;
+  windowsSeen: number;
+}
+
+const gCas = globalThis as unknown as { __cgLiqCascade?: CascadeState };
+const CAS: CascadeState = (gCas.__cgLiqCascade ??= { notified: new Map(), oi: new Map(), oiBusy: new Set(), lastScanAt: null, windowsSeen: 0 });
+
+function fmtUsdK(n: number | null | undefined): string {
+  if (n == null || !Number.isFinite(n)) return "n/a";
+  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
+  if (n >= 1e6) return `$${(n / 1e6).toFixed(2)}M`;
+  if (n >= 1e3) return `$${(n / 1e3).toFixed(n >= 1e5 ? 0 : 1)}k`;
+  return `$${n.toFixed(0)}`;
+}
+
+/** OI in USD for the OI-relative alt path — Binance fapi (free), cached
+ *  10 min, fetched only for windows that could actually qualify. */
+async function oiUsdOf(sym: string): Promise<number | null> {
+  const hit = CAS.oi.get(sym);
+  if (hit && Date.now() - hit.at < 10 * 60_000) return hit.oiUsd;
+  if (CAS.oiBusy.has(sym)) return hit?.oiUsd ?? null;
+  CAS.oiBusy.add(sym);
+  try {
+    const bo = await fetchBinOi(sym);
+    if (bo && bo.oiUsd > 0) {
+      CAS.oi.set(sym, { at: Date.now(), oiUsd: bo.oiUsd });
+      return bo.oiUsd;
+    }
+    return null;
+  } catch {
+    return null;
+  } finally {
+    CAS.oiBusy.delete(sym);
+  }
+}
+
+/** nearest M1 pullback / M2 ±2σ exhaustion context from the scanner's own
+ *  market snapshot (zero extra upstream calls). The z-score uses the
+ *  cascade's own latest print price — the day-anchored VWAP is stable, the
+ *  print price is the cascade-time price. */
+function cascadeSetupContext(sym: string, lastPrice: number | null, domSide: "long" | "short" | "mixed"): string {
+  const m = S.market.get(sym);
+  if (!m || lastPrice == null) return "M1/M2 context n/a (scan snapshot cold)";
+  const bits: string[] = [];
+  const vwap = m.vwap?.vwap;
+  const sd1 = m.vwap?.bands?.sd1;
+  if (vwap != null && sd1 != null && sd1 > 0) {
+    const z = (lastPrice - vwap) / sd1;
+    if (Math.abs(z) >= 2) {
+      const zone = z >= 0 ? "above" : "below";
+      let triage = "M2 mean-reversion triage";
+      if (domSide === "long" && z <= -2) triage = "long capitulation into −2σ support — M2 mean-reversion LONG triage";
+      else if (domSide === "short" && z >= 2) triage = "short squeeze at +2σ resistance — M2 mean-reversion SHORT triage";
+      bits.push(`M2: ${z >= 0 ? "+" : ""}${z.toFixed(2)}σ ${zone} day VWAP (±2σ exhaustion zone) — ${triage}`);
+    } else {
+      bits.push(`M2: ${z >= 0 ? "+" : ""}${z.toFixed(2)}σ from day VWAP (inside bands — not stretched)`);
+    }
+  }
+  const h4 = m.ema?.h4;
+  const d1 = m.ema?.d1;
+  if (h4?.e13 != null && h4?.e89 != null && h4?.e233 != null && d1?.e13 != null && d1?.e89 != null && d1?.e233 != null) {
+    const up = h4.e13 > h4.e89 && h4.e89 > h4.e233 && d1.e13 > d1.e89;
+    const down = h4.e13 < h4.e89 && h4.e89 < h4.e233 && d1.e13 < d1.e89;
+    if (up) bits.push("M1: H4+D1 EMA stack up — trend-pullback watch");
+    else if (down) bits.push("M1: H4+D1 EMA stack down — trend-pullback watch");
+    else bits.push("M1: H4/D1 EMA stacks mixed — regime gate off");
+  }
+  const ageMin = m.dataAt ? Math.round((Date.now() - m.dataAt) / 60_000) : null;
+  const suffix = ageMin != null && ageMin > 15 ? ` (context snapshot ${ageMin}m old)` : "";
+  return (bits.length ? bits.join(" · ") : "M1/M2 context n/a") + suffix;
+}
+
+async function scanLiqCascades() {
+  const windows = liqWindows5m();
+  CAS.lastScanAt = Date.now();
+  CAS.windowsSeen = windows.length;
+  if (!windows.length) return;
+  const bucketMs = Math.floor(Date.now() / 300_000) * 300_000;
+  if (CAS.notified.size > 600) {
+    for (const [k, at] of CAS.notified) if (Date.now() - at > 20 * 60_000) CAS.notified.delete(k);
+  }
+  for (const w of windows) {
+    const totalUsd = w.longUsd + w.shortUsd;
+    if (totalUsd <= 0) continue; // no computable notional — cannot tier (honest skip)
+    const longShare = w.longUsd / totalUsd;
+    const domShare = Math.max(longShare, 1 - longShare);
+    const domSide: "long" | "short" | "mixed" = domShare >= 0.55 ? (longShare >= 0.5 ? "long" : "short") : "mixed";
+    const key = `${w.sym}|${domSide}|${bucketMs}`;
+    if (CAS.notified.has(key)) continue;
+
+    const isMajor = LIQ_CASCADE_MAJORS.has(w.sym);
+    let triggered = false;
+    let threshold = "";
+    let oiUsd: number | null = null;
+    if (isMajor) {
+      if (totalUsd >= LIQ_MAJOR_ABS_USD) {
+        triggered = true;
+        threshold = "major ≥$1.5M/5m";
+      } else if (totalUsd >= LIQ_MAJOR_CONC_USD && domShare >= LIQ_MAJOR_CONC_SHARE && w.count >= LIQ_MAJOR_CONC_COUNT) {
+        triggered = true;
+        threshold = `major concentrated ≥$500k + ${Math.round(LIQ_MAJOR_CONC_SHARE * 100)}% single-side + ${LIQ_MAJOR_CONC_COUNT} prints`;
+      }
+    } else if (domShare >= LIQ_ALT_SHARE) {
+      if (totalUsd >= LIQ_ALT_ABS_USD) {
+        triggered = true;
+        threshold = `alt ≥$200k/5m + ${Math.round(LIQ_ALT_SHARE * 100)}% single-side`;
+      } else if (totalUsd >= LIQ_ALT_OI_FETCH_FLOOR_USD && w.count >= LIQ_ALT_OI_MIN_COUNT) {
+        // OI-relative path — free fapi fetch, 10-min cache, only when plausible
+        oiUsd = await oiUsdOf(w.sym);
+        if (oiUsd != null && totalUsd >= oiUsd * LIQ_ALT_OI_PCT) {
+          triggered = true;
+          threshold = `alt ≥0.15% of OI (${fmtUsdK(oiUsd)} OI) + ${Math.round(LIQ_ALT_SHARE * 100)}% single-side`;
+        }
+      }
+    }
+    if (!triggered) continue;
+    CAS.notified.set(key, Date.now());
+
+    // dominant venue + largest print
+    let dominantVenue: string | null = null;
+    let venueUsd = 0;
+    for (const [v, u] of Object.entries(w.venueUsd)) {
+      if (u > venueUsd) {
+        venueUsd = u;
+        dominantVenue = v;
+      }
+    }
+    const venueSharePct = dominantVenue ? Math.round((venueUsd / totalUsd) * 100) : null;
+    const sideLabel = domSide === "mixed" ? "mixed-side liquidation cascade" : domSide === "long" ? "LONG liquidation cascade" : "SHORT-SQUEEZE liquidation cascade";
+    const ge = w.unknownUsdPrints > 0 ? "≥ " : "";
+    emit({
+      ts: Date.now(),
+      asset: w.sym,
+      source: "liq-live",
+      kind: domSide === "mixed" ? "liq_cascade_mixed" : domSide === "long" ? "long_cascade" : "short_cascade",
+      dir: domSide === "long" ? "bearish" : domSide === "short" ? "bullish" : "neutral",
+      severity: "high",
+      title: `${w.sym} ${sideLabel} — ${ge}${fmtUsdK(totalUsd)} / 5m`,
+      detail: `${ge}${fmtUsdK(totalUsd)} liquidated in 5m across ${w.count} prints (${Math.round(domShare * 100)}% ${
+        domSide === "mixed" ? "split" : domSide
+      }) · dominant venue ${dominantVenue ?? "n/a"}${venueSharePct != null ? ` (${venueSharePct}%)` : ""} · largest print ${fmtUsdK(
+        w.largestUsd
+      )}${w.largestPrice != null ? ` @ ${fmtAssetPrice(w.largestPrice, w.sym)}` : ""} · ${cascadeSetupContext(
+        w.sym,
+        w.lastPrice,
+        domSide
+      )} · trigger: ${threshold}${w.unknownUsdPrints ? ` (${w.unknownUsdPrints} prints without venue notional — true total is higher)` : ""}`,
+      price: w.lastPrice,
+      barTs: Math.floor(bucketMs / 1000),
+      barType: "time",
+      meta: {
+        usd5m: Math.round(totalUsd),
+        count: w.count,
+        domShare: +domShare.toFixed(3),
+        side: domSide,
+        dominantVenue,
+        venueSharePct,
+        largestUsd: w.largestUsd,
+        largestPrice: w.largestPrice,
+        unknownUsdPrints: w.unknownUsdPrints,
+        ...(oiUsd != null ? { oiUsd, oiPctOfLiq: +(totalUsd / oiUsd).toFixed(5) } : {}),
+        threshold,
+      },
+    });
+    trackHotSignal(w.sym); // a live cascade is top priority for the hot lane
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Orchestration
 // ---------------------------------------------------------------------------
 
@@ -690,6 +899,14 @@ export function scannerStatus() {
     whaleCached: [...S.whale.keys()],
     liqCached: [...S.liq.keys()],
     cvdCached: [...S.cvd.keys()],
+    /** liquidation-cascade detector liveness (30 s tick over liq-live rings) */
+    liqCascade: {
+      lastScanAt: CAS.lastScanAt,
+      lastScanAgeMs: CAS.lastScanAt != null ? Date.now() - CAS.lastScanAt : null,
+      windowsSeen: CAS.windowsSeen,
+      notifiedBuckets: CAS.notified.size,
+      oiCached: CAS.oi.size,
+    },
   };
 }
 
@@ -708,6 +925,9 @@ function scanList(): { sym: string }[] {
 export function startScanner() {
   if (S.started || process.env.CG_SCAN === "off") return;
   S.started = true;
+  // the cascade detector reads liq-live's in-memory rings — boot the
+  // collector with the scanner so alerts work before the first route hit
+  ensureLiqCollector();
   const list = scanList().map((a) => a.sym);
   // Curated cadence lanes (2026-11-12 consolidation, "no gaps" budget):
   //   fast  — BTC/ETH/SOL, a 60 s tick → each asset ~every 3 min
@@ -793,6 +1013,23 @@ export function startScanner() {
     }
   }, 110_000);
   hotTimer.unref?.();
+
+  // liquidation cascades: tier/OI-normalized HIGH alerts from liq-live's
+  // 5m rolling windows (in-memory rings — zero Coinglass quota; OI only via
+  // free Binance fapi for near-threshold alt windows, 10-min cache). 30 s
+  // tick for prompt detection; 5-minute bucket dedupe caps the alert rate.
+  // Overlap guard: a slow OI fetch must not stack the next 30 s pass.
+  let cascadeBusy = false;
+  const cascadeTimer = setInterval(() => {
+    if (cascadeBusy) return;
+    cascadeBusy = true;
+    scanLiqCascades()
+      .catch(() => undefined)
+      .finally(() => {
+        cascadeBusy = false;
+      });
+  }, 30_000);
+  cascadeTimer.unref?.();
 
   // initial pass: prime the fast lane immediately
   setTimeout(() => {

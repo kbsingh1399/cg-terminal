@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildScreenerPayload } from "@/lib/cg/screener";
 import { warmAssetScan } from "@/lib/cg/scan";
-import { isAsset } from "@/lib/cg/assets";
+import { anyTerminalSym, gateReject } from "@/lib/cg/sym-gate";
 
 export const dynamic = "force-dynamic";
 
 /**
- * GET /api/cg/screener — live cross-asset Alpha Matrix (Top 30 Crypto + 3 Metals + Curated TradFi Core).
- * Optional `?warm=HYPE` triggers an on-demand coalesced scan warm-up for a cold symbol.
+ * GET /api/cg/screener — live cross-asset Alpha Matrix over the canonical
+ * Curated-61 (30 crypto perps + 28 TradFi perps + 3 classics) with the
+ * narrative radar's M1/M2 state, VWAP σ, RVOL, OI 4h quadrant, OI-weighted
+ * funding APR, trailing-5m liquidation cascade USD and honest data-age.
+ * Optional `?warm=SYM` triggers an on-demand coalesced scan warm-up for a
+ * cold symbol (any terminal symbol — curated or legacy registry).
  */
 export async function GET(req: NextRequest) {
   const warm = req.nextUrl.searchParams.get("warm")?.trim().toUpperCase();
   if (warm) {
-    if (!isAsset(warm)) {
-      return NextResponse.json({ ok: false, error: `unknown tier-1 asset ${warm}` }, { status: 400 });
+    if (!(await anyTerminalSym(warm))) {
+      return NextResponse.json({ ok: false, error: gateReject(warm) }, { status: 400 });
     }
     await warmAssetScan(warm).catch(() => undefined);
   }
