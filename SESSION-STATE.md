@@ -23,6 +23,31 @@ dated entry after each meaningful change; keep only the last 10 entries.
 
 ## Log
 
+### 2026-11-12 16:25 UTC — Z.ai sandbox agent — 360° END-TO-END VERIFICATION ROUND (all workflows green)
+- Full fresh gate on the shipped state (no code changes needed — pure
+  verification): **units** quant-math 38/38 · mcp-tools 34/34 (incl.
+  backtest_summary / portfolio_risk / narrative_ai_brief) · liq-live 45/45 ·
+  paperbook 29/29 · venue-ws + venue-liq-ws probes exit 0. **static** tsc
+  --noEmit 0 errors · eslint 0/0 (both with live server up, mem-watchdog,
+  box never dipped below ~1.4GB available). **parity** parity-vs-coinglass
+  PASS — BTC 22/2/5 + ETH 26/1/3 signals identical to Coinglass's verbatim
+  engine across time/vol/range sets. **API battery** 96×200 + 13×clean-400 +
+  0 failed (livebook warmed after one cold-start transient on the first
+  pass; second pass ALL GREEN); backtest/risk/screener/alert-rules/narrative
+  routes all 200 with real payloads. **browser E2E** zero page+console
+  errors across Terminal · Backtest (3201 trades render) · AlphaMatrix
+  (Radar 61/61 · 25 fresh) · Desk&MT5 (risk banner 80 pos · 465 corr pairs ·
+  cluster tiles · blotter) · Alerts rule builder · split view (HTF pane) ·
+  AI brief honest NOT-CONFIGURED; public path :81 = 200. **desk cadence**
+  daemon alive — 1618Z round ran + pushed autonomously mid-verification.
+- Known env-only (not regressions): host-IP fapi ban until ~18:19Z broke 2
+  live spot probes in test-quant-options.mjs (browser-direct fallback keeps
+  the user's UI serving); NVIDIA_API_KEY still absent (brief honestly
+  reports NOT CONFIGURED until re-added to .env).
+- STATE: code of record = main @ 2426637, working tree clean, server up
+  (uptime 1h15m, rss ~1.9GB steady), daemon cadencing. Job complete
+  end-to-end.
+
 ### 2026-11-12 07:20 UTC — Z.ai sandbox agent — footprint = Coinglass aggregate (verified parity) + UI/hardening round
 
 - **Footprint methodology REVERTED to the Coinglass aggregated method** (user
