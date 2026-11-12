@@ -3596,3 +3596,30 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R171 · 2026-11-12 14:40 UTC · zai-desk
+
+**Market**: BTC 72,141.1 (-2.5%)  ETH 2,014.50 (-2.0%)  SOL 81.42 (-2.2%)  XAU 3,903.02 (-2.1%)  XAG 50.570 (-1.5%)
+**Bias (|score|≥2)**: AVAX-6(TREND)  XRP-5(TREND)  ADA-5(TREND)  BTC-5(TREND)  ETH-4(TRANS)  LTC-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- XRP SHORT confluence -5.5 — REJECTED: opposite liq magnet 1.0480 (str 61, ~$13M est) within 1.2R of entry — wait for sweep
+- ADA SHORT confluence -5.3 — REJECTED: opposite liq magnet 0.1735 (str 87, ~$4M est) within 1.2R of entry — wait for sweep
+- NEW R171-BTC-1 BTC SHORT limit 73,593.9 · stop 74,236.6 · T1 71,712.3 · T2 71,507.1 · T3 71,301.8 · R 2.9
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (72,141.1 vs 72,951.2), h4 RSI 29.5, day -2.5%
+      [AGAINST] footprint: bull 17 / bear 9; recent: Divergence/buy[time], Exhaustion/buy[vol], Absorption/buy[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×1, abs:sell×1, div:buy×1, exh:buy×1 — net 3 buy-side vs 1 sell-side
+      [AGAINST] largeOrders: ask wall $21.6M @ 72,926.0 within 2% opposes
+      [FOR    ] liquidation: long-liq magnet 71,712.3 (str 45, ~$322M est, -0.60%) as target
+      [FOR    ] stops(BTC heatmap): 24h liq exposure below $233M vs above $787M
+      [FOR    ] bookWalls: ±5% depth imbalance +0.066 (5m ago +0.084, falling bids); bid $1.21B vs ask $1.06B
+      [FOR    ] cvd: taker buy 49.2%, perpCvd -2337, spotCvd +156, quadrant spot-bid, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -9.6 (15 events)
+- ETH SHORT confluence -3.8 — REJECTED: opposite liq magnet 2,053.57 (str 100, ~$595M est) within 1.2R of entry — wait for sweep
+
+### Order lifecycle
+- R168-AVAX-1 re-debated: FOR 7/AGAINST 1 — stands
+- R169-LINK-1 re-debated: FOR 5/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
