@@ -27,30 +27,30 @@
     }
   },
   "analysis": {
-    "last_round": "R153",
-    "last_round_ts": 1794476775103,
+    "last_round": "R154",
+    "last_round_ts": 1794477842265,
     "engine": "v3.2 (regime-aware: trend-pullback + mean-revert templates | 9-source debate + microFlow vote | FOR>=3 & FOR>AGAINST | min R 2.0 | perpRefPrice basis stamp)",
     "assets": {
       "BTC": {
-        "price": 73368.8,
-        "chgDayPct": -0.8261692349283551,
-        "score": -6.07,
+        "price": 73458,
+        "chgDayPct": -0.7055961070559611,
+        "score": -3.71,
         "parts": {
-          "notif": -2,
+          "notif": 0.34,
           "signals": 0.0,
           "trend": -2.0,
           "vwap": -1,
           "rsi": 0,
-          "cvd": -1.07
+          "cvd": -1.05
         },
         "error": null
       },
       "ETH": {
-        "price": 2044.41,
-        "chgDayPct": -0.5322694431605238,
-        "score": -0.7,
+        "price": 2046.45,
+        "chgDayPct": -0.43301627460042635,
+        "score": -1.04,
         "parts": {
-          "notif": 1.3,
+          "notif": 0.96,
           "signals": 1,
           "trend": -2.0,
           "vwap": -1,
@@ -59,38 +59,11 @@
         "error": null
       },
       "SOL": {
-        "price": 83,
-        "chgDayPct": -0.2643595289593834,
-        "score": -1.64,
+        "price": 83.17,
+        "chgDayPct": -0.060081711127129483,
+        "score": 0.94,
         "parts": {
-          "notif": 0.36,
-          "signals": 1,
-          "trend": -2.0,
-          "vwap": -1,
-          "rsi": 0
-        },
-        "error": null
-      },
-      "BNB": {
-        "price": 671.48,
-        "chgDayPct": -1.2485844963748414,
-        "score": -4.2,
-        "parts": {
-          "notif": -0.98,
-          "signals": 1,
-          "trend": -2.0,
-          "vwap": -1,
-          "rsi": 0,
-          "cvd": -1.22
-        },
-        "error": null
-      },
-      "XRP": {
-        "price": 1.0486,
-        "chgDayPct": -0.2947608633640869,
-        "score": 1.26,
-        "parts": {
-          "notif": 1.26,
+          "notif": 0.94,
           "signals": 1,
           "trend": -2.0,
           "vwap": 1,
@@ -98,12 +71,39 @@
         },
         "error": null
       },
-      "ADA": {
-        "price": 0.1733,
-        "chgDayPct": -0.5166475315728957,
-        "score": 0.63,
+      "BNB": {
+        "price": 672.45,
+        "chgDayPct": -1.105931144021057,
+        "score": -3.8,
         "parts": {
-          "notif": 0.63,
+          "notif": -0.65,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0,
+          "cvd": -1.15
+        },
+        "error": null
+      },
+      "XRP": {
+        "price": 1.053,
+        "chgDayPct": 0.12360939431395424,
+        "score": -1.32,
+        "parts": {
+          "notif": -0.65,
+          "signals": 0.33,
+          "trend": -2.0,
+          "vwap": 1,
+          "rsi": 0
+        },
+        "error": null
+      },
+      "ADA": {
+        "price": 0.1738,
+        "chgDayPct": -0.22962112514350383,
+        "score": -0.98,
+        "parts": {
+          "notif": -0.98,
           "signals": 1,
           "trend": -2.0,
           "vwap": 1,
@@ -112,39 +112,37 @@
         "error": null
       },
       "AVAX": {
-        "price": 8.663,
-        "chgDayPct": 1.821814762576412,
-        "score": -3.42,
+        "price": 8.691,
+        "chgDayPct": 2.150916784203122,
+        "score": -1.33,
         "parts": {
-          "notif": -0.32,
-          "signals": -1,
+          "notif": 0.66,
+          "signals": -0.99,
           "trend": -2.0,
           "vwap": 1,
-          "rsi": 0,
-          "cvd": -1.1
+          "rsi": 0
         },
         "error": null
       },
       "DOGE": {
-        "price": 0.06707,
-        "chgDayPct": -0.5781203676252615,
-        "score": -2.59,
+        "price": 0.06728,
+        "chgDayPct": -0.26682478505781143,
+        "score": -1.33,
         "parts": {
-          "notif": -0.32,
-          "signals": 0.0,
+          "notif": 0.0,
+          "signals": -0.33,
           "trend": -2.0,
-          "vwap": -1,
-          "rsi": 0,
-          "cvd": 0.72
+          "vwap": 1,
+          "rsi": 0
         },
         "error": null
       },
       "LINK": {
-        "price": 10.09,
-        "chgDayPct": -0.8938218249680709,
-        "score": -1.33,
+        "price": 10.098,
+        "chgDayPct": -0.8152440821137258,
+        "score": -1.68,
         "parts": {
-          "notif": 0.67,
+          "notif": 0.32,
           "signals": 1,
           "trend": -2.0,
           "vwap": -1,
@@ -153,25 +151,25 @@
         "error": null
       },
       "LTC": {
-        "price": 49.57,
-        "chgDayPct": -1.2746464847639924,
-        "score": -3.86,
+        "price": 49.62,
+        "chgDayPct": -1.1750647281418112,
+        "score": -3.87,
         "parts": {
-          "notif": -0.63,
-          "signals": 1,
+          "notif": 0.0,
+          "signals": 0.33,
           "trend": -2.0,
           "vwap": -1,
           "rsi": 0,
-          "cvd": -1.22
+          "cvd": -1.2
         },
         "error": null
       },
       "XAU": {
-        "price": 3949.73,
-        "chgDayPct": -0.8955141490733738,
-        "score": -1.85,
+        "price": 3952.4,
+        "chgDayPct": -0.8285199552368379,
+        "score": -1.87,
         "parts": {
-          "notif": 0.65,
+          "notif": 0.63,
           "signals": 0.0,
           "trend": -2.0,
           "vwap": -1,
@@ -180,44 +178,44 @@
         "error": null
       },
       "XAG": {
-        "price": 51.28,
-        "chgDayPct": -0.1557632398753861,
-        "score": -1.77,
+        "price": 51.26,
+        "chgDayPct": -0.19470404984423953,
+        "score": -2.39,
         "parts": {
-          "notif": 0.97,
+          "notif": 0.32,
           "signals": -0.66,
           "trend": -2.0,
           "vwap": -1,
           "rsi": 0,
-          "cvd": 0.93
+          "cvd": 0.95
         },
         "error": null
       }
     },
     "watchlist": [
       {
-        "sym": "BTC",
-        "score": -6.07
-      },
-      {
-        "sym": "DOGE",
-        "score": -2.59
-      },
-      {
-        "sym": "BNB",
-        "score": -4.2
-      },
-      {
         "sym": "XAG",
-        "score": -1.77
+        "score": -2.39
       },
       {
         "sym": "LTC",
-        "score": -3.86
+        "score": -3.87
       },
       {
-        "sym": "AVAX",
-        "score": -3.42
+        "sym": "BTC",
+        "score": -3.71
+      },
+      {
+        "sym": "BNB",
+        "score": -3.8
+      },
+      {
+        "sym": "XAU",
+        "score": -1.87
+      },
+      {
+        "sym": "LINK",
+        "score": -1.68
       }
     ]
   },
@@ -363,14 +361,14 @@
       "expiresTs": 1794485964427,
       "status": "suggested",
       "statusTs": 1794471564427,
-      "perpRefPrice": 671.48,
+      "perpRefPrice": 672.45,
       "regime": "TREND-DOWN",
       "mode": "trend-pullback",
       "debate": [
         {
           "source": "overview",
           "verdict": "FOR",
-          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (671.48 vs 676.22), h4 RSI 35.5, day -1.2%"
+          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (672.45 vs 676.14), h4 RSI 36.2, day -1.1%"
         },
         {
           "source": "footprint",
@@ -390,7 +388,7 @@
         {
           "source": "liquidation",
           "verdict": "FOR",
-          "evidence": "long-liq magnet 669.32 (str 45, ~$6M est, -0.40%) as target"
+          "evidence": "long-liq magnet 669.32 (str 45, ~$6M est, -0.46%) as target"
         },
         {
           "source": "stops(BTC heatmap)",
@@ -400,17 +398,17 @@
         {
           "source": "bookWalls",
           "verdict": "FOR",
-          "evidence": "\u00b15% depth imbalance +0.093 (5m ago +0.093, falling bids); bid $0.03B vs ask $0.02B"
+          "evidence": "\u00b15% depth imbalance +0.085 (5m ago +0.067, rising bids); bid $0.03B vs ask $0.02B"
         },
         {
           "source": "cvd",
           "verdict": "FOR",
-          "evidence": "taker buy 49.1%, perpCvd -25, spotCvd +0, quadrant both-selling, latestDiv bear (recent)"
+          "evidence": "taker buy 49.4%, perpCvd -19, spotCvd +1, quadrant spot-bid, latestDiv bear (recent)"
         },
         {
           "source": "notifications",
           "verdict": "FOR",
-          "evidence": "6h weighted bias -2.9 (6 events)"
+          "evidence": "6h weighted bias -2.0 (5 events)"
         }
       ],
       "rationale": "recent signals: Exhaustion/buy (time), Absorption/sell (vol), Exhaustion/buy (range); confluence -3.2 [notif +0.0 \u00b7 signals +1.0 \u00b7 trend -2 \u00b7 vwap -1 \u00b7 rsi +0.0 \u00b7 cvd -1.2] \u00b7 debate FOR 4/AGAINST 2; entry VWAP+1\u03c3/day-POC 674.61 [trend-pullback \u00b7 TREND-DOWN]; stop beyond 2\u03c3 zone; T1 long-liq cluster str 40 (~$7M est) \u00b7 T2 long-liq cluster str 43 (~$7M est) \u00b7 T3 \u2014; levels are PERP prices \u2014 translate to broker via live basis before MT5; liq clusters are Coinglass estimates",
@@ -439,24 +437,24 @@
       "expiresTs": 1794489069184,
       "status": "suggested",
       "statusTs": 1794474669184,
-      "perpRefPrice": 73368.8,
+      "perpRefPrice": 73458,
       "regime": "TREND-DOWN",
       "mode": "trend-pullback",
       "debate": [
         {
           "source": "overview",
           "verdict": "FOR",
-          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (73,368.8 vs 73,678.4), h4 RSI 37.3, day -0.8%"
+          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (73,458.0 vs 73,674.6), h4 RSI 37.9, day -0.7%"
         },
         {
           "source": "footprint",
           "verdict": "NEUTRAL",
-          "evidence": "bull 15 / bear 15; recent: Absorption/sell[vol], Absorption/buy[range]"
+          "evidence": "bull 16 / bear 16; recent: Divergence/buy[time], Absorption/sell[vol], Absorption/buy[range]"
         },
         {
           "source": "microFlow(abs/trap/exh)",
           "verdict": "AGAINST",
-          "evidence": "6h micro-events: abs:buy\u00d71, abs:sell\u00d71, trap:buy\u00d71 \u2014 net 2 buy-side vs 1 sell-side"
+          "evidence": "6h micro-events: abs:buy\u00d71, abs:sell\u00d71, div:buy\u00d71, trap:buy\u00d71 \u2014 net 3 buy-side vs 1 sell-side"
         },
         {
           "source": "largeOrders",
@@ -466,27 +464,27 @@
         {
           "source": "liquidation",
           "verdict": "FOR",
-          "evidence": "long-liq magnet 72,234.2 (str 52, ~$774M est, -1.63%) as target"
+          "evidence": "long-liq magnet 72,234.2 (str 52, ~$774M est, -1.67%) as target"
         },
         {
           "source": "stops(BTC heatmap)",
           "verdict": "FOR",
-          "evidence": "24h liq exposure below $431M vs above $548M"
+          "evidence": "24h liq exposure below $429M vs above $550M"
         },
         {
           "source": "bookWalls",
           "verdict": "FOR",
-          "evidence": "\u00b15% depth imbalance +0.116 (5m ago +0.103, rising bids); bid $1.29B vs ask $1.02B"
+          "evidence": "\u00b15% depth imbalance +0.126 (5m ago +0.104, rising bids); bid $1.25B vs ask $0.97B"
         },
         {
           "source": "cvd",
           "verdict": "FOR",
-          "evidence": "taker buy 49.7%, perpCvd -1097, spotCvd +304, quadrant spot-bid, latestDiv bear (recent)"
+          "evidence": "taker buy 49.8%, perpCvd -968, spotCvd +320, quadrant spot-bid, latestDiv bear (recent)"
         },
         {
           "source": "notifications",
-          "verdict": "FOR",
-          "evidence": "6h weighted bias -8.5 (10 events)"
+          "verdict": "AGAINST",
+          "evidence": "6h weighted bias +1.0 (6 events)"
         }
       ],
       "rationale": "recent signals: Divergence/buy (vol), Absorption/buy (range); confluence -6.4 [notif -2.0 \u00b7 signals -0.3 \u00b7 trend -2 \u00b7 vwap -1 \u00b7 rsi +0.0 \u00b7 cvd -1.1] \u00b7 debate FOR 7/AGAINST 2; entry VWAP+1\u03c3/day-POC 73,580.9 [trend-pullback \u00b7 TREND-DOWN]; stop beyond 2\u03c3 zone; T1 long-liq cluster str 52 (~$774M est) \u00b7 T2 \u2014 \u00b7 T3 \u2014; bid wall $22.4M @ 72,800.0 mid-path (2.7R); levels are PERP prices \u2014 translate to broker via live basis before MT5; liq clusters are Coinglass estimates",
@@ -517,24 +515,24 @@
       "expiresTs": 1794490117582,
       "status": "suggested",
       "statusTs": 1794475717582,
-      "perpRefPrice": 49.57,
+      "perpRefPrice": 49.62,
       "regime": "TREND-DOWN",
       "mode": "trend-pullback",
       "debate": [
         {
           "source": "overview",
           "verdict": "FOR",
-          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (49.57 vs 49.83), h4 RSI 37.0, day -1.3%"
+          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (49.62 vs 49.83), h4 RSI 37.3, day -1.2%"
         },
         {
           "source": "footprint",
           "verdict": "AGAINST",
-          "evidence": "bull 43 / bear 35; recent: Bear div/sell[time], Divergence/sell[vol], Exhaustion/buy[range]"
+          "evidence": "bull 39 / bear 38; recent: Bear div/sell[time], Divergence/sell[vol], Exhaustion/buy[range]"
         },
         {
           "source": "microFlow(abs/trap/exh)",
           "verdict": "AGAINST",
-          "evidence": "6h micro-events: abs:buy\u00d72, div:buy\u00d71, div:sell\u00d71, exh:buy\u00d73, sdiv:sell\u00d71, trap:buy\u00d72 \u2014 net 8 buy-side vs 2 sell-side"
+          "evidence": "6h micro-events: abs:buy\u00d72, div:buy\u00d71, div:sell\u00d72, exh:buy\u00d73, sdiv:sell\u00d71, trap:buy\u00d72 \u2014 net 8 buy-side vs 3 sell-side"
         },
         {
           "source": "largeOrders",
@@ -554,17 +552,17 @@
         {
           "source": "bookWalls",
           "verdict": "FOR",
-          "evidence": "\u00b15% depth imbalance +0.085 (5m ago -0.033, rising bids); bid $0.01B vs ask $0.01B"
+          "evidence": "\u00b15% depth imbalance +0.091 (5m ago -0.059, rising bids); bid $0.01B vs ask $0.01B"
         },
         {
           "source": "cvd",
           "verdict": "FOR",
-          "evidence": "taker buy 49.1%, perpCvd -9, spotCvd -2, quadrant both-selling, latestDiv bear (recent)"
+          "evidence": "taker buy 49.2%, perpCvd -9, spotCvd -2, quadrant both-selling, latestDiv bear (recent)"
         },
         {
           "source": "notifications",
-          "verdict": "FOR",
-          "evidence": "6h weighted bias -1.9 (2 events)"
+          "verdict": "NEUTRAL",
+          "evidence": "6h weighted bias +0.0 (2 events)"
         }
       ],
       "rationale": "recent signals: Bear div/sell (time), Divergence/sell (vol), Exhaustion/buy (range); confluence -3.2 [notif -0.0 \u00b7 signals +1.0 \u00b7 trend -2 \u00b7 vwap -1 \u00b7 rsi +0.0 \u00b7 cvd -1.2] \u00b7 debate FOR 4/AGAINST 2; entry VWAP+1\u03c3/day-POC 50.01 [trend-pullback \u00b7 TREND-DOWN]; stop beyond 2\u03c3 zone; T1 long-liq cluster str 54 (~$1M est) \u00b7 T2 long-liq cluster str 60 (~$1M est) \u00b7 T3 \u2014; levels are PERP prices \u2014 translate to broker via live basis before MT5; liq clusters are Coinglass estimates",
@@ -595,19 +593,19 @@
       "expiresTs": 1794491175103,
       "status": "suggested",
       "statusTs": 1794476775103,
-      "perpRefPrice": 8.663,
+      "perpRefPrice": 8.691,
       "regime": "TREND-DOWN",
       "mode": "trend-pullback",
       "debate": [
         {
           "source": "overview",
           "verdict": "FOR",
-          "evidence": "h4 \u2193/d1 \u2193 EMA, price above day VWAP (8.663 vs 8.590), h4 RSI 57.7, day +1.8%"
+          "evidence": "h4 \u2193/d1 \u2193 EMA, price above day VWAP (8.691 vs 8.592), h4 RSI 58.6, day +2.2%"
         },
         {
           "source": "footprint",
           "verdict": "FOR",
-          "evidence": "bull 29 / bear 35; recent: Absorption/sell[time], Absorption/sell[vol], Absorption/buy[range]"
+          "evidence": "bull 31 / bear 34; recent: Absorption/sell[time], Absorption/sell[vol], Absorption/buy[range]"
         },
         {
           "source": "microFlow(abs/trap/exh)",
@@ -622,12 +620,12 @@
         {
           "source": "liquidation",
           "verdict": "FOR",
-          "evidence": "long-liq magnet 8.370 (str 72, ~$3M est, -3.46%) as target"
+          "evidence": "long-liq magnet 8.370 (str 72, ~$3M est, -3.69%) as target"
         },
         {
           "source": "liquidation-hazard",
           "verdict": "AGAINST",
-          "evidence": "short-liq magnet 8.760 (str 77) sits between entry and stop \u2014 sweep risk"
+          "evidence": "short-liq magnet 8.780 (str 74) sits between entry and stop \u2014 sweep risk"
         },
         {
           "source": "stops(BTC heatmap)",
@@ -637,17 +635,17 @@
         {
           "source": "bookWalls",
           "verdict": "FOR",
-          "evidence": "\u00b15% depth imbalance +0.045 (5m ago +0.031, rising bids); bid $0.01B vs ask $0.01B"
+          "evidence": "\u00b15% depth imbalance +0.039 (5m ago +0.039, falling bids); bid $0.01B vs ask $0.01B"
         },
         {
           "source": "cvd",
-          "verdict": "FOR",
-          "evidence": "taker buy 49.6%, perpCvd -17, spotCvd +5, quadrant spot-bid, latestDiv bear (recent)"
+          "verdict": "NEUTRAL",
+          "evidence": "unavailable"
         },
         {
           "source": "notifications",
-          "verdict": "FOR",
-          "evidence": "6h weighted bias -1.0 (6 events)"
+          "verdict": "AGAINST",
+          "evidence": "6h weighted bias +2.0 (2 events)"
         }
       ],
       "rationale": "recent signals: Absorption/sell (time), Absorption/sell (vol), Absorption/buy (range); confluence -3.4 [notif -0.3 \u00b7 signals -1.0 \u00b7 trend -2 \u00b7 vwap +1 \u00b7 rsi +0.0 \u00b7 cvd -1.1] \u00b7 debate FOR 7/AGAINST 1; entry VWAP+1\u03c3/day-POC 8.663 [trend-pullback \u00b7 TREND-DOWN]; stop beyond 2\u03c3 zone; T1 month POC \u00b7 T2 day VAL \u00b7 T3 \u2014; levels are PERP prices \u2014 translate to broker via live basis before MT5; liq clusters are Coinglass estimates",
