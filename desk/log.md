@@ -4141,3 +4141,24 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R201 · 2026-11-12 22:04 UTC · zai-desk
+
+**Market**: BTC 71,489.4 (-3.4%)  ETH 2,015.72 (-1.9%)  SOL 81.37 (-2.2%)  XAU 3,885.99 (-2.5%)  XAG 50.180 (-2.3%)
+**Bias (|score|≥2)**: AVAX-7(TREND)  BNB-6(TREND)  XRP-5(TRANS)  LTC-4(TREND)  ETH-4(TRANS)  XAU-5(TREND)  ADA-3(TREND)  DOGE-2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- AVAX SHORT confluence -7.2 — REJECTED: no structural target >= 2.0R (nearest magnet 8.230 = 0.7R)
+- XRP SHORT confluence -5.0 — REJECTED: opposite liq magnet 1.0481 (str 82, ~$13M est) within 1.2R of entry — wait for sweep
+- LTC SHORT confluence -4.2 — REJECTED: opposite liq magnet 50.55 (str 61, ~$1M est) within 1.2R of entry — wait for sweep
+- ETH SHORT confluence -4.1 — REJECTED: no structural target >= 2.0R (nearest magnet 1,988.83 = 10.5R)
+- XAU SHORT confluence -4.6 — REJECTED: opposite liq magnet 4,018.23 (str 82, ~$19M est) within 1.2R of entry — wait for sweep
+
+### Order lifecycle
+- R183-AVAX-1 EXPIRED (unfilled past expiry)
+- R183-XRP-2 EXPIRED (unfilled past expiry)
+- R187-BNB-1 re-debated: FOR 7/AGAINST 0 — stands
+- R193-DOGE-1 re-debated: FOR 5/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
