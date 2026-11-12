@@ -2938,3 +2938,37 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R137 · 2026-11-12 05:08 UTC · zai-desk
+
+**Market**: BTC 73,608.8 (-0.5%)  ETH 2,046.39 (-0.4%)  SOL 82.95 (-0.3%)  XAU 3,984.81 (-0.0%)  XAG 51.570 (+0.4%)
+**Bias (|score|≥2)**: BTC-7(TREND)  LTC-5(TREND)  XAG-2(TREND)  DOGE-3(TREND)  BNB-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R137-BTC-1 BTC SHORT limit 73,702.1 · stop 73,996.6 · T1 72,234.2 · R 5.0
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (73,608.8 vs 73,817.6), h4 RSI 39.2, day -0.5%
+      [FOR    ] footprint: bull 17 / bear 19; recent: Divergence/buy[time], Divergence/sell[vol]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:sell×1, div:buy×1, div:sell×2, trap:sell×1 — net 1 buy-side vs 4 sell-side
+      [AGAINST] largeOrders: ask wall $25.4M @ 74,888.0 within 2% opposes
+      [FOR    ] liquidation: long-liq magnet 72,234.2 (str 50, ~$768M est, -1.90%) as target
+      [FOR    ] stops(BTC heatmap): 24h liq exposure below $439M vs above $441M
+      [FOR    ] bookWalls: ±5% depth imbalance +0.076 (5m ago +0.084, falling bids); bid $1.33B vs ask $1.14B
+      [FOR    ] cvd: taker buy 49.7%, perpCvd -1215, spotCvd +294, quadrant spot-bid, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -11.2 (8 events)
+- NEW R137-LTC-2 LTC SHORT limit 50.00 · stop 50.20 · T1 49.37 · T2 49.31 · T3 49.08 · R 3.2
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (49.73 vs 50.03), h4 RSI 38.0, day -1.0%
+      [FOR    ] footprint: bull 38 / bear 43; recent: Divergence/buy[time], Bear div/sell[vol], Divergence/buy[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, div:buy×3, div:sell×2, exh:buy×1, exh:sell×3, sdiv:buy×1, sdiv:sell×1, trap:buy×1 — net 8 buy-side vs 6 sell-side
+      [FOR    ] liquidation: long-liq magnet 49.37 (str 66, ~$1M est, -0.77%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.062 (5m ago -0.067, rising bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 49.1%, perpCvd -9, spotCvd -3, quadrant both-selling, latestDiv bear (recent)
+      [AGAINST] notifications: 6h weighted bias +2.0 (1 events)
+
+### Order lifecycle
+- R123-BTC-1 EXPIRED (unfilled past expiry)
+- R127-XAU-1 WITHDRAWN (re-debate lost: FOR 3/AGAINST 3)
+- R128-DOGE-1 re-debated: FOR 6/AGAINST 1 — stands
+- R133-BNB-1 re-debated: FOR 4/AGAINST 2 — stands
+
+### Positions
+- no open positions
+
