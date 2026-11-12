@@ -3811,3 +3811,34 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R183 · 2026-11-12 17:53 UTC · zai-desk
+
+**Market**: BTC 71,855.8 (-2.9%)  ETH 2,015.81 (-1.9%)  SOL 81.61 (-1.9%)  XAU 3,881.78 (-2.6%)  XAG 50.110 (-2.4%)
+**Bias (|score|≥2)**: AVAX-6(TREND)  ADA-5(TRANS)  XRP-4(TREND)  ETH-3(TRANS)  DOGE-2(TRANS)  XAU-2(TREND)  BNB-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R183-AVAX-1 AVAX SHORT limit 8.594 · stop 8.724 · T1 8.230 · T2 8.180 · T3 8.120 · R 2.8
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (8.334 vs 8.464), h4 RSI 46.3, day -2.0%
+      [FOR    ] footprint: bull 31 / bear 51; recent: Absorption/sell[time], Divergence/sell[vol], Exhaustion/buy[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, abs:sell×6, div:buy×2, div:sell×7, exh:buy×3, exh:sell×2, sdiv:sell×3, trap:buy×1 — net 8 buy-side vs 18 sell-side
+      [FOR    ] liquidation: long-liq magnet 8.220 (str 75, ~$2M est, -1.43%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.075 (5m ago +0.022, rising bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.8%, perpCvd -35, spotCvd +1, quadrant spot-bid, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -3.0 (5 events)
+- ADA SHORT confluence -4.7 — REJECTED: opposite liq magnet 0.1735 (str 86, ~$5M est) within 1.2R of entry — wait for sweep
+- NEW R183-XRP-2 XRP SHORT limit 1.0474 · stop 1.0581 · T1 1.0199 · T2 1.0154 · T3 1.0121 · R 2.6
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (1.0293 vs 1.0367), h4 RSI 29.0, day -2.1%
+      [FOR    ] footprint: bull 12 / bear 16; recent: Trapped shorts/buy[time], Absorption/sell[vol], Exhaustion/buy[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:sell×1, div:sell×1, exh:buy×2, trap:buy×2 — net 4 buy-side vs 2 sell-side
+      [FOR    ] liquidation: long-liq magnet 1.0154 (str 100, ~$8M est, -1.34%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.012 (5m ago +0.026, falling bids); bid $0.07B vs ask $0.07B
+      [FOR    ] cvd: taker buy 48.5%, perpCvd -121, spotCvd -110, quadrant both-selling, latestDiv bear (stale/none)
+      [AGAINST] notifications: 6h weighted bias +0.9 (3 events)
+- ETH SHORT confluence -3.3 — REJECTED: no structural target >= 2.0R (nearest magnet 1,984.68 = 15.9R)
+
+### Order lifecycle
+- R168-AVAX-1 EXPIRED (unfilled past expiry)
+
+### Positions
+- no open positions
+
