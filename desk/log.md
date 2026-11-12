@@ -2705,3 +2705,27 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R125 · 2026-11-12 01:42 UTC · zai-desk
+
+**Market**: BTC 73,685.1 (-0.4%)  ETH 2,050.32 (-0.2%)  SOL 83.18 (-0.0%)  XAU 3,994.37 (+0.2%)  XAG 51.780 (+0.8%)
+**Bias (|score|≥2)**: LTC-5(TREND)  BTC-5(TREND)  DOGE-4(TREND)  SOL-2(TREND)  LINK-4(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R125-LINK-1 LINK SHORT limit 10.156 · stop 10.197 · T1 9.988 · T2 9.968 · T3 9.917 · R 4.2
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (10.137 vs 10.181), h4 RSI 36.4, day -0.4%
+      [FOR    ] footprint: bull 21 / bear 23; recent: Absorption/sell[vol], Bear div/sell[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, abs:sell×3, exh:buy×1, sdiv:buy×1, sdiv:sell×1, trap:buy×1 — net 5 buy-side vs 4 sell-side
+      [FOR    ] liquidation: long-liq magnet 9.988 (str 77, ~$1M est, -1.44%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.039 (5m ago -0.001, falling bids); bid $0.01B vs ask $0.02B
+      [FOR    ] cvd: taker buy 49.3%, perpCvd -17, spotCvd +0, quadrant both-selling, latestDiv bear (recent)
+      [AGAINST] notifications: 6h weighted bias +4.0 (5 events)
+
+### Order lifecycle
+- R113-DOGE-1 re-debated: FOR 5/AGAINST 2 — stands
+- R118-LTC-1 re-debated: FOR 5/AGAINST 0 — stands
+- R123-BTC-1 re-debated: FOR 5/AGAINST 3 — stands
+- R123-BNB-2 WITHDRAWN (re-debate lost: FOR 3/AGAINST 3)
+
+### Positions
+- no open positions
+
