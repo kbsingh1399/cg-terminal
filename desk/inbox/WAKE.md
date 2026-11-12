@@ -349,3 +349,14 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] cvd: taker buy 48.5%, perpCvd -42, spotCvd -5, quadrant both-selling, latestDiv bear (stale/none)
 - [FOR] notifications: 6h weighted bias -1.9 (4 events)
 - → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 20:32 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 1)
+- R193-DOGE-1 DOGE SHORT limit entry 0.06587 · stop 0.06671 · targets 0.064 / 0.06349 · R 2.2 · expires 2026-11-13 00:31 UTC
+- BASIS: levels are PERP prices (perpRef 0.06582). Before placing in MT5 read spreads.DOGUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.06582 vs 0.06606), h4 RSI 32.5, day -2.4%
+- [AGAINST] footprint: bull 51 / bear 46; recent: Absorption/buy[vol], Absorption/buy[range]
+- [FOR] liquidation: long-liq magnet 0.06438 (str 77, ~$5M est, -2.17%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.010 (5m ago +0.004, rising bids); bid $0.03B vs ask $0.03B
+- [FOR] cvd: taker buy 48.5%, perpCvd -83, spotCvd -2, quadrant both-selling, latestDiv bear (recent)
+- [FOR] notifications: 6h weighted bias -3.9 (4 events)
+- → place on DOGUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
