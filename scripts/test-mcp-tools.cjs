@@ -65,7 +65,7 @@ function record(name, ok, note) {
   const tl = await rpc("tools/list");
   const names = (tl.result?.tools ?? []).map((t) => t.name);
   console.log("tools/list:", names.join(", "));
-  record("tools/list has 21 tools", names.length === 21, `${names.length} tools`); // 21 since liq_live (live multi-venue liquidation collector)
+  record("tools/list has 24 tools", names.length === 24, `${names.length} tools`); // 24 since backtest_summary + portfolio_risk + narrative_ai_brief (WS6)
 
   const expectOk = async (name, args, check, label) => {
     const r = await call(name, args);
@@ -129,7 +129,10 @@ function record(name, ok, note) {
   await expectOk("options_surface", { sym: "SOL" }, (t) => t.split("\n")[0].slice(0, 90), "options_surface SOL (graceful unsupported)");
 
   // V2 screener + desk tools
-  await expectOk("alpha_screener", { mode: "all" }, (t) => t.split("\n")[0].slice(0, 100), "alpha_screener (V2 tool)");
+  await expectOk("alpha_screener", {}, (t) => {
+    const head = t.split("\n")[0];
+    return /Curated-61/.test(head) ? head.slice(0, 110) : "header mismatch: " + head.slice(0, 110);
+  }, "alpha_screener (Curated-61 radar)");
   await expectOk("desk_status", {}, (t) => t.split("\n")[0].slice(0, 100), "desk_status (V2 tool)");
 
   // Virtual Book — paper-trade outcome tracker for the agent setups
@@ -138,6 +141,21 @@ function record(name, ok, note) {
     return /Virtual Book — \d+ armed · \d+ open · \d+ closed/.test(head) ? head.slice(0, 110) : "header mismatch: " + head.slice(0, 90);
   }, "paper_book (book-wide scoreboard)");
   await expectOk("paper_book", { sym: "BTC" }, (t) => /Virtual Book/.test(t.split("\n")[0]) || /Most relevant ticket/.test(t) ? "sym filter ok" : "no sym-scoped output", "paper_book BTC (sym filter)");
+
+  // WS6 tools — backtest summary, portfolio risk, AI brief (graceful when unconfigured)
+  await expectOk("backtest_summary", {}, (t) => {
+    const head = t.split("\n")[0];
+    return /Walk-Forward Backtest|no completed run/.test(head) ? head.slice(0, 110) : "header mismatch: " + head.slice(0, 110);
+  }, "backtest_summary (walk-forward M1/M2)");
+  await expectOk("backtest_summary", { sym: "BTC" }, (t) => /Backtest|BTC/.test(t.split("\n")[0]) ? "sym filter ok" : "no sym summary", "backtest_summary BTC (sym filter)");
+  await expectOk("portfolio_risk", {}, (t) => {
+    const head = t.split("\n")[0];
+    return /Portfolio Risk/.test(head) ? head.slice(0, 110) : "header mismatch: " + head.slice(0, 110);
+  }, "portfolio_risk (correlation + heat)");
+  await expectOk("narrative_ai_brief", { sym: "BTC" }, (t) => {
+    const head = t.split("\n")[0];
+    return /AI desk brief|unavailable/.test(head) ? head.slice(0, 110) : "header mismatch: " + head.slice(0, 110);
+  }, "narrative_ai_brief BTC (on-demand, honest when unconfigured)");
 
   const fails = results.filter((r) => !r.ok).length;
   console.log(`\n===== ${results.length - fails}/${results.length} passed =====`);

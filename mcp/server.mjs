@@ -723,6 +723,120 @@ async function toolPaperBook(args) {
 // MCP protocol plumbing (JSON-RPC 2.0 over stdio, line-delimited)
 // ---------------------------------------------------------------------------
 
+async function toolBacktestSummary(args) {
+  const sym = args?.sym ? String(args.sym).toUpperCase() : null;
+  const d = await api(`/api/cg/backtest${sym ? `?trades=1` : `?trades=0`}`);
+  if (!d?.ok) throw new Error(d?.error || "backtest feed failed");
+  if (!d.metricsAll) {
+    return {
+      text: `Backtest: no completed run on disk yet${d.status?.running ? ` — a run is in progress (${d.status.progress.done}/${d.status.progress.total} assets)` : " — trigger one from the Backtest tab or /api/cg/backtest?run=1"}. ${d.status?.lastError ? `last error: ${d.status.lastError}` : ""}`.trim(),
+      data: d,
+    };
+  }
+  const fmtM = (m) =>
+    m
+      ? `trades ${m.trades} · fill ${m.fillRatePct ?? "–"}% · win ${m.winRatePct ?? "–"}% · PF ${m.profitFactor ?? "–"} · expNet ${m.expectancyNetR ?? "–"}R · DD ${m.maxDrawdownR}R · sharpe ${m.sharpePerTrade ?? "–"}`
+      : "n/a";
+  let assetLine = "";
+  if (sym) {
+    const trades = (d.trades ?? []).filter((t) => t.sym === sym);
+    const wins = trades.filter((t) => (t.netR ?? 0) > 0).length;
+    const totalR = trades.reduce((s, t) => s + (t.netR ?? 0), 0);
+    assetLine = `\n${sym} historical trades: ${trades.length} · wins ${trades.length ? Math.round((wins / trades.length) * 100) : "–"}% · total ${totalR.toFixed(2)}R`;
+  }
+  const lines = [
+    `Walk-Forward Backtest — ${d.params.days}d · ${d.universe.length} Curated-58 perps · generated ${new Date(d.generatedAt).toISOString().slice(0, 16)}Z · ${d.trades?.length ?? 0} trades`,
+    `ALL: ${fmtM(d.metricsAll)}`,
+    `M1 TREND_PULLBACK: ${fmtM(d.byModel?.M1_TREND_PULLBACK)}`,
+    `M2 MEAN_REVERSION: ${fmtM(d.byModel?.M2_MEAN_REVERSION)}`,
+    `Tiers — majors: ${fmtM(d.byTier?.["crypto-major"])}`,
+    `        alts: ${fmtM(d.byTier?.["crypto-alt"])}`,
+    `        tradfi: ${fmtM(d.byTier?.tradfi)}`,
+    "Sensitivity:",
+    ...(d.sensitivity ?? []).map(
+      (c) => `  ${c.axis}=${c.value}: trades ${c.metrics.trades} · win ${c.metrics.winRatePct ?? "–"}% · expNet ${c.metrics.expectancyNetR ?? "–"}R · PF ${c.metrics.profitFactor ?? "–"}`
+    ),
+    "Calibration curves (probability.ts blends with w_emp = n/(n+30)):",
+    ...(d.calibration ?? []).slice(0, 6).map(
+      (c) => `  ${c.model}|${c.regime}|${c.tier}: n=${c.n} · win ${c.winRate} · avgNetR ${c.avgNetR}${c.logitFit ? ` · fit σ(${c.logitFit.intercept} + ${c.logitFit.slope}·logit(prior))` : ""}`
+    ),
+    `Accounting: ${d.source}`,
+    `Freshness: dataAt ${d.dataAt} · age ${Math.round((d.ageMs ?? 0) / 1000)}s · stale ${d.stale}`,
+    assetLine,
+  ];
+  return { text: lines.filter(Boolean).join("\n"), data: d };
+}
+
+async function toolPortfolioRisk() {
+  const d = await api(`/api/cg/risk`);
+  if (!d?.ok) throw new Error(d?.error || "risk engine failed");
+  const beta = (d.beta ?? []).map((b) => `${b.vs} β7d ${b.beta7d ?? "–"} (24h ${b.beta24h ?? "–"})`).join(" · ");
+  const clusters = (d.clusters ?? [])
+    .slice()
+    .sort((a, b) => b.pctOfGross - a.pctOfGross)
+    .map((c) => `${c.cluster}: ${c.pctOfGross}% gross${c.heatPct != null ? ` · heat ${c.heatPct}%` : ""} (${c.positions.slice(0, 6).join(",")}${c.positions.length > 6 ? "…" : ""})`);
+  const lines = [
+    `Portfolio Risk — ${d.positions.length} positions across surfaces · equity $${d.heat.equityUsd ?? "n/a"} · N_eff ${d.nEff ?? "n/a"}`,
+    `Heat: ${d.heat.heatPct ?? "n/a"}% of equity at stop risk (cluster cap ${d.heat.clusterCapPct}%) · worst cluster ${d.heat.worstCluster ? `${d.heat.worstCluster.cluster} ${d.heat.worstCluster.heatPct}%` : "none"}`,
+    `Beta: ${beta || "n/a"}`,
+    "Clusters:",
+    ...clusters.map((c) => `  ${c}`),
+    ...(d.warnings?.length ? ["Warnings:", ...d.warnings.map((w) => `  [${w.level.toUpperCase()}] ${w.message}`)] : ["Warnings: none"]),
+    `Attribution — Virtual Book: ${(d.attribution?.virtualBook ?? [])
+      .filter((a) => a.model !== "ALL")
+      .map((a) => `${a.model === "M1_TREND_PULLBACK" ? "M1" : a.model === "WAIT_PULLBACK" ? "M1w" : "M2"} ${a.closed} closed · win ${a.winRatePct ?? "–"}% · ${a.totalR >= 0 ? "+" : ""}${a.totalR}R`)
+      .join(" · ")} | MT5 live: ${d.attribution?.mt5Live?.positions ?? 0} positions / ${d.attribution?.mt5Live?.orders ?? 0} orders`,
+    `Sources: ${d.source} · dataAt ${d.dataAt} · age ${Math.round((d.ageMs ?? 0) / 1000)}s`,
+  ];
+  return { text: lines.join("\n"), data: d };
+}
+
+async function toolNarrativeAiBrief(args) {
+  const sym = (args?.sym ?? "BTC").toUpperCase();
+  // the route streams SSE; collect it server-side into one brief
+  try {
+    const res = await fetch(`${TERMINAL_URL}/api/cg/narrative/ai`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ sym }),
+      signal: AbortSignal.timeout(125_000),
+    });
+    const ct = res.headers.get("content-type") ?? "";
+    if (!ct.includes("text/event-stream")) {
+      const j = await res.json().catch(() => null);
+      return {
+        text: `${sym} AI desk brief unavailable: ${j?.reason ?? j?.error ?? `route answered ${res.status}`} — the brief is optional and needs NVIDIA_API_KEY on the server.`,
+        data: j ?? { ok: false },
+      };
+    }
+    const text = await res.text();
+    let brief = "";
+    let cached = false;
+    let ms = null;
+    for (const line of text.split("\n")) {
+      const t = line.trim();
+      if (!t.startsWith("data:")) continue;
+      const payload = t.slice(5).trim();
+      if (payload === "[DONE]") continue;
+      try {
+        const j = JSON.parse(payload);
+        if (j.type === "delta" || j.type === "cached") brief += j.text ?? "";
+        if (j.type === "cached") cached = true;
+        if (j.type === "done") ms = j.ms;
+        if (j.type === "error") return { text: `${sym} AI brief stream error: ${j.error}`, data: { ok: false, error: j.error } };
+      } catch {
+        /* skip */
+      }
+    }
+    return {
+      text: `${sym} AI desk brief${cached ? " (15-min cache)" : ms != null ? ` (${ms} ms)` : ""}:\n\n${brief || "(empty response)"}`,
+      data: { ok: true, sym, brief, cached, ms },
+    };
+  } catch (e) {
+    return { text: `${sym} AI desk brief failed: ${e instanceof Error ? e.message : String(e)}`, data: { ok: false } };
+  }
+}
+
 const TOOLS = [
   {
     name: "list_assets",
@@ -937,8 +1051,14 @@ const TOOLS = [
   },
   {
     name: "alpha_screener",
-    description: "Ranked cross-asset screener across all 30 crucial crypto + 3 metals + TradFi core: live price, 24h%, VWAP σ, 4H EMA, footprint signal, liquidation magnet, and multi-factor confluence score.",
-    inputSchema: { type: "object", properties: { sector: { type: "string", description: "Optional sector filter (major, l1, defi, ai, l2, meme, privacy, metal)" } } },
+    description: "Ranked cross-asset screener over the canonical Curated-61 (30 crypto perps + 28 TradFi perps + 3 classics): live price, 24h%, VWAP σ, RVOL, narrative-radar M1/M2 state (model · grade · direction · EV in R), OI 4h quadrant, OI-weighted funding APR, trailing-5m liquidation cascade USD and multi-factor confluence — with radar sweep liveness telemetry.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        kind: { type: "string", enum: ["crypto-perp", "tradfi-perp", "classic"], description: "Optional kind filter" },
+        gradeMin: { type: "string", enum: ["A", "A+"], description: "Optional minimum narrative grade" },
+      },
+    },
     handler: toolAlphaScreener,
   },
   {
@@ -959,6 +1079,33 @@ const TOOLS = [
       },
     },
     handler: toolPaperBook,
+  },
+  {
+    name: "backtest_summary",
+    description: "Cached walk-forward M1/M2 backtest results (real Binance klines + funding history, stop-first intrabar accounting, tiered fees/slippage): per-model / per-regime / per-tier trades, fill rate, win rate, profit factor, net expectancy R, Sharpe/Sortino, max drawdown, MFE/MAE percentiles, parameter sensitivity grid (M2 σ threshold × M1 R filter) and the empirical calibration curves probability.ts blends in. Optional asset filter summarizes that asset's trades.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sym: { type: "string", description: "Optional asset filter — summarizes that asset's historical trades only" },
+      },
+    },
+    handler: toolBacktestSummary,
+  },
+  {
+    name: "portfolio_risk",
+    description: "Live portfolio risk engine across every exposure surface (MT5 positions/orders + desk directives + Binance testnet + Virtual Book open tickets): rolling 24h/7d return-correlation matrix, net beta vs BTC/QQQ, cluster exposure (Crypto Majors/Alts · AI-Semis · Metals · Energy · Indices), effective independent bets N_eff, portfolio heat (% equity at stop risk) and correlation-guard warnings.",
+    inputSchema: { type: "object", properties: {} },
+    handler: toolPortfolioRisk,
+  },
+  {
+    name: "narrative_ai_brief",
+    description: "Optional on-demand AI desk brief for one asset (streaming SSE, 15-min cache per bar). Requires NVIDIA_API_KEY on the server — answers honestly unavailable otherwise. Grounded strictly in the verified NarrativeVerdict + quant + options telemetry; highlights risks and blindspots, never invents numbers.",
+    inputSchema: {
+      type: "object",
+      properties: { sym: { type: "string", description: "Asset symbol, e.g. BTC, NVDA" } },
+      required: ["sym"],
+    },
+    handler: toolNarrativeAiBrief,
   },
 ];
 

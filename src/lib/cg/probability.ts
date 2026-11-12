@@ -10,12 +10,12 @@
  *     P(max excursion ≥ d within N bars) ≈ 2·(1 − Φ(d / (σ√N)))
  *     σ_bar = ATR(h1) / √(8/π) = ATR(h1) / 1.596 — for a driftless Brownian
  *     motion E[True Range] = σ·√(8/π) ≈ 1.596σ (2026-11-12 WS3 fix: the old
- *     /1.25 constant UNDERSTATED σ ≈ 21.6%, making every fill/touch
- *     probability too optimistic; verified against close-to-close realized
- *     vol std(log returns) in scripts/test-quant-math.cjs). N = the model's
- *     TTL in h1 bars (M1 48h, M2 18h — the same TTLs the Virtual Book expires
- *     tickets at, so the probability describes the exact bet the tracker
- *     grades).
+ *     /1.25 constant OVERSTATED per-bar σ by ≈ 27.7% (1.596/1.25 − 1), making
+ *     every fill/touch first-passage probability too optimistic; verified
+ *     against close-to-close realized vol std(log returns) in
+ *     scripts/test-quant-math.cjs). N = the model's TTL in h1 bars (M1 48h,
+ *     M2 18h — the same TTLs the Virtual Book expires tickets at, so the
+ *     probability describes the exact bet the tracker grades).
  *
  *  2. P(T1 before stop | filled) — gambler's ruin on the fill frame:
  *     p₀ = |E − S| / |T1 − S| (the driftless bound for a two-barrier walk),
