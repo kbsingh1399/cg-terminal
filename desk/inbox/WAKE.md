@@ -144,3 +144,29 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] cvd: taker buy 49.3%, perpCvd -23, spotCvd +3, quadrant spot-bid, latestDiv bear (recent)
 - [FOR] notifications: 6h weighted bias -3.0 (2 events)
 - → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 05:10 UTC — new suggested order — place in MT5 (debate FOR 8/AGAINST 1)
+- R137-BTC-1 BTC SHORT limit entry 73702.1 · stop 73996.6 · targets 72234.2 · R 5 · expires 2026-11-12 09:08 UTC
+- BASIS: levels are PERP prices (perpRef 73608.8). Before placing in MT5 read spreads.BTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (73,608.8 vs 73,817.6), h4 RSI 39.2, day -0.5%
+- [FOR] footprint: bull 17 / bear 19; recent: Divergence/buy[time], Divergence/sell[vol]
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:sell×1, div:buy×1, div:sell×2, trap:sell×1 — net 1 buy-side vs 4 sell-side
+- [AGAINST] largeOrders: ask wall $25.4M @ 74,888.0 within 2% opposes
+- [FOR] liquidation: long-liq magnet 72,234.2 (str 50, ~$768M est, -1.90%) as target
+- [FOR] stops(BTC heatmap): 24h liq exposure below $439M vs above $441M
+- [FOR] bookWalls: ±5% depth imbalance +0.076 (5m ago +0.084, falling bids); bid $1.33B vs ask $1.14B
+- [FOR] cvd: taker buy 49.7%, perpCvd -1215, spotCvd +294, quadrant spot-bid, latestDiv bear (recent)
+- [FOR] notifications: 6h weighted bias -11.2 (8 events)
+- → place on BTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 05:10 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 2)
+- R137-LTC-2 LTC SHORT limit entry 50 · stop 50.2 · targets 49.37 / 49.31 / 49.08 · R 3.2 · expires 2026-11-12 09:08 UTC
+- BASIS: levels are PERP prices (perpRef 49.73). Before placing in MT5 read spreads.LTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (49.73 vs 50.03), h4 RSI 38.0, day -1.0%
+- [FOR] footprint: bull 38 / bear 43; recent: Divergence/buy[time], Bear div/sell[vol], Divergence/buy[range]
+- [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, div:buy×3, div:sell×2, exh:buy×1, exh:sell×3, sdiv:buy×1, sdiv:sell×1, trap:buy×1 — net 8 buy-side vs 6 sell-side
+- [FOR] liquidation: long-liq magnet 49.37 (str 66, ~$1M est, -0.77%) as target
+- [FOR] bookWalls: ±5% depth imbalance -0.062 (5m ago -0.067, rising bids); bid $0.01B vs ask $0.01B
+- [FOR] cvd: taker buy 49.1%, perpCvd -9, spotCvd -3, quadrant both-selling, latestDiv bear (recent)
+- [AGAINST] notifications: 6h weighted bias +2.0 (1 events)
+- → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
