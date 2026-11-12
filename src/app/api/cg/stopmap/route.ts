@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import { makeObeToken } from "@/lib/cg/crypto";
-import { buildStopModel, buildRollingStopModel, type LiqHeatmapPayload, type StopModel } from "@/lib/cg/liq-heatmap";
+import { buildStopModel, buildRollingStopModel, lastRollingNullReason, type LiqHeatmapPayload, type StopModel } from "@/lib/cg/liq-heatmap";
 import { isAsset } from "@/lib/cg/assets";
 import { isCuratedPerp } from "@/lib/cg/assets";
 import { anyTerminalSym } from "@/lib/cg/sym-gate";
@@ -79,7 +79,9 @@ export async function GET(req: NextRequest) {
           ok: true,
           supported: false,
           sym,
-          reason: "no liquidation-level snapshots archived yet for this perp — the engine rotates the full universe every ~45 min; retry after the next pass",
+          reason:
+            lastRollingNullReason ||
+            "no liquidation-level snapshots archived yet for this perp — the engine rotates the full universe every ~45 min; retry after the next pass",
           dataAt: Date.now(),
           ageMs: 0,
           stale: false,

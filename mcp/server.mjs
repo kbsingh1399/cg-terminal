@@ -112,17 +112,27 @@ async function toolListAssets() {
   if (!d || d.ok === false || !Array.isArray(d.assets)) {
     throw new Error(`assets route unhealthy: ${JSON.stringify(d).slice(0, 200)}`);
   }
-  // count + crypto/metal split derived from the LIVE response — the registry
-  // (src/lib/cg/assets.ts ASSETS) is the source of truth and grows; a
-  // hardcoded count here drifted 12 → 15 once and lied to the agent.
-  const assets = d.assets;
-  const metals = assets.filter((a) => a.kind === "metal").length;
-  return {
-    text:
-      `${assets.length} tradable assets (${assets.length - metals} crypto perps + ${metals} metal perps) — live from the terminal:\n` +
-      assets.map((a) => `${a.sym.padEnd(5)} ${a.name}${a.kind === "metal" ? " (metal perp)" : ""}`).join("\n"),
-    data: d,
-  };
+  // FULL CURATED-61 (2026-11-12 directive): 58 curated perps (30 crypto +
+  // 28 TradFi) + 3 classic (SPX500/UKO/NDX100) — membership live from the
+  // route (source of truth: src/lib/universe/curated.ts), never hardcoded.
+  const curated = Array.isArray(d.curated) ? d.curated : [];
+  const classic = Array.isArray(d.curatedClassic) ? d.curatedClassic : [];
+  if (!curated.length) {
+    throw new Error("assets route returned no curated list — universe unavailable");
+  }
+  const crypto = curated.filter((a) => a.kind === "crypto-perp");
+  const tradfi = curated.filter((a) => a.kind === "tradfi-perp");
+  const lines = [
+    `${curated.length + classic.length} assets: ${crypto.length} crypto perps + ${tradfi.length} TradFi perps + ${classic.length} classic — live from the terminal:`,
+    "",
+    "-- CRYPTO PERPS --",
+    ...crypto.map((a) => `${a.sym.padEnd(10)} ${a.name} [${a.sub}]${a.punchable ? "" : " (live-only, no testnet)"}`),
+    "-- TRADFI PERPS (Binance plain-name USDT-M) --",
+    ...tradfi.map((a) => `${a.sym.padEnd(10)} ${a.name} [${a.sub}]${a.spotPair ? ` · spot ${a.spotPair}` : ""}${a.punchable ? "" : " (live-only)"}`),
+    "-- CLASSIC (no perp engine — quotes + bars) --",
+    ...classic.map((a) => `${a.sym.padEnd(10)} ${a.name} [${a.sub}]`),
+  ];
+  return { text: lines.join("\n"), data: { curatedTotal: d.curatedTotal ?? curated.length, classicTotal: classic.length, total: curated.length + classic.length, curated, curatedClassic: classic } };
 }
 
 async function toolMarketSnapshot(args) {
@@ -313,7 +323,14 @@ async function toolStopmap(args) {
   if (Number.isFinite(endN) && endN > 0) endQ = `&endTime=${Math.floor(endN)}`;
   const d = await api(`/api/cg/stopmap?sym=${sym}${endQ}`);
   if (!d.ok) throw new Error(d.error || "stopmap failed");
+  // honest degradation: non-BTC perps serve the rolling liq-snapshot heatmap
+  // from archived liqlevels — until the engine's rotation archives that sym,
+  // the route returns 200 { supported: false, reason }. Never crash, never 400.
+  if (d.supported === false) {
+    return { text: `${sym} liquidation heatmap: ${d.reason ?? "rolling liq-snapshot archive not yet available for this perp"}`, data: d };
+  }
   const m = d.model;
+  if (!m) throw new Error("stopmap returned no model");
   const lines = [
     `${sym} liquidation heatmap (24h window @ 5m bars, ${m.totals?.rows ?? 0} priced rows${endQ ? ", historical" : ""}) — price ${m.lastPrice}`,
     `est. resting liq exposure: ${fmtUsd(m.totals?.below)} below (longs) · ${fmtUsd(m.totals?.above)} above (shorts)`,
@@ -426,7 +443,7 @@ async function toolKline(args) {
 
 async function toolAnalyzeSetup(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
-  const [market, signals, liq, whale, book, cvd, notif] = await Promise.all([
+  const [market, signals, liq, whale, book, cvd, notif, narrative, quant, options] = await Promise.all([
     toolMarketSnapshot({ sym }).catch(() => null),
     toolSignals({ sym }).catch(() => null),
     toolLiquidationLevels({ sym, range: "3d" }).catch(() => null),
@@ -434,9 +451,25 @@ async function toolAnalyzeSetup(args) {
     toolBookWalls({ sym }).catch(() => null),
     toolCvdState({ sym }).catch(() => null),
     api(`/api/cg/notifications?asset=${sym}&limit=15`).catch(() => null),
+    api(`/api/cg/narrative?sym=${sym}`).catch(() => null),
+    api(`/api/cg/quant?sym=${sym}`).catch(() => null),
+    api(`/api/cg/options?sym=${sym}`).catch(() => null),
   ]);
   const parts = [];
-  parts.push(`=== ${sym} TRADE CONTEXT (all values live from the Coinglass API) ===`);
+  parts.push(`=== ${sym} TRADE CONTEXT (all values live) ===`);
+  if (narrative?.ok && narrative.supported !== false) {
+    parts.push(
+      `\n--- NARRATIVE VERDICT (M1/M2 engine) ---\n` +
+        `${narrative.regime} · ${narrative.activeModel} · ${narrative.direction} · grade ${narrative.grade} (conf ${narrative.confidence}/100)\n` +
+        `${narrative.thesis}\n` +
+        (narrative.plan?.entryZone
+          ? `Plan: entry ${narrative.plan.entryZone[0]?.toFixed(2)}-${narrative.plan.entryZone[1]?.toFixed(2)} · stop ${narrative.plan.stop?.toFixed(2)} · bestR ${narrative.plan.bestR?.toFixed(2)}\n` +
+            `Targets: ${(narrative.plan.targets || []).filter((t) => t.level != null).map((t) => `${t.label} @ ${t.level.toFixed(2)} (${t.rMultiple?.toFixed(1) ?? "?"}R)`).join(" | ")}\n`
+          : "") +
+        (narrative.plan?.vetoes?.length ? `Vetoes: ${narrative.plan.vetoes.join("; ")}\n` : "") +
+        `Freshness: worstAgeMs ${narrative.freshness?.worstAgeMs ?? "?"}${narrative.freshness?.staleFields?.length ? ` · stale: ${narrative.freshness.staleFields.join(",")}` : ""}`
+    );
+  }
   if (market) parts.push(`\n--- MARKET ---\n${market.text}`);
   if (signals) parts.push(`\n--- FOOTPRINT SIGNALS ---\n${signals.text}`);
   if (liq) parts.push(`\n--- LIQUIDATION CLUSTERS (sweep magnets) ---\n${liq.text}`);
@@ -449,6 +482,24 @@ async function toolAnalyzeSetup(args) {
         notif.items.map((n) => `${new Date(n.ts).toISOString().slice(5, 16).replace("T", " ")} [${n.severity}] ${n.dir.toUpperCase()} ${n.source}: ${n.title}`).join("\n")
     );
   }
+  if (quant?.ok && quant.supported !== false) {
+    const ls1h = quant.lsRatios?.["1h"] ?? {};
+    parts.push(
+      `\n--- QUANT POSITIONING ---\n` +
+        `OI-weighted funding APR ${quant.funding?.annualizedAprPct?.toFixed(2) ?? "–"}% · spread ${quant.funding?.fundingSpreadBps?.toFixed(2) ?? "–"}bps\n` +
+        `L/S 1h: global ${ls1h.global?.ratio?.toFixed(2) ?? "–"} · top-trader positions ${ls1h.topPositions?.ratio?.toFixed(2) ?? "–"} · taker ${ls1h.taker?.buySellRatio?.toFixed(2) ?? "–"}\n` +
+        `OI quadrants: 1h ${quant.oiQuadrant?.["1h"]?.quadrant ?? "–"} · 4h ${quant.oiQuadrant?.["4h"]?.quadrant ?? "–"} · 24h ${quant.oiQuadrant?.["24h"]?.quadrant ?? "–"}\n` +
+        `Basis ${quant.basis?.basisPct?.toFixed(3) ?? "–"}% · Coinbase premium ${quant.basis?.coinbasePremiumBps?.toFixed(1) ?? "–"}bps`
+    );
+  }
+  if (options?.ok && options.supported !== false) {
+    parts.push(
+      `\n--- OPTIONS SURFACE (Deribit) ---\n` +
+        `DVOL ${options.dvol?.value?.toFixed(1) ?? "–"} (${options.dvol?.changePct24h?.toFixed(1) ?? "–"}% 24h) · ATM IV 7/30/90d ` +
+        `${options.termStructure?.["7d"]?.toFixed(1) ?? "–"}/${options.termStructure?.["30d"]?.toFixed(1) ?? "–"}/${options.termStructure?.["90d"]?.toFixed(1) ?? "–"}\n` +
+        `RR25d ${options.riskReversal25d?.value?.toFixed(1) ?? "–"} · GEX ${options.gex?.regime ?? "–"} · P/C OI ${options.putCallRatio?.oi?.toFixed(2) ?? "–"}`
+    );
+  }
   parts.push(
     `\n--- FORMULATION GUIDE ---\n` +
       `Bias: align footprint signal direction (absorption/trap = strongest) with the 4H EMA13×EMA89 trend and position vs day VWAP.\n` +
@@ -459,7 +510,7 @@ async function toolAnalyzeSetup(args) {
   );
   return {
     text: parts.join("\n"),
-    data: { sym, market: market?.data, signals: signals?.data, liq: liq?.data, whale: whale?.data, notifications: notif?.items ?? [] },
+    data: { sym, narrative, market: market?.data, signals: signals?.data, liq: liq?.data, whale: whale?.data, quant, options, notifications: notif?.items ?? [] },
   };
 }
 
@@ -479,6 +530,82 @@ async function toolAlphaScreener(args) {
       const mag = r.liqMagnet ? `mag:${r.liqMagnet.side}@${r.liqMagnet.distPct}%` : "";
       return `${r.sym.padEnd(9)} px=${r.price ?? "–"} (${chg}) · 4h=${r.ema4h ?? "–"} · ${conf} ${vw} ${mag}`.trim();
     }),
+  ];
+  return { text: lines.join("\n"), data: d };
+}
+
+async function toolTradeNarrative(args) {
+  const sym = (args?.sym ?? "BTC").toUpperCase();
+  const d = await api(`/api/cg/narrative?sym=${sym}`);
+  if (d?.ok === false) throw new Error(d?.error || "narrative failed");
+  if (d?.supported === false) {
+    return { text: `${sym}: ${d.reason ?? "no narrative available for this instrument"}`, data: d };
+  }
+  const plan = d.plan ?? {};
+  const lines = [
+    `${sym} — ${d.regime} · ${d.activeModel} · ${d.direction} · grade ${d.grade} (confidence ${d.confidence}/100)`,
+    d.thesis ?? "",
+    "",
+    `Entry zone: ${plan.entryZone ? `${plan.entryZone[0]} – ${plan.entryZone[1]}` : "n/a"}`,
+    `Trigger: ${plan.triggerRule ?? "n/a"}`,
+    `Stop: ${plan.stop ?? "n/a"} (${plan.invalidation ?? ""})`,
+    ...(plan.targets ?? []).map((t) => `${t.label}: ${t.level ?? "n/a"}${t.rMultiple != null ? ` (${t.rMultiple.toFixed(2)}R)` : ""}`),
+    `bestR: ${plan.bestR != null ? plan.bestR.toFixed(2) : "n/a"} (min 1.5)`,
+    ...(plan.vetoes?.length ? ["", `Vetoes:`, ...plan.vetoes.map((v) => `- ${v}`)] : []),
+    "",
+    "Checklist (exact measured values):",
+    ...(d.checklist ?? []).map((c) => `- [${c.pass === true ? "PASS" : c.pass === false ? "FAIL" : "N/A"}] ${c.label}: ${c.value}`),
+    "",
+    `Freshness: worstAgeMs ${d.freshness?.worstAgeMs ?? "?"}${d.freshness?.staleFields?.length ? ` · stale fields: ${d.freshness.staleFields.join(", ")}` : " (all fresh)"}`,
+  ];
+  return { text: lines.join("\n"), data: d };
+}
+
+async function toolQuantPositioning(args) {
+  const sym = (args?.sym ?? "BTC").toUpperCase();
+  const d = await api(`/api/cg/quant?sym=${sym}`);
+  if (d?.ok === false) throw new Error(d?.error || "quant positioning failed");
+  if (d?.supported === false) return { text: `${sym}: ${d.reason ?? "no positioning data"}`, data: d };
+  const per = (p) => {
+    const x = d.lsRatios?.[p] ?? {};
+    return `${p}: global ${x.global?.ratio?.toFixed(2) ?? "–"} (${x.global?.longPct?.toFixed(1) ?? "–"}% long) · top accounts ${x.topAccounts?.ratio?.toFixed(2) ?? "–"} · top positions ${x.topPositions?.ratio?.toFixed(2) ?? "–"} · taker ${x.taker?.buySellRatio?.toFixed(3) ?? "–"}`;
+  };
+  const lines = [
+    `${sym} quant positioning (${d.pair}):`,
+    per("15m"),
+    per("1h"),
+    per("4h"),
+    "",
+    `OI-weighted funding: ${d.funding?.oiWeightedRate8h ?? "–"}%/8h → ${d.funding?.annualizedAprPct?.toFixed(2) ?? "–"}% APR · cross-venue spread ${d.funding?.fundingSpreadBps?.toFixed(2) ?? "–"}bps (${(d.funding?.spreadVenues ?? []).join(" vs ")})`,
+    `Venues: ${(d.funding?.venues ?? []).map((v) => `${v.name} ${v.rate8h}%/${v.fundingIntervalHours}h`).join(" · ")}`,
+    "",
+    `OI×price quadrants: 1h ${d.oiQuadrant?.["1h"]?.quadrant ?? "–"} (Δoi ${d.oiQuadrant?.["1h"]?.oiDeltaPct?.toFixed(2) ?? "–"}%, Δpx ${d.oiQuadrant?.["1h"]?.priceDeltaPct?.toFixed(2) ?? "–"}%) · 4h ${d.oiQuadrant?.["4h"]?.quadrant ?? "–"} · 24h ${d.oiQuadrant?.["24h"]?.quadrant ?? "–"}`,
+    `OI/24h-vol ratio: ${d.oiQuadrant?.oiToVolRatio?.toFixed(2) ?? "–"}`,
+    `Spot-perp basis: ${d.basis?.basisPct?.toFixed(4) ?? "–"}% (spot ${d.basis?.spotPair ?? "n/a"} @ ${d.basis?.spotPrice ?? "–"}) · Coinbase premium ${d.basis?.coinbasePremiumBps?.toFixed(1) ?? "–"}bps`,
+    "",
+    `Freshness: dataAt ${d.dataAt} · ageMs ${d.ageMs} · stale ${d.stale} · source ${d.source}`,
+    ...(d.notes?.length ? ["", "Notes:", ...d.notes.map((n) => `- ${n}`)] : []),
+  ];
+  return { text: lines.join("\n"), data: d };
+}
+
+async function toolOptionsSurface(args) {
+  const sym = (args?.sym ?? "BTC").toUpperCase();
+  const d = await api(`/api/cg/options?sym=${sym}`);
+  if (d?.ok === false) throw new Error(d?.error || "options surface failed");
+  if (d?.supported === false) return { text: `${sym}: ${d.reason ?? "no options data"}`, data: d };
+  const lines = [
+    `${sym} options surface (Deribit ${d.currency}):`,
+    `DVOL ${d.dvol?.value?.toFixed(1) ?? "–"} (${d.dvol?.changePct24h?.toFixed(1) ?? "–"}% 24h)`,
+    `ATM IV term structure: 7d ${d.termStructure?.["7d"]?.toFixed(1) ?? "–"}% · 30d ${d.termStructure?.["30d"]?.toFixed(1) ?? "–"}% · 90d ${d.termStructure?.["90d"]?.toFixed(1) ?? "–"}%`,
+    `25Δ risk reversal: ${d.riskReversal25d?.value?.toFixed(1) ?? "–"} vol pts (${d.riskReversal25d?.method ?? "–"}, ${d.riskReversal25d?.expiry ?? "–"})`,
+    `Max pain: ${(d.maxPain ?? []).map((m) => `${m.expiry} @ ${m.strike}`).join(" · ")}`,
+    `Top call OI walls: ${(d.oiWalls?.calls ?? []).slice(0, 3).map((w) => `${w.strike} ($${(w.oiUsd / 1e6).toFixed(1)}M)`).join(" · ")}`,
+    `Top put OI walls: ${(d.oiWalls?.puts ?? []).slice(0, 3).map((w) => `${w.strike} ($${(w.oiUsd / 1e6).toFixed(1)}M)`).join(" · ")}`,
+    `GEX: ${d.gex?.netGexUsd != null ? `$${(d.gex.netGexUsd / 1e6).toFixed(1)}M` : "–"} → ${d.gex?.regime ?? "–"} (spot ${d.gex?.spot ?? "–"})`,
+    `Put/Call: OI ${d.putCallRatio?.oi?.toFixed(2) ?? "–"} · vol24h ${d.putCallRatio?.vol24h?.toFixed(2) ?? "–"}`,
+    `Freshness: dataAt ${d.dataAt} · ageMs ${d.ageMs} · stale ${d.stale}`,
+    ...(d.notes?.length ? ["", "Notes:", ...d.notes.map((n) => `- ${n}`)] : []),
   ];
   return { text: lines.join("\n"), data: d };
 }
@@ -669,6 +796,36 @@ const TOOLS = [
     description: "One-call trade-formulation context for an asset: market snapshot + footprint signals + liquidation clusters + whale walls + book walls + CVD state + recent events + the formulation guide (bias / entry / stop / targets).",
     inputSchema: { type: "object", properties: { sym: { type: "string" } }, required: ["sym"] },
     handler: toolAnalyzeSetup,
+  },
+  {
+    name: "trade_narrative",
+    description: "The deterministic M1/M2 trade narrative: regime classification (TREND_UP/DOWN · RANGE_BALANCE · COMPRESSION_SQUEEZE), dual-model evaluation (M1 trend-pullback, M2 VWAP ±2σ-3σ mean reversion), hard vetoes, full plan (entry zone · trigger · stop · T1-T3 R-ladder) and the exact-value checklist with freshness (worstAgeMs, staleFields). Works for crypto, TradFi perps and classic (reduced checklist).",
+    inputSchema: {
+      type: "object",
+      properties: { sym: { type: "string", description: "Asset symbol, e.g. BTC, NVDA, SPX500" } },
+      required: ["sym"],
+    },
+    handler: toolTradeNarrative,
+  },
+  {
+    name: "quant_positioning",
+    description: "Derivatives positioning: Binance long/short ratios (global accounts, top-trader accounts, top-trader positions, taker buy/sell) at 15m/1h/4h, OI-weighted funding + annualized APR + cross-venue arb spread, OI×price 4-quadrant states (1h/4h/24h), spot-perp basis and Coinbase premium (majors).",
+    inputSchema: {
+      type: "object",
+      properties: { sym: { type: "string", description: "Asset symbol, e.g. BTC, NVDA, 1000PEPE" } },
+      required: ["sym"],
+    },
+    handler: toolQuantPositioning,
+  },
+  {
+    name: "options_surface",
+    description: "Deribit options surface (BTC/ETH): DVOL index, ATM IV term structure (7/30/90d), 25-delta risk-reversal skew, max pain (3 monthlies), top call/put OI walls, dealer net gamma (GEX) regime and put/call ratios.",
+    inputSchema: {
+      type: "object",
+      properties: { sym: { type: "string", enum: ["BTC", "ETH"], description: "Deribit lists options only for BTC/ETH" } },
+      required: ["sym"],
+    },
+    handler: toolOptionsSurface,
   },
   {
     name: "alpha_screener",

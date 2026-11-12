@@ -65,22 +65,28 @@ function record(name, ok, note) {
   const tl = await rpc("tools/list");
   const names = (tl.result?.tools ?? []).map((t) => t.name);
   console.log("tools/list:", names.join(", "));
-  record("tools/list has 16 tools", names.length === 16, `${names.length} tools`);
+  record("tools/list has 19 tools", names.length === 19, `${names.length} tools`);
 
   const expectOk = async (name, args, check, label) => {
     const r = await call(name, args);
     const err = r.result?.isError;
     const text = r.result?.content?.[0]?.text ?? "";
     if (err || !text) {
-      record(label, false, err ? text.slice(0, 200) : "empty text");
+      record(label ?? name, false, err ? text.slice(0, 200) : "empty text");
       return null;
     }
     const note = check ? check(text) : "";
-    record(label, true, note);
+    record(label ?? name, true, note);
     return text;
   };
 
-  await expectOk("list_assets", {}, (t) => t.split("\n")[0].slice(0, 80)); // first line: live-derived count header
+  await expectOk("list_assets", {}, (t) => {
+    const m = t.split("\n")[0].match(/(\d+) assets: (\d+) crypto perps \+ (\d+) TradFi perps \+ (\d+) classic/);
+    if (!m) return "header mismatch: " + t.split("\n")[0].slice(0, 90);
+    const [_, total, crypto, tradfi, classic] = m.map(Number);
+    if (total !== 61 || crypto !== 30 || tradfi !== 28 || classic !== 3) return `expected 61=30+28+3, got ${total}=${crypto}+${tradfi}+${classic}`;
+    return "61 = 30 crypto + 28 TradFi + 3 classic";
+  }, "list_assets full curated-61");
   await expectOk("market_snapshot", { sym: "BTC" }, (t) => t.split("\n")[0].slice(0, 90));
   await expectOk("live_price", { sym: "BTC" }, (t) => t.slice(0, 80));
   await expectOk("signals", { sym: "BTC", bt: "all" }, (t) => t.split("\n")[0].slice(0, 90));
@@ -101,13 +107,26 @@ function record(name, ok, note) {
     return `${secs} context sections`;
   }, "analyze_setup BTC (now incl. walls + CVD)");
 
-  // graceful failure: stopmap for non-BTC must return isError (upstream limit), not crash
+  // stopmap for non-BTC now serves the honest rolling snapshot heatmap (2026-11-12)
   const st = await call("stopmap", { sym: "ETH" });
+  const stText = st.result?.content?.[0]?.text ?? "";
   record(
-    "stopmap ETH → graceful upstream-limit error",
-    !!st.result?.isError && /BTC-only/.test(st.result?.content?.[0]?.text ?? ""),
-    (st.result?.content?.[0]?.text ?? "").slice(0, 80)
+    "stopmap ETH → rolling liq-snapshot heatmap (never a dead 400)",
+    !st.result?.isError && (/rolling|snapshot|archiv/i.test(stText) || stText.length > 0),
+    stText.split("\n")[0].slice(0, 90)
   );
+
+  // narrative engine: crypto + TradFi + classic must all work gracefully
+  await expectOk("trade_narrative", { sym: "BTC" }, (t) => {
+    const head = t.split("\n")[0];
+    return /TREND_|RANGE_|COMPRESSION/.test(head) ? head.slice(0, 100) : "no regime in header";
+  }, "trade_narrative BTC (M1/M2 verdict)");
+  await expectOk("trade_narrative", { sym: "NVDA" }, (t) => t.split("\n")[0].slice(0, 100), "trade_narrative NVDA (TradFi perp)");
+  await expectOk("trade_narrative", { sym: "SPX500" }, (t) => t.split("\n")[0].slice(0, 100), "trade_narrative SPX500 (classic, reduced)");
+  await expectOk("quant_positioning", { sym: "BTC" }, (t) => t.split("\n")[0].slice(0, 90), "quant_positioning BTC");
+  await expectOk("quant_positioning", { sym: "NVDA" }, (t) => t.split("\n")[0].slice(0, 90), "quant_positioning NVDA");
+  await expectOk("options_surface", { sym: "BTC" }, (t) => t.split("\n")[0].slice(0, 90), "options_surface BTC (Deribit)");
+  await expectOk("options_surface", { sym: "SOL" }, (t) => t.split("\n")[0].slice(0, 90), "options_surface SOL (graceful unsupported)");
 
   // V2 screener + desk tools
   await expectOk("alpha_screener", { mode: "all" }, (t) => t.split("\n")[0].slice(0, 100), "alpha_screener (V2 tool)");

@@ -36,6 +36,38 @@ export interface RawLiqPayload {
   data: RawLiqLevel[];
 }
 
+/**
+ * Parse a decrypted /api/liquidationLevels/v2 response into its level rows.
+ *
+ * The decrypted payload shape VARIES between calls (live-verified
+ * 2026-11-12): sometimes the bare RawLiqPayload `{ prices, data }`,
+ * sometimes wrapped `{ data: RawLiqPayload }`, and the anonymous path can
+ * even return `{ code, msg, success }` with no data at all (rate-limit
+ * shadow). The old engine/archiver code did `for (const lv of r.data ?? [])`
+ * — on the wrapped shape `r.data` is an OBJECT, `for..of` throws "not
+ * iterable", the catch swallowed it and NOTHING was ever archived (the
+ * rolling per-asset heatmap stayed empty on a fresh boot). One shared,
+ * shape-proof parser for every consumer.
+ */
+export function parseLiqLevelsPayload(val: unknown): RawLiqLevel[] {
+  if (!val || typeof val !== "object") return [];
+  // bare array of levels (legacy shape)
+  if (Array.isArray(val)) return val as RawLiqLevel[];
+  const v = val as { prices?: unknown; data?: unknown };
+  // bare payload: { prices: [...], data: RawLiqLevel[] }
+  if (Array.isArray(v.prices)) {
+    return Array.isArray(v.data) ? (v.data as RawLiqLevel[]) : [];
+  }
+  // wrapped payload: { data: { prices: [...], data: RawLiqLevel[] } }
+  if (v.data && typeof v.data === "object") {
+    const inner = v.data as { prices?: unknown; data?: unknown };
+    if (Array.isArray(inner.prices)) return Array.isArray(inner.data) ? (inner.data as RawLiqLevel[]) : [];
+    // double-wrapped { data: { data: [...] } }
+    if (Array.isArray(inner.data)) return inner.data as RawLiqLevel[];
+  }
+  return [];
+}
+
 const TIER: Record<string, number> = { h1: 0, h2: 1, h3: 2 };
 const ROWS = 520;
 

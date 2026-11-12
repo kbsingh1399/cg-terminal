@@ -11,6 +11,7 @@
 
 import fs from "fs";
 import path from "path";
+import { resolveDataRoot } from "./store";
 
 export type NotifSource = "footprint" | "indicators" | "whale-orders" | "liqlevels" | "cvd" | "engine";
 export type NotifDir = "bullish" | "bearish" | "neutral";
@@ -31,7 +32,10 @@ export interface CgNotification {
   meta?: Record<string, unknown>;
 }
 
-const ROOT = process.env.CG_DATA_DIR || path.join(process.cwd(), "data", "cg-series");
+// CRITICAL (2026-11-12 fix): same standalone-cwd trap as store.ts — the
+// notification feed must survive rebuilds, so it lives in the PROJECT
+// data/cg-series, never inside .next/standalone (wiped by next build).
+const ROOT = resolveDataRoot();
 const FEED_FILE = path.join(ROOT, "notifications.jsonl");
 const MAX = 2000;
 

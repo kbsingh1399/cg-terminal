@@ -33,7 +33,36 @@ interface StoreState {
   writeWarned?: boolean;
 }
 
-const ROOT = process.env.CG_DATA_DIR || path.join(process.cwd(), "data", "cg-series");
+/**
+ * Resolve the project's data/cg-series directory.
+ *
+ * CRITICAL (2026-11-12 fix): `npm start` runs `.next/standalone/server.js`
+ * with cwd = <project>/.next/standalone — a plain `process.cwd()/data/...`
+ * therefore pointed INSIDE the build output, which `next build` WIPES on
+ * every rebuild. Months of continuity archives (liqlevels, bookwalls, flows)
+ * silently vanished on each deploy. Escape the standalone dir by walking up
+ * until we find the real project root (the one with package.json + data/).
+ */
+/** shared project-root resolver (also used by notify.ts) */
+export function resolveDataRoot(): string {
+  return ROOT;
+}
+
+function resolveRoot(): string {
+  if (process.env.CG_DATA_DIR) return process.env.CG_DATA_DIR;
+  let dir = process.cwd();
+  for (let i = 0; i < 6; i++) {
+    if (path.basename(dir) === "standalone" && path.basename(path.dirname(dir)) === ".next") {
+      dir = path.dirname(path.dirname(dir)); // <project>/.next/standalone -> <project>
+      break;
+    }
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return path.join(dir, "data", "cg-series");
+}
+const ROOT = resolveRoot();
 
 /**
  * Retention cap: per-series in-memory rows AND compacted file rows.

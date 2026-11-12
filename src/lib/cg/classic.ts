@@ -54,8 +54,8 @@ export const CLASSIC_ASSETS: ClassicCfg[] = [
   //   micro anchor (24/7, seconds-fresh) → futYahoo (24/5, ~10m delayed) → cash (session-bound).
   // US30 + US2000 have no micro-mapped perp, so they ride Yahoo futures leads.
   { sym: "US30", name: "Dow Jones 30", klass: "index", broker: "US30", yahoo: "^DJI", volume: true, tradfiCore: true, futYahoo: "YM=F" },
-  { sym: "SPX500", name: "S&P 500", klass: "index", broker: "SPX500", yahoo: "^GSPC", volume: true, tradfiCore: true },
-  { sym: "NDX100", name: "Nasdaq 100", klass: "index", broker: "NDX100", yahoo: "^NDX", volume: true, tradfiCore: true },
+  { sym: "SPX500", name: "S&P 500", klass: "index", broker: "SPX500", yahoo: "^GSPC", volume: true, tradfiCore: true, futYahoo: "ES=F" },
+  { sym: "NDX100", name: "Nasdaq 100", klass: "index", broker: "NDX100", yahoo: "^NDX", volume: true, tradfiCore: true, futYahoo: "NQ=F" },
   { sym: "US2000", name: "Russell 2000", klass: "index", broker: "US2000", yahoo: "^RUT", volume: false, futYahoo: "RTY=F" },
   { sym: "VIX", name: "CBOE Volatility Index", klass: "index", broker: "VIX", yahoo: "^VIX", volume: false, tradfiCore: true, note: "cash VIX is price-only; VIX futures not on Yahoo" },
   { sym: "GER30", name: "DAX 40", klass: "index", broker: "GER30", yahoo: "^GDAXI", volume: false, tradfiCore: true },

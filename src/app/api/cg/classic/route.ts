@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CLASSIC_ASSETS, classicOf, classicCounts, isClassic } from "@/lib/cg/classic";
-import { microLiveQuote, microMapOf, type LiveQuote } from "@/lib/cg/micro";
+import { CLASSIC_ASSETS, classicOf, classicCounts, isClassic, type ClassicCfg } from "@/lib/cg/classic";
+import { microLiveQuote, microMapOf, type LiveQuote, hlXyzSnapshot } from "@/lib/cg/micro";
+import { HL_XYZ_MAP } from "@/lib/binance/aliases";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +47,82 @@ interface CacheEntry {
 const g = globalThis as unknown as { __cgClassic?: Map<string, CacheEntry>; __cgClassicFut?: Map<string, CacheEntry> };
 const cache = (g.__cgClassic ??= new Map<string, CacheEntry>());
 const CACHE_MAX = 96; // whitelist key space is 78×6×6 — cap live memory (review G5/E7)
+
+// ---------------------------------------------------------------------------
+// LIVE BRIDGE (2026-11-12 directive): classic live quotes stay sub-5s fresh.
+// The Yahoo body cache keeps its 60s TTL (bars/indicators don't move faster
+// and Yahoo 429s are routine), but a fresh Hyperliquid xyz mark — one shared
+// snapshot request for ALL classic coins, 4s TTL — is merged into EVERY
+// response: price, chgPct and the FORMING candle are bridged 24/7 with an
+// honest sessionState badge ("regular" vs "closed_futures_bridge").
+// ---------------------------------------------------------------------------
+interface BridgeQuote { price: number | null; source: string; at: number }
+
+const gBridge = globalThis as unknown as { __cgClassicBridge?: { at: number; marks: Record<string, number> } };
+const BRIDGE_TTL = 4_000;
+
+async function freshHlMarks(): Promise<Record<string, number>> {
+  const hit = gBridge.__cgClassicBridge;
+  if (hit && Date.now() - hit.at < BRIDGE_TTL) return hit.marks;
+  const marks: Record<string, number> = {};
+  try {
+    const snap = await hlXyzSnapshot();
+    for (const [coin, ctx] of Object.entries(snap ?? {})) {
+      const raw = (ctx as { markPx?: string | number }).markPx;
+      const m = raw == null ? NaN : +raw;
+      if (Number.isFinite(m) && m > 0) marks[coin] = m;
+    }
+  } catch {
+    /* bridge unavailable — body serves without it */
+  }
+  gBridge.__cgClassicBridge = { at: Date.now(), marks };
+  return marks;
+}
+
+function bridgeMarkFor(sym: string, cfg: ClassicCfg, marks: Record<string, number>): BridgeQuote | null {
+  const coin = HL_XYZ_MAP[sym];
+  if (!coin) return null;
+  const px = marks[coin];
+  if (!(px > 0)) return null;
+  return { price: px, source: `hl:${coin}`, at: Date.now() };
+}
+
+/** cash session printing? Yahoo's regularMarketTime within 15 min says yes. */
+function cashOpen(regularMarketTime: number | null): boolean {
+  if (!regularMarketTime) return false;
+  return Date.now() - regularMarketTime < 15 * 60_000;
+}
+
+function applyLiveBridge(body: Record<string, unknown>, bridge: BridgeQuote | null) {
+  if (!bridge || bridge.price == null) {
+    body.sessionState = cashOpen((body.regularMarketTime as number | null) ?? null) ? "regular" : "closed";
+    return body;
+  }
+  const open = cashOpen((body.regularMarketTime as number | null) ?? null);
+  const yahooPx = typeof body.price === "number" ? body.price : null;
+  const bridged = !open || bridge.price !== yahooPx;
+  if (bridged) {
+    // bridge the quote
+    const prev = typeof body.prevClose === "number" && body.prevClose > 0 ? body.prevClose : yahooPx;
+    body.price = bridge.price;
+    if (prev) body.chgPct = ((bridge.price - prev) / prev) * 100;
+    // bridge the FORMING candle (last bar): close + wick extension only —
+    // never rewrite settled history.
+    const bars = body.bars as { t: number; o: number; h: number; l: number; c: number; v?: number }[] | undefined;
+    if (Array.isArray(bars) && bars.length) {
+      const lastBar = bars[bars.length - 1];
+      lastBar.c = bridge.price;
+      lastBar.h = Math.max(lastBar.h, bridge.price);
+      lastBar.l = Math.min(lastBar.l, bridge.price);
+    }
+    body.sessionState = open ? "regular" : "closed_futures_bridge";
+    body.liveBridge = { price: bridge.price, source: bridge.source, at: bridge.at, note: "24/7 Hyperliquid xyz perp mark bridged onto the quote + forming candle" };
+  } else {
+    body.sessionState = "regular";
+  }
+  return body;
+}
+
 
 async function yahooChart(yahoo: string, interval: string, range: string): Promise<{ status: number; text: string }> {
   const path = `/v8/finance/chart/${encodeURIComponent(yahoo)}?interval=${interval}&range=${range}&includePrePost=false`;
@@ -235,7 +312,11 @@ export async function GET(req: NextRequest) {
   const hit = cache.get(key);
   if (hit && Date.now() - hit.at < TTL_MS) {
     if (hit.err) return NextResponse.json({ ok: false, error: hit.err }, { status: 502 });
-    return NextResponse.json(hit.body);
+    // fresh 24/7 bridge on every serve — the cached bars stay, the quote
+    // stays sub-5s live (2026-11-12 directive)
+    const marks = await freshHlMarks().catch(() => ({}) as Record<string, number>);
+    const bridged = applyLiveBridge({ ...(hit.body as Record<string, unknown>) }, bridgeMarkFor(sym, cfg, marks));
+    return NextResponse.json(bridged);
   }
   if (hit) cache.delete(key); // expired: evict, never pin stale bodies (review E7)
   if (cache.size >= CACHE_MAX) {
@@ -319,5 +400,7 @@ export async function GET(req: NextRequest) {
     ...(fut ? { fut } : {}),
   };
   cache.set(key, { at: Date.now(), body });
-  return NextResponse.json(body);
+  // fresh 24/7 bridge on first build too
+  const marks = await freshHlMarks().catch(() => ({}) as Record<string, number>);
+  return NextResponse.json(applyLiveBridge({ ...body }, bridgeMarkFor(sym, cfg, marks)));
 }

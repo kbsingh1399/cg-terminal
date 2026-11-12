@@ -27,6 +27,7 @@ import type { KlineRow } from "./types";
 import { ASSETS, aggVenues, isCuratedPerp, leadInstr, liqVenues } from "./assets";
 import { curatedPerps } from "@/lib/universe/curated";
 import { startScanner } from "./scan";
+import { parseLiqLevelsPayload, type RawLiqLevel } from "./liq-model";
 
 const STEP_MS = 900_000; // m15 master step
 const POLL_KLINE = 60_000;
@@ -323,12 +324,14 @@ async function pollLiqLevelsAssets(n: number) {
       const at = Date.now();
       const rows: { at: number; v: string; side: number; p: number; s: number; l2: string }[] = [];
       for (const v of venues) {
-        const r = (await cgGet(`/api/liquidationLevels/v2?symbol=${encodeURIComponent(v)}&limit=4000&range=3d`, 0)) as {
-          data?: { price: number; size: number; side: number; level2?: string }[];
-        };
-        for (const lv of r.data ?? []) {
-          if (!(lv.size > 0)) continue;
-          rows.push({ at, v, side: lv.side, p: lv.price, s: lv.size, l2: lv.level2 ?? "" });
+        // shape-proof parse (2026-11-12 fix): the decrypted payload arrives
+        // bare OR wrapped — the old `for (const lv of r.data ?? [])` threw
+        // "not iterable" on the wrapped shape and silently archived nothing.
+        const val = await cgGet(`/api/liquidationLevels/v2?symbol=${encodeURIComponent(v)}&limit=4000&range=3d`, 0);
+        for (const lv of parseLiqLevelsPayload(val) as RawLiqLevel[]) {
+          const size = Number(lv.size);
+          if (!(size > 0)) continue;
+          rows.push({ at, v, side: Number(lv.side), p: Number(lv.price), s: size, l2: lv.level2 ?? "" });
         }
       }
       if (rows.length) append(name, rows, keyLiq);
@@ -347,12 +350,12 @@ async function pollLiqLevels() {
     const at = Date.now();
     const rows: { at: number; v: string; side: number; p: number; s: number; l2: string }[] = [];
     for (const v of venues) {
-      const r = (await cgGet(`/api/liquidationLevels/v2?symbol=${encodeURIComponent(v)}&limit=4000&range=3d`, 0)) as {
-        data?: { price: number; size: number; side: number; level2?: string }[];
-      };
-      for (const lv of r.data ?? []) {
-        if (!(lv.size > 0)) continue;
-        rows.push({ at, v, side: lv.side, p: lv.price, s: lv.size, l2: lv.level2 ?? "" });
+      // shape-proof parse (2026-11-12 fix) — see pollLiqLevelsAssets
+      const val = await cgGet(`/api/liquidationLevels/v2?symbol=${encodeURIComponent(v)}&limit=4000&range=3d`, 0);
+      for (const lv of parseLiqLevelsPayload(val) as RawLiqLevel[]) {
+        const size = Number(lv.size);
+        if (!(size > 0)) continue;
+        rows.push({ at, v, side: Number(lv.side), p: Number(lv.price), s: size, l2: lv.level2 ?? "" });
       }
     }
     append("liqlevels:3d", rows, keyLiq);
@@ -446,6 +449,12 @@ async function backfillAllAssets(days: number) {
     }
     markBackfilling(name, keyKline, false, Date.now());
     markPoll(name, keyKline);
+    // inter-instrument pacing (2026-11-12): a boot backfill over 59
+    // instruments with zero gap burned the shared fapi IP weight budget
+    // (2400/min) and tripped the breaker for every other consumer
+    // (stopmap candles, market OHLCV). 350ms/asset keeps the whole boot
+    // pass under the budget while staying fast enough (~21s overhead).
+    await new Promise((r) => setTimeout(r, 350));
   }
 }
 
@@ -599,6 +608,14 @@ export function engineStatus() {
     const s = stat(`kline:${leadInstr(sym)}:m15`, keyKline);
     assetSeries.push({ asset: sym, count: s.count, lastTs: s.lastTs, lastError: s.lastError, gaps: gapCount(`kline:${leadInstr(sym)}:m15`, keyKline, STEP_MS) });
   }
+  // per-asset liqlevels archive (rolling heatmap source) — observability:
+  // which perps already have archived liquidation-level history.
+  const liqArchives: { asset: string; count: number; lastTs: number | null; lastError: string | null }[] = [];
+  for (const sym of continuitySyms()) {
+    if (sym === "BTC") continue;
+    const s = stat(`liqlevels:${sym}:3d`, keyLiq);
+    if (s.count > 0 || s.lastError) liqArchives.push({ asset: sym, count: s.count, lastTs: s.lastTs, lastError: s.lastError });
+  }
   // per-instrument flows
   const flowNames = engine.instrumentKeys ?? [];
   for (const k of flowNames) {
@@ -612,6 +629,7 @@ export function engineStatus() {
     instrumentKeys: flowNames,
     series,
     assetSeries,
+    liqArchives,
     klineGaps: gapCount("kline:Binance_BTCUSDT:m15", keyKline, STEP_MS),
     dataDir: process.env.CG_DATA_DIR || "data/cg-series",
   };
@@ -629,6 +647,10 @@ export async function forceBackfill() {
     backfillBookwalls(Math.min(days, 2)),
     pollLto(),
     pollLiqLevels(),
+    // warm the per-asset liqlevels archive faster than the 45-min rotation:
+    // the first 12 majors (ETH, BNB, SOL, …) get an immediate snapshot; the
+    // rotation covers the rest. Best-effort, additive, cursor untouched.
+    pollLiqLevelsAssets(12),
   ]);
   return engineStatus();
 }

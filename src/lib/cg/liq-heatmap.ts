@@ -201,14 +201,18 @@ export function buildStopModel(p: LiqHeatmapPayload, topN = 8): StopModel | null
 // ---------------------------------------------------------------------------
 
 import { rowsOf } from "./store";
-import { liqVenues } from "./assets";
+import { liqVenues, leadInstr } from "./assets";
 import { cgGet } from "./client";
 import { fetchBinCandles } from "./fallbacks";
+import { parseLiqLevelsPayload, type RawLiqLevel } from "./liq-model";
 
 export interface RollingStopModel extends StopModel {
   mode: "liq-snapshot-rolling";
   note: string;
   source: "archive" | "live-aggregate" | "archive+live";
+  /** price-path provenance: live fapi bars vs engine-archived m15 bars
+   * (archive = the fapi IP breaker was active; bars may lag up to ~15 min) */
+  pricePath: "fapi-live" | "archive";
   snapshots: number;
   archivedSince: number | null;
   /** construction diagnostics (honest telemetry) */
@@ -226,20 +230,45 @@ interface ArchRow {
 
 const archKey = (r: ArchRow) => `${r.at}|${r.v}|${r.side}|${r.p}|${r.l2}`;
 
+/** last null-reason from buildRollingStopModel (diagnostics for the route) */
+export let lastRollingNullReason = "";
+
 export async function buildRollingStopModel(symRaw: string, windowMs = 24 * 3_600_000): Promise<RollingStopModel | null> {
   const sym = symRaw.trim().toUpperCase();
-  // 1) price path — m15 klines over the window (Binance plain names work for
-  //    every curated perp; failures return null and the route degrades).
+  lastRollingNullReason = "";
+  // 1) price path — m15 klines over the window. PRIMARY: live Binance fapi.
+  // FALLBACK (2026-11-12): the engine's own persisted kline:<inst>:m15
+  // continuity series — when the shared fapi IP breaker is tripped (boot
+  // backfill bursts), the heatmap must still render from archived bars
+  // instead of dead-ending. Badged honestly via model.pricePath.
   let candles: StopCandle[] = [];
+  let pricePath: "fapi-live" | "archive" = "fapi-live";
   try {
     const bars = await fetchBinCandles(sym, "m15", Math.min(96 * 3, Math.ceil(windowMs / 900_000) + 4));
     candles = bars
       .filter((b) => b.t >= Date.now() - windowMs)
       .map((b) => ({ ts: b.t, o: b.o, h: b.h, l: b.l, c: b.c }));
-  } catch {
-    /* no candles — grid without a price path is useless */
+  } catch (e) {
+    lastRollingNullReason = `candles fetch failed: ${e instanceof Error ? e.message : "error"}`;
   }
-  if (candles.length < 8) return null;
+  if (candles.length < 8) {
+    // archive fallback — the engine keeps m15 continuity for every curated perp
+    try {
+      const keyK = (r: { t?: number }) => `${r.t}`;
+      const arch = rowsOf(`kline:${leadInstr(sym)}:m15`, keyK) as unknown as { t: number; o: number; h: number; l: number; c: number }[];
+      candles = arch
+        .filter((b) => b.t >= Date.now() - windowMs && Number.isFinite(b.c) && b.c > 0)
+        .map((b) => ({ ts: b.t, o: b.o, h: b.h, l: b.l, c: b.c }))
+        .sort((a, b) => a.ts - b.ts);
+      if (candles.length >= 8) pricePath = "archive";
+    } catch {
+      /* no archive either */
+    }
+  }
+  if (candles.length < 8) {
+    lastRollingNullReason ||= `only ${candles.length} candles (need >= 8; live fapi and archive both unavailable)`;
+    return null;
+  }
   const lastPrice = candles[candles.length - 1].c;
   const lastTs = candles[candles.length - 1].ts;
   const now = Date.now();
@@ -256,12 +285,14 @@ export async function buildRollingStopModel(symRaw: string, windowMs = 24 * 3_60
     try {
       const at = now;
       for (const v of liqVenues(sym)) {
-        const r = (await cgGet(`/api/liquidationLevels/v2?symbol=${encodeURIComponent(v.key)}&limit=4000&range=3d`, 0)) as {
-          data?: { price: number; size: number; side: number; level2?: string }[];
-        };
-        for (const lv of r.data ?? []) {
-          if (!(lv.size > 0)) continue;
-          liveRows.push({ at, v: v.key, side: Number(lv.side), p: lv.price, s: lv.size, l2: lv.level2 ?? "" });
+        // shape-proof parse (2026-11-12 fix): bare OR wrapped decrypted
+        // payload — the old `for (const lv of r.data ?? [])` threw "not
+        // iterable" on the wrapped shape, silently killing the live fallback.
+        const val = await cgGet(`/api/liquidationLevels/v2?symbol=${encodeURIComponent(v.key)}&limit=4000&range=3d`, 0);
+        for (const lv of parseLiqLevelsPayload(val) as RawLiqLevel[]) {
+          const size = Number(lv.size);
+          if (!(size > 0)) continue;
+          liveRows.push({ at, v: v.key, side: Number(lv.side), p: Number(lv.price), s: size, l2: lv.level2 ?? "" });
         }
       }
     } catch {
@@ -272,7 +303,10 @@ export async function buildRollingStopModel(symRaw: string, windowMs = 24 * 3_60
       source = arch.length ? "archive+live" : "live-aggregate";
     }
   }
-  if (!rows.length) return null;
+  if (!rows.length) {
+    lastRollingNullReason = "no archived liqlevel rows in window and live aggregate returned none";
+    return null;
+  }
 
   // 3) y grid — unique level prices within ±12% of last, bucketed to <= 140 rows
   const lo = lastPrice * 0.88;
@@ -283,7 +317,10 @@ export async function buildRollingStopModel(symRaw: string, windowMs = 24 * 3_60
   // different venues that land in one bucket SUM their USD).
   const nY = 140;
   const step = (hi - lo) / nY;
-  if (!(step > 0)) return null;
+  if (!(step > 0)) {
+    lastRollingNullReason = "degenerate price grid (step <= 0)";
+    return null;
+  }
   const yiOf = (p: number) => Math.min(nY - 1, Math.max(0, Math.floor((p - lo) / step)));
   const y: number[] = [];
   for (let i = 0; i < nY; i++) y.push(+(lo + (i + 0.5) * step).toFixed(8));
@@ -413,6 +450,7 @@ export async function buildRollingStopModel(symRaw: string, windowMs = 24 * 3_60
     cumulative,
     mode: "liq-snapshot-rolling",
     source,
+    pricePath,
     snapshots: snaps.size,
     archivedSince: archSince,
     diag: dbg,
