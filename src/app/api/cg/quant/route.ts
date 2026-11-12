@@ -209,7 +209,11 @@ type LsKey = keyof typeof LS_ENDPOINTS;
 function telemetryOf(stamps: number[], source: string): Telemetry {
   const dataAt = stamps.length > 0 ? Math.min(...stamps) : null;
   const ageMs = dataAt != null ? Date.now() - dataAt : null;
-  return { dataAt, ageMs, stale: ageMs != null ? ageMs > 60_000 : false, source };
+  // Binance /futures/data rows are bucket-stamped (15m/1h/4h): the 4h taker
+  // row's dataAs-of is its bucket END, so a healthy response can legitimately
+  // be ~1h old. The stale flag therefore uses the bucket cadence (75 min),
+  // not a flat 60s — dataAt/ageMs stay exact and honest either way.
+  return { dataAt, ageMs, stale: ageMs != null ? ageMs > 75 * 60_000 : false, source };
 }
 
 function classifyQuadrant(oiUp: boolean, pxUp: boolean): Quadrant {

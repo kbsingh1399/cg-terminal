@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildMarketSnapshot } from "@/lib/cg/market";
 import { anyTerminalSym, knownSym } from "@/lib/cg/sym-gate";
+import { markViewed } from "@/lib/cg/scan";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ export async function GET(req: NextRequest) {
   if (!(await anyTerminalSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
+  markViewed(sym); // priority continuity: keep the viewed asset on the hot scan lane
   // classic instruments pass the terminal gate but have no perp/spot kline
   // history — the classic route owns them; degrade honestly, never 502.
   if (!(await knownSym(sym))) {

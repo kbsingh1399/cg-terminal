@@ -304,8 +304,44 @@ async function pollLto() {
   }
 }
 
+/** rotate cursor for the per-asset liqlevels archive (module-global so dev
+ *  hot-reload keeps the rotation position) */
+const gLiqRot = globalThis as unknown as { __cgLiqRotIdx?: number };
+
+/** archive liqlevels for the next `n` curated assets into their own series
+ *  (liqlevels:<SYM>:3d) — the stopmap rolling heatmap reads these back, so
+ *  the whole universe keeps true time x price liquidation history. */
+async function pollLiqLevelsAssets(n: number) {
+  const syms = continuitySyms().filter((s) => s !== "BTC");
+  if (!syms.length) return;
+  const idx = (gLiqRot.__cgLiqRotIdx ??= 0) % syms.length;
+  for (let k = 0; k < Math.min(n, syms.length); k++) {
+    const sym = syms[(idx + k) % syms.length];
+    const name = `liqlevels:${sym}:3d`;
+    const venues = liqVenues(sym).map((v) => v.key);
+    try {
+      const at = Date.now();
+      const rows: { at: number; v: string; side: number; p: number; s: number; l2: string }[] = [];
+      for (const v of venues) {
+        const r = (await cgGet(`/api/liquidationLevels/v2?symbol=${encodeURIComponent(v)}&limit=4000&range=3d`, 0)) as {
+          data?: { price: number; size: number; side: number; level2?: string }[];
+        };
+        for (const lv of r.data ?? []) {
+          if (!(lv.size > 0)) continue;
+          rows.push({ at, v, side: lv.side, p: lv.price, s: lv.size, l2: lv.level2 ?? "" });
+        }
+      }
+      if (rows.length) append(name, rows, keyLiq);
+      markPoll(name, keyLiq);
+    } catch (e) {
+      markPoll(name, keyLiq, e instanceof Error ? e.message : "error");
+    }
+  }
+  gLiqRot.__cgLiqRotIdx = (idx + n) % syms.length;
+}
+
 async function pollLiqLevels() {
-  // single registry: derive BTC's venue list instead of a second hardcoded copy
+  // BTC keeps its legacy series (engineStatus + routes read liqlevels:3d)...
   const venues = liqVenues("BTC").map((v) => v.key);
   try {
     const at = Date.now();
@@ -536,6 +572,9 @@ export function ensureEngine(): { started: boolean; startedAt: number; bootDone:
   t(POLL_STOPMAP, 60_000, pollStopmap);
   t(POLL_BOOKWALLS, 90_000, pollBookwalls);
   t(POLL_LIQLEVELS, 45_000, pollLiqLevels);
+  // per-asset liqlevels archive: 4 curated assets per 3-min tick (a full
+  // 57-asset pass ≈ 45 min) — the rolling Liq-Snapshot heatmap source.
+  t(3 * 60_000, 60_000, () => pollLiqLevelsAssets(4));
   // live notification scanner (all assets, all tabs)
   startScanner();
   // never let an unexpected rejection kill the host process

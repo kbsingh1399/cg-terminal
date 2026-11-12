@@ -207,8 +207,9 @@ async function crossAssetBeta(sym: string, isTradfi: boolean): Promise<{ vs: str
   const hit = betaCache.get(sym);
   if (hit && Date.now() - hit.at < BETA_TTL) return hit.val;
   const cg = resolveCgSym(sym);
-  const refs = isTradfi ? ["QQQ", "BTC"] : ["BTC"];
+  const refs = (isTradfi ? ["QQQ", "BTC"] : ["BTC"]).filter((r) => r !== cg);
   const out: { vs: string; b24h: number | null; b7d: number | null }[] = [];
+  if (refs.length === 0) return out;
   try {
     const mine = closes(await fetchBinCandles(cg, "h1", 200));
     for (const ref of refs) {
@@ -243,10 +244,10 @@ interface FreshTracker {
   fields: string[];
 }
 
-function trackFresh(ft: FreshTracker, field: string, ageMs: number | null | undefined) {
+function trackFresh(ft: FreshTracker, field: string, ageMs: number | null | undefined, maxAgeMs = 120_000) {
   if (ageMs == null || !Number.isFinite(ageMs)) return;
   if (ageMs > ft.worst) ft.worst = ageMs;
-  if (ageMs > 120_000) ft.fields.push(field);
+  if (ageMs > maxAgeMs) ft.fields.push(field);
 }
 
 /** recent footprint signals (last `bars` m15 bars) of given types/side. */
@@ -319,7 +320,10 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       generatedAt: Date.now(),
     };
   }
-  trackFresh(fresh, "market", market.ageMs);
+  // the last m15 bar OPENS up to 15 min ago while still forming — honest
+  // staleness is the age BEYOND the expected bar close, not from its open.
+  const marketAgeBeyondBar = Math.max(0, market.ageMs - 15 * 60_000);
+  trackFresh(fresh, "market", marketAgeBeyondBar);
   if (market.stale) fresh.fields.push("market(stale-bar)");
 
   const price = market.price.last;
@@ -332,7 +336,7 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
   const atrPct = market.vol.atr14PctRank;
 
   const signals = getSignalsSnapshot(sym) ?? getSignalsSnapshot(resolveCgSym(sym));
-  if (signals) trackFresh(fresh, "signals", Date.now() - signals.updatedAt);
+  if (signals) trackFresh(fresh, "signals", Date.now() - signals.updatedAt, 20 * 60_000);
   // cold engine? compute one live footprint pass (m15, 300 bars) — same
   // parity pipeline the Footprint tab uses.
   let liveSets = signals?.sets;
@@ -346,16 +350,19 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
   }
 
   const cvd = getCvdSnapshot(sym) ?? getCvdSnapshot(resolveCgSym(sym));
-  if (cvd) trackFresh(fresh, "cvd", Date.now() - cvd.updatedAt);
+  if (cvd) trackFresh(fresh, "cvd", Date.now() - cvd.updatedAt, 20 * 60_000);
   const whale = getWhaleSnapshot(sym) ?? getWhaleSnapshot(resolveCgSym(sym));
-  if (whale) trackFresh(fresh, "walls", Date.now() - whale.updatedAt);
+  if (whale) trackFresh(fresh, "walls", Date.now() - whale.updatedAt, 20 * 60_000);
   const liq = getLiqSnapshot(sym) ?? getLiqSnapshot(resolveCgSym(sym));
-  if (liq) trackFresh(fresh, "liq", Date.now() - liq.updatedAt);
+  if (liq) trackFresh(fresh, "liq", Date.now() - liq.updatedAt, 20 * 60_000);
 
   const quant = !isClassic ? await fetchQuantLite(sym) : null;
-  if (quant?.dataAt) trackFresh(fresh, "quant", Date.now() - quant.dataAt);
+  // L/S ratios are 1h-bucket metrics (bucket-END stamps) — 75 min is the
+  // honest freshness bound for the rows this engine consumes.
+  if (quant?.dataAt) trackFresh(fresh, "quant", Date.now() - quant.dataAt, 75 * 60_000);
   const options = sym === "BTC" || sym === "ETH" ? await fetchOptionsLite(sym) : null;
-  if (options?.dataAt) trackFresh(fresh, "options", Date.now() - options.dataAt);
+  // DVOL is hourly; the chain snapshot is minutes-fresh — 10 min bound.
+  if (options?.dataAt) trackFresh(fresh, "options", Date.now() - options.dataAt, 10 * 60_000);
 
   const beta = await crossAssetBeta(sym, market.kind === "equity" || market.kind === "commodity" || market.kind === "index").catch(() => []);
 

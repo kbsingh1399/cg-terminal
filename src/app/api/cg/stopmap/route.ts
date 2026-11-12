@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import { makeObeToken } from "@/lib/cg/crypto";
-import { buildStopModel, type LiqHeatmapPayload, type StopModel } from "@/lib/cg/liq-heatmap";
+import { buildStopModel, buildRollingStopModel, type LiqHeatmapPayload, type StopModel } from "@/lib/cg/liq-heatmap";
 import { isAsset } from "@/lib/cg/assets";
+import { isCuratedPerp } from "@/lib/cg/assets";
+import { anyTerminalSym } from "@/lib/cg/sym-gate";
 import { BoundedMap } from "@/lib/cg/bounded";
 
 export const dynamic = "force-dynamic";
@@ -48,20 +50,62 @@ async function loadStopmap(sym: string, endTime: number | undefined, ttlMs = 25_
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!isAsset(sym)) {
+  if (!(await anyTerminalSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   // The anonymous /api/index/v2/liqHeatMap endpoint serves BTC only — every
   // other symbol returns upstream code 40000 (live-verified for ETH/SOL/XRP/
-  // XAU/XAG across the v1/v2/v3/v5/v6 and aggregate variants).
+  // XAU/XAG across the v1/v2/v3/v5/v6 and aggregate variants). The other
+  // curated perps get the honest LIQ-SNAPSHOT ROLLING HEATMAP (archived +
+  // live multi-venue liquidation levels — see liq-heatmap.ts), clearly
+  // badged, never a dead 400.
   if (sym !== "BTC") {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: `stopmap (liquidation heatmap) is BTC-only on the anonymous Coinglass API — ${sym} returns upstream code 40000`,
-      },
-      { status: 400 }
-    );
+    if (!isCuratedPerp(sym)) {
+      return NextResponse.json({
+        ok: true,
+        supported: false,
+        sym,
+        reason: "Liquidation heatmaps require perp leverage tiers (unavailable for classic cash/CFD instruments)",
+        dataAt: Date.now(),
+        ageMs: 0,
+        stale: false,
+        source: "stopmap-gate",
+      });
+    }
+    try {
+      const rolling = await buildRollingStopModel(sym);
+      if (!rolling) {
+        return NextResponse.json({
+          ok: true,
+          supported: false,
+          sym,
+          reason: "no liquidation-level snapshots archived yet for this perp — the engine rotates the full universe every ~45 min; retry after the next pass",
+          dataAt: Date.now(),
+          ageMs: 0,
+          stale: false,
+          source: "liq-archive",
+        });
+      }
+      return NextResponse.json({
+        ok: true,
+        sym,
+        symbol: sym,
+        reference: `multi-venue:${sym}`,
+        window: { interval: "15m", bars: rolling.candles.length, from: rolling.candles[0]?.ts, to: rolling.lastTs },
+        instrument: `rolling aggregate (${rolling.source})`,
+        model: rolling,
+        dataAt: rolling.updateTime,
+        ageMs: Date.now() - rolling.updateTime,
+        stale: Date.now() - rolling.updateTime > 20 * 60_000,
+        source: `liq-snapshot-rolling:${rolling.source}`,
+        updatedAt: rolling.updateTime,
+      });
+    } catch (e) {
+      return NextResponse.json(
+        { ok: false, error: e instanceof Error ? e.message : "rolling heatmap failed" },
+        { status: 502 }
+      );
+    }
   }
   const REF_SYMBOL = `Binance_${sym}USDT`;
   const endTimeRaw = Number(sp.get("endTime") ?? 0);
@@ -108,6 +152,10 @@ export async function GET(req: NextRequest) {
         ? `${payload.instrument.exName} ${payload.instrument.instrumentId}`
         : REF_SYMBOL,
       model,
+      dataAt: model.updateTime,
+      ageMs: Date.now() - model.updateTime,
+      stale: Date.now() - model.updateTime > 60_000,
+      source: "coinglass:native-heatmap",
       updatedAt: Date.now(),
     });
   } catch (e) {

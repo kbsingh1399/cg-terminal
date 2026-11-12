@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSignalsSnapshot, type SignalSetInfo } from "@/lib/cg/scan";
 import { anyTerminalSym } from "@/lib/cg/sym-gate";
+import { markViewed } from "@/lib/cg/scan";
 import { resolveCgSym } from "@/lib/binance/aliases";
 import { loadFpBars } from "@/lib/cg/fp-load";
 import { autoThreshold, buildDerivedBars, computeCgSignals, cgSigName, cgSigText, type FpBar } from "@/lib/cg/cg-signals";
@@ -22,6 +23,7 @@ export async function GET(req: NextRequest) {
   if (!(await anyTerminalSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
+  markViewed(sym); // priority continuity: keep the viewed asset on the hot scan lane
   const cgSym = resolveCgSym(sym);
   let snap = getSignalsSnapshot(sym) ?? getSignalsSnapshot(cgSym);
   let computed = false;

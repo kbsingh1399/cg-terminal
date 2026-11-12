@@ -424,6 +424,7 @@ async function scanWhale(sym: string) {
   st.whalePrimed = true; // per-lane priming: a footprint failure must not silence whale alerts
 
   for (const w of bigNew) {
+    trackHotSignal(sym);
     emit({ ts: at, asset: sym, source: "whale-orders", kind: "whale_wall", dir: w.side === "bid" ? "bullish" : "bearish", severity: "high",
       title: `${sym} whale ${w.side} wall ${fmtUsd(w.usd)} @ ${fmtAssetPrice(w.price, sym)}`, detail: `new resting ${w.side} order ≥ $10M on ${w.ex} — magnet / defense level`, price: w.price, meta: { ex: w.ex, side: w.side } });
   }
@@ -627,6 +628,57 @@ export async function warmAssetScan(symRaw: string): Promise<void> {
   return p;
 }
 
+// ---------------------------------------------------------------------------
+// PRIORITY CONTINUITY (2026-11-12 directive): the currently-viewed asset,
+// top-RVOL movers and assets with a recent HIGH-severity signal are scanned
+// on a hot lane (<= 2 min loop) while the background lanes rotate politely
+// inside the upstream rate budget.
+// ---------------------------------------------------------------------------
+
+interface HotState {
+  /** last time each sym was viewed (route hit) */
+  viewedAt: Map<string, number>;
+  /** recent HIGH-severity signals: sym -> last emit ts */
+  hotSignalAt: Map<string, number>;
+}
+
+const gHot = globalThis as unknown as { __cgHotLane?: HotState };
+const HOT: HotState = (gHot.__cgHotLane ??= { viewedAt: new Map(), hotSignalAt: new Map() });
+
+/** Mark a sym as currently viewed — routes call this on every hit so the
+ *  hot lane keeps its fp/market/cvd state <= 2 min fresh. */
+export function markViewed(sym: string) {
+  if (!sym) return;
+  HOT.viewedAt.set(sym.toUpperCase(), Date.now());
+}
+
+function trackHotSignal(sym: string) {
+  HOT.hotSignalAt.set(sym.toUpperCase(), Date.now());
+}
+
+/** hot set: viewed in the last 10 min, or a HIGH-signal in the last 30 min,
+ *  or top RVOL from the freshest market snapshots. */
+function hotSet(): string[] {
+  const now = Date.now();
+  const out = new Set<string>();
+  for (const [sym, at] of HOT.viewedAt) {
+    if (now - at < 10 * 60_000) out.add(sym);
+    else HOT.viewedAt.delete(sym);
+  }
+  for (const [sym, at] of HOT.hotSignalAt) {
+    if (now - at < 30 * 60_000) out.add(sym);
+    else HOT.hotSignalAt.delete(sym);
+  }
+  // top RVOL movers from the scanner's own market snapshots (real measured
+  // vol.rvolHour — falls back to nothing on a cold engine)
+  const rvolRanked = [...S.market.values()]
+    .filter((m) => m.vol?.rvolHour != null && Number.isFinite(m.vol.rvolHour))
+    .sort((a, b) => (b.vol!.rvolHour ?? 0) - (a.vol!.rvolHour ?? 0))
+    .slice(0, 5);
+  for (const m of rvolRanked) out.add(m.sym.toUpperCase());
+  return [...out];
+}
+
 export function scannerStatus() {
   const assets = (process.env.CG_SCAN_ASSETS ?? "").split(",").map((s) => s.trim().toUpperCase()).filter(Boolean);
   return {
@@ -726,6 +778,22 @@ export function startScanner() {
     laneI = (laneI + 4) % list.length;
   }, 4 * 60_000);
   laneTimer.unref?.();
+  // HOT lane (priority continuity): viewed + top-RVOL + recent-HIGH-signal
+  // assets re-scan every 110 s — the user's "<= 2 min loop for hot assets".
+  // Empty hot set costs one no-op interval.
+  const hotBusy = new Set<string>();
+  const hotTimer = setInterval(() => {
+    for (const sym of hotSet()) {
+      if (!list.includes(sym) && !curatedAssetOf(sym)) continue; // curated members only
+      if (hotBusy.has(sym)) continue;
+      hotBusy.add(sym);
+      scanAssetAll(sym)
+        .catch(() => undefined)
+        .finally(() => hotBusy.delete(sym));
+    }
+  }, 110_000);
+  hotTimer.unref?.();
+
   // initial pass: prime the fast lane immediately
   setTimeout(() => {
     warmAssetScan("BTC").catch(() => undefined);

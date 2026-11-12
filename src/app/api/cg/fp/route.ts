@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loadFpBars } from "@/lib/cg/fp-load";
 import { anyTerminalSym, knownSym } from "@/lib/cg/sym-gate";
+import { markViewed } from "@/lib/cg/scan";
 import { parseInterval } from "@/lib/cg/params";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +31,7 @@ export async function GET(req: NextRequest) {
   if (!(await anyTerminalSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
+  markViewed(sym); // priority continuity: keep the viewed asset on the hot scan lane
   // classic instruments (SPX500/NDX100/UKO) pass the terminal gate but have
   // no perp order flow anywhere — degrade honestly, never a dead 400/502.
   if (!(await knownSym(sym))) {
