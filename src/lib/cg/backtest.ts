@@ -140,9 +140,74 @@ export interface BtMetrics {
   sortinoPerTrade: number | null;
   maxDrawdownR: number;
   maxDrawdownPct: number | null;
+  /** WS9 — longest run of consecutive netR <= 0 trades */
+  maxConsecutiveLosses: number;
   mfe: { p25: number | null; p50: number | null; p75: number | null };
   mae: { p25: number | null; p50: number | null; p75: number | null };
   avgHoldH: number | null;
+}
+
+/**
+ * WS9 — MONTE CARLO RUIN PROFILE: seeded 1000-path bootstrap over the
+ * closed-trade netR distribution. Each path draws `trades.length` trades
+ * WITH replacement (the empirical distribution is the best honest estimate
+ * of the next-N-trades generator) and walks the R equity curve; the report
+ * is the probability of suffering a ≥5R and ≥10R peak-to-trough drawdown
+ * under the CURRENT expectancy + variance — the desk's "can I sit through
+ * the losing streak" number. Deterministic LCG seed → reproducible.
+ */
+export interface BtMonteCarlo {
+  method: string;
+  paths: number;
+  tradesPerPath: number;
+  /** P(max peak-to-trough drawdown >= 5R) — 0..1 */
+  pDd5R: number | null;
+  /** P(max peak-to-trough drawdown >= 10R) — 0..1 */
+  pDd10R: number | null;
+  /** median max drawdown across paths, in R */
+  medianMaxDdR: number | null;
+  /** 95th percentile max drawdown across paths, in R */
+  p95MaxDdR: number | null;
+}
+
+export function monteCarloRuin(netRs: number[], paths = 1000, seed = 20261113): BtMonteCarlo | null {
+  const pool = netRs.filter((r) => Number.isFinite(r));
+  if (pool.length < 10 || paths < 1) return null;
+  // deterministic LCG (same family as the quant-math unit lock)
+  let s = seed >>> 0;
+  const rnd = () => {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return (s + 0.5) / 4294967296;
+  };
+  const n = pool.length;
+  const maxDds = new Float64Array(paths);
+  let dd5 = 0;
+  let dd10 = 0;
+  for (let p = 0; p < paths; p++) {
+    let cum = 0;
+    let peak = 0;
+    let maxDd = 0;
+    for (let i = 0; i < n; i++) {
+      cum += pool[Math.floor(rnd() * n)];
+      if (cum > peak) peak = cum;
+      const dd = peak - cum;
+      if (dd > maxDd) maxDd = dd;
+    }
+    maxDds[p] = maxDd;
+    if (maxDd >= 5) dd5++;
+    if (maxDd >= 10) dd10++;
+  }
+  const sorted = Float64Array.from(maxDds).sort();
+  const at = (q: number) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.round(q * (sorted.length - 1))))];
+  return {
+    method: `seeded bootstrap (LCG ${seed}), ${paths} paths x ${n} trades with replacement`,
+    paths,
+    tradesPerPath: n,
+    pDd5R: Number((dd5 / paths).toFixed(4)),
+    pDd10R: Number((dd10 / paths).toFixed(4)),
+    medianMaxDdR: Number(at(0.5).toFixed(2)),
+    p95MaxDdR: Number(at(0.95).toFixed(2)),
+  };
 }
 
 export interface BtCalibBin {
@@ -195,6 +260,8 @@ export interface BtRunResult {
   byRegime: Record<string, BtMetrics>;
   byTier: Record<string, BtMetrics>;
   byMonth: Record<string, BtMetrics>;
+  /** WS9 — 1000-path Monte Carlo ruin profile on the closed-trade netR pool */
+  monteCarlo?: BtMonteCarlo | null;
   sensitivity: BtSensCell[];
   calibration: BtCalibCurve[];
   /** standard freshness telemetry */
@@ -264,7 +331,12 @@ async function loadKlines(a: CuratedPerp, interval: "15m" | "4h" | "1h" | "1d", 
   } catch {
     cache = null;
   }
-  if (cache && Date.now() - cache.fetchedAt < KL_TTL && cache.from <= from && cache.to >= to - ITV_MS[interval]) {
+  // BAN-PROOF RE-RUNS (WS9, 2026-11-13): serve a fresh (< 12 h) cache even
+  // when its tail lags `to` by up to the TTL — the walk-forward window just
+  // ends at the cached tail (coverage reports the honest lastBar) instead
+  // of re-fetching 58 assets × 4 intervals and re-arming the recurring host
+  // fapi ban. A cold symbol still fetches normally.
+  if (cache && Date.now() - cache.fetchedAt < KL_TTL && cache.from <= from && cache.to >= to - KL_TTL) {
     return cache.candles.filter((c) => c.t >= from && c.t < to);
   }
   const candles = await fetchKlinesPaged(a.pair, interval, from, to);
@@ -280,8 +352,19 @@ async function loadKlines(a: CuratedPerp, interval: "15m" | "4h" | "1h" | "1d", 
   return candles;
 }
 
-/** historical 8 h funding events in [from, to) — /fapi/v1/fundingRate */
+/** historical 8 h funding events in [from, to) — /fapi/v1/fundingRate
+ *  (disk-cached 12 h like klines: re-runs inside the TTL are fapi-free) */
 export async function loadFundingHistory(pair: string, from: number, to: number): Promise<{ t: number; rate: number }[]> {
+  const f = path.join(KLINE_DIR, `${pair}-funding.json`);
+  let cached: { fetchedAt: number; events: { t: number; rate: number }[] } | null = null;
+  try {
+    cached = JSON.parse(fs.readFileSync(f, "utf8")) as { fetchedAt: number; events: { t: number; rate: number }[] };
+  } catch {
+    cached = null;
+  }
+  if (cached && Date.now() - cached.fetchedAt < KL_TTL) {
+    return cached.events.filter((e) => e.t >= from && e.t < to).sort((a, b) => a.t - b.t);
+  }
   const out: { t: number; rate: number }[] = [];
   let cursor = from;
   for (let page = 0; page < 10; page++) {
@@ -299,7 +382,16 @@ export async function loadFundingHistory(pair: string, from: number, to: number)
     if (!last || rows.length < 1000 || last >= to) break;
     cursor = last + 1;
   }
-  return out.sort((a, b) => a.t - b.t);
+  const events = out.sort((a, b) => a.t - b.t);
+  if (events.length) {
+    try {
+      fs.mkdirSync(KLINE_DIR, { recursive: true });
+      fs.writeFileSync(f, JSON.stringify({ fetchedAt: Date.now(), events }));
+    } catch {
+      /* best-effort */
+    }
+  }
+  return events;
 }
 
 // ---------------------------------------------------------------------------
@@ -704,6 +796,11 @@ function simulateM1(args: SimArgs): BtTrade[] {
     const atr = atr15[i];
     const vwap = dv[i];
     if (atr == null || !vwap || vwap.sd <= 0) continue;
+    // DEAD-MARKET GUARD (WS9, 2026-11-13): flat sessions (weekend metals,
+    // holiday equities) collapse ATR to ~0 → the 0.5-ATR stop lands ON the
+    // zone entry (risk 0.001-0.01%) and fee-in-R explodes. A 15m ATR below
+    // 0.5 bp of price is a dead tape — no honest trade can be structured.
+    if (atr / b.c < 5 / 100_000) continue;
     const up = h4e.e13 > h4e.e89 && h4e.e89 > (h4e.e233 as number) && d1e.e13 > d1e.e89;
     const down = h4e.e13 < h4e.e89 && h4e.e89 < (h4e.e233 as number) && d1e.e13 < d1e.e89;
     if (!up && !down) continue;
@@ -718,6 +815,9 @@ function simulateM1(args: SimArgs): BtTrade[] {
     const entry = zone;
     const risk = Math.abs(entry - stop);
     if (!(risk > 0) || risk / entry > 0.25) continue; // garbage guard (25%)
+    // GEOMETRY FLOOR (WS9): the stop must clear the venue fill precision —
+    // risk below 10 bps cannot even be placed (tier spread is 2-6 bps/side).
+    if (risk / entry < 10 / 10_000) continue;
     const t1 = long ? entry + rFilter * risk : entry - rFilter * risk;
     const t2 = long ? entry + 2 * risk : entry - 2 * risk;
     // driftless geometric prior (gambler's ruin from the fill frame)
@@ -784,7 +884,15 @@ function simulateM2(args: SimArgs): BtTrade[] {
     const t2 = v.vwap;
     const entry = m15[i + 1].o; // market entry at the NEXT bar open — zero look-ahead
     const risk = Math.abs(entry - stop);
+    // GEOMETRY GUARD (WS9, 2026-11-13): on an extreme stretch the entry can
+    // land ON the ±3σ stop band → risk collapses to ~1bp → fees divided by a
+    // degenerate risk unit produced fake -100R..-270R "trades" (XRP/NVDA in
+    // the 30d run). The LIVE engine widens the stop to 0.4 ATR past the
+    // sweep; the sim instead SKIPS the no-room knife-catch — honest and
+    // conservative. Floor: risk ≥ 0.5σ AND ≥ 10 bps (venue spread cannot
+    // even fill a tighter stop).
     if (!(risk > 0) || risk / entry > 0.25) continue;
+    if (risk < 0.5 * v.sd || risk / entry < 10 / 10_000) continue;
     const r1 = Math.abs(t1 - entry) / risk;
     const r2 = Math.abs(t2 - entry) / risk;
     if (r1 < 1.2 || r2 < 1.5) continue; // the narrative's hard R vetoes
@@ -845,6 +953,9 @@ export function computeMetrics(trades: BtTrade[]): BtMetrics {
   let eq = 1;
   let eqPeak = 1;
   let maxDDpct = 0;
+  // WS9 — longest consecutive-loss streak (netR <= 0)
+  let lossStreak = 0;
+  let maxLossStreak = 0;
   for (const r of netRs) {
     cumR += r;
     peakR = Math.max(peakR, cumR);
@@ -852,6 +963,12 @@ export function computeMetrics(trades: BtTrade[]): BtMetrics {
     eq *= 1 + r * 0.01;
     eqPeak = Math.max(eqPeak, eq);
     maxDDpct = Math.max(maxDDpct, (eqPeak - eq) / eqPeak);
+    if (r <= 0) {
+      lossStreak++;
+      maxLossStreak = Math.max(maxLossStreak, lossStreak);
+    } else {
+      lossStreak = 0;
+    }
   }
   const mfe = closed.map((t) => t.mfeR).filter((x): x is number => x != null);
   const mae = closed.map((t) => t.maeR).filter((x): x is number => x != null);
@@ -871,6 +988,7 @@ export function computeMetrics(trades: BtTrade[]): BtMetrics {
     sortinoPerTrade: mean != null && dstd && dstd > 0 ? Number((mean / dstd).toFixed(3)) : null,
     maxDrawdownR: Number(maxDDr.toFixed(2)),
     maxDrawdownPct: maxDDpct > 0 ? Number((maxDDpct * 100).toFixed(2)) : null,
+    maxConsecutiveLosses: maxLossStreak,
     mfe: { p25: pct(mfe, 25), p50: pct(mfe, 50), p75: pct(mfe, 75) },
     mae: { p25: pct(mae, 25), p50: pct(mae, 50), p75: pct(mae, 75) },
     avgHoldH: closed.length ? Number((closed.reduce((s, t) => s + (t.holdH ?? 0), 0) / closed.length).toFixed(1)) : null,
@@ -962,7 +1080,23 @@ export function backtestStatus() {
 
 function readLastResult(): BtRunResult | null {
   try {
-    return JSON.parse(fs.readFileSync(RESULT_FILE, "utf8")) as BtRunResult;
+    const parsed = JSON.parse(fs.readFileSync(RESULT_FILE, "utf8")) as BtRunResult;
+    // WS9 — enrich legacy persisted runs IN MEMORY (disk untouched): the
+    // Monte Carlo ruin profile and the max-consecutive-loss streak are pure
+    // functions of the stored trades, so old results serve the new fields
+    // without a re-run.
+    if (parsed?.trades?.length) {
+      if (parsed.monteCarlo == null) {
+        parsed.monteCarlo = monteCarloRuin(parsed.trades.map((t) => t.netR).filter((r): r is number => r != null));
+      }
+      if (parsed.metricsAll?.maxConsecutiveLosses == null) {
+        parsed.metricsAll = computeMetrics(parsed.trades);
+        for (const model of Object.keys(parsed.byModel ?? {})) {
+          parsed.byModel[model] = computeMetrics(parsed.trades.filter((t) => t.model === model));
+        }
+      }
+    }
+    return parsed;
   } catch {
     return null;
   }
@@ -1106,6 +1240,7 @@ export async function runBacktest(opts: BtRunOpts = {}): Promise<BtRunResult> {
     const equity = eqFull.filter((_, i) => i % step === 0 || i === eqFull.length - 1);
 
     const calibration = calibrationCurves(trades);
+    const closedNetRs = trades.filter((t) => t.netR != null).map((t) => t.netR as number);
     const result: BtRunResult = {
       ok: true,
       generatedAt: Date.now(),
@@ -1119,6 +1254,7 @@ export async function runBacktest(opts: BtRunOpts = {}): Promise<BtRunResult> {
       byRegime,
       byTier,
       byMonth,
+      monteCarlo: monteCarloRuin(closedNetRs),
       sensitivity: sens,
       calibration,
       dataAt: Date.now(),

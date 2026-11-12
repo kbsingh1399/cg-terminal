@@ -40,11 +40,13 @@ import { isCuratedPerp } from "./assets";
 import { curatedPerps, curatedClassic, CURATED_BY_SYM } from "@/lib/universe/curated";
 import { buildProbability, type SetupProbability } from "./probability";
 import type { PbStats } from "./paperbook";
+import { mt5SpreadOf, spreadDragVerdict } from "./mt5-spread";
 
 export type Regime = "TREND_UP" | "TREND_DOWN" | "RANGE_BALANCE" | "COMPRESSION_SQUEEZE";
 export type ActiveModel = "M1_TREND_PULLBACK" | "M2_MEAN_REVERSION" | "WAIT_PULLBACK" | "WATCH_EXHAUSTION" | "NO_TRADE";
 export type Direction = "LONG" | "SHORT" | "NEUTRAL";
-export type Grade = "A+" | "A" | "B" | "SKIP";
+/** C = spread-drag / erosion penalty (WS7.3) — tradeable only at reduced conviction */
+export type Grade = "A+" | "A" | "B" | "C" | "SKIP";
 
 export interface ChecklistItem {
   key: string;
@@ -59,6 +61,12 @@ export interface TargetLevel {
   rMultiple: number | null;
 }
 
+export interface LadderRung {
+  level: number;
+  weightPct: number;
+  label: string;
+}
+
 export interface NarrativePlan {
   entryZone: [number, number] | null;
   triggerRule: string;
@@ -67,6 +75,12 @@ export interface NarrativePlan {
   targets: TargetLevel[];
   bestR: number | null;
   vetoes: string[];
+  /** WS7.1 M1 3-tier limit ladder (40/40/20) with the composite cost basis */
+  ladder?: LadderRung[];
+  /** weighted composite entry of the ladder — risk/R are measured from this */
+  compositeEntry?: number | null;
+  /** WS7.3 spread-drag verdict (SPREAD_DRAG_EXCESSIVE) when fired */
+  spreadDrag?: { ratio: number; spreadPct: number; stopDistPct: number; verdict: "SKIP" | "C"; source: string } | null;
 }
 
 export interface NarrativeVerdict {
@@ -120,6 +134,8 @@ interface OptionsLite {
   gexRegime: string | null;
   rr25d: number | null;
   dvol: number | null;
+  maxPainStrike: number | null;
+  gammaFlipPrice: number | null;
   dataAt: number | null;
 }
 
@@ -162,9 +178,10 @@ async function fetchOptionsLite(sym: string): Promise<OptionsLite | null> {
     const j = (await res.json()) as {
       ok: boolean;
       supported?: boolean;
-      gex?: { regime?: string };
+      gex?: { regime?: string; gammaFlipPrice?: number | null };
       riskReversal25d?: { value?: number };
       dvol?: { value?: number };
+      maxPainStrike?: number | null;
       dataAt?: number;
     };
     if (j.ok !== true || j.supported === false) return null;
@@ -172,6 +189,8 @@ async function fetchOptionsLite(sym: string): Promise<OptionsLite | null> {
       gexRegime: j.gex?.regime ?? null,
       rr25d: j.riskReversal25d?.value ?? null,
       dvol: j.dvol?.value ?? null,
+      maxPainStrike: j.maxPainStrike ?? null,
+      gammaFlipPrice: j.gex?.gammaFlipPrice ?? null,
       dataAt: j.dataAt ?? null,
     };
   } catch {
@@ -518,6 +537,26 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       const cvdAgrees = long ? (cvd?.delta24h ?? 0) > 0 : (cvd?.delta24h ?? 0) < 0;
       const triggered = trigSigs.length > 0 || (wallNear && cvdAgrees && nonDistribution);
 
+      // WS7.1 — THREE-TIMEFRAME ALIGNMENT: 4H EMA13×89 trend + 1H market
+      // structure (EMA13×89 cross) + 15m execution bar holding the structural
+      // EMA89 side (a pullback may compress the m15 EMAs, but price must not
+      // LOSE the m15 EMA89 that defines the execution-trend regime).
+      const h4Cross = market.ema.h4.e13 != null && market.ema.h4.e89 != null ? (long ? market.ema.h4.e13 > market.ema.h4.e89 : market.ema.h4.e13 < market.ema.h4.e89) : null;
+      const h1Cross = market.ema.h1.e13 != null && market.ema.h1.e89 != null ? (long ? market.ema.h1.e13 > market.ema.h1.e89 : market.ema.h1.e13 < market.ema.h1.e89) : null;
+      const m15Hold = market.ema.m15.e89 != null && price != null ? (long ? price > market.ema.m15.e89 : price < market.ema.m15.e89) : null;
+      const tf3AlignVotes = [h4Cross, h1Cross, m15Hold];
+      const tf3Aligned = tf3AlignVotes.filter(Boolean).length >= 2 && h4Cross !== false;
+      const tf3Note = `3-TF: H4 13×89 ${h4Cross == null ? "n/a" : h4Cross ? "trend" : "against"} · H1 structure ${h1Cross == null ? "n/a" : h1Cross ? "aligned" : "against"} · m15 bar ${m15Hold == null ? "n/a" : m15Hold ? "holds EMA89" : "lost EMA89"}`;
+
+      // WS7.1 — ABSORPTION / CVD-DIVERGENCE AT THE ZONE (A/A+ prerequisite):
+      // positive-delta absorption printed inside the pullback zone, or a live
+      // CVD divergence in the trade direction.
+      const inZone = (s: CgSignal) => s.lo != null && s.hi != null && s.lo <= zoneHi && s.hi >= zoneLo;
+      const absorptionAtZone = trigSigs.some((s) => s.t === "abs" && inZone(s));
+      const cvdDivLatest = cvd?.divergences?.length ? cvd.divergences[cvd.divergences.length - 1] : null;
+      const cvdDivAtDir = cvdDivLatest ? (long ? cvdDivLatest.dir === "bullish" : cvdDivLatest.dir === "bearish") : false;
+      const zoneFlowOk = absorptionAtZone || cvdDivAtDir;
+
       // stop: beyond structural invalidation
       const sigZone = trigSigs.length ? (long ? trigSigs[0].lo : trigSigs[0].hi) : null;
       const stopCandidates = [
@@ -533,6 +572,27 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       const gBuf = 0.25 * ((atr && atr > 0 ? atr : Math.abs(zoneHi - zoneLo)) || entryMid * 0.002);
       stop = long ? Math.min(stop, zoneLo - gBuf) : Math.max(stop, zoneHi + gBuf);
 
+      // WS7.1 — 3-TIER LIMIT LADDER: 40% at POC · 40% at the trend-side −1σ
+      // VWAP · 20% at the absorption low/high (deepest rung, aggressive).
+      // Risk & R are measured from the weighted COMPOSITE entry.
+      const absRung = trigSigs.find((s) => s.t === "abs" && inZone(s)) ?? null;
+      const ladderFallback = long ? zoneLo - gBuf * 0.5 : zoneHi + gBuf * 0.5;
+      const l1 = dayPoc ?? entryMid;
+      const l2 = long ? vwap! - (sd1 ?? 0) : vwap! + (sd1 ?? 0);
+      const l3 = absRung ? (long ? absRung.lo : absRung.hi) ?? ladderFallback : ladderFallback;
+      const ladderRungs = long
+        ? [
+            { level: Math.max(l1, l2, l3!), weightPct: 40, label: "L1 · 40% at POC" },
+            { level: Math.min(Math.max(l1, l3!), l2), weightPct: 40, label: "L2 · 40% at −1σ VWAP band" },
+            { level: Math.min(l1, l2, l3!), weightPct: 20, label: `L3 · 20% at ${absRung ? "absorption low" : "zone floor"}` },
+          ]
+        : [
+            { level: Math.min(l1, l2, l3!), weightPct: 40, label: "L1 · 40% at POC" },
+            { level: Math.max(Math.min(l1, l3!), l2), weightPct: 40, label: "L2 · 40% at +1σ VWAP band" },
+            { level: Math.max(l1, l2, l3!), weightPct: 20, label: `L3 · 20% at ${absRung ? "absorption high" : "zone ceiling"}` },
+          ];
+      const compositeEntry = ladderRungs.reduce((s, r) => s + (r.level * r.weightPct) / 100, 0);
+
       // targets
       const t1Candidates = [long ? dayVah : dayVal, long ? vwap! + 1.5 * (sd1 ?? 0) : vwap! - 1.5 * (sd1 ?? 0)].filter(
         (x): x is number => x != null
@@ -545,8 +605,8 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       );
       const t3 = t3Candidates.length ? (long ? Math.min(...t3Candidates) : Math.max(...t3Candidates)) : null;
 
-      const risk = stop != null && entryMid > 0 ? Math.abs(entryMid - stop) : null;
-      const rOf = (lvl: number | null) => (lvl != null && risk != null && risk > 0 ? Math.abs(lvl - entryMid) / risk : null);
+      const risk = stop != null && compositeEntry > 0 ? Math.abs(compositeEntry - stop) : null;
+      const rOf = (lvl: number | null) => (lvl != null && risk != null && risk > 0 ? Math.abs(lvl - compositeEntry) / risk : null);
       const r1 = rOf(t1);
       const r2 = rOf(t2);
       const r3 = rOf(t3);
@@ -562,8 +622,10 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
 
       m1Plan = {
         entryZone: [zoneLo, zoneHi],
+        ladder: ladderRungs,
+        compositeEntry,
         triggerRule: triggered
-          ? `${trigSigs.length ? `footprint ${trigSigs[0].t} fired ${trigSigs[0].side}` : "wall + CVD + OI quadrant aligned"} in ${regime === "TREND_UP" ? "long" : "short"} direction at the zone`
+          ? `${trigSigs.length ? `footprint ${trigSigs[0].t} fired ${trigSigs[0].side}` : "wall + CVD + OI quadrant aligned"} in ${regime === "TREND_UP" ? "long" : "short"} direction at the zone${absorptionAtZone ? " (absorption inside the zone)" : ""}`
           : `await ${long ? "bullish" : "bearish"} footprint confirmation (absorption / strong divergence / trap) or wall+CVD confluence at ${fmt(zoneLo, market.priceDecs)}-${fmt(zoneHi, market.priceDecs)}`,
         stop,
         invalidation: `structure beyond ${fmt(stop, market.priceDecs)} (signal zone / ±2σ VWAP / 0.5 ATR buffer)`,
@@ -575,12 +637,26 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
         bestR,
         vetoes: [],
       };
-      m1 = { status: triggered ? "TRIGGERED" : "ARMED", note: `${regime} with pullback into ${fmt(zoneLo, market.priceDecs)}-${fmt(zoneHi, market.priceDecs)}` };
+      m1 = {
+        status: triggered ? "TRIGGERED" : "ARMED",
+        note: `${regime} with pullback into ${fmt(zoneLo, market.priceDecs)}-${fmt(zoneHi, market.priceDecs)} · ${tf3Note}${!zoneFlowOk ? " · no absorption/CVD-div at zone (A/A+ capped)" : ""}`,
+      };
       const checks = [biasOk, !stretched, triggered, bestR == null || bestR >= 1.5, !blocksT1, !market.stale];
       const passed = checks.filter(Boolean).length;
       m1Grade = passed >= 6 ? "A" : passed >= 4 ? "B" : "SKIP";
       if (bestR != null && bestR >= 2 && triggered) m1Grade = "A+";
-      m1Confidence = Math.min(92, 35 + passed * 10 + (trigSigs.length ? 8 : 0));
+      // WS7.1 gates: A/A+ requires 3-TF alignment AND absorption/CVD-div at zone
+      if ((m1Grade === "A" || m1Grade === "A+") && (!tf3Aligned || !zoneFlowOk)) {
+        m1Grade = "B";
+        vetoes.push(
+          !tf3Aligned && !zoneFlowOk
+            ? `M1 A/A+ demoted: 3-TF alignment incomplete AND no absorption/CVD-divergence at the zone (${tf3Note})`
+            : !tf3Aligned
+              ? `M1 A/A+ demoted: 3-TF alignment incomplete (${tf3Note})`
+              : "M1 A/A+ demoted: no positive-delta absorption or CVD divergence at the pullback zone"
+        );
+      }
+      m1Confidence = Math.min(92, 35 + passed * 10 + (trigSigs.length ? 8 : 0) + (tf3Aligned && zoneFlowOk ? 5 : 0));
     }
   } else {
     m1 = { status: "OFF", note: `regime ${regime} — M1 needs TREND_UP/TREND_DOWN` };
@@ -622,6 +698,22 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
     const cvdFades = cvdDiv ? (short ? cvdDiv.dir === "bearish" : cvdDiv.dir === "bullish") : false;
     const proof = proofSigs.length > 0 || (wallDefends && cvdFades);
 
+    // WS7.2 — EXHAUSTION SWEEP: price stretched > 2σ AND swept into a MAJOR
+    // liquidation cluster (strength ≥ 50/100 or ≥ $5M) AND printed a volume-
+    // exhaustion pinbar (footprint "exh": 10-bar extreme, dead-volume zone,
+    // close in the opposite half) AND the delta flipped against the trend
+    // (live CVD divergence or a div/sdiv footprint signal in the fade
+    // direction).
+    const sweptMajorLevel = short ? liq?.topAbove?.[0] ?? null : liq?.topBelow?.[0] ?? null;
+    const sweptMajorCluster =
+      sweptMajorLevel != null && price != null &&
+      (short ? sweptMajorLevel.price > price : sweptMajorLevel.price < price) &&
+      (sweptMajorLevel.price - price) / price * (short ? 1 : -1) < 0.005 &&
+      (sweptMajorLevel.strength >= 50 || sweptMajorLevel.usd >= 5_000_000);
+    const exhPin = proofSigs.some((s) => s.t === "exh");
+    const deltaFlip = cvdFades || proofSigs.some((s) => s.t === "div" || s.t === "sdiv");
+    const exhaustionSweep = sweptMajorCluster && exhPin && deltaFlip;
+
     if (!crowded) {
       m2 = { status: "WATCH_EXHAUSTION", note: `price ${fmt(Math.abs(z!), 2)}σ from VWAP but no crowding signal yet (RSI ${fmt(rsiH1 ?? rsiM15, 0)}, funding ${fmt(quant?.fundingAprPct, 1)}% APR, top L/S ${fmt(quant?.topLs, 2)})` };
       m2Grade = "B";
@@ -640,9 +732,11 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       const stop = short ? Math.max(...stopCandidates) : Math.min(...stopCandidates);
       const entryMid = price;
 
-      const t1 = short ? vwap - (sd1 ?? 0) : vwap + (sd1 ?? 0);
-      const t2Candidates = [vwap, dayPoc].filter((x): x is number => x != null);
-      const t2 = t2Candidates.length ? (short ? Math.max(...t2Candidates) : Math.min(...t2Candidates)) : null;
+      // WS7.2 — dynamic targets: T1 = session/day POC (the value magnet the
+      // auction reverts to first), T2 = the opposing 0σ VWAP midline (full
+      // mean reversion), T3 = through-side day VAL/VAH or opposite cluster.
+      const t1 = dayPoc ?? (short ? vwap - (sd1 ?? 0) : vwap + (sd1 ?? 0));
+      const t2 = vwap;
       const t3Candidates = [short ? dayVal : dayVah, short ? liqBelow : liqAbove].filter((x): x is number => x != null);
       const t3 = t3Candidates.length ? (short ? Math.min(...t3Candidates) : Math.max(...t3Candidates)) : null;
 
@@ -670,19 +764,22 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
         stop,
         invalidation: `±3σ VWAP (${fmt(short ? vwap + (sd3 ?? 0) : vwap - (sd3 ?? 0), market.priceDecs)}) or 0.4 ATR past the sweep`,
         targets: [
-          { level: t1, label: "T1 · ±1σ VWAP (partial, stop → BE)", rMultiple: r1 },
-          { level: t2, label: "T2 · Day VWAP / POC", rMultiple: r2 },
+          { level: t1, label: "T1 · session POC (first revert)", rMultiple: r1 },
+          { level: t2, label: "T2 · 0σ VWAP midline", rMultiple: r2 },
           { level: t3, label: "T3 · Day VAL/VAH or opposite cluster", rMultiple: r3 },
         ],
         bestR: r2 ?? r1,
         vetoes: [],
       };
-      m2 = { status: "TRIGGERED", note: `${fmt(Math.abs(z!), 2)}σ stretch ${peakConviction ? "(peak conviction) " : ""}+ ${sweptCluster ? "swept cluster, " : ""}reversal proof: ${proofSigs.length ? proofSigs[0].t : "wall+CVD"}` };
+      m2 = {
+        status: exhaustionSweep ? "EXHAUSTION_SWEEP_CONFIRMED" : "TRIGGERED",
+        note: `${fmt(Math.abs(z!), 2)}σ stretch ${peakConviction ? "(peak conviction) " : ""}+ ${sweptCluster ? "swept cluster, " : ""}reversal proof: ${proofSigs.length ? proofSigs[0].t : "wall+CVD"}${exhaustionSweep ? ` · EXHAUSTION_SWEEP: major cluster ${fmt(sweptMajorLevel!.price, market.priceDecs)} (str ${sweptMajorLevel!.strength}, $${(sweptMajorLevel!.usd / 1e6).toFixed(1)}M) swept + exhaustion pinbar + delta flip` : ""}`,
+      };
       const checks = [crowded, proof, r1 == null || r1 >= 1.2, r2 == null || r2 >= 1.5, !(trendAccel && cvdRising && premiumWith && noExhaustion)];
       const passed = checks.filter(Boolean).length;
       m2Grade = passed >= 5 ? "A" : passed >= 3 ? "B" : "SKIP";
-      if (passed >= 5 && peakConviction) m2Grade = "A+";
-      m2Confidence = Math.min(90, 30 + passed * 12);
+      if (passed >= 5 && (peakConviction || exhaustionSweep)) m2Grade = "A+";
+      m2Confidence = Math.min(90, 30 + passed * 12 + (exhaustionSweep ? 8 : 0));
     }
   } else {
     m2 = { status: "OFF", note: z != null ? `price ${fmt(z, 2)}σ from Day VWAP — M2 needs |z| ≥ 2.0` : "VWAP z unavailable" };
@@ -697,7 +794,7 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
   let thesis = "";
 
   const m1Armed = m1?.status === "TRIGGERED" || m1?.status === "ARMED";
-  const m2Armed = m2?.status === "TRIGGERED";
+  const m2Armed = m2?.status === "TRIGGERED" || m2?.status === "EXHAUSTION_SWEEP_CONFIRMED";
 
   if (m1?.status === "WAIT_PULLBACK") {
     activeModel = "WAIT_PULLBACK";
@@ -744,6 +841,42 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
 
   if (grade === "SKIP" && (activeModel === "M1_TREND_PULLBACK" || activeModel === "M2_MEAN_REVERSION")) {
     thesis += " Setup exists but the grade is SKIP — vetoes must clear first.";
+  }
+
+  // ---- WS7.3: SPREAD-ADJUSTED EV GATE (MT5 execution cost) ----
+  // Only fires on VERIFIED FRESH mt5.json spreads (missing/stale → honest
+  // n/a, no penalty): spread cost > 12% of the stop distance erodes the
+  // edge (grade C, SPREAD_DRAG_EXCESSIVE) and > 25% kills the setup (SKIP).
+  const spreadInfo = activeModel === "M1_TREND_PULLBACK" || activeModel === "M2_MEAN_REVERSION" ? mt5SpreadOf(sym) : null;
+  const costBasis = plan.compositeEntry ?? (plan.entryZone ? (plan.entryZone[0] + plan.entryZone[1]) / 2 : null);
+  const stopDistPct =
+    spreadInfo?.spreadPct != null && costBasis != null && plan.stop != null && costBasis > 0
+      ? (Math.abs(costBasis - plan.stop) / costBasis) * 100
+      : null;
+  const spreadGate = spreadInfo?.spreadPct != null && stopDistPct != null ? spreadDragVerdict(spreadInfo.spreadPct, stopDistPct) : null;
+  if (spreadGate) {
+    plan.spreadDrag = {
+      ratio: Number(spreadGate.ratio.toFixed(3)),
+      spreadPct: spreadInfo!.spreadPct!,
+      stopDistPct: Number(stopDistPct!.toFixed(3)),
+      verdict: spreadGate.verdict,
+      source: spreadInfo!.source,
+    };
+    if (activeModel === "M1_TREND_PULLBACK" || activeModel === "M2_MEAN_REVERSION") {
+      if (spreadGate.verdict === "SKIP") {
+        grade = "SKIP";
+        confidence = Math.min(confidence, 25);
+        vetoes.push(
+          `SPREAD_DRAG_EXCESSIVE: MT5 spread ${fmt(spreadInfo!.spreadPct, 2)}% is ${fmt(spreadGate.ratio * 100, 0)}% of the ${fmt(stopDistPct!, 2)}% stop distance — the edge pays the spread, not you`
+        );
+      } else {
+        grade = "C";
+        confidence = Math.min(confidence, 45);
+        vetoes.push(
+          `SPREAD_DRAG_EXCESSIVE: MT5 spread ${fmt(spreadInfo!.spreadPct, 2)}% is ${fmt(spreadGate.ratio * 100, 0)}% of the ${fmt(stopDistPct!, 2)}% stop distance — edge eroded, trade smaller or not at all`
+        );
+      }
+    }
   }
 
   // ---- checklist (exact measured values) ----
@@ -804,7 +937,9 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       key: "gex",
       label: "GEX / Skew (Deribit)",
       pass: options ? (options.gexRegime === "POSITIVE_PIN" ? regime === "RANGE_BALANCE" : true) : null,
-      value: options ? `${options.gexRegime ?? "–"} · RR25d ${fmt(options.rr25d, 1)} · DVOL ${fmt(options.dvol, 0)}` : "BTC/ETH only",
+      value: options
+        ? `${options.gexRegime ?? "–"} · RR25d ${fmt(options.rr25d, 1)} · DVOL ${fmt(options.dvol, 0)}${options.maxPainStrike != null ? ` · max pain ${fmt(options.maxPainStrike, 0)}` : ""}${options.gammaFlipPrice != null ? ` · γ-flip ${fmt(options.gammaFlipPrice, 0)}` : ""}`
+        : "BTC/ETH only",
     },
     {
       key: "r",
@@ -817,6 +952,17 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       label: "Freshness",
       pass: fresh.fields.length === 0,
       value: fresh.fields.length ? `stale: ${fresh.fields.join(", ")}` : `worst age ${(fresh.worst / 1000).toFixed(0)}s`,
+    },
+    {
+      key: "exec-cost",
+      label: "Execution cost (MT5 spread)",
+      pass: spreadInfo == null ? null : spreadGate ? false : true,
+      value:
+        spreadInfo == null
+          ? "no MT5 spread feed (gate off)"
+          : spreadInfo.spreadPct == null || spreadInfo.stale
+            ? `unavailable${spreadInfo.stale ? ` (mt5.json ${Math.round((spreadInfo.ageMs ?? 0) / 60_000)}m old — gate off)` : ""}`
+            : `spread ${fmt(spreadInfo.spreadPct, 3)}% vs stop ${fmt(stopDistPct, 2)}% → ${fmt((spreadGate?.ratio ?? spreadInfo.spreadPct / (stopDistPct ?? 1)) * 100, 0)}% drag${spreadGate ? ` (SPREAD_DRAG_EXCESSIVE → ${spreadGate.verdict})` : ""}`,
     },
   ];
   if (isClassic) {

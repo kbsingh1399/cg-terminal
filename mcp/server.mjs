@@ -654,6 +654,10 @@ async function toolOptionsSurface(args) {
     `ATM IV term structure: 7d ${d.termStructure?.["7d"]?.toFixed(1) ?? "–"}% · 30d ${d.termStructure?.["30d"]?.toFixed(1) ?? "–"}% · 90d ${d.termStructure?.["90d"]?.toFixed(1) ?? "–"}%`,
     `25Δ risk reversal: ${d.riskReversal25d?.value?.toFixed(1) ?? "–"} vol pts (${d.riskReversal25d?.method ?? "–"}, ${d.riskReversal25d?.expiry ?? "–"})`,
     `Max pain: ${(d.maxPain ?? []).map((m) => `${m.expiry} @ ${m.strike}`).join(" · ")}`,
+    d.maxPainStrike != null ? `Max pain strike (nearest monthly, the pin magnet): ${d.maxPainStrike}` : "Max pain strike: n/a",
+    d.gammaFlipPrice != null
+      ? `GEX flip point (zero-gamma): ${d.gammaFlipPrice} — above it dealer hedging stabilizes price, below it accelerates the move`
+      : "GEX flip point: no zero-crossing in the 0.70x-1.30x band",
     `Top call OI walls: ${(d.oiWalls?.calls ?? []).slice(0, 3).map((w) => `${w.strike} ($${(w.oiUsd / 1e6).toFixed(1)}M)`).join(" · ")}`,
     `Top put OI walls: ${(d.oiWalls?.puts ?? []).slice(0, 3).map((w) => `${w.strike} ($${(w.oiUsd / 1e6).toFixed(1)}M)`).join(" · ")}`,
     `GEX: ${d.gex?.netGexUsd != null ? `$${(d.gex.netGexUsd / 1e6).toFixed(1)}M` : "–"} → ${d.gex?.regime ?? "–"} (spot ${d.gex?.spot ?? "–"})`,
@@ -735,7 +739,7 @@ async function toolBacktestSummary(args) {
   }
   const fmtM = (m) =>
     m
-      ? `trades ${m.trades} · fill ${m.fillRatePct ?? "–"}% · win ${m.winRatePct ?? "–"}% · PF ${m.profitFactor ?? "–"} · expNet ${m.expectancyNetR ?? "–"}R · DD ${m.maxDrawdownR}R · sharpe ${m.sharpePerTrade ?? "–"}`
+      ? `trades ${m.trades} · fill ${m.fillRatePct ?? "–"}% · win ${m.winRatePct ?? "–"}% · PF ${m.profitFactor ?? "–"} · expNet ${m.expectancyNetR ?? "–"}R · DD ${m.maxDrawdownR}R · sharpe ${m.sharpePerTrade ?? "–"} · sortino ${m.sortinoPerTrade ?? "–"}${m.maxConsecutiveLosses != null ? ` · max loss streak ${m.maxConsecutiveLosses}` : ""}`
       : "n/a";
   let assetLine = "";
   if (sym) {
@@ -749,6 +753,9 @@ async function toolBacktestSummary(args) {
     `ALL: ${fmtM(d.metricsAll)}`,
     `M1 TREND_PULLBACK: ${fmtM(d.byModel?.M1_TREND_PULLBACK)}`,
     `M2 MEAN_REVERSION: ${fmtM(d.byModel?.M2_MEAN_REVERSION)}`,
+    d.monteCarlo
+      ? `Monte Carlo ruin (${d.monteCarlo.paths}-path bootstrap): P(≥5R DD) ${(d.monteCarlo.pDd5R * 100).toFixed(1)}% · P(≥10R DD) ${(d.monteCarlo.pDd10R * 100).toFixed(1)}% · median maxDD ${d.monteCarlo.medianMaxDdR}R · p95 ${d.monteCarlo.p95MaxDdR}R`
+      : "Monte Carlo ruin: not enough closed trades",
     `Tiers — majors: ${fmtM(d.byTier?.["crypto-major"])}`,
     `        alts: ${fmtM(d.byTier?.["crypto-alt"])}`,
     `        tradfi: ${fmtM(d.byTier?.tradfi)}`,
@@ -1041,7 +1048,7 @@ const TOOLS = [
   },
   {
     name: "options_surface",
-    description: "Deribit options surface (BTC/ETH): DVOL index, ATM IV term structure (7/30/90d), 25-delta risk-reversal skew, max pain (3 monthlies), top call/put OI walls, dealer net gamma (GEX) regime and put/call ratios.",
+    description: "Deribit options surface (BTC/ETH): DVOL index, ATM IV term structure (7/30/90d), 25-delta risk-reversal skew, max pain + maxPainStrike (nearest monthly pin magnet), GEX flip point (zero-gamma regime boundary), top call/put OI walls, dealer net gamma (GEX) regime and put/call ratios.",
     inputSchema: {
       type: "object",
       properties: { sym: { type: "string", enum: ["BTC", "ETH"], description: "Deribit lists options only for BTC/ETH" } },
@@ -1082,7 +1089,7 @@ const TOOLS = [
   },
   {
     name: "backtest_summary",
-    description: "Cached walk-forward M1/M2 backtest results (real Binance klines + funding history, stop-first intrabar accounting, tiered fees/slippage): per-model / per-regime / per-tier trades, fill rate, win rate, profit factor, net expectancy R, Sharpe/Sortino, max drawdown, MFE/MAE percentiles, parameter sensitivity grid (M2 σ threshold × M1 R filter) and the empirical calibration curves probability.ts blends in. Optional asset filter summarizes that asset's trades.",
+    description: "Walk-forward M1/M2 backtest summary: fill/win rates, profit factor, expectancy in R, drawdown, Sharpe/Sortino per trade, max consecutive-loss streak, and the 1000-path Monte Carlo ruin profile (P of >=5R / >=10R drawdowns) — plus per-model/tier/regime buckets, parameter sensitivity and probability calibration curves.",
     inputSchema: {
       type: "object",
       properties: {

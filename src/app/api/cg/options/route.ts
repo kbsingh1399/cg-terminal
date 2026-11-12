@@ -171,6 +171,73 @@ function bsGamma(s: number, k: number, ivPct: number, tYears: number): number | 
   return Math.exp(-0.5 * d1 * d1) / (SQRT_2PI * s * sigma * sqT);
 }
 
+/**
+ * WS8 — GEX FLIP POINT: the spot level S* where the OI-weighted dealer
+ * gamma profile G(S) = Σ calls OI·Γ(S,K,iv,T) − Σ puts OI·Γ(S,K,iv,T)
+ * crosses zero — the regime boundary between dealer hedging that STABILIZES
+ * price (positive gamma: sell rallies / buy dips) and hedging that
+ * ACCELERATES the move (negative gamma: chase the trend).
+ *
+ * Method: evaluate G(S) on a 0.70×–1.30× spot grid (160 steps, expiries ≤ 90d
+ * with real OI + mark_iv), detect the sign change, then bisect to < $0.01 of
+ * the exact root. Returns null when G keeps one sign across the band (a
+ * purely call-heavy or put-heavy book has no flip inside it).
+ */
+function gammaFlipPriceOf(
+  legs: OptLeg[],
+  now: number,
+  spot: number
+): { price: number; legsCounted: number; horizonD: number } | null {
+  if (!(spot > 0)) return null;
+  const HORIZON_MS = 90 * 86_400_000;
+  const act = legs.filter(
+    (l) => l.oi > 0 && l.markIv != null && l.und > 0 && l.expTs > now && l.expTs - now <= HORIZON_MS
+  );
+  if (act.length < 8) return null;
+  const gAt = (s: number): number => {
+    let g = 0;
+    for (const l of act) {
+      const t = (l.expTs - now) / YEAR_MS;
+      const gamma = bsGamma(s, l.strike, l.markIv as number, t);
+      if (gamma == null) continue;
+      g += (l.type === "C" ? 1 : -1) * l.oi * gamma;
+    }
+    return g;
+  };
+  const LO = 0.7;
+  const HI = 1.3;
+  const STEPS = 160;
+  let prevS = spot * LO;
+  let prevG = gAt(prevS);
+  if (prevG === 0) return { price: prevS, legsCounted: act.length, horizonD: 90 };
+  for (let i = 1; i <= STEPS; i++) {
+    const s = spot * (LO + ((HI - LO) * i) / STEPS);
+    const gv = gAt(s);
+    if (gv === 0) return { price: s, legsCounted: act.length, horizonD: 90 };
+    if (prevG > 0 !== gv > 0) {
+      // sign change — bisect to the exact root
+      let a = prevS;
+      let b = s;
+      let ga = prevG;
+      for (let k = 0; k < 44; k++) {
+        const m = 0.5 * (a + b);
+        const gm = gAt(m);
+        if (gm === 0 || b - a < spot * 0.0001) break;
+        if (ga > 0 !== gm > 0) {
+          b = m;
+        } else {
+          a = m;
+          ga = gm;
+        }
+      }
+      return { price: 0.5 * (a + b), legsCounted: act.length, horizonD: 90 };
+    }
+    prevS = s;
+    prevG = gv;
+  }
+  return null;
+}
+
 /** Deribit monthly options expire on the last Friday of the month. */
 function isLastFriday(ts: number): boolean {
   const d = new Date(ts);
@@ -324,6 +391,9 @@ export async function GET(req: NextRequest) {
       regime: "POSITIVE_PIN" | "NEGATIVE_GAMMA_EXPANSION";
       spot: number | null;
       legsCounted: number;
+      /** WS8 — zero-gamma spot level (dealer regime flip); null when no sign change */
+      gammaFlipPrice: number | null;
+      gammaFlipLegs: number | null;
     } | null = null;
     const putCallRatio: { oi: number | null; vol24h: number | null } = { oi: null, vol24h: null };
 
@@ -539,12 +609,16 @@ export async function GET(req: NextRequest) {
         gexLegs++;
       }
       const gexSpot = futureExpiries.length > 0 ? undOf(futureExpiries[0][0]) : 0;
+      // WS8 — GEX flip point (zero-gamma level, ≤90d expiries, OI-weighted)
+      const gexFlip = gexSpot > 0 ? gammaFlipPriceOf(legs, now, gexSpot) : null;
       gex = {
         netGexUsd: Number(netGex.toFixed(4)),
         netGexUsdPer1Pct: gexSpot > 0 ? Number((netGex * gexSpot * gexSpot * 0.01).toFixed(2)) : null,
         regime: netGex > 0 ? "POSITIVE_PIN" : "NEGATIVE_GAMMA_EXPANSION",
         spot: gexSpot > 0 ? gexSpot : null,
         legsCounted: gexLegs,
+        gammaFlipPrice: gexFlip ? Number(gexFlip.price.toFixed(gexFlip.price >= 1000 ? 1 : 2)) : null,
+        gammaFlipLegs: gexFlip?.legsCounted ?? null,
       };
       notes.push(
         "gex: gamma computed via Black-Scholes (r=0, q=0) from mark_iv + underlying_price + time-to-expiry"
@@ -552,6 +626,13 @@ export async function GET(req: NextRequest) {
       notes.push(
         "gex: netGexUsd = sum(call OI x gamma) - sum(put OI x gamma); netGexUsdPer1Pct scales it by spot^2 x 1%"
       );
+      if (gexFlip) {
+        notes.push(
+          `gex.gammaFlipPrice: zero-gamma root of the OI-weighted dealer gamma profile over a 0.70x-1.30x spot grid (expiries <= 90d, ${gexFlip.legsCounted} legs) — above it dealer hedging stabilizes, below it accelerates`
+        );
+      } else {
+        notes.push("gex.gammaFlipPrice: no zero-crossing in the 0.70x-1.30x band — the book keeps one gamma sign");
+      }
 
       // (c6) put/call ratios (whole listed chain)
       let oiC = 0;
@@ -595,6 +676,10 @@ export async function GET(req: NextRequest) {
         riskReversal25d ??
         (riskReversalReason ? { value: null, method: null, expiry: null, reason: riskReversalReason } : null),
       maxPain,
+      /** WS8 — nearest-monthly max-pain strike (the pin magnet) */
+      maxPainStrike: maxPain.length > 0 ? maxPain[0].strike : null,
+      /** WS8 — GEX flip level surfaced top-level for chart overlays */
+      gammaFlipPrice: gex?.gammaFlipPrice ?? null,
       oiWalls,
       gex,
       putCallRatio,

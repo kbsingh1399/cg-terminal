@@ -240,10 +240,46 @@ export default function BacktestTool({ sym: _sym }: { sym: string }) {
               <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">Equity Curve — cumulative net R (after fees, slippage, funding)</span>
               <span className="font-mono text-[10px] text-neutral-500">
                 sharpe/trade {fmtNum(data.metricsAll.sharpePerTrade, 3)} · sortino {fmtNum(data.metricsAll.sortinoPerTrade, 3)} · maxDD {data.metricsAll.maxDrawdownR}R ({data.metricsAll.maxDrawdownPct ?? "–"}% @ 1% risk/trade)
+                {data.metricsAll.maxConsecutiveLosses != null ? ` · max loss streak ${data.metricsAll.maxConsecutiveLosses}` : ""}
               </span>
             </div>
             <EquityCurve points={data.equity} />
           </div>
+
+          {/* WS9 — Monte Carlo ruin profile */}
+          {data.monteCarlo && (
+            <div className="rounded-lg border border-neutral-800 bg-[#11151a] p-3">
+              <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">Monte Carlo Ruin Profile — 1,000-path bootstrap on the closed-trade R distribution</span>
+                <span className="font-mono text-[9px] text-neutral-600">{data.monteCarlo.method}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div>
+                  <div className="text-[9px] uppercase tracking-wider text-neutral-500">P(≥5R drawdown)</div>
+                  <div className={`font-mono text-lg font-bold ${data.monteCarlo.pDd5R != null && data.monteCarlo.pDd5R > 0.5 ? "text-amber-300" : "text-emerald-300"}`}>
+                    {data.monteCarlo.pDd5R != null ? `${(data.monteCarlo.pDd5R * 100).toFixed(1)}%` : "–"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[9px] uppercase tracking-wider text-neutral-500">P(≥10R drawdown)</div>
+                  <div className={`font-mono text-lg font-bold ${data.monteCarlo.pDd10R != null && data.monteCarlo.pDd10R > 0.2 ? "text-rose-300" : "text-emerald-300"}`}>
+                    {data.monteCarlo.pDd10R != null ? `${(data.monteCarlo.pDd10R * 100).toFixed(1)}%` : "–"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[9px] uppercase tracking-wider text-neutral-500">median max DD</div>
+                  <div className="font-mono text-lg font-bold text-neutral-100">{fmtNum(data.monteCarlo.medianMaxDdR)}R</div>
+                </div>
+                <div>
+                  <div className="text-[9px] uppercase tracking-wider text-neutral-500">p95 max DD</div>
+                  <div className="font-mono text-lg font-bold text-neutral-100">{fmtNum(data.monteCarlo.p95MaxDdR)}R</div>
+                </div>
+              </div>
+              <div className="mt-1 font-mono text-[9px] text-neutral-600">
+                each path draws {data.monteCarlo.tradesPerPath} trades with replacement from the closed-trade pool — the “can I sit through the streak” number at current expectancy &amp; variance
+              </div>
+            </div>
+          )}
 
           {/* headline metrics by model / regime / tier */}
           <div className="space-y-2">

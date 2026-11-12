@@ -23,6 +23,76 @@ dated entry after each meaningful change; keep only the last 10 entries.
 
 ## Log
 
+### 2026-11-12 21:15 UTC — Z.ai sandbox agent — PHASE 3 (WS7-WS10) quantitative expansion shipped
+- **WS7 M1/M2 deepening (narrative.ts)**: M1 now enforces 3-TF alignment
+  (4H EMA13×89 trend + H1 structure cross + m15 bar holding EMA89) AND
+  zone-local flow proof (positive-delta absorption inside the entry zone or
+  CVD divergence in the trade direction) as hard A/A+ prerequisites —
+  failures demote to B with the exact 3-TF breakdown in the note. M1 gains
+  the 3-tier limit ladder (40% POC · 40% −1σ/+1σ VWAP band · 20% absorption
+  low/high) with risk/R measured from the weighted COMPOSITE entry (UI card
+  shows the rungs + composite basis; sizing + ticket staging use it).
+  M2 gains EXHAUSTION_SWEEP_CONFIRMED: >2σ stretch AND major liq cluster
+  sweep (strength ≥50/100 or ≥$5M within 0.5%) AND footprint exhaustion
+  pinbar AND delta flip (CVD div or div/sdiv signal) → A+ path + confidence
+  bonus; T1 retargeted to session POC, T2 to the 0σ VWAP midline.
+- **WS7.3 spread gate**: new src/lib/cg/mt5-spread.ts reads desk/mt5.json
+  (60s mtime cache, 20-min staleness bound, honest n/a when absent/stale —
+  sandbox snapshot is 8h old so the gate is honestly OFF here). When fresh:
+  spread > 12% of stop distance → grade C "SPREAD_DRAG_EXCESSIVE", > 25% →
+  SKIP; new "Execution cost (MT5 spread)" checklist row carries the exact
+  ratio. Grade type extended with C (alpha-matrix + alert-rules GRADE_RANK
+  C:1 — alert semantics unchanged, B still the ≥2 threshold).
+- **WS8 GEX**: options route computes the GEX flip point — the zero-gamma
+  root of the OI-weighted dealer gamma profile (BS gamma from real mark_iv,
+  0.70×-1.30× spot grid + bisection, ≤90d expiries; BTC live: flip 75,568
+  with spot 71.8k below it = NEGATIVE_GAMMA_EXPANSION, consistent; ETH flip
+  2,083). Exposed as gex.gammaFlipPrice + top-level gammaFlipPrice +
+  maxPainStrike (nearest monthly); MCP options_surface lines added;
+  SplitContextView draws Max Pain (orange) + GEX Flip (rose) reference
+  lines on the asset panes (BTC/ETH, open-state gated 120s poll) and the
+  narrative GEX checklist row carries both values.
+- **WS9 backtest analytics**: BtMetrics + maxConsecutiveLosses (run: 27);
+  new monteCarloRuin() — deterministic 1000-path bootstrap (LCG seed
+  20261113) on closed-trade netR → pDd5R/pDd10R/median/p95 exposed at
+  result.monteCarlo, Backtest tab "Monte Carlo Ruin Profile" tile row, MCP
+  backtest_summary line. Legacy persisted runs are enriched IN MEMORY at
+  read time (disk untouched). **TWO REAL DATA BUGS found & fixed**: (1) M2
+  stops collapsing onto the entry at extreme stretches (XRP -269R, NVDA
+  -101R "trades" from ~1bp risk units) → geometry floor risk ≥ 0.5σ and
+  ≥ 10bps, degenerate knife-catches now skipped; (2) M1 dead-market arming
+  on flat sessions (XAU/XAG weekend bars collapse ATR→0 → 0.001% stops)
+  → dead-tape guard (ATR < 0.5bp skipped) + 10bps stop floor. Clean 30d
+  rerun: 2957 trades · win 47.6% · PF 1.705 · expNet +0.20R · worst trade
+  -3.5R (was -269R) · maxDD 169R honest. Ban-proof re-runs: kline cache now
+  serves a fresh (<12h) cache even when its tail lags (coverage reports the
+  honest lastBar) + funding history disk-cached 12h — re-runs are fapi-free.
+- **WS10 GLM reasoning stream**: AI route parses delta.reasoning_content
+  (both naming variants) BEFORE content deltas + captures
+  usage.completion_tokens_details.reasoning_tokens; new SSE `reasoning`
+  events + reasoningTokens on done; 15-min cache stores reasoning.
+  NarrativeCard renders a collapsible "Analyst Chain-of-Thought" box
+  (streams while thinking, auto-folds when the brief starts, char count +
+  "N reasoning tokens" chip). .env.example documents NVIDIA_API_KEY.
+- **GATES**: tsc 0 · eslint 0/0 · quant-math unit lock 73/73 (+35 phase-3
+  locks: GEX flip root/sign-change/OI-weighting, spread-drag boundaries
+  incl. real ADA/LTC/BTC mt5.json numbers, Monte Carlo determinism +
+  distribution sensitivity, ladder composite math, 3-TF gate, loss streaks)
+  · mcp-tools 34/34 · liq-live 45/45 · paperbook 29/29 · API battery
+  93×200 + 13×clean-400 + 3 livebook 502s (recurring host-IP fapi ban
+  re-arms on every expiry — environment, not code; user UI serves via
+  browser-direct fallback) · browser E2E: ladder card, Monte Carlo panel,
+  split-view GEX line (rose pixels confirmed in 4H pane), zero
+  console/page errors · memory steady rss ~1.7GB.
+- **OPS**: agent-spawned servers are reaped at command end in this sandbox
+  (even setsid/nohup — verified twice); the DESK DAEMON survives and its
+  round script already boots the terminal when :3000 is down — server
+  revived via ROUND_NOW inbox instructions on each new build (3 boot
+  cycles during this round). Daemon-booted servers persist fine.
+- OPEN: NVIDIA_API_KEY still absent in sandbox .env (local atg has it per
+  the user's directive note); mt5.json 8h stale here (local daemon refreshes
+  on the trader's machine — spread gate auto-arms when fresh).
+
 ### 2026-11-12 16:25 UTC — Z.ai sandbox agent — 360° END-TO-END VERIFICATION ROUND (all workflows green)
 - Full fresh gate on the shipped state (no code changes needed — pure
   verification): **units** quant-math 38/38 · mcp-tools 34/34 (incl.

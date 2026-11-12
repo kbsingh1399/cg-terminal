@@ -24,7 +24,7 @@ type CatFilter = "all" | "crypto" | "tradfi" | "classic";
 type StatePill = "m1" | "m2" | "cascade" | "gradeA";
 type SortKey = "ev" | "grade" | "vwapZ" | "liq5m" | "vol" | "chg" | "confluence" | "sym";
 
-const GRADE_RANK: Record<string, number> = { "A+": 4, A: 3, B: 2, SKIP: 1 };
+const GRADE_RANK: Record<string, number> = { "A+": 4, A: 3, B: 2, C: 1, SKIP: 1 };
 
 const MAJORS = new Set(["BTC", "ETH", "SOL"]);
 /** cascade-pill threshold mirrors the scanner's concentrated tier (majors

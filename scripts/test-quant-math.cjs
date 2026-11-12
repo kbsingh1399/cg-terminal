@@ -234,6 +234,229 @@ console.log("== cascade tier thresholds ==");
 }
 
 // ---------------------------------------------------------------------------
+// 5. PHASE-3 (WS7/WS8/WS9, 2026-11-13 directive) — GEX flip point,
+//    spread-drag EV gate, Monte Carlo ruin, 3-tier ladder, 3-TF gate,
+//    loss streaks. Mirrors of: options/route.ts gammaFlipPriceOf ·
+//    mt5-spread.ts spreadDragVerdict · backtest.ts monteCarloRuin +
+//    computeMetrics maxConsecutiveLosses · narrative.ts WS7.1 ladder/3-TF.
+// ---------------------------------------------------------------------------
+console.log("== WS8: GEX flip point (zero-gamma root) ==");
+{
+  const SQRT_2PI = Math.sqrt(2 * Math.PI);
+  const YEAR_MS = 365 * 24 * 3_600_000;
+  // mirror of options/route.ts bsGamma
+  const bsGamma = (s, k, ivPct, tYears) => {
+    if (!(s > 0) || !(k > 0) || !(tYears > 0)) return null;
+    const sigma = ivPct / 100;
+    if (!(sigma > 0)) return null;
+    const sqT = Math.sqrt(tYears);
+    const d1 = (Math.log(s / k) + 0.5 * sigma * sigma * tYears) / (sigma * sqT);
+    return Math.exp(-0.5 * d1 * d1) / (SQRT_2PI * s * sigma * sqT);
+  };
+  // mirror of options/route.ts gammaFlipPriceOf (grid + bisection)
+  const gammaFlip = (legs, now, spot) => {
+    if (!(spot > 0)) return null;
+    const act = legs.filter((l) => l.oi > 0 && l.iv > 0 && l.expTs > now && l.expTs - now <= 90 * 86_400_000);
+    if (act.length < 8) return null;
+    const gAt = (s) => {
+      let g = 0;
+      for (const l of act) {
+        const gamma = bsGamma(s, l.strike, l.iv, (l.expTs - now) / YEAR_MS);
+        if (gamma == null) continue;
+        g += (l.type === "C" ? 1 : -1) * l.oi * gamma;
+      }
+      return g;
+    };
+    const LO = 0.7, HI = 1.3, STEPS = 160;
+    let prevS = spot * LO, prevG = gAt(prevS);
+    if (prevG === 0) return prevS;
+    for (let i = 1; i <= STEPS; i++) {
+      const s = spot * (LO + ((HI - LO) * i) / STEPS);
+      const gv = gAt(s);
+      if (gv === 0) return s;
+      if (prevG > 0 !== gv > 0) {
+        let a = prevS, b = s, ga = prevG;
+        for (let k = 0; k < 44; k++) {
+          const m = 0.5 * (a + b);
+          const gm = gAt(m);
+          if (gm === 0 || b - a < spot * 0.0001) break;
+          if (ga > 0 !== gm > 0) b = m;
+          else { a = m; ga = gm; }
+        }
+        return 0.5 * (a + b);
+      }
+      prevS = s;
+      prevG = gv;
+    }
+    return null;
+  };
+  const now = Date.now();
+  const T30 = now + 30 * 86_400_000;
+  const leg = (type, strike, oi) => ({ type, strike, oi, iv: 50, expTs: T30 });
+  // sanity: BS gamma peaks at the strike (ATM), decays away
+  const g90 = bsGamma(100, 90, 50, 30 / 365);
+  const g100 = bsGamma(100, 100, 50, 30 / 365);
+  const g111 = bsGamma(100, 111, 50, 30 / 365);
+  ok(g100 > g90 && g100 > g111, `BS gamma peaks ATM (Γ(100,90)=${g90.toExponential(2)} < Γ(100,100)=${g100.toExponential(2)} > Γ(100,111)=${g111.toExponential(2)})`);
+  // call-heavy book: positive gamma everywhere → NO flip in the band
+  const callsOnly = [leg("C", 80, 500), leg("C", 90, 800), leg("C", 100, 1200), leg("C", 110, 900), leg("C", 120, 600), leg("C", 130, 400), leg("C", 140, 300), leg("C", 150, 200)];
+  ok(gammaFlip(callsOnly, now, 100) === null, "call-only book keeps one gamma sign → no flip");
+  // put-heavy at low strikes vs heavy calls high (8 legs — the engine's
+  // sanity floor): G(spot=100) < 0 (put gamma dominates) but G(105+) > 0
+  // (call gamma dominates) → flip must exist between them
+  const mixed = [
+    leg("P", 75, 400), leg("P", 80, 900), leg("P", 85, 1000), leg("P", 90, 1100),
+    leg("P", 95, 1200), leg("P", 100, 1000),
+    leg("C", 110, 2000), leg("C", 120, 2000),
+  ];
+  const flip = gammaFlip(mixed, now, 100);
+  ok(flip != null && flip > 100 && flip < 130, `put-heavy book flips to positive gamma between spot and call strikes (flip ${flip ? flip.toFixed(2) : "none"})`);
+  // the flip is a TRUE zero: gamma profile changes sign across it
+  const gAtFlip = (s) => {
+    let g = 0;
+    for (const l of mixed.filter((l) => l.oi > 0)) {
+      const gm = bsGamma(s, l.strike, l.iv, (l.expTs - now) / YEAR_MS);
+      if (gm != null) g += (l.type === "C" ? 1 : -1) * l.oi * gm;
+    }
+    return g;
+  };
+  if (flip != null) {
+    ok(gAtFlip(flip - 1) < 0 && gAtFlip(flip + 1) > 0, "dealer gamma is negative below the flip and positive above (regime boundary verified)");
+  }
+  // OI weighting matters: starve the put OI (same strikes, same leg count)
+  // → put gamma negligible → no sign change anywhere in the band
+  const putsTiny = mixed.map((l) => (l.type === "P" ? { ...l, oi: 1 } : l));
+  ok(gammaFlip(putsTiny, now, 100) === null, "starving put OI removes the flip (OI-weighted, not strike-counted)");
+}
+
+console.log("== WS7.3: spread-drag EV gate ==");
+{
+  // mirror of mt5-spread.ts spreadDragVerdict
+  const verdict = (spreadPct, stopDistPct) => {
+    if (spreadPct == null || !(spreadPct >= 0)) return null;
+    if (stopDistPct == null || !(stopDistPct > 0)) return null;
+    const ratio = spreadPct / stopDistPct;
+    if (ratio > 0.25) return { ratio, verdict: "SKIP" };
+    if (ratio > 0.12) return { ratio, verdict: "C" };
+    return null;
+  };
+  // REAL desk/mt5.json numbers (2026-11-12 snapshot)
+  ok(verdict(2.2119, 1.28)?.verdict === "SKIP", "ADA spread 2.21% vs 1.28% stop (173% drag) → SKIP");
+  ok(verdict(2.2998, 1.0)?.verdict === "SKIP", "LTC spread 2.30% vs 1.0% stop (230% drag) → SKIP");
+  ok(verdict(0.0281, 0.87) == null, "BTC spread 0.028% vs 0.87% stop (3.2% drag) → passes clean");
+  // boundaries: > 12% strictly → C; > 25% strictly → SKIP
+  ok(verdict(0.12, 1.0) == null, "exactly 12% drag → no penalty (strictly-greater gate)");
+  ok(verdict(0.121, 1.0)?.verdict === "C", "12.1% drag → grade C (SPREAD_DRAG_EXCESSIVE)");
+  ok(verdict(0.25, 1.0)?.verdict === "C", "exactly 25% drag → still C");
+  ok(verdict(0.251, 1.0)?.verdict === "SKIP", "25.1% drag → SKIP");
+  // honest-off states
+  ok(verdict(null, 1.0) == null, "missing spread → gate off (n/a, never penalized)");
+  ok(verdict(2.0, null) == null, "missing stop distance → gate off");
+  ok(verdict(2.0, 0) == null, "zero stop distance → gate off (degenerate geometry)");
+}
+
+console.log("== WS9: Monte Carlo ruin profile (seeded bootstrap) ==");
+{
+  // mirror of backtest.ts monteCarloRuin
+  const mc = (netRs, paths = 1000, seed = 20261113) => {
+    const pool = netRs.filter((r) => Number.isFinite(r));
+    if (pool.length < 10 || paths < 1) return null;
+    let s = seed >>> 0;
+    const rnd = () => {
+      s = (s * 1664525 + 1013904223) % 4294967296;
+      return (s + 0.5) / 4294967296;
+    };
+    const n = pool.length;
+    const maxDds = new Float64Array(paths);
+    let dd5 = 0, dd10 = 0;
+    for (let p = 0; p < paths; p++) {
+      let cum = 0, peak = 0, maxDd = 0;
+      for (let i = 0; i < n; i++) {
+        cum += pool[Math.floor(rnd() * n)];
+        if (cum > peak) peak = cum;
+        const dd = peak - cum;
+        if (dd > maxDd) maxDd = dd;
+      }
+      maxDds[p] = maxDd;
+      if (maxDd >= 5) dd5++;
+      if (maxDd >= 10) dd10++;
+    }
+    const sorted = Float64Array.from(maxDds).sort();
+    const at = (q) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.round(q * (sorted.length - 1))))];
+    return { paths, pDd5R: dd5 / paths, pDd10R: dd10 / paths, medianMaxDdR: at(0.5), p95MaxDdR: at(0.95) };
+  };
+  const allLoss = Array(12).fill(-1);
+  const r1 = mc(allLoss);
+  ok(r1.pDd5R === 1 && r1.pDd10R === 1, `all-loss pool: every path draws a >=10R DD (p5R ${r1.pDd5R}, p10R ${r1.pDd10R})`);
+  const allWin = Array(12).fill(1.5);
+  const r2 = mc(allWin);
+  ok(r2.pDd5R === 0 && r2.pDd10R === 0, "all-win pool: zero ruin probability");
+  // alternating +2/-1 pool: the perfect sequence never dips more than 1R,
+  // but WITH-REPLACEMENT draws can sequence losses — that sequencing risk
+  // is exactly what the bootstrap quantifies (5R DD possible, 10R ruin rare)
+  const alt = [];
+  for (let i = 0; i < 6; i++) { alt.push(2, -1); }
+  const r3 = mc(alt);
+  ok(r3.pDd10R <= 0.05 && r3.pDd5R < 0.5, `alternating +2/-1 pool: 5R sequencing risk exists (p5R ${r3.pDd5R}) but 10R ruin is rare (p10R ${r3.pDd10R})`);
+  ok(r3.pDd5R < r1.pDd5R, `mixing winners cuts ruin probability vs the all-loss pool (${r3.pDd5R} < ${r1.pDd5R}) — bootstrap is distribution-sensitive`);
+  // determinism: same seed → identical profile
+  const mixed = [1.2, -1, 0.8, -1, 2.5, -1, 0.3, -1, 1.9, -1, 0.6, -1];
+  ok(JSON.stringify(mc(mixed)) === JSON.stringify(mc(mixed)), "same seed reproduces the exact profile (deterministic LCG)");
+  const rm = mc(mixed);
+  ok(rm.p95MaxDdR >= rm.medianMaxDdR, `p95 max DD (${rm.p95MaxDdR}R) >= median (${rm.medianMaxDdR}R)`);
+  ok(rm.pDd5R >= rm.pDd10R, `P(>=5R DD) (${rm.pDd5R}) >= P(>=10R DD) (${rm.pDd10R}) — monotone`);
+  // honest null: < 10 closed trades → no profile
+  ok(mc([1, -1, 2]) === null, "fewer than 10 closed trades → null (honest n/a)");
+  // max consecutive-loss streak (computeMetrics mirror)
+  const streak = (rs) => {
+    let cur = 0, mx = 0;
+    for (const r of rs) {
+      if (r <= 0) { cur++; mx = Math.max(mx, cur); } else cur = 0;
+    }
+    return mx;
+  };
+  ok(streak([-1, -1, 2, -1, -1, -1, 1.5, 2]) === 3, "loss streak counts the longest netR<=0 run (3)");
+  ok(streak([1, 2, 3]) === 0, "no losses → streak 0");
+  ok(streak([0, -0.5, 1, -1]) === 2, "zero R counts as a non-win (streak 2)");
+}
+
+console.log("== WS7.1: 3-tier ladder + 3-TF alignment gate ==");
+{
+  // mirror of narrative.ts ladder construction (long side)
+  const ladder = (poc, vwap, sd1, absLow) => {
+    const l1 = poc, l2 = vwap - sd1, l3 = absLow;
+    const rungs = [
+      { level: Math.max(l1, l2, l3), weightPct: 40, label: "L1@POC" },
+      { level: Math.min(Math.max(l1, l3), l2), weightPct: 40, label: "L2@-1σ" },
+      { level: Math.min(l1, l2, l3), weightPct: 20, label: "L3@abs-low" },
+    ];
+    const composite = rungs.reduce((s, r) => s + (r.level * r.weightPct) / 100, 0);
+    return { rungs, composite };
+  };
+  const { rungs, composite } = ladder(101, 100, 1, 98);
+  ok(rungs.reduce((s, r) => s + r.weightPct, 0) === 100, "ladder weights sum to 100%");
+  ok(rungs[0].level >= rungs[1].level && rungs[1].level >= rungs[2].level, "long ladder is monotone: POC >= -1σ band >= absorption low");
+  ok(near(composite, 0.4 * 101 + 0.4 * 99 + 0.2 * 98, 1e-12), `composite basis = 40%×POC + 40%×(VWAP−σ) + 20%×abs-low (${composite})`);
+  // R measured from the COMPOSITE, not the zone mid
+  const stop = 97.5;
+  const risk = composite - stop;
+  const rOf = (lvl) => Math.abs(lvl - composite) / risk;
+  ok(near(rOf(104), (104 - 99.6) / 2.1, 1e-12), `R to T1 measured from composite entry (${rOf(104).toFixed(3)}R)`);
+  ok(rOf(104) > (104 - 100) / (100 - 97.5), "deeper composite basis widens risk → honest R (no zone-mid inflation)");
+  // 3-TF alignment mirror: H4 13×89 cross + H1 structure + m15 EMA89 hold
+  const tf3 = (h4e13, h4e89, h1e13, h1e89, price, m15e89, long) => {
+    const h4 = long ? h4e13 > h4e89 : h4e13 < h4e89;
+    const h1 = long ? h1e13 > h1e89 : h1e13 < h1e89;
+    const m15 = long ? price > m15e89 : price < m15e89;
+    return [h4, h1, m15].filter(Boolean).length >= 2 && h4 !== false;
+  };
+  ok(tf3(101, 99, 100.5, 99.5, 100, 98.5, true) === true, "full long alignment (H4↑ H1↑ m15 holds EMA89) → aligned");
+  ok(tf3(101, 99, 99.5, 100.5, 100, 98.5, true) === true, "H1 against but H4 trend + m15 hold → 2-of-3 aligned");
+  ok(tf3(99, 101, 100.5, 99.5, 100, 98.5, true) === false, "H4 trend AGAINST the trade direction → never aligned (veto)");
+  ok(tf3(101, 99, 99.5, 100.5, 98, 98.5, true) === false, "only H4 aligned (H1 against + m15 lost EMA89) → 1-of-3 → capped at B");
+}
+
+// ---------------------------------------------------------------------------
 // summary
 // ---------------------------------------------------------------------------
 console.log(`\n[quant-math unit-lock] ${passed} passed, ${failed} failed`);

@@ -98,7 +98,7 @@ export function listRules(): AlertRule[] {
   return [...loadRules()].sort((a, b) => b.createdAt - a.createdAt);
 }
 
-const GRADE_RANK: Record<string, number> = { "A+": 4, A: 3, B: 2, SKIP: 1 };
+const GRADE_RANK: Record<string, number> = { "A+": 4, A: 3, B: 2, C: 1, SKIP: 1 };
 
 function newId(): string {
   return `AR-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;

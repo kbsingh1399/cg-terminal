@@ -27,7 +27,7 @@ const AI_MODEL = "z-ai/glm-5.3-flash";
 const CACHE_TTL = 15 * 60_000;
 const UPSTREAM_TIMEOUT_MS = 120_000;
 
-const gAi = globalThis as unknown as { __cgAiBriefCache?: Map<string, { at: number; text: string; sym: string }> };
+const gAi = globalThis as unknown as { __cgAiBriefCache?: Map<string, { at: number; text: string; reasoning: string; sym: string }> };
 const cache = (gAi.__cgAiBriefCache ??= new Map());
 
 export async function POST(req: NextRequest) {
@@ -59,9 +59,10 @@ export async function POST(req: NextRequest) {
   const cacheKey = `${sym}|${barTs}`;
   const hit = cache.get(cacheKey);
   if (hit && Date.now() - hit.at < CACHE_TTL) {
-    return new Response(`data: ${JSON.stringify({ type: "cached", text: hit.text, cached: true })}\n\ndata: [DONE]\n\n`, {
-      headers: { "content-type": "text/event-stream", "cache-control": "no-store", "x-cg-ai-cached": "1" },
-    });
+    return new Response(
+      `data: ${JSON.stringify({ type: "cached", text: hit.text, reasoning: hit.reasoning || undefined, cached: true })}\n\ndata: [DONE]\n\n`,
+      { headers: { "content-type": "text/event-stream", "cache-control": "no-store", "x-cg-ai-cached": "1" } }
+    );
   }
 
   // quant + options lite (in-process route pattern — module caches make this cheap)
@@ -134,7 +135,10 @@ export async function POST(req: NextRequest) {
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       let acc = "";
+      let accReasoning = "";
+      let reasoningTokens: number | null = null;
       let sentAny = false;
+      let sentReasoning = false;
       try {
         const res = await fetch(`${AI_BASE}/chat/completions`, {
           method: "POST",
@@ -173,30 +177,52 @@ export async function POST(req: NextRequest) {
             const payload = t.slice(5).trim();
             if (payload === "[DONE]") continue;
             try {
-              const j = JSON.parse(payload) as { choices?: { delta?: { content?: string } }[] };
+              // WS10 — GLM-5.3-Flash streams reasoning tokens BEFORE the
+              // message content: delta.reasoning_content (SSE chunks) and
+              // the final usage.completion_tokens_details.reasoning_tokens
+              // count. Both surfaces are handled; neither is required.
+              const j = JSON.parse(payload) as {
+                choices?: { delta?: { content?: string; reasoning_content?: string; reasoning?: string } }[];
+                usage?: { completion_tokens_details?: { reasoning_tokens?: number } };
+              };
+              const reasoningPiece = j.choices?.[0]?.delta?.reasoning_content ?? j.choices?.[0]?.delta?.reasoning;
+              if (reasoningPiece) {
+                accReasoning += reasoningPiece;
+                sentReasoning = true;
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "reasoning", text: reasoningPiece })}\n\n`));
+              }
               const piece = j.choices?.[0]?.delta?.content;
               if (piece) {
                 acc += piece;
                 sentAny = true;
                 controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "delta", text: piece })}\n\n`));
               }
+              const rt = j.usage?.completion_tokens_details?.reasoning_tokens;
+              if (typeof rt === "number" && Number.isFinite(rt)) reasoningTokens = rt;
             } catch {
               /* skip malformed chunk */
             }
           }
         }
-        if (acc) {
+        if (acc || accReasoning) {
           // 15-min cache keyed by (sym, barTs)
-          cache.set(cacheKey, { at: Date.now(), text: acc, sym });
+          cache.set(cacheKey, { at: Date.now(), text: acc, reasoning: accReasoning, sym });
           if (cache.size > 80) {
             const oldest = [...cache.entries()].sort((a, b) => a[1].at - b[1].at)[0];
             if (oldest) cache.delete(oldest[0]);
           }
-          if (!sentAny) {
+          if (!sentAny && acc) {
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "delta", text: acc })}\n\n`));
           }
+          if (!sentReasoning && accReasoning) {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "reasoning", text: accReasoning })}\n\n`));
+          }
         }
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "done", ms: Date.now() - startedAt, cached: false })}\n\n`));
+        controller.enqueue(
+          encoder.encode(
+            `data: ${JSON.stringify({ type: "done", ms: Date.now() - startedAt, cached: false, reasoningTokens })}\n\n`
+          )
+        );
       } catch (e) {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "error", error: e instanceof Error ? e.message : "stream failed" })}\n\n`));
       } finally {

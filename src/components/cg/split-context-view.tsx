@@ -39,6 +39,15 @@ interface MarketSnapLite {
   ema?: { h4?: { e13: number | null; e89: number | null; e233: number | null } };
 }
 
+/** WS8 — Deribit options reference levels (BTC/ETH only) */
+interface OptionsLite {
+  ok: boolean;
+  supported?: boolean;
+  maxPainStrike?: number | null;
+  gammaFlipPrice?: number | null;
+  gex?: { regime?: string | null };
+}
+
 function rowsToBars(rows: KlinesResp["rows"]): Bar[] {
   if (!rows) return [];
   const out: Bar[] = [];
@@ -121,6 +130,22 @@ export default function SplitContextView({
 
   // the active asset's market snapshot carries the reference levels
   const mkt = usePolling<MarketSnapLite>(`/api/cg/market?sym=${encodeURIComponent(sym)}`, 30_000);
+  // WS8 — Deribit max-pain + GEX flip reference lines (BTC/ETH only, 120 s
+  // server cache; null-poll keeps every other symbol AND the collapsed state
+  // off the options route)
+  const hasOptions = (sym === "BTC" || sym === "ETH") && open;
+  const opts = usePolling<OptionsLite>(hasOptions ? `/api/cg/options?sym=${sym}` : null, 120_000);
+  const optLevels = useMemo<ChartLevel[]>(() => {
+    if (!hasOptions || !opts.data?.ok || opts.data.supported === false) return [];
+    const out: ChartLevel[] = [];
+    if (opts.data.maxPainStrike != null) {
+      out.push({ price: opts.data.maxPainStrike, label: `Max Pain ${fmtPxShort(opts.data.maxPainStrike)}`, color: "rgba(251,146,60,0.9)" });
+    }
+    if (opts.data.gammaFlipPrice != null) {
+      out.push({ price: opts.data.gammaFlipPrice, label: `GEX Flip ${fmtPxShort(opts.data.gammaFlipPrice)}`, color: "rgba(244,63,94,0.85)" });
+    }
+    return out;
+  }, [hasOptions, opts.data]);
   const benchmark = isTradfi ? "QQQ" : sym === "BTC" ? "ETH" : "BTC";
   const benchMkt = usePolling<MarketSnapLite>(
     open && mode === "benchmark" ? `/api/cg/market?sym=${encodeURIComponent(benchmark)}` : null,
@@ -131,7 +156,7 @@ export default function SplitContextView({
   const benchSnap = benchMkt.data?.sym === benchmark ? benchMkt.data : null;
 
   const levelsOf = useCallback(
-    (m: MarketSnapLite | null, withHtfEmas: boolean): ChartLevel[] => {
+    (m: MarketSnapLite | null, withHtfEmas: boolean, withOptions = false): ChartLevel[] => {
       const out: ChartLevel[] = [];
       const vwap = m?.vwap?.vwap;
       const sd1 = m?.vwap?.bands?.sd1;
@@ -150,9 +175,12 @@ export default function SplitContextView({
         if (e89 != null) out.push({ price: e89, label: `H4 EMA89 ${fmtPxShort(e89)}`, color: "rgba(244,114,182,0.7)" });
         if (e233 != null) out.push({ price: e233, label: `H4 EMA233 ${fmtPxShort(e233)}`, color: "rgba(148,163,184,0.7)" });
       }
+      // WS8 — Deribit max-pain strike (pin magnet) + GEX flip (zero-gamma
+      // regime boundary) as horizontal reference lines alongside VWAP/POC
+      if (withOptions) out.push(...optLevels);
       return out;
     },
-    []
+    [optLevels]
   );
 
   if (!open) {
@@ -176,7 +204,7 @@ export default function SplitContextView({
         iv="15m"
         height={380}
         title="Execution"
-        levels={levelsOf(snap, false)}
+        levels={[...levelsOf(snap, false), ...levelsOf(snap, false, true)]}
         syncTime={timeB}
         onHoverTime={setTimeA}
       />
@@ -186,7 +214,7 @@ export default function SplitContextView({
         iv="15m"
         height={380}
         title="Active asset"
-        levels={levelsOf(snap, false)}
+        levels={[...levelsOf(snap, false), ...levelsOf(snap, false, true)]}
         syncTime={timeB}
         onHoverTime={setTimeA}
       />
@@ -198,7 +226,7 @@ export default function SplitContextView({
         iv="4h"
         height={380}
         title="HTF context"
-        levels={levelsOf(snap, true)}
+        levels={[...levelsOf(snap, true), ...levelsOf(snap, false, true)]}
         syncTime={timeA}
         onHoverTime={setTimeB}
       />
@@ -233,6 +261,7 @@ export default function SplitContextView({
         </div>
         <span className="text-[10px] text-neutral-500">
           hover either pane → the other pins the same bar time (sky line) · levels: VWAP ±2σ · POC{mode === "context" ? " · H4 EMA13/89/233" : ""}
+          {hasOptions && optLevels.length > 0 ? " · Max Pain · GEX Flip (Deribit)" : ""}
         </span>
         <span className="font-mono text-[10px] text-neutral-600">{sym} · {priceDecs}dp</span>
         <button onClick={() => setOpen(false)} className="ml-auto rounded border border-neutral-700 px-2 py-0.5 text-[11px] text-neutral-400 hover:text-neutral-100">

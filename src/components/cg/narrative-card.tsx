@@ -86,6 +86,7 @@ const GRADE_STYLE: Record<string, string> = {
   "A+": "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-400/60",
   A: "bg-emerald-500/10 text-emerald-300/90 ring-1 ring-emerald-500/30",
   B: "bg-amber-500/10 text-amber-300 ring-1 ring-amber-500/30",
+  C: "bg-orange-500/10 text-orange-300 ring-1 ring-orange-500/40",
   SKIP: "bg-neutral-800 text-neutral-400 ring-1 ring-neutral-700",
 };
 
@@ -192,9 +193,23 @@ export default function NarrativeCard({ sym }: { sym: string }) {
   const [equity, setEquity] = useState<number | null>(null);
   const [staged, setStaged] = useState<string | null>(null);
   const [now, setNow] = useState(() => Date.now());
-  const [aiBrief, setAiBrief] = useState<{ loading: boolean; text: string; error: string | null; cached: boolean; ms: number | null; open: boolean; disabledReason: string | null }>({
+  const [aiBrief, setAiBrief] = useState<{
+    loading: boolean;
+    text: string;
+    reasoning: string;
+    showReasoning: boolean;
+    reasoningTokens: number | null;
+    error: string | null;
+    cached: boolean;
+    ms: number | null;
+    open: boolean;
+    disabledReason: string | null;
+  }>({
     loading: false,
     text: "",
+    reasoning: "",
+    showReasoning: false,
+    reasoningTokens: null,
     error: null,
     cached: false,
     ms: null,
@@ -206,9 +221,12 @@ export default function NarrativeCard({ sym }: { sym: string }) {
   // OPTIONAL streaming AI desk brief — STRICTLY on-demand (this click handler
   // is the ONLY trigger; never polled, never on mount). Reads the SSE stream
   // /api/cg/narrative/ai produces and grounds itself in the verified verdict.
+  // WS10: GLM-5.3-Flash reasoning chunks arrive as `reasoning` events BEFORE
+  // the `delta` content — they stream into a collapsible Chain-of-Thought
+  // box that auto-collapses once the crisp brief starts printing.
   const fetchAiBrief = async () => {
     if (aiBrief.loading) return;
-    setAiBrief({ loading: true, text: "", error: null, cached: false, ms: null, open: true, disabledReason: null });
+    setAiBrief({ loading: true, text: "", reasoning: "", showReasoning: true, reasoningTokens: null, error: null, cached: false, ms: null, open: true, disabledReason: null });
     try {
       const res = await fetch("/api/cg/narrative/ai", {
         method: "POST",
@@ -221,6 +239,9 @@ export default function NarrativeCard({ sym }: { sym: string }) {
         setAiBrief({
           loading: false,
           text: "",
+          reasoning: "",
+          showReasoning: false,
+          reasoningTokens: null,
           error: j?.reason ?? j?.error ?? `unexpected response (${res.status})`,
           cached: false,
           ms: null,
@@ -234,9 +255,13 @@ export default function NarrativeCard({ sym }: { sym: string }) {
       const dec = new TextDecoder();
       let buf = "";
       let text = "";
+      let reasoning = "";
+      let showReasoning = true;
+      let reasoningTokens: number | null = null;
       let cached = false;
       let ms: number | null = null;
       let err: string | null = null;
+      let sawContent = false;
       for (;;) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -249,16 +274,24 @@ export default function NarrativeCard({ sym }: { sym: string }) {
           const payload = t.slice(5).trim();
           if (payload === "[DONE]") continue;
           try {
-            const j = JSON.parse(payload) as { type?: string; text?: string; error?: string; cached?: boolean; ms?: number };
-            if (j.type === "delta" && j.text) {
+            const j = JSON.parse(payload) as { type?: string; text?: string; error?: string; cached?: boolean; ms?: number; reasoningTokens?: number };
+            if (j.type === "reasoning" && j.text) {
+              reasoning += j.text;
+              setAiBrief((s) => ({ ...s, reasoning, showReasoning, cached, ms }));
+            } else if (j.type === "delta" && j.text) {
+              if (!sawContent) {
+                sawContent = true;
+                showReasoning = false; // brief starts → fold the CoT away (still expandable)
+              }
               text += j.text;
-              setAiBrief((s) => ({ ...s, text, cached, ms }));
+              setAiBrief((s) => ({ ...s, text, reasoning, showReasoning, cached, ms }));
             } else if (j.type === "cached") {
               text = j.text ?? "";
               cached = true;
               setAiBrief((s) => ({ ...s, text, cached }));
             } else if (j.type === "done") {
               ms = j.ms ?? null;
+              if (typeof j.reasoningTokens === "number") reasoningTokens = j.reasoningTokens;
             } else if (j.type === "error") {
               err = j.error ?? "stream error";
             }
@@ -267,9 +300,9 @@ export default function NarrativeCard({ sym }: { sym: string }) {
           }
         }
       }
-      setAiBrief({ loading: false, text, error: err, cached, ms, open: true, disabledReason: null });
+      setAiBrief({ loading: false, text, reasoning, showReasoning: reasoning ? showReasoning : false, reasoningTokens, error: err, cached, ms, open: true, disabledReason: null });
     } catch (e) {
-      setAiBrief({ loading: false, text: "", error: e instanceof Error ? e.message : "AI brief failed", cached: false, ms: null, open: true, disabledReason: null });
+      setAiBrief({ loading: false, text: "", reasoning: "", showReasoning: false, reasoningTokens: null, error: e instanceof Error ? e.message : "AI brief failed", cached: false, ms: null, open: true, disabledReason: null });
     }
   };
 
@@ -283,7 +316,8 @@ export default function NarrativeCard({ sym }: { sym: string }) {
 
   const sizing = useMemo(() => {
     if (!v?.plan?.entryZone || v.plan.entryZone[0] == null || v.plan.stop == null) return null;
-    const entryMid = (v.plan.entryZone[0] + v.plan.entryZone[1]) / 2;
+    // WS7.1 — prefer the ladder composite cost basis over the raw zone mid
+    const entryMid = v.plan.compositeEntry ?? (v.plan.entryZone[0] + v.plan.entryZone[1]) / 2;
     const riskPerUnit = Math.abs(entryMid - v.plan.stop);
     if (!(riskPerUnit > 0) || effEquity == null) return null;
     const riskUsd = (effEquity * riskPct) / 100;
@@ -413,11 +447,36 @@ export default function NarrativeCard({ sym }: { sym: string }) {
             <span>AI desk brief · grounded in the verified verdict</span>
             {aiBrief.cached && <span className="rounded bg-neutral-800 px-1 text-[9px] text-neutral-400">15-min cache</span>}
             {aiBrief.ms != null && <span className="rounded bg-neutral-800 px-1 text-[9px] text-neutral-400">{aiBrief.ms} ms</span>}
+            {aiBrief.reasoningTokens != null && (
+              <span className="rounded bg-neutral-800 px-1 text-[9px] text-neutral-400" title="upstream usage.completion_tokens_details.reasoning_tokens">
+                {aiBrief.reasoningTokens} reasoning tokens
+              </span>
+            )}
             <button onClick={() => setAiBrief((s) => ({ ...s, open: false }))} className="ml-auto text-neutral-500 hover:text-neutral-200">
               ✕
             </button>
           </div>
-          {aiBrief.loading && !aiBrief.text && <div className="text-[11px] text-neutral-500">streaming…</div>}
+          {/* WS10 — collapsible Analyst Chain-of-Thought (GLM-5.3-Flash reasoning stream) */}
+          {aiBrief.reasoning && (
+            <div className="mb-2 rounded border border-neutral-800/80 bg-[#0b0e11]/70">
+              <button
+                type="button"
+                onClick={() => setAiBrief((s) => ({ ...s, showReasoning: !s.showReasoning }))}
+                className="flex w-full items-center gap-1.5 px-2 py-1 text-left text-[10px] font-semibold text-neutral-400 hover:text-neutral-200"
+              >
+                <span className={`inline-block transition-transform ${aiBrief.showReasoning ? "rotate-90" : ""}`}>▸</span>
+                <span>Analyst Chain-of-Thought</span>
+                <span className="font-mono text-[9px] font-normal text-neutral-600">{aiBrief.reasoning.length.toLocaleString()} chars</span>
+                {aiBrief.loading && !aiBrief.text && <span className="font-mono text-[9px] font-normal text-violet-400/70">thinking…</span>}
+              </button>
+              {aiBrief.showReasoning && (
+                <div className="max-h-44 overflow-y-auto whitespace-pre-wrap border-t border-neutral-800/60 px-2.5 py-1.5 font-mono text-[10px] leading-relaxed text-neutral-500">
+                  {aiBrief.reasoning}
+                </div>
+              )}
+            </div>
+          )}
+          {aiBrief.loading && !aiBrief.text && !aiBrief.reasoning && <div className="text-[11px] text-neutral-500">streaming…</div>}
           {aiBrief.error && <div className="text-[11px] text-amber-300">{aiBrief.error}</div>}
           {aiBrief.text && <div className="whitespace-pre-wrap text-[11px] leading-relaxed text-neutral-200">{aiBrief.text}</div>}
         </div>
@@ -431,6 +490,23 @@ export default function NarrativeCard({ sym }: { sym: string }) {
             <div className="font-mono text-xs text-neutral-100">
               {fmtPx(v.plan.entryZone[0], decs)} – {fmtPx(v.plan.entryZone[1], decs)}
             </div>
+            {/* WS7.1 — 3-tier limit ladder with composite cost basis */}
+            {v.plan.ladder && v.plan.ladder.length > 0 && (
+              <div className="mt-1 space-y-0.5 border-t border-neutral-800/60 pt-1">
+                {v.plan.ladder.map((r) => (
+                  <div key={r.label} className="flex justify-between font-mono text-[9px] text-neutral-500">
+                    <span>{r.label}</span>
+                    <span className="text-neutral-300">{fmtPx(r.level, decs)}</span>
+                  </div>
+                ))}
+                {v.plan.compositeEntry != null && (
+                  <div className="flex justify-between font-mono text-[9px] text-emerald-300/80">
+                    <span>composite basis</span>
+                    <span>{fmtPx(v.plan.compositeEntry, decs)}</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <div className="rounded-lg border border-neutral-800/80 bg-[#0b0e11] px-3 py-2">
             <div className="text-[9px] uppercase tracking-wider text-neutral-500">Stop / invalidation</div>
