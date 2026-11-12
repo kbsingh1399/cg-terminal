@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePolling } from "./use-cg-data";
 import type { NarrativeVerdict } from "@/lib/cg/narrative";
+import type { SetupProbability } from "@/lib/cg/probability";
 import type { PaperBookTicketView } from "@/lib/cg/paperbook";
 
 /**
@@ -100,6 +101,78 @@ function fmtUsd(v: number | null | undefined): string {
   if (abs >= 1e6) return `${s}$${(abs / 1e6).toFixed(2)}M`;
   if (abs >= 1e3) return `${s}$${(abs / 1e3).toFixed(1)}k`;
   return `${s}$${abs.toFixed(2)}`;
+}
+
+/** horizontal 0-100% meter for the probability block */
+function PMeter({ label, p, tone }: { label: string; p: number; tone?: "good" | "bad" }) {
+  const pct = Math.round(p * 100);
+  return (
+    <div className="min-w-[128px] flex-1">
+      <div className="flex items-baseline justify-between">
+        <span className="text-[9px] uppercase tracking-wider text-neutral-500">{label}</span>
+        <span className={`font-mono text-[11px] font-bold ${tone === "good" ? "text-emerald-300" : tone === "bad" ? "text-rose-300" : "text-neutral-100"}`}>{pct}%</span>
+      </div>
+      <div className="mt-0.5 h-1.5 overflow-hidden rounded bg-neutral-800">
+        <div
+          className={`h-full rounded ${tone === "good" ? "bg-emerald-400/80" : tone === "bad" ? "bg-rose-400/80" : "bg-sky-400/70"}`}
+          style={{ width: `${Math.max(2, Math.min(100, pct))}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/** Probability block - the structural odds engine read on the quoted setup */
+function ProbabilityBlock({ prob }: { prob: SetupProbability }) {
+  const hasAny = prob.pFill != null || prob.pT1 != null || prob.pMeanRevert != null;
+  if (!hasAny) return null;
+  return (
+    <div className="border-t border-neutral-800/70 px-4 py-2.5">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-[9px] uppercase tracking-wider text-cyan-300/80">Probability - structural odds</span>
+        {prob.horizonH != null && prob.pFill != null && prob.pFill < 1 && (
+          <span className="font-mono text-[9px] text-neutral-600">
+            over {prob.horizonH}h · sigma {prob.sigmaBar != null ? prob.sigmaBar.toPrecision(3) : "n/a"}/bar
+          </span>
+        )}
+      </div>
+      <div className="mt-1.5 flex flex-wrap gap-3">
+        {prob.pFill != null && prob.pFill < 1 && <PMeter label={`P(fill zone <= ${prob.horizonH ?? "?"}h)`} p={prob.pFill} />}
+        {prob.pT1 != null && <PMeter label="P(T1 first | fill)" p={prob.pT1} />}
+        {prob.pWin != null && prob.pFill != null && prob.pFill < 1 && <PMeter label="P(fill + T1 first)" p={prob.pWin} />}
+        {prob.pMeanRevert != null && <PMeter label="P(revert to 0-sigma VWAP)" p={prob.pMeanRevert} />}
+        {prob.evR != null && (
+          <div className="min-w-[86px]">
+            <div className="text-[9px] uppercase tracking-wider text-neutral-500">EV (R units)</div>
+            <div className={`font-mono text-sm font-bold ${prob.evR > 0 ? "text-emerald-300" : prob.evR < 0 ? "text-rose-300" : "text-neutral-300"}`}>
+              {prob.evR > 0 ? "+" : ""}
+              {prob.evR.toFixed(2)}R
+            </div>
+          </div>
+        )}
+      </div>
+      {/* confluence factor chips - signed log-odds weights */}
+      <div className="mt-1.5 flex flex-wrap gap-1">
+        {prob.factors.map((f) => (
+          <span
+            key={f.key}
+            title={`${f.label}: ${f.value}`}
+            className={`rounded px-1.5 py-0.5 font-mono text-[9px] ${
+              f.dir === 1 ? "bg-emerald-500/10 text-emerald-300/90" : f.dir === -1 ? "bg-rose-500/10 text-rose-300/90" : "bg-neutral-800/60 text-neutral-600"
+            }`}
+          >
+            {f.dir === 1 ? "+" : f.dir === -1 ? "-" : "·"} {f.label.split(" ")[0]} {f.weight.toFixed(2)}
+          </span>
+        ))}
+      </div>
+      <div className="mt-1 font-mono text-[9px] leading-snug text-neutral-600">
+        {prob.caveats[0] ?? ""}
+        {prob.empirical
+          ? ` · virtual book: ${prob.empirical.closed} closed · fill ${prob.empirical.fillRatePct ?? "-"}% · win ${prob.empirical.winRatePct ?? "-"}% · avg ${prob.empirical.avgR ?? "-"}R`
+          : ""}
+      </div>
+    </div>
+  );
 }
 
 export default function NarrativeCard({ sym }: { sym: string }) {
@@ -296,7 +369,10 @@ export default function NarrativeCard({ sym }: { sym: string }) {
         </div>
       )}
 
-      {/* virtual book outcome — what this setup is doing as a paper trade */}
+            {/* probability \u2014 structural odds for the quoted setup */}
+      {v.probability && <ProbabilityBlock prob={v.probability} />}
+
+{/* virtual book outcome — what this setup is doing as a paper trade */}
       {ticket && (
         <div className="border-t border-neutral-800/70 px-4 py-2.5">
           <div className="flex flex-wrap items-center gap-2">

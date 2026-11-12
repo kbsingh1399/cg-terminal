@@ -37,6 +37,8 @@ import { classicOf } from "./classic";
 import { fetchBinCandles } from "./fallbacks";
 import { resolveCgSym } from "../binance/aliases";
 import { isCuratedPerp } from "./assets";
+import { buildProbability, type SetupProbability } from "./probability";
+import type { PbStats } from "./paperbook";
 
 export type Regime = "TREND_UP" | "TREND_DOWN" | "RANGE_BALANCE" | "COMPRESSION_SQUEEZE";
 export type ActiveModel = "M1_TREND_PULLBACK" | "M2_MEAN_REVERSION" | "WAIT_PULLBACK" | "WATCH_EXHAUSTION" | "NO_TRADE";
@@ -86,6 +88,8 @@ export interface NarrativeVerdict {
   freshness: { worstAgeMs: number; staleFields: string[]; dataAt: number; ageMs: number; stale: boolean; source: string };
   /** cross-asset rolling beta (24h/7d, h1 closes vs fapi BTC/QQQ) */
   beta: { vs: string; b24h: number | null; b7d: number | null }[];
+  /** structural odds for the quoted setup (fill · T1-first · mean-revert · EV in R) */
+  probability: SetupProbability | null;
   generatedAt: number;
 }
 
@@ -317,6 +321,7 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       m2: null,
       freshness: { worstAgeMs: Number.MAX_SAFE_INTEGER, staleFields: ["market"], dataAt: 0, ageMs: 0, stale: true, source: "none" },
       beta: [],
+      probability: null,
       generatedAt: Date.now(),
     };
   }
@@ -816,6 +821,27 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
 
   plan.vetoes = [...plan.vetoes, ...vetoes];
 
+  // ---- STEP 4: structural odds (transparent, from measured geometry) ----
+  let probability: SetupProbability | null = null;
+  try {
+    let pbStats: PbStats[] | null = null;
+    try {
+      // lazy import: paperbook imports buildNarrative — a static import here
+      // would close a runtime cycle; the route-call pattern is already used
+      // for quant/options above
+      const { paperBookStats } = await import("./paperbook");
+      pbStats = paperBookStats();
+    } catch {
+      pbStats = null;
+    }
+    probability = buildProbability(
+      { model: activeModel, direction, plan, checklist, price, vwapZ: z, atrH1: atr },
+      pbStats
+    );
+  } catch {
+    probability = null;
+  }
+
   const worstAge = fresh.worst || market.ageMs;
   return {
     ok: true,
@@ -843,6 +869,7 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       source: `market:${market.source}${liveSets ? "+fp" : ""}${cvd ? "+cvd" : ""}${whale ? "+walls" : ""}${liq ? "+liq" : ""}${quant ? "+quant" : ""}${options ? "+options" : ""}`,
     },
     beta,
+    probability,
     generatedAt: Date.now(),
   };
 }

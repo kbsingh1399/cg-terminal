@@ -222,6 +222,51 @@ async function toolLiquidationLevels(args) {
   return { text: lines.join("\n"), data: d };
 }
 
+async function toolLiqLive(args) {
+  const sym = (args?.sym ?? "").toUpperCase();
+  const limit = Math.max(1, Math.min(60, Number(args?.limit ?? 15) || 15));
+  const url = sym
+    ? `/api/cg/liq-live?sym=${encodeURIComponent(sym)}&limit=${limit}`
+    : `/api/cg/liq-live?globalLimit=${limit}`;
+  const d = await api(url);
+  if (!d.ok) throw new Error(d.error || "live liquidations failed");
+  const venues = (d.venues ?? []).map((v) => `${v.venue}:${v.status}(${v.events}ev)`).join(" ");
+  const lines = [
+    `LIVE liquidations — collector ${d.stale ? "STALE" : d.quiet ? "quiet (healthy, no events)" : "live"} · venues ${venues}`,
+    `source: ${d.source}`,
+  ];
+  if (d.asset) {
+    const a = d.asset;
+    if (!a.supported) {
+      lines.push(`${a.sym}: ${a.reason ?? "no perp venue carries this instrument"}`);
+    } else {
+      lines.push(
+        `${a.sym} 1h: ${a.stats1h.count} prints $${(a.stats1h.usd / 1000).toFixed(1)}K (${a.stats1h.longs}L/${a.stats1h.shorts}S) · 24h: ${a.stats24h.count} prints $${(a.stats24h.usd / 1000).toFixed(1)}K (${a.stats24h.longs}L/${a.stats24h.shorts}S)`
+      );
+      for (const e of a.events.slice(0, limit)) {
+        lines.push(
+          `  ${new Date(e.t).toISOString().slice(11, 19)} ${e.venue.toUpperCase()} ${e.side === "long" ? "LONG-LIQ" : "SHORT-LIQ"} ${e.qtyBase ?? "?"} @ ${e.price} ($${e.usd != null ? e.usd.toFixed(0) : "?"})`
+        );
+      }
+      if (!a.events.length) lines.push(`  no prints in the stored 24h window${a.stats24h.lastAt ? ` (last ${Math.round((Date.now() - a.stats24h.lastAt) / 60000)}m ago)` : ""}`);
+    }
+  }
+  if (d.global) {
+    const g = d.global;
+    lines.push(
+      `universe 1h: ${g.universe1h.count} prints $${(g.universe1h.usd / 1000).toFixed(1)}K · 24h: ${g.universe24h.count} prints $${(g.universe24h.usd / 1000).toFixed(1)}K`
+    );
+    const hot = g.assets.filter((x) => x.count24h > 0).slice(0, 10);
+    if (hot.length) lines.push(`hot (24h): ${hot.map((x) => `${x.sym} ${x.count24h}/$${(x.usd24h / 1000).toFixed(0)}K`).join(" · ")}`);
+    for (const e of g.tape.slice(0, limit)) {
+      lines.push(
+        `  ${new Date(e.t).toISOString().slice(11, 19)} ${e.asset} ${e.venue.toUpperCase()} ${e.side === "long" ? "LONG-LIQ" : "SHORT-LIQ"} ${e.qtyBase ?? "?"} @ ${e.price} ($${e.usd != null ? e.usd.toFixed(0) : "?"})`
+      );
+    }
+  }
+  return { text: lines.join("\n"), data: d };
+}
+
 async function toolWhaleOrders(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
   const minUsd = Math.max(0, Number(args?.minUsd ?? 1_000_000));
@@ -733,6 +778,18 @@ const TOOLS = [
       required: ["sym"],
     },
     handler: toolLiquidationLevels,
+  },
+  {
+    name: "liq_live",
+    description: "LIVE liquidation prints, server-collected from Binance (!forceOrder@arr) + Bybit (allLiquidation) + OKX (liquidation-orders) and persisted per asset (24h journal). Per-asset: recent prints + 1h/24h aggregates (count, USD, long/short split). No sym = universe-wide tape + hottest assets. Event-stream freshness: quiet (healthy, no events) is reported separately from stale (collector down).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sym: { type: "string", description: "Terminal asset (BTC, 1000PEPE, NVDA...) — omit for the universe-wide view" },
+        limit: { type: "number", description: "Max prints returned (default 15, max 60)" },
+      },
+    },
+    handler: toolLiqLive,
   },
   {
     name: "whale_orders",
