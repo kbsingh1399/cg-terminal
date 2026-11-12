@@ -51,15 +51,24 @@ export function resolveDataRoot(): string {
 function resolveRoot(): string {
   if (process.env.CG_DATA_DIR) return process.env.CG_DATA_DIR;
   let dir = process.cwd();
-  for (let i = 0; i < 6; i++) {
+  let fallbackWithPkg: string | null = null;
+  for (let i = 0; i < 8; i++) {
+    // <project>/.next/standalone -> <project> (standalone ships its own
+    // package.json, so the marker check below would stop there wrongly)
     if (path.basename(dir) === "standalone" && path.basename(path.dirname(dir)) === ".next") {
-      dir = path.dirname(path.dirname(dir)); // <project>/.next/standalone -> <project>
+      dir = path.dirname(path.dirname(dir));
       break;
+    }
+    // the real project root: package.json + data/ both live here
+    if (fs.existsSync(path.join(dir, "package.json"))) {
+      if (fs.existsSync(path.join(dir, "data"))) break;
+      fallbackWithPkg ??= dir; // package.json without data/ — remember, keep walking
     }
     const parent = path.dirname(dir);
     if (parent === dir) break;
     dir = parent;
   }
+  if (fallbackWithPkg && !fs.existsSync(path.join(dir, "data"))) dir = fallbackWithPkg;
   return path.join(dir, "data", "cg-series");
 }
 const ROOT = resolveRoot();
