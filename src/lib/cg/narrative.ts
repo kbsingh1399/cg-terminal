@@ -37,7 +37,7 @@ import { classicOf } from "./classic";
 import { fetchBinCandles } from "./fallbacks";
 import { resolveCgSym } from "../binance/aliases";
 import { isCuratedPerp } from "./assets";
-import { curatedPerps, curatedClassic } from "@/lib/universe/curated";
+import { curatedPerps, curatedClassic, CURATED_BY_SYM } from "@/lib/universe/curated";
 import { buildProbability, type SetupProbability } from "./probability";
 import type { PbStats } from "./paperbook";
 
@@ -844,7 +844,17 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
       pbStats = null;
     }
     probability = buildProbability(
-      { model: activeModel, direction, plan, checklist, price, vwapZ: z, atrH1: atr },
+      {
+        model: activeModel,
+        direction,
+        plan,
+        checklist,
+        price,
+        vwapZ: z,
+        atrH1: atr,
+        regime,
+        tier: isCuratedPerp(sym) && CURATED_BY_SYM.get(sym)?.kind === "tradfi-perp" ? "tradfi" : sym === "BTC" || sym === "ETH" || sym === "SOL" ? "crypto-major" : "crypto-alt",
+      },
       pbStats
     );
   } catch {

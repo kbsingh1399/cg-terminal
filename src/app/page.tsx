@@ -3,6 +3,7 @@
 import { Suspense, useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { useSearchParams } from "next/navigation";
 import AlphaMatrix from "@/components/cg/alpha-matrix";
+import BacktestTool from "@/components/cg/backtest-tool";
 import DeskBlotter from "@/components/cg/desk-blotter";
 import OverviewTool from "@/components/cg/overview-tool";
 import ClassicOverview from "@/components/cg/classic-overview";
@@ -25,7 +26,7 @@ import { CURATED } from "@/lib/universe/curated";
 import type { DeskLiveSnapshot } from "@/lib/desk/live";
 
 type CockpitView = "terminal" | "matrix" | "desk" | "markets";
-type ToolTab = "overview" | "footprint" | "largeorders" | "liqlevels" | "bookwalls" | "cvd" | "alerts" | "l2" | "quant";
+type ToolTab = "overview" | "footprint" | "largeorders" | "liqlevels" | "bookwalls" | "cvd" | "alerts" | "l2" | "quant" | "backtest";
 
 // ---------------------------------------------------------------------------
 // THE CURATED 61 — the terminal's complete, FIXED universe (user directive
@@ -125,6 +126,7 @@ const BASE_TABS: { id: ToolTab; label: string }[] = [
   { id: "liqlevels", label: "Liq Levels" },
   { id: "bookwalls", label: "Book Walls" },
   { id: "cvd", label: "CVD" },
+  { id: "backtest", label: "Backtest", },
   { id: "alerts", label: "Alerts" },
 ];
 const ALL_TOOL_TABS = new Set<ToolTab>([
@@ -137,6 +139,7 @@ const ALL_TOOL_TABS = new Set<ToolTab>([
   "alerts",
   "l2",
   "quant",
+  "backtest",
 ]);
 
 function fmtMacroPx(v: number | null | undefined): string {
@@ -165,7 +168,7 @@ function bootFromSearchParams(sp: URLSearchParams): { sym: string; tab: ToolTab;
   const sym = resolveUniSym(rawSym) ?? "BTC";
   const classic = UNI_OF.get(sym)?.classic ?? false;
   const rawTab = (sp.get("tab")?.trim().toLowerCase() ?? "overview") as ToolTab;
-  const tab = ALL_TOOL_TABS.has(rawTab) && !(classic && rawTab !== "overview" && rawTab !== "quant") ? rawTab : "overview";
+  const tab = ALL_TOOL_TABS.has(rawTab) && !(classic && rawTab !== "overview" && rawTab !== "quant" && rawTab !== "backtest") ? rawTab : "overview";
   const rawView = (sp.get("view")?.trim().toLowerCase() ?? "terminal") as CockpitView;
   const view: CockpitView = ["terminal", "matrix", "desk", "markets"].includes(rawView) ? rawView : "terminal";
   return { sym, tab, view };
@@ -608,6 +611,7 @@ function TerminalCockpit() {
                 ? [
                     { id: "overview", label: "Overview" },
                     { id: "quant", label: "TradFi Quant", badge: "COT" },
+                    { id: "backtest" as const, label: "Backtest" },
                   ]
                 : [
                     ...BASE_TABS,
@@ -666,6 +670,7 @@ function TerminalCockpit() {
                   {activeTab === "liqlevels" && <LiquidationLevelsTool sym={sym} />}
                   {activeTab === "bookwalls" && <BookWallsTool sym={sym} />}
                   {activeTab === "cvd" && <CvdTool sym={sym} />}
+                  {activeTab === "backtest" && <BacktestTool sym={sym} />}
                   {activeTab === "alerts" && <AlertsTool sym={sym} />}
                   {activeTab === "l2" && !classic && (
                     <BinanceView
