@@ -1,5 +1,5 @@
 {
-  "ts": 1794470693470,
+  "ts": 1794470754694,
   "positioning": {
     "BTC": {
       "fundingPct8h": 0.006967,
@@ -23,25 +23,13 @@
       "oiDelta24hPct": 0.93
     },
     "BNB": {
-      "fundingPct8h": 0.000572,
-      "oiUsd": 1077528239,
-      "oiDelta1hPct": 0.35,
-      "oiDelta4hPct": 0.13,
-      "oiDelta24hPct": -0.54
+      "error": "timed out"
     },
     "DOGE": {
-      "fundingPct8h": -0.000219,
-      "oiUsd": 916204702,
-      "oiDelta1hPct": 0.83,
-      "oiDelta4hPct": 1.18,
-      "oiDelta24hPct": -0.67
+      "error": "timed out"
     },
     "XAU": {
-      "fundingPct8h": 0.00406,
-      "oiUsd": 1693644094,
-      "oiDelta1hPct": -0.06,
-      "oiDelta4hPct": 1.43,
-      "oiDelta24hPct": 11.71
+      "error": "timed out"
     }
   }
 }
