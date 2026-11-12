@@ -44,13 +44,19 @@ export const PRIORITY_BINANCE_PAIRS: readonly string[] = [
   "SPYUSDT", "QQQUSDT", "COPPERUSDT",
 ];
 
-/** Canonical Hyperliquid xyz coin overrides for indices without 1:1 Binance futures scale. */
+/** Canonical Hyperliquid xyz coin overrides for indices without 1:1 Binance futures scale.
+ *  All entries verified live 2026-11-12 via POST api.hyperliquid.xyz/info
+ *  {"type":"metaAndAssetCtxs","dex":"xyz"} (144-market universe) — the QB
+ *  additions (GOOGL, CL, SPCX, SKHY, NFLX, DRAM, KORU) included. NOTE: this map
+ *  is xyz-ONLY on purpose — main-dex coins (BTC, ETH, kPEPE…) live in
+ *  MICRO_MAP with dex:"main" and must NOT be routed through the xyz snapshot. */
 export const HL_XYZ_MAP: Record<string, string> = {
   SPX500: "xyz:SP500",
   SP500: "xyz:SP500",
   NDX100: "xyz:XYZ100",
   JP225: "xyz:JP225",
   USO: "xyz:CL",
+  CL: "xyz:CL",
   UKO: "xyz:BRENTOIL",
   NATGAS: "xyz:NATGAS",
   XAU: "xyz:GOLD",
@@ -59,6 +65,7 @@ export const HL_XYZ_MAP: Record<string, string> = {
   AAPL: "xyz:AAPL",
   AMZN: "xyz:AMZN",
   GOOG: "xyz:GOOGL",
+  GOOGL: "xyz:GOOGL",
   MSFT: "xyz:MSFT",
   NVDA: "xyz:NVDA",
   TSLA: "xyz:TSLA",
@@ -74,6 +81,11 @@ export const HL_XYZ_MAP: Record<string, string> = {
   AVGO: "xyz:AVGO",
   TSM: "xyz:TSM",
   SOXL: "xyz:SOXL",
+  SPCX: "xyz:SPCX",
+  SKHY: "xyz:SKHY",
+  NFLX: "xyz:NFLX",
+  DRAM: "xyz:DRAM",
+  KORU: "xyz:KORU",
 };
 
 export function hlCoinOf(sym: string): string | undefined {
