@@ -170,3 +170,15 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] cvd: taker buy 49.1%, perpCvd -9, spotCvd -3, quadrant both-selling, latestDiv bear (recent)
 - [AGAINST] notifications: 6h weighted bias +2.0 (1 events)
 - → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 05:44 UTC — new suggested order — place in MT5 (debate FOR 5/AGAINST 2)
+- R139-XRP-1 XRP SHORT limit entry 1.0515 · stop 1.0569 · targets 1.0352 / 1.0332 · R 3 · expires 2026-11-12 09:42 UTC
+- BASIS: levels are PERP prices (perpRef 1.0414). Before placing in MT5 read spreads.XRPUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (1.0414 vs 1.0487), h4 RSI 30.8, day -1.0%
+- [AGAINST] footprint: bull 18 / bear 12; recent: Absorption/buy[vol], Absorption/sell[range]
+- [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×1, abs:sell×1, div:buy×1 — net 2 buy-side vs 1 sell-side
+- [FOR] liquidation: long-liq magnet 1.0352 (str 88, ~$31M est, -0.65%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.029 (5m ago +0.056, falling bids); bid $0.07B vs ask $0.07B
+- [FOR] cvd: taker buy 48.7%, perpCvd -100, spotCvd -118, quadrant both-selling, latestDiv bear (recent)
+- [FOR] notifications: 6h weighted bias -1.1 (9 events)
+- → place on XRPUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
