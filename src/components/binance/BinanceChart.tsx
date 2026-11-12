@@ -112,6 +112,12 @@ function timeLabel(t: number, daily: boolean): string {
   return `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`;
 }
 
+export interface ChartLevel {
+  price: number;
+  label: string;
+  color: string;
+}
+
 export default function BinanceChart({
   bars: restBars,
   liveBar,
@@ -119,6 +125,9 @@ export default function BinanceChart({
   priceDecs,
   height = 460,
   base,
+  levels,
+  onHoverTime,
+  syncTime,
 }: {
   bars: Bar[] | null;
   liveBar: LiveBar | null;
@@ -126,6 +135,12 @@ export default function BinanceChart({
   priceDecs: number;
   height?: number;
   base?: string;
+  /** clean horizontal reference lines (VWAP · POC · liq magnets — WS5 split view) */
+  levels?: ChartLevel[];
+  /** reports the hovered bar's open time (null on leave) for crosshair syncing */
+  onHoverTime?: (t: number | null) => void;
+  /** external crosshair timestamp from the linked pane (drawn when not hovering locally) */
+  syncTime?: number | null;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -398,6 +413,29 @@ export default function BinanceChart({
       ctx.font = "10px ui-monospace, SFMono-Regular, Menlo, monospace";
     }
 
+    // clean reference levels (VWAP · POC · liq magnets — split-context view)
+    if (levels && levels.length) {
+      ctx.font = "10px ui-monospace, SFMono-Regular, Menlo, monospace";
+      for (const lv of levels) {
+        if (!(lv.price > 0) || !Number.isFinite(lv.price)) continue;
+        const y = yP(lv.price);
+        if (y < plotT || y > priceBot) continue;
+        ctx.strokeStyle = lv.color;
+        ctx.setLineDash([5, 4]);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(plotL, y);
+        ctx.lineTo(plotR, y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        const tw = ctx.measureText(lv.label).width + 8;
+        ctx.fillStyle = "rgba(11,14,17,0.82)";
+        ctx.fillRect(plotL + 4, y - 7, tw, 14);
+        ctx.fillStyle = lv.color;
+        ctx.fillText(lv.label, plotL + 8, y);
+      }
+    }
+
     // crosshair + axis bubbles
     if (hover && !dragRef.current) {
       ctx.strokeStyle = "rgba(230,237,243,0.35)";
@@ -427,6 +465,41 @@ export default function BinanceChart({
       ctx.textAlign = "center";
       ctx.fillText(tTxt, clamp(hover.x, plotL + tw / 2, plotR - tw / 2), plotB + 10);
       ctx.textAlign = "left";
+    }
+
+    // SYNCED crosshair: external timestamp from the linked pane (WS5 dual-pane
+    // context — drawn only when this pane is NOT hovered locally)
+    if (!hover && syncTime != null && !dragRef.current) {
+      let lo = 0;
+      let hi = bars.length - 1;
+      let best = -1;
+      while (lo <= hi) {
+        const mid = (lo + hi) >> 1;
+        if (bars[mid].t <= syncTime) {
+          best = mid;
+          lo = mid + 1;
+        } else hi = mid - 1;
+      }
+      if (best >= iMin && best <= iMax) {
+        const cx = xOfBar(best, view) + barW / 2;
+        ctx.strokeStyle = "rgba(56,189,248,0.5)";
+        ctx.setLineDash([3, 4]);
+        ctx.beginPath();
+        ctx.moveTo(cx, plotT);
+        ctx.lineTo(cx, plotB);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        const tTxt = new Date(bars[best].t).toLocaleString("en-US", {
+          timeZone: "UTC", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", hour12: false,
+        });
+        const tw = ctx.measureText(tTxt).width + 12;
+        ctx.fillStyle = "#12303f";
+        ctx.fillRect(clamp(cx - tw / 2, plotL, plotR - tw), plotB + 2, tw, 15);
+        ctx.fillStyle = "#7dd3fc";
+        ctx.textAlign = "center";
+        ctx.fillText(tTxt, clamp(cx, plotL + tw / 2, plotR - tw / 2), plotB + 10);
+        ctx.textAlign = "left";
+      }
     }
 
     // OHLCV legend (hovered bar, else live bar)
@@ -470,7 +543,7 @@ export default function BinanceChart({
     ctx.moveTo(plotL + 0.5, plotB + 0.5);
     ctx.lineTo(plotR - 0.5, plotB + 0.5);
     ctx.stroke();
-  }, [size, view, bars, hover, interval, priceDecs, base, lastPrice, plotL, plotR, plotT, plotB, priceBot, priceH, plotW, daily, idxAtX, xOfBar, priceAt, restBars]);
+  }, [size, view, bars, hover, interval, priceDecs, base, lastPrice, plotL, plotR, plotT, plotB, priceBot, priceH, plotW, daily, idxAtX, xOfBar, priceAt, restBars, levels, syncTime]);
 
   useEffect(() => {
     draw();
@@ -539,6 +612,28 @@ export default function BinanceChart({
     [zoneOf, priceAt]
   );
 
+  // hover-time reporting for the dual-pane sync (fires only when the hovered
+  // BAR changes — never per-pixel, so no render storms)
+  const lastReportedT = useRef<number | null>(null);
+  const onHoverTimeRef = useRef(onHoverTime);
+  useEffect(() => {
+    onHoverTimeRef.current = onHoverTime;
+  }, [onHoverTime]);
+  const reportHoverTime = useCallback(
+    (x: number) => {
+      const v = viewRef.current;
+      const bars = barsRef.current;
+      if (!v || !bars.length || !onHoverTimeRef.current) return;
+      const hi = clamp(Math.round(idxAtX(x, v)), 0, bars.length - 1);
+      const t = bars[hi].t;
+      if (t !== lastReportedT.current) {
+        lastReportedT.current = t;
+        onHoverTimeRef.current(t);
+      }
+    },
+    [idxAtX]
+  );
+
   const onPointerMove = useCallback(
     (e: React.PointerEvent) => {
       const el = canvasRef.current;
@@ -549,6 +644,7 @@ export default function BinanceChart({
       const d = dragRef.current;
       if (!d) {
         setHover({ x, y });
+        reportHoverTime(x);
         const z = zoneOf(x, y);
         setCursor(z === "vzoom" ? "ns-resize" : z === "hzoom" ? "ew-resize" : "crosshair");
         return;
@@ -578,7 +674,7 @@ export default function BinanceChart({
         commit({ ...d.view, barW });
       }
     },
-    [zoneOf, commit]
+    [zoneOf, commit, reportHoverTime]
   );
 
   const endDrag = useCallback((e: React.PointerEvent) => {
@@ -588,7 +684,13 @@ export default function BinanceChart({
     setCursor("crosshair");
   }, []);
 
-  const onPointerLeave = useCallback(() => setHover(null), []);
+  const onPointerLeave = useCallback(() => {
+    setHover(null);
+    if (lastReportedT.current != null) {
+      lastReportedT.current = null;
+      onHoverTimeRef.current?.(null);
+    }
+  }, []);
 
   const reset = useCallback(() => {
     autoYRef.current = true;

@@ -13,7 +13,7 @@ import fs from "fs";
 import path from "path";
 import { resolveDataRoot } from "./store";
 
-export type NotifSource = "footprint" | "indicators" | "whale-orders" | "liqlevels" | "cvd" | "engine" | "paperbook" | "liq-live";
+export type NotifSource = "footprint" | "indicators" | "whale-orders" | "liqlevels" | "cvd" | "engine" | "paperbook" | "liq-live" | "alert-rules";
 export type NotifDir = "bullish" | "bearish" | "neutral";
 
 export interface CgNotification {

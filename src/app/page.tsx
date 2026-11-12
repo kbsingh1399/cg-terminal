@@ -4,6 +4,7 @@ import { Suspense, useCallback, useEffect, useMemo, useState, useSyncExternalSto
 import { useSearchParams } from "next/navigation";
 import AlphaMatrix from "@/components/cg/alpha-matrix";
 import BacktestTool from "@/components/cg/backtest-tool";
+import SplitContextView from "@/components/cg/split-context-view";
 import DeskBlotter from "@/components/cg/desk-blotter";
 import OverviewTool from "@/components/cg/overview-tool";
 import ClassicOverview from "@/components/cg/classic-overview";
@@ -655,6 +656,7 @@ function TerminalCockpit() {
                   {activeTab === "overview" && !classic && (
                     <>
                       <OverviewTool sym={sym} />
+                      <SplitContextView sym={sym} isTradfi={uni?.kind === "tradfi-perp"} priceDecs={binProps.priceDecs} />
                       <BinanceView
                         sym={sym}
                         rank={binProps.rank}

@@ -5,9 +5,11 @@ import { fmtAssetPrice, symDecs } from "@/lib/cg/assets";
 
 /**
  * Live notification feed — every event from every tab (footprint signals,
- * indicator events, whale walls, liquidation sweep setups, CVD divergences),
- * streamed over SSE the moment the scanner detects it, with the full
- * persisted history on load. Filters by asset / source / direction.
+ * indicator events, whale walls, liquidation sweep setups, CVD divergences,
+ * liquidation cascades, custom alert-rule fires), streamed over SSE the
+ * moment the scanner detects it, with the full persisted history on load.
+ * Filters by asset / source / direction + the persistent custom Rules
+ * manager (WS5) and browser-toast / desktop notifications for [HIGH] events.
  */
 
 interface Notif {
@@ -25,12 +27,33 @@ interface Notif {
   barType?: string;
 }
 
+interface AlertRuleLite {
+  id: string;
+  name: string;
+  enabled: boolean;
+  kind: "grade" | "vwapZ" | "cascade5m" | "fundingApr" | "priceCross";
+  syms: string[];
+  threshold: number | null;
+  level: number | null;
+  direction: "above" | "below";
+  createdAt: number;
+  fires: number;
+  lastFiredAt: number | null;
+}
+
+interface RulesPayload {
+  ok: boolean;
+  rules: AlertRuleLite[];
+  telemetry?: { rules: number; enabled: number; fires: number; webhookConfigured: boolean };
+}
+
 const SOURCES: { key: string; label: string }[] = [
   { key: "footprint", label: "Footprint signals" },
   { key: "indicators", label: "Indicators" },
   { key: "whale-orders", label: "Whale orders" },
   { key: "liqlevels", label: "Liq clusters" },
   { key: "liq-live", label: "Liq cascades" },
+  { key: "alert-rules", label: "My rules" },
   { key: "cvd", label: "CVD" },
   { key: "paperbook", label: "Paper book" },
   { key: "engine", label: "Engine" },
@@ -42,6 +65,7 @@ const SOURCE_COLOR: Record<string, string> = {
   "whale-orders": "bg-amber-500/15 text-amber-300",
   liqlevels: "bg-rose-500/15 text-rose-300",
   "liq-live": "bg-red-600/20 text-red-300",
+  "alert-rules": "bg-orange-500/20 text-orange-300",
   cvd: "bg-teal-500/15 text-teal-300",
   paperbook: "bg-fuchsia-500/15 text-fuchsia-300",
   engine: "bg-neutral-500/15 text-neutral-300",
@@ -54,9 +78,67 @@ export default function AlertsTool({ sym }: { sym?: string }) {
   const [dirFilter, setDirFilter] = useState<string>("all");
   const [live, setLive] = useState(false);
   const [stats, setStats] = useState<{ total: number; last24h: number; bySource: Record<string, number> } | null>(null);
+  const [rules, setRules] = useState<AlertRuleLite[]>([]);
+  const [rulesTel, setRulesTel] = useState<RulesPayload["telemetry"] | null>(null);
+  const [newRule, setNewRule] = useState<{ kind: AlertRuleLite["kind"]; syms: string; threshold: string; level: string; direction: "above" | "below"; name: string }>({
+    kind: "grade",
+    syms: "",
+    threshold: "3",
+    level: "",
+    direction: "above",
+    name: "",
+  });
+  const [ruleBusy, setRuleBusy] = useState(false);
+  const [ruleErr, setRuleErr] = useState<string | null>(null);
+  const [toasts, setToasts] = useState<{ id: number; title: string; detail: string }[]>([]);
+  // lazy initial state — no effect needed for the already-granted case
+  const [desktopOk, setDesktopOk] = useState(() => typeof Notification !== "undefined" && Notification.permission === "granted");
   const alive = useRef(true);
   const loadedRef = useRef(false);
   const [derived, setDerived] = useState<{ sym: string; items: Notif[] }>({ sym: "", items: [] });
+
+  const loadRules = useCallback(async () => {
+    try {
+      const res = await fetch("/api/cg/alert-rules");
+      const j = (await res.json()) as RulesPayload;
+      if (j.ok) {
+        setRules(j.rules ?? []);
+        setRulesTel(j.telemetry ?? null);
+      }
+    } catch {
+      /* offline */
+    }
+  }, []);
+
+  // desktop notifications are opt-in (browser permission prompt on first toggle)
+  const askDesktop = useCallback(async () => {
+    if (typeof Notification === "undefined") {
+      setDesktopOk(false);
+      return;
+    }
+    if (Notification.permission === "granted") {
+      setDesktopOk(true);
+      return;
+    }
+    const p = await Notification.requestPermission().catch(() => "denied");
+    setDesktopOk(p === "granted");
+  }, []);
+
+  const pushToast = useCallback(
+    (n: Notif) => {
+      const t = { id: n.id, title: n.title, detail: n.detail };
+      setToasts((prev) => [...prev.slice(-3), t]);
+      setTimeout(() => setToasts((prev) => prev.filter((x) => x.id !== t.id)), 12_000);
+      if (desktopOk && typeof Notification !== "undefined" && Notification.permission === "granted") {
+        try {
+          new Notification(`CG Terminal · ${n.title}`, { body: n.detail.slice(0, 180) });
+        } catch {
+          /* some browsers restrict the constructor */
+        }
+      }
+    },
+    [desktopOk]
+  );
 
   useEffect(() => {
     if (!sym) return;
@@ -215,19 +297,26 @@ export default function AlertsTool({ sym }: { sym?: string }) {
       try {
         const n = JSON.parse((ev as MessageEvent).data) as Notif;
         setItems((prev) => (prev.some((x) => x.id === n.id) ? prev : [...prev, n].slice(-800)));
+        // browser toast + optional desktop notification for HIGH events
+        // (cascades, rule fires — the actionable ones)
+        if (n.severity === "high") pushToast(n);
       } catch {
         /* skip */
       }
     });
     es.onerror = () => setLive(false);
     const poll = setInterval(load, 120_000); // safety net behind SSE
+    const rulesPoll = setInterval(loadRules, 60_000);
+    const rulesKick = setTimeout(loadRules, 0); // off the synchronous effect path
     return () => {
       alive.current = false;
       es.close();
       clearInterval(poll);
+      clearInterval(rulesPoll);
+      clearTimeout(rulesKick);
       if (kick) clearTimeout(kick);
     };
-  }, [load]);
+  }, [load, loadRules, pushToast]);
 
   // keep the asset filter glued to the active symbol — adjusted during render
   // on prop change (React docs pattern), no effect needed
@@ -259,8 +348,193 @@ export default function AlertsTool({ sym }: { sym?: string }) {
 
   const hasSseForSym = Boolean(sym && items.some((n) => n.asset === sym));
 
+  const submitRule = async () => {
+    setRuleBusy(true);
+    setRuleErr(null);
+    try {
+      const body: Record<string, unknown> = {
+        kind: newRule.kind,
+        name: newRule.name || undefined,
+        syms: newRule.syms.split(",").map((s) => s.trim()).filter(Boolean),
+        direction: newRule.direction,
+      };
+      if (newRule.kind === "priceCross") body.level = Number(newRule.level);
+      else if (newRule.kind === "grade") body.threshold = Number(newRule.threshold || "3");
+      else body.threshold = Number(newRule.threshold);
+      const res = await fetch("/api/cg/alert-rules", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const j = (await res.json()) as { ok: boolean; error?: string };
+      if (!j.ok) setRuleErr(j.error ?? "create failed");
+      else {
+        setNewRule((r) => ({ ...r, name: "", level: "" }));
+        await loadRules();
+      }
+    } catch (e) {
+      setRuleErr(e instanceof Error ? e.message : "create failed");
+    } finally {
+      setRuleBusy(false);
+    }
+  };
+
+  const toggleRule = async (id: string, enabled: boolean) => {
+    await fetch(`/api/cg/alert-rules?id=${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ enabled }),
+    }).catch(() => undefined);
+    await loadRules();
+  };
+
+  const removeRule = async (id: string) => {
+    await fetch(`/api/cg/alert-rules?id=${encodeURIComponent(id)}`, { method: "DELETE" }).catch(() => undefined);
+    await loadRules();
+  };
+
   return (
     <div className="space-y-3">
+      {/* toast stack — HIGH events (cascades, rule fires) */}
+      <div className="pointer-events-none fixed right-4 top-16 z-50 flex w-80 flex-col gap-2">
+        {toasts.map((t) => (
+          <div key={t.id} className="pointer-events-auto rounded-lg border border-rose-500/40 bg-[#1a0d10]/95 px-3 py-2 shadow-lg shadow-rose-900/20">
+            <div className="text-[11px] font-bold text-rose-200">{t.title}</div>
+            <div className="mt-0.5 line-clamp-3 text-[10px] leading-snug text-neutral-400">{t.detail}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* custom alert rules manager (WS5) */}
+      <div className="rounded-lg border border-neutral-800 bg-[#11151a] px-4 py-3">
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-300">My Alert Rules</span>
+          <span className="text-[10px] text-neutral-500">
+            evaluated in the scanner loop every 30 s · [HIGH] SSE events + toast{rulesTel?.webhookConfigured ? " + webhook" : ""} · 30 min cooldown per rule+asset
+          </span>
+          <button
+            onClick={() => void askDesktop()}
+            className={`ml-auto rounded px-2 py-0.5 text-[10px] font-semibold ${
+              desktopOk ? "bg-emerald-500/15 text-emerald-300" : "bg-neutral-800 text-neutral-400 hover:text-neutral-200"
+            }`}
+          >
+            {desktopOk ? "Desktop notifications ON" : "Enable desktop notifications"}
+          </button>
+        </div>
+        <div className="flex flex-wrap items-end gap-2">
+          <label className="flex flex-col gap-1 text-[10px] text-neutral-500">
+            Condition
+            <select
+              value={newRule.kind}
+              onChange={(e) => {
+                const kind = e.target.value as AlertRuleLite["kind"];
+                setNewRule((r) => ({
+                  ...r,
+                  kind,
+                  threshold: kind === "grade" ? "3" : kind === "vwapZ" ? "2" : kind === "cascade5m" ? "200000" : kind === "fundingApr" ? "50" : r.threshold,
+                }));
+              }}
+              className="rounded border border-neutral-800 bg-[#0b0e11] px-2 py-1 text-xs text-neutral-100"
+            >
+              <option value="grade">M1/M2 Grade ≥ (2=B · 3=A · 4=A+)</option>
+              <option value="vwapZ">|VWAP Z| ≥ σ</option>
+              <option value="cascade5m">Liq cascade 5m ≥ USD</option>
+              <option value="fundingApr">Funding APR ≥ %</option>
+              <option value="priceCross">Price crosses level</option>
+            </select>
+          </label>
+          {newRule.kind === "priceCross" ? (
+            <>
+              <label className="flex flex-col gap-1 text-[10px] text-neutral-500">
+                Level
+                <input
+                  value={newRule.level}
+                  onChange={(e) => setNewRule((r) => ({ ...r, level: e.target.value }))}
+                  inputMode="decimal"
+                  placeholder="e.g. 100000"
+                  className="w-28 rounded border border-neutral-800 bg-[#0b0e11] px-2 py-1 text-xs text-neutral-100"
+                />
+              </label>
+              <label className="flex flex-col gap-1 text-[10px] text-neutral-500">
+                Direction
+                <select
+                  value={newRule.direction}
+                  onChange={(e) => setNewRule((r) => ({ ...r, direction: e.target.value as "above" | "below" }))}
+                  className="rounded border border-neutral-800 bg-[#0b0e11] px-2 py-1 text-xs text-neutral-100"
+                >
+                  <option value="above">crossing above</option>
+                  <option value="below">crossing below</option>
+                </select>
+              </label>
+            </>
+          ) : (
+            <label className="flex flex-col gap-1 text-[10px] text-neutral-500">
+              {newRule.kind === "grade" ? "Min grade (2/3/4)" : newRule.kind === "vwapZ" ? "σ threshold" : newRule.kind === "cascade5m" ? "USD threshold" : "APR %"}
+              <input
+                value={newRule.threshold}
+                onChange={(e) => setNewRule((r) => ({ ...r, threshold: e.target.value }))}
+                inputMode="decimal"
+                className="w-24 rounded border border-neutral-800 bg-[#0b0e11] px-2 py-1 text-xs text-neutral-100"
+              />
+            </label>
+          )}
+          <label className="flex flex-col gap-1 text-[10px] text-neutral-500">
+            Assets (blank = all 61)
+            <input
+              value={newRule.syms}
+              onChange={(e) => setNewRule((r) => ({ ...r, syms: e.target.value }))}
+              placeholder="BTC,ETH,NVDA"
+              className="w-40 rounded border border-neutral-800 bg-[#0b0e11] px-2 py-1 text-xs text-neutral-100"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-[10px] text-neutral-500">
+            Name
+            <input
+              value={newRule.name}
+              onChange={(e) => setNewRule((r) => ({ ...r, name: e.target.value }))}
+              placeholder="optional"
+              className="w-32 rounded border border-neutral-800 bg-[#0b0e11] px-2 py-1 text-xs text-neutral-100"
+            />
+          </label>
+          <button
+            onClick={() => void submitRule()}
+            disabled={ruleBusy}
+            className="rounded bg-emerald-500/15 px-3 py-1.5 text-xs font-semibold text-emerald-300 ring-1 ring-emerald-500/40 hover:bg-emerald-500/25 disabled:opacity-40"
+          >
+            {ruleBusy ? "…" : "Add rule"}
+          </button>
+        </div>
+        {ruleErr && <div className="mt-1 text-[11px] text-rose-300">{ruleErr}</div>}
+        {rules.length > 0 && (
+          <div className="mt-2 space-y-1">
+            {rules.map((r) => (
+              <div key={r.id} className="flex flex-wrap items-center gap-2 rounded border border-neutral-800/70 bg-[#0d1117] px-2 py-1.5 text-[11px]">
+                <button
+                  onClick={() => void toggleRule(r.id, !r.enabled)}
+                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${r.enabled ? "bg-emerald-500/15 text-emerald-300" : "bg-neutral-800 text-neutral-500"}`}
+                >
+                  {r.enabled ? "ON" : "OFF"}
+                </button>
+                <span className="font-mono text-neutral-200">{r.name || r.kind}</span>
+                <span className="text-neutral-500">
+                  {r.kind === "priceCross"
+                    ? `${r.direction} ${r.level?.toPrecision(6) ?? "–"}`
+                    : r.kind === "grade"
+                      ? `grade ≥ ${r.threshold === 4 ? "A+" : r.threshold === 3 ? "A" : "B"}`
+                      : `${r.kind} ≥ ${r.threshold}`}
+                </span>
+                <span className="text-neutral-600">{r.syms.length ? r.syms.join(",") : "all 61"}</span>
+                <span className="ml-auto text-neutral-600">
+                  {r.fires} fires{r.lastFiredAt ? ` · last ${new Date(r.lastFiredAt).toISOString().slice(11, 16)}Z` : ""}
+                </span>
+                <button onClick={() => void removeRule(r.id)} className="text-neutral-600 hover:text-rose-400" title="Delete rule">
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       <div className="rounded-lg border border-neutral-800 bg-[#11151a]/60 px-4 py-2.5 text-[11px] leading-relaxed text-neutral-400">
         <span className="font-semibold text-neutral-300">Scanner scope:</span> the notification engine scans all 58
         curated perps (30 crypto + 28 TradFi). Cadence lanes — fast BTC · ETH · SOL (~every 3 min), mid crypto (~every 40

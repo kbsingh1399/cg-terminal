@@ -192,7 +192,86 @@ export default function NarrativeCard({ sym }: { sym: string }) {
   const [equity, setEquity] = useState<number | null>(null);
   const [staged, setStaged] = useState<string | null>(null);
   const [now, setNow] = useState(() => Date.now());
+  const [aiBrief, setAiBrief] = useState<{ loading: boolean; text: string; error: string | null; cached: boolean; ms: number | null; open: boolean; disabledReason: string | null }>({
+    loading: false,
+    text: "",
+    error: null,
+    cached: false,
+    ms: null,
+    open: false,
+    disabledReason: null,
+  });
   const stagedForSym = staged === sym;
+
+  // OPTIONAL streaming AI desk brief — STRICTLY on-demand (this click handler
+  // is the ONLY trigger; never polled, never on mount). Reads the SSE stream
+  // /api/cg/narrative/ai produces and grounds itself in the verified verdict.
+  const fetchAiBrief = async () => {
+    if (aiBrief.loading) return;
+    setAiBrief({ loading: true, text: "", error: null, cached: false, ms: null, open: true, disabledReason: null });
+    try {
+      const res = await fetch("/api/cg/narrative/ai", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ sym }),
+      });
+      const ct = res.headers.get("content-type") ?? "";
+      if (!ct.includes("text/event-stream")) {
+        const j = (await res.json().catch(() => null)) as { ok?: boolean; reason?: string; error?: string } | null;
+        setAiBrief({
+          loading: false,
+          text: "",
+          error: j?.reason ?? j?.error ?? `unexpected response (${res.status})`,
+          cached: false,
+          ms: null,
+          open: true,
+          disabledReason: j?.reason?.includes("NVIDIA_API_KEY") ? j.reason : null,
+        });
+        return;
+      }
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error("no stream body");
+      const dec = new TextDecoder();
+      let buf = "";
+      let text = "";
+      let cached = false;
+      let ms: number | null = null;
+      let err: string | null = null;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const lines = buf.split("\n");
+        buf = lines.pop() ?? "";
+        for (const line of lines) {
+          const t = line.trim();
+          if (!t.startsWith("data:")) continue;
+          const payload = t.slice(5).trim();
+          if (payload === "[DONE]") continue;
+          try {
+            const j = JSON.parse(payload) as { type?: string; text?: string; error?: string; cached?: boolean; ms?: number };
+            if (j.type === "delta" && j.text) {
+              text += j.text;
+              setAiBrief((s) => ({ ...s, text, cached, ms }));
+            } else if (j.type === "cached") {
+              text = j.text ?? "";
+              cached = true;
+              setAiBrief((s) => ({ ...s, text, cached }));
+            } else if (j.type === "done") {
+              ms = j.ms ?? null;
+            } else if (j.type === "error") {
+              err = j.error ?? "stream error";
+            }
+          } catch {
+            /* skip */
+          }
+        }
+      }
+      setAiBrief({ loading: false, text, error: err, cached, ms, open: true, disabledReason: null });
+    } catch (e) {
+      setAiBrief({ loading: false, text: "", error: e instanceof Error ? e.message : "AI brief failed", cached: false, ms: null, open: true, disabledReason: null });
+    }
+  };
 
   // 30 s clock for elapsed-time labels (one interval, cleaned up on unmount)
   useEffect(() => {
@@ -288,6 +367,22 @@ export default function NarrativeCard({ sym }: { sym: string }) {
         <span className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ${REGIME_STYLE[v.regime] ?? REGIME_STYLE.RANGE_BALANCE}`}>
           {v.regime.replace("_", " ")}
         </span>
+        {/* optional streaming AI desk brief — STRICTLY on-demand (WS5) */}
+        <button
+          type="button"
+          onClick={() => void fetchAiBrief()}
+          disabled={aiBrief.loading || Boolean(aiBrief.disabledReason)}
+          title={aiBrief.disabledReason ?? "On-demand AI desk brief grounded in the verified verdict + quant + options telemetry (never auto-polled)"}
+          className={`ml-auto flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-semibold ${
+            aiBrief.disabledReason
+              ? "bg-neutral-800/60 text-neutral-600"
+              : aiBrief.loading
+                ? "bg-sky-500/15 text-sky-300"
+                : "bg-violet-500/15 text-violet-300 ring-1 ring-violet-500/40 hover:bg-violet-500/25"
+          }`}
+        >
+          {aiBrief.loading ? "AI streaming…" : aiBrief.disabledReason ? "AI brief off" : "✨ AI desk brief"}
+        </button>
         <span className="text-xs font-semibold text-neutral-200">{MODEL_LABEL[v.activeModel] ?? v.activeModel}</span>
         {v.direction !== "NEUTRAL" && (
           <span className={`font-mono text-xs font-bold ${dirStyle}`}>{v.direction}</span>
@@ -310,6 +405,23 @@ export default function NarrativeCard({ sym }: { sym: string }) {
 
       {/* thesis */}
       <div className="px-4 py-3 text-[12px] leading-relaxed text-neutral-300">{v.thesis}</div>
+
+      {/* AI desk brief panel (only after an explicit button click) */}
+      {aiBrief.open && (
+        <div className="mx-4 mb-3 rounded-lg border border-violet-900/40 bg-violet-950/10 px-3 py-2.5">
+          <div className="mb-1 flex items-center gap-2 text-[10px] uppercase tracking-wider text-violet-300/80">
+            <span>AI desk brief · grounded in the verified verdict</span>
+            {aiBrief.cached && <span className="rounded bg-neutral-800 px-1 text-[9px] text-neutral-400">15-min cache</span>}
+            {aiBrief.ms != null && <span className="rounded bg-neutral-800 px-1 text-[9px] text-neutral-400">{aiBrief.ms} ms</span>}
+            <button onClick={() => setAiBrief((s) => ({ ...s, open: false }))} className="ml-auto text-neutral-500 hover:text-neutral-200">
+              ✕
+            </button>
+          </div>
+          {aiBrief.loading && !aiBrief.text && <div className="text-[11px] text-neutral-500">streaming…</div>}
+          {aiBrief.error && <div className="text-[11px] text-amber-300">{aiBrief.error}</div>}
+          {aiBrief.text && <div className="whitespace-pre-wrap text-[11px] leading-relaxed text-neutral-200">{aiBrief.text}</div>}
+        </div>
+      )}
 
       {/* plan strip */}
       {v.plan.entryZone && (

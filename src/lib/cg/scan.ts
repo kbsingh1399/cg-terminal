@@ -1031,6 +1031,24 @@ export function startScanner() {
   }, 30_000);
   cascadeTimer.unref?.();
 
+  // custom user alert rules (WS5): evaluated against live engine state every
+  // 30 s — radar verdicts (grades), market snapshots (VWAP σ), liq-live 5m
+  // cascades, radar funding APR and the live price hub. Fires push [HIGH]
+  // notifications + optional webhook. Dynamic import: alert-rules reads this
+  // module's snapshots (a static import would close a cycle).
+  let rulesBusy = false;
+  const rulesTimer = setInterval(() => {
+    if (rulesBusy) return;
+    rulesBusy = true;
+    import("./alert-rules")
+      .then(({ evaluateAlertRules }) => evaluateAlertRules())
+      .catch(() => undefined)
+      .finally(() => {
+        rulesBusy = false;
+      });
+  }, 30_000);
+  rulesTimer.unref?.();
+
   // initial pass: prime the fast lane immediately
   setTimeout(() => {
     warmAssetScan("BTC").catch(() => undefined);
