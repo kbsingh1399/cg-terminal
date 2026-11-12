@@ -142,7 +142,9 @@ function record(name, ok, note) {
   }, "paper_book (book-wide scoreboard)");
   await expectOk("paper_book", { sym: "BTC" }, (t) => /Virtual Book/.test(t.split("\n")[0]) || /Most relevant ticket/.test(t) ? "sym filter ok" : "no sym-scoped output", "paper_book BTC (sym filter)");
 
-  // WS6 tools — backtest summary, portfolio risk, AI brief (graceful when unconfigured)
+  // WS6 tools — backtest summary, portfolio risk, deterministic brief kit
+  // (dual-agent: zero external LLM calls in the terminal runtime — the kit
+  // grounds Antigravity's native formulation of the desk brief)
   await expectOk("backtest_summary", {}, (t) => {
     const head = t.split("\n")[0];
     return /Walk-Forward Backtest|no completed run/.test(head) ? head.slice(0, 110) : "header mismatch: " + head.slice(0, 110);
@@ -154,8 +156,8 @@ function record(name, ok, note) {
   }, "portfolio_risk (correlation + heat)");
   await expectOk("narrative_ai_brief", { sym: "BTC" }, (t) => {
     const head = t.split("\n")[0];
-    return /AI desk brief|unavailable/.test(head) ? head.slice(0, 110) : "header mismatch: " + head.slice(0, 110);
-  }, "narrative_ai_brief BTC (on-demand, honest when unconfigured)");
+    return /deterministic AI brief kit|brief kit unavailable/.test(head) ? head.slice(0, 110) : "header mismatch: " + head.slice(0, 110);
+  }, "narrative_ai_brief BTC (deterministic brief kit, zero external AI)");
 
   const fails = results.filter((r) => !r.ok).length;
   console.log(`\n===== ${results.length - fails}/${results.length} passed =====`);

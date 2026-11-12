@@ -800,48 +800,76 @@ async function toolPortfolioRisk() {
 
 async function toolNarrativeAiBrief(args) {
   const sym = (args?.sym ?? "BTC").toUpperCase();
-  // the route streams SSE; collect it server-side into one brief
-  try {
-    const res = await fetch(`${TERMINAL_URL}/api/cg/narrative/ai`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ sym }),
-      signal: AbortSignal.timeout(125_000),
-    });
-    const ct = res.headers.get("content-type") ?? "";
-    if (!ct.includes("text/event-stream")) {
-      const j = await res.json().catch(() => null);
-      return {
-        text: `${sym} AI desk brief unavailable: ${j?.reason ?? j?.error ?? `route answered ${res.status}`} — the brief is optional and needs NVIDIA_API_KEY on the server.`,
-        data: j ?? { ok: false },
-      };
+  // DUAL-AGENT ARCHITECTURE — the terminal runtime makes ZERO external
+  // AI/LLM calls. This tool assembles the deterministic BRIEF KIT: the
+  // verified NarrativeVerdict + quant + options telemetry plus the
+  // institutional briefing protocol, all from the local terminal. The
+  // Antigravity trading-committee personas formulate the actual desk brief
+  // NATIVELY from this kit — grounded only in the supplied numbers.
+  const t0 = Date.now();
+  const getJson = async (path) => {
+    try {
+      const res = await fetch(`${TERMINAL_URL}${path}`, { signal: AbortSignal.timeout(20_000) });
+      if (!res.ok) return { __http: res.status };
+      return await res.json();
+    } catch (e) {
+      return { __err: e instanceof Error ? e.message : String(e) };
     }
-    const text = await res.text();
-    let brief = "";
-    let cached = false;
-    let ms = null;
-    for (const line of text.split("\n")) {
-      const t = line.trim();
-      if (!t.startsWith("data:")) continue;
-      const payload = t.slice(5).trim();
-      if (payload === "[DONE]") continue;
-      try {
-        const j = JSON.parse(payload);
-        if (j.type === "delta" || j.type === "cached") brief += j.text ?? "";
-        if (j.type === "cached") cached = true;
-        if (j.type === "done") ms = j.ms;
-        if (j.type === "error") return { text: `${sym} AI brief stream error: ${j.error}`, data: { ok: false, error: j.error } };
-      } catch {
-        /* skip */
-      }
-    }
+  };
+  const [verdict, quant, options] = await Promise.all([
+    getJson(`/api/cg/narrative?sym=${encodeURIComponent(sym)}`),
+    getJson(`/api/cg/quant?sym=${encodeURIComponent(sym)}`),
+    getJson(`/api/cg/options?sym=${encodeURIComponent(sym)}`),
+  ]);
+  const ms = Date.now() - t0;
+  if (verdict?.ok !== true) {
     return {
-      text: `${sym} AI desk brief${cached ? " (15-min cache)" : ms != null ? ` (${ms} ms)` : ""}:\n\n${brief || "(empty response)"}`,
-      data: { ok: true, sym, brief, cached, ms },
+      text: `${sym} brief kit unavailable: ${verdict?.__err ?? verdict?.error ?? `no verified narrative (route answered ${verdict?.__http ?? "ok:false"})`} — the terminal serves the deterministic verdict at /api/cg/narrative; the kit needs it as ground truth.`,
+      data: { ok: false, sym, verdict },
     };
-  } catch (e) {
-    return { text: `${sym} AI desk brief failed: ${e instanceof Error ? e.message : String(e)}`, data: { ok: false } };
   }
+  const fmt = (x, d = 2) => (typeof x === "number" && Number.isFinite(x) ? x.toFixed(d) : "n/a");
+  const planLines = (verdict.plan?.targets ?? [])
+    .map((t) => `- ${t.label}: ${t.level ?? "n/a"}${t.rMultiple != null ? ` (${fmt(t.rMultiple)}R)` : ""}`)
+    .join("\n");
+  const ladderLines = (verdict.plan?.ladder ?? [])
+    .map((r) => `- ${r.weight != null ? `${Math.round(r.weight * 100)}%` : "?"} @ ${r.level ?? "n/a"} (${r.label ?? "rung"})`)
+    .join("\n");
+  const checklistLines = (verdict.checklist ?? [])
+    .map((c) => `- ${c.label}: ${c.pass === true ? "PASS" : c.pass === false ? "FAIL" : "n/a"} (${c.value})`)
+    .join("\n");
+  const p = verdict.probability;
+  const probLine = p
+    ? `pFill ${fmt(p.pFill != null ? p.pFill * 100 : null, 1)}% · pT1 ${fmt(p.pT1 != null ? p.pT1 * 100 : null, 1)}% · pMeanRevert ${fmt(p.pMeanRevert != null ? p.pMeanRevert * 100 : null, 1)}% · EV ${fmt(p.evR)}R · σ_bar ${fmt(p.sigmaBar, 4)}`
+    : "n/a";
+  const q = quant && !quant.__err && !quant.__http ? quant : null;
+  const o = options && !options.__err && !options.__http ? options : null;
+  const text = [
+    `${sym} deterministic AI brief kit (dual-agent — Antigravity formulates the brief natively; terminal runtime makes zero external LLM calls) · assembled in ${ms} ms`,
+    ``,
+    `BRIEFING PROTOCOL (institutional desk brief, max ~220 words):`,
+    `- Cite ONLY the numbers in this kit — never invent prices, probabilities or data; n/a stays n/a.`,
+    `- Structure: (1) one-line state of the setup, (2) strongest confirming evidence, (3) strongest RISK / blindspot that could invalidate it (stale fields, missing feeds, correlation/crowding, funding cost), (4) one concrete invalidation level to watch.`,
+    `- Personas: Senior Quant Analyst (EV / Bayesian updates / GEX flip / Monte Carlo ruin), Order-Flow Microstructure Specialist (CVD divergence, absorption at VWAP/POC, liq sweeps), Chief Risk Officer (heat caps, spread drag, stop-first sizing).`,
+    ``,
+    `VERDICT (verified, deterministic): ${verdict.name} (${verdict.kind}) · regime ${verdict.regime} — ${verdict.regimeNote}`,
+    `MODEL: ${verdict.activeModel} · direction ${verdict.direction} · grade ${verdict.grade} · confidence ${verdict.confidence}/100`,
+    `THESIS: ${verdict.thesis}`,
+    `PLAN: entry ${verdict.plan?.entryZone ? `${verdict.plan.entryZone[0]}–${verdict.plan.entryZone[1]}` : "n/a"} · stop ${verdict.plan?.stop ?? "n/a"} · bestR ${verdict.plan?.bestR ?? "n/a"}`,
+    planLines,
+    ladderLines ? `LADDER (composite-entry risk):\n${ladderLines}` : ``,
+    `PROBABILITY/EV: ${probLine}`,
+    `CHECKLIST:\n${checklistLines}`,
+    `FRESHNESS: worst age ${Math.round((verdict.freshness?.worstAgeMs ?? 0) / 1000)}s · stale fields: ${verdict.freshness?.staleFields?.join(", ") || "none"}`,
+    `QUANT: ${q ? `OI-weighted funding APR ${q.funding?.annualizedAprPct ?? "n/a"}% · OI 4h quadrant ${q.oiQuadrant?.["4h"]?.quadrant ?? "n/a"} · top-trader L/S ${q.lsRatios?.["1h"]?.topPositions?.ratio ?? "n/a"}${q.basis?.coinbasePremiumBps != null ? ` · Coinbase premium ${q.basis.coinbasePremiumBps}bps` : ""}` : "n/a"}`,
+    `OPTIONS: ${o ? `GEX ${o.gex?.regime ?? "n/a"} · gamma flip ${o.gex?.gammaFlipPrice ?? o.gammaFlipPrice ?? "n/a"} · max pain ${o.maxPainStrike ?? "n/a"} · RR25d ${o.riskReversal25d?.value ?? "n/a"} · DVOL ${o.dvol?.value ?? "n/a"}` : "n/a (BTC/ETH only)"}`,
+    `M1 STATUS: ${verdict.m1?.status ?? "n/a"} — ${verdict.m1?.note ?? ""}`,
+    `M2 STATUS: ${verdict.m2?.status ?? "n/a"} — ${verdict.m2?.note ?? ""}`,
+  ].join("\n");
+  return {
+    text,
+    data: { ok: true, sym, architecture: "dual-agent", ms, verdict, quant: q, options: o },
+  };
 }
 
 const TOOLS = [
@@ -1106,7 +1134,8 @@ const TOOLS = [
   },
   {
     name: "narrative_ai_brief",
-    description: "Optional on-demand AI desk brief for one asset (streaming SSE, 15-min cache per bar). Requires NVIDIA_API_KEY on the server — answers honestly unavailable otherwise. Grounded strictly in the verified NarrativeVerdict + quant + options telemetry; highlights risks and blindspots, never invents numbers.",
+    description:
+      "Deterministic AI brief kit for one asset (dual-agent architecture): the verified NarrativeVerdict + quant + options telemetry + the institutional briefing protocol, assembled from the local terminal with ZERO external LLM calls in the runtime. Antigravity's trading-committee personas (Senior Quant Analyst / Order-Flow Microstructure Specialist / Chief Risk Officer) formulate the desk brief natively from this kit — cite only the supplied numbers, n/a stays n/a.",
     inputSchema: {
       type: "object",
       properties: { sym: { type: "string", description: "Asset symbol, e.g. BTC, NVDA" } },

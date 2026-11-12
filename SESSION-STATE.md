@@ -23,6 +23,40 @@ dated entry after each meaningful change; keep only the last 10 entries.
 
 ## Log
 
+### 2026-11-12 21:40 UTC — Z.ai sandbox agent — DUAL-AGENT ARCHITECTURE lockdown: terminal runtime now ZERO external AI APIs
+- **Blueprint acknowledged** (Z.ai = `zai-desk` microstructure engine & data
+  architect; Antigravity = `atg-exec` master quant brain via the 24-tool MCP
+  surface). Phase-3 WS7/WS8/WS9 were already shipped in ad41907; this round
+  brings WS10 into architectural compliance.
+- **WS10 reworked — /api/cg/narrative/ai is STRICTLY INERT**: the route no
+  longer fetches integrate.api.nvidia.com (GLM-5.3 SSE gone); it answers an
+  instant deterministic 200 `{ok:false, inert:true, architecture:"dual-agent"}`
+  (400 for unknown syms) pointing at the MCP path. NarrativeCard lost the
+  "✨ AI desk brief" button, SSE reader, reasoning/CoT state and the violet
+  panel — the card is now pure deterministic verdict UI. The web terminal is
+  a 100% self-contained data & math engine: no LLM keys, no token cost, no
+  rate-limit failures.
+- **MCP `narrative_ai_brief` repurposed as the deterministic BRIEF KIT**: it
+  now assembles (in ~1 local round-trip) the verified NarrativeVerdict +
+  quant (funding APR / OI quadrant / L-S / Coinbase premium) + options (GEX
+  regime, gamma flip, max pain, RR25d, DVOL) + the institutional briefing
+  protocol (cite-only-these-numbers, 4-part structure, the three committee
+  personas). Antigravity formulates the desk brief NATIVELY from this kit.
+  Tool description + test lock updated (34/34 green).
+- **.env.example**: NVIDIA_API_KEY block removed, replaced by the dual-agent
+  note. New `scripts/verify-core-liquids.cjs` — zero-gap integrity probe for
+  the five primary instruments.
+- **GATES (all green)**: tsc 0 · eslint 0/0 · quant-math 73/73 · liq-live
+  45/45 · mcp-tools 34/34 · paperbook 29/29 · API battery 96×200 + 13×400 +
+  0 fail (livebook 3× cold-start warm, then 200) · core-liquids 7/7
+  (BTC/ETH/SOL/XAU/NVDA verdicts fresh 39–233s, zero stale fields; BTC
+  gammaFlip 75,561 / maxPain 78,000; ETH 2,082 / 2,350 — both
+  NEGATIVE_GAMMA_EXPANSION) · desk sync: state.json + inbox/WAKE.md + mt5.json
+  valid, /api/desk/live ok (R198, eq $4,649.96, slots 0/4) · server rebuilt +
+  running detached (setsid --fork survives tool-call teardown).
+- NOTE for atg: mt5.json in this sandbox snapshot is ~9h stale → the spread
+  gate honestly reports n/a here; on the local desk (45s sync) it is live.
+
 ### 2026-11-12 21:15 UTC — Z.ai sandbox agent — PHASE 3 (WS7-WS10) quantitative expansion shipped
 - **WS7 M1/M2 deepening (narrative.ts)**: M1 now enforces 3-TF alignment
   (4H EMA13×89 trend + H1 structure cross + m15 bar holding EMA89) AND
