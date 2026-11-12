@@ -4226,3 +4226,23 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R205 · 2026-11-12 23:08 UTC · zai-desk
+
+**Market**: BTC 71,496.4 (-3.4%)  ETH 2,019.67 (-1.7%)  SOL 81.69 (-1.8%)  XAU 3,885.72 (-2.5%)  XAG 50.160 (-2.3%)
+**Bias (|score|≥2)**: BNB-6(TREND)  SOL-4(TRANS)  LINK-4(TREND)  ADA-5(TREND)  LTC-5(TREND)  XAU-5(TREND)  AVAX-3(TREND)  XRP-2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- BNB SHORT confluence -5.9 — REJECTED: opposite liq magnet 673.91 (str 53, ~$5M est) within 1.2R of entry — wait for sweep
+- SOL SHORT confluence -3.9 — REJECTED: opposite liq magnet 82.97 (str 54, ~$23M est) within 1.2R of entry — wait for sweep
+- LINK SHORT confluence -4.2 — REJECTED: opposite liq magnet 10.172 (str 93, ~$4M est) within 1.2R of entry — wait for sweep
+- ADA SHORT confluence -5.1 — REJECTED: opposite liq magnet 0.1750 (str 58, ~$3M est) within 1.2R of entry — wait for sweep
+- LTC SHORT confluence -4.8 — REJECTED: opposite liq magnet 50.54 (str 59, ~$1M est) within 1.2R of entry — wait for sweep
+- XAU SHORT confluence -4.6 — REJECTED: opposite liq magnet 3,980.21 (str 90, ~$68M est) within 1.2R of entry — wait for sweep
+
+### Order lifecycle
+- R187-BNB-1 EXPIRED (unfilled past expiry)
+- R193-DOGE-1 WITHDRAWN (confluence flipped to +0.1)
+
+### Positions
+- no open positions
+
