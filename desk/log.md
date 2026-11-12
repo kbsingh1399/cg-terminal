@@ -4183,3 +4183,24 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R203 · 2026-11-12 22:36 UTC · zai-desk
+
+**Market**: BTC 71,422.7 (-3.5%)  ETH 2,010.84 (-2.2%)  SOL 81.33 (-2.3%)  XAU 3,886.37 (-2.5%)  XAG 50.160 (-2.3%)
+**Bias (|score|≥2)**: AVAX-7(TREND)  BNB-6(TREND)  XRP-6(TRANS)  LTC-4(TREND)  ADA-5(TREND)  ETH-4(TRANS)  XAU-3(TREND)  LINK-3(TREND)  SOL-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- AVAX SHORT confluence -7.2 — REJECTED: no structural target >= 2.0R (nearest magnet 8.230 = 0.7R)
+- XRP SHORT confluence -5.7 — REJECTED: opposite liq magnet 1.0481 (str 98, ~$20M est) within 1.2R of entry — wait for sweep
+- LTC SHORT confluence -4.2 — REJECTED: opposite liq magnet 50.54 (str 59, ~$1M est) within 1.2R of entry — wait for sweep
+- ADA SHORT confluence -5.2 — REJECTED: opposite liq magnet 0.1750 (str 58, ~$3M est) within 1.2R of entry — wait for sweep
+- ETH SHORT confluence -3.9 — REJECTED: opposite liq magnet 2,033.06 (str 100, ~$610M est) within 1.2R of entry — wait for sweep
+- XAU SHORT confluence -3.4 — REJECTED: opposite liq magnet 3,980.21 (str 90, ~$68M est) within 1.2R of entry — wait for sweep
+- LINK SHORT confluence -3.3 — REJECTED: opposite liq magnet 10.172 (str 93, ~$4M est) within 1.2R of entry — wait for sweep
+
+### Order lifecycle
+- R187-BNB-1 re-debated: FOR 6/AGAINST 0 — stands
+- R193-DOGE-1 re-debated: FOR 4/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
