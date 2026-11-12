@@ -171,6 +171,11 @@ function ProbabilityBlock({ prob }: { prob: SetupProbability }) {
           ? ` · virtual book: ${prob.empirical.closed} closed · fill ${prob.empirical.fillRatePct ?? "-"}% · win ${prob.empirical.winRatePct ?? "-"}% · avg ${prob.empirical.avgR ?? "-"}R`
           : ""}
       </div>
+      {prob.views?.backtestCalibrated && (
+        <div className="mt-0.5 font-mono text-[9px] leading-snug text-sky-400/80">
+          model prior pT1 {prob.views.structuralPrior.pT1 != null ? `${Math.round(prob.views.structuralPrior.pT1 * 100)}%` : "–"} → backtest-calibrated {Math.round((prob.views.backtestCalibrated.pT1 ?? 0) * 100)}% (n={prob.views.backtestCalibrated.n}, w_emp={prob.views.backtestCalibrated.wEmp})
+        </div>
+      )}
     </div>
   );
 }
@@ -179,6 +184,7 @@ export default function NarrativeCard({ sym }: { sym: string }) {
   const q = usePolling<NarrativeVerdict>(`/api/cg/narrative?sym=${encodeURIComponent(sym)}`, 30_000);
   const acct = usePolling<AcctLite>("/api/binance/account", 30_000);
   const pb = usePolling<PaperBookLite>(`/api/cg/paperbook?sym=${encodeURIComponent(sym)}`, 20_000);
+  const riskQ = usePolling<{ ok: boolean; warnings: { level: string; message: string }[]; heat: { heatPct: number | null } }>("/api/cg/risk", 60_000);
   const v = q.data;
   const ticket = pb.data?.ticket ?? null;
   const [showDetail, setShowDetail] = useState(false);
@@ -264,6 +270,19 @@ export default function NarrativeCard({ sym }: { sym: string }) {
 
   return (
     <div className="rounded-xl border border-neutral-800 bg-[#11151a]">
+      {/* portfolio risk guard banner (WS4) — warnings naming this asset or the heat cap */}
+      {(riskQ.data?.warnings ?? []).filter((w) => w.message.includes(sym) || w.level === "high").length > 0 && (
+        <div className="flex flex-wrap gap-1.5 border-b border-rose-900/40 bg-rose-950/20 px-4 py-2">
+          {(riskQ.data?.warnings ?? [])
+            .filter((w) => w.message.includes(sym) || w.level === "high")
+            .slice(0, 3)
+            .map((w, i) => (
+              <span key={i} className="rounded bg-rose-500/10 px-1.5 py-0.5 text-[10px] text-rose-300">
+                ⚠ {w.message}
+              </span>
+            ))}
+        </div>
+      )}
       {/* header row */}
       <div className="flex flex-wrap items-center gap-2 border-b border-neutral-800/70 px-4 py-3">
         <span className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ${REGIME_STYLE[v.regime] ?? REGIME_STYLE.RANGE_BALANCE}`}>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePolling } from "./use-cg-data";
 import type { DeskLiveSnapshot } from "@/lib/desk/live";
 import type { PaperBookTicketView, PbStats } from "@/lib/cg/paperbook";
+import type { PortfolioRiskView } from "@/lib/cg/portfolio-risk";
 
 /**
  * DeskBlotter — Strictly Read-Only Live MT5 + `zai-desk` / `atg-exec` Coordination Blotter.
@@ -106,8 +107,10 @@ export default function DeskBlotter({
 }) {
   const q = usePolling<DeskLiveSnapshot>("/api/desk/live", 10_000);
   const pbq = usePolling<PaperBookPayload>("/api/cg/paperbook", 15_000);
+  const rq = usePolling<PortfolioRiskView>("/api/cg/risk", 30_000);
   const d = q.data;
   const pb = pbq.data;
+  const risk = rq.data;
   const [orderFilter, setOrderFilter] = useState<"active" | "all">("active");
   const [pbFilter, setPbFilter] = useState<"live" | "closed" | "all">("live");
   const [expandedRound, setExpandedRound] = useState<string | null>(null);
@@ -144,6 +147,86 @@ export default function DeskBlotter({
 
   return (
     <div className="space-y-4">
+      {/* Portfolio Risk Engine (WS4) — correlation guard + heat + attribution */}
+      <div className="rounded-lg border border-neutral-800 bg-[#11151a] p-4">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-neutral-300">
+              Portfolio Risk · Correlation Guard
+            </span>
+            <span
+              className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
+                (risk?.heat.heatPct ?? 0) > (risk?.heat.clusterCapPct ?? 3) ? "bg-rose-500/15 text-rose-300" : "bg-emerald-500/15 text-emerald-300"
+              }`}
+            >
+              heat {(risk?.heat.heatPct ?? 0).toFixed?.(2) ?? "–"}% / cap {risk?.heat.clusterCapPct ?? 3}%
+            </span>
+          </div>
+          <span className="text-[10px] text-neutral-500" title={risk?.source}>
+            {risk ? `${risk.positions.length} positions · ${risk.correlation.length} corr pairs · N_eff ${risk.nEff ?? "–"}` : "risk engine warming…"}
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+          <KpiTile
+            label="Portfolio Heat"
+            value={risk?.heat.heatPct != null ? `${risk.heat.heatPct.toFixed(2)}%` : "–"}
+            sub={risk?.heat.equityUsd != null ? `$${risk.heat.equityUsd.toLocaleString("en-US")} equity at stop risk` : "equity n/a"}
+            cls={(risk?.heat.heatPct ?? 0) > (risk?.heat.clusterCapPct ?? 3) ? "text-rose-300" : "text-emerald-300"}
+          />
+          <KpiTile
+            label="Worst Cluster Heat"
+            value={risk?.heat.worstCluster ? `${risk.heat.worstCluster.heatPct.toFixed(2)}%` : "–"}
+            sub={risk?.heat.worstCluster?.cluster ?? "no stopped positions"}
+            cls={(risk?.heat.worstCluster?.heatPct ?? 0) > (risk?.heat.clusterCapPct ?? 3) ? "text-rose-300" : "text-neutral-100"}
+          />
+          <KpiTile
+            label="Beta vs BTC (7d)"
+            value={risk?.beta.find((b) => b.vs === "BTC")?.beta7d != null ? String(risk.beta.find((b) => b.vs === "BTC")?.beta7d) : "–"}
+            sub={risk?.beta.find((b) => b.vs === "QQQ")?.beta7d != null ? `vs QQQ ${risk.beta.find((b) => b.vs === "QQQ")?.beta7d}` : "vs QQQ n/a"}
+          />
+          <KpiTile
+            label="Eff. Bets N_eff"
+            value={risk?.nEff != null ? risk.nEff.toFixed(2) : "–"}
+            sub="correlation-weighted diversification"
+          />
+          <KpiTile
+            label="Top Cluster"
+            value={risk?.clusters.length ? `${risk.clusters.slice().sort((a, b) => b.pctOfGross - a.pctOfGross)[0].pctOfGross.toFixed(1)}%` : "–"}
+            sub={risk?.clusters.length ? risk.clusters.slice().sort((a, b) => b.pctOfGross - a.pctOfGross)[0].cluster : "–"}
+          />
+          <KpiTile
+            label="Open Positions"
+            value={String(risk?.positions.length ?? 0)}
+            sub={risk ? `${risk.positions.filter((p) => p.source === "virtual-book").length} virtual · ${risk.positions.filter((p) => p.source.includes("mt5")).length} MT5 · ${risk.positions.filter((p) => p.source === "binance-testnet").length} testnet` : ""}
+          />
+        </div>
+        {(risk?.warnings?.length ?? 0) > 0 && (
+          <div className="mt-2 space-y-1">
+            {risk!.warnings.map((w, i) => (
+              <div
+                key={i}
+                className={`rounded px-2 py-1 text-[11px] ${
+                  w.level === "high" ? "bg-rose-500/10 text-rose-300" : "bg-amber-500/10 text-amber-300"
+                }`}
+              >
+                [{w.level.toUpperCase()}] {w.message}
+              </div>
+            ))}
+          </div>
+        )}
+        {risk && (
+          <div className="mt-2 text-[10px] text-neutral-600">
+            Virtual Book vs MT5 attribution —{" "}
+            {risk.attribution.virtualBook
+              .filter((a) => a.model !== "ALL")
+              .map((a) => `${a.model === "M1_TREND_PULLBACK" ? "M1" : a.model === "WAIT_PULLBACK" ? "M1w" : "M2"}: closed ${a.closed} · win ${a.winRatePct ?? "–"}% · ${a.totalR >= 0 ? "+" : ""}${a.totalR}R${a.openR != null ? ` · open ${a.openR >= 0 ? "+" : ""}${a.openR}R` : ""}`)
+              .join("  ·  ")}{" "}
+            | MT5 live: {risk.attribution.mt5Live.positions} positions / {risk.attribution.mt5Live.orders} orders
+            {risk.attribution.mt5Live.unrealizedUsd != null ? ` · unrealized $${risk.attribution.mt5Live.unrealizedUsd.toFixed(2)}` : ""}
+          </div>
+        )}
+      </div>
+
       {/* Read-only MT5 Account Telemetry */}
       <div className="rounded-lg border border-neutral-800 bg-[#11151a] p-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
