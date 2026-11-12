@@ -485,8 +485,14 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
         long ? pdl : pdh,
         ...pocket,
       ].filter((x): x is number => x != null && Number.isFinite(x));
-      const zoneLo = Math.max(...candidates) - (atr ?? 0) * 0.25;
-      const zoneHi = Math.min(...candidates) + (atr ?? 0) * 0.25;
+      const zoneLoRaw = Math.max(...candidates) - (atr ?? 0) * 0.25;
+      const zoneHiRaw = Math.min(...candidates) + (atr ?? 0) * 0.25;
+      // GEOMETRY FIX (2026-11-12): a wide candidate spread (PDH vs POC vs
+      // EMA pocket can sit ATRs apart) made zoneLo > zoneHi — an INVERTED
+      // zone that also let the structural stop land inside it, overstating
+      // R on far fills. Normalize the span; the stop gets clamped outside.
+      const zoneLo = Math.min(zoneLoRaw, zoneHiRaw);
+      const zoneHi = Math.max(zoneLoRaw, zoneHiRaw);
       const entryMid = (Math.max(...candidates) + Math.min(...candidates)) / 2;
 
       // order-flow trigger at the zone
@@ -505,7 +511,13 @@ export async function buildNarrative(symRaw: string): Promise<NarrativeVerdict> 
         long ? vwap! - (sd2 ?? 0) : vwap! + (sd2 ?? 0),
         long ? zoneLo - (atr ?? 0) * 0.5 : zoneHi + (atr ?? 0) * 0.5,
       ].filter((x): x is number => x != null && Number.isFinite(x));
-      const stop = long ? Math.min(...stopCandidates) : Math.max(...stopCandidates);
+      let stop = long ? Math.min(...stopCandidates) : Math.max(...stopCandidates);
+      // GEOMETRY GUARD (2026-11-12): the stop must sit OUTSIDE the entry
+      // zone on the invalidation side — when ATR/σ candidates are missing,
+      // the signal-zone stop can collapse inside the pullback zone and
+      // invert the risk on fills near the far edge.
+      const gBuf = 0.25 * ((atr && atr > 0 ? atr : Math.abs(zoneHi - zoneLo)) || entryMid * 0.002);
+      stop = long ? Math.min(stop, zoneLo - gBuf) : Math.max(stop, zoneHi + gBuf);
 
       // targets
       const t1Candidates = [long ? dayVah : dayVal, long ? vwap! + 1.5 * (sd1 ?? 0) : vwap! - 1.5 * (sd1 ?? 0)].filter(
