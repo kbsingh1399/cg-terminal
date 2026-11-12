@@ -227,3 +227,17 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] bookWalls: ±5% depth imbalance +0.066 (5m ago +0.068, falling bids); bid $0.03B vs ask $0.02B
 - [FOR] cvd: taker buy 49.3%, perpCvd -23, spotCvd +1, quadrant spot-bid, latestDiv bear (recent)
 - → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 09:12 UTC — new suggested order — place in MT5 (debate FOR 7/AGAINST 2)
+- R151-BTC-1 BTC SHORT limit entry 73580.9 · stop 73874.4 · targets 72234.2 · R 4.6 · expires 2026-11-12 13:11 UTC
+- BASIS: levels are PERP prices (perpRef 73393.1). Before placing in MT5 read spreads.BTCUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (73,393.1 vs 73,716.1), h4 RSI 37.4, day -0.8%
+- [FOR] footprint: bull 20 / bear 21; recent: Divergence/buy[vol], Absorption/buy[range]
+- [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, abs:sell×2, div:buy×1, trap:buy×2 — net 5 buy-side vs 2 sell-side
+- [AGAINST] largeOrders: ask wall $25.6M @ 74,614.0 within 2% opposes
+- [FOR] liquidation: long-liq magnet 72,234.2 (str 52, ~$774M est, -1.60%) as target
+- [FOR] stops(BTC heatmap): 24h liq exposure below $457M vs above $538M
+- [FOR] bookWalls: ±5% depth imbalance +0.100 (5m ago +0.106, falling bids); bid $1.29B vs ask $1.05B
+- [FOR] cvd: taker buy 49.6%, perpCvd -1225, spotCvd +270, quadrant spot-bid, latestDiv bear (recent)
+- [FOR] notifications: 6h weighted bias -9.9 (11 events)
+- → place on BTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
