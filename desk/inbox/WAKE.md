@@ -119,3 +119,16 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] cvd: taker buy 50.2%, perpCvd +51, spotCvd +0, quadrant both-buying, latestDiv bear (recent)
 - [FOR] notifications: 6h weighted bias -1.9 (2 events)
 - → place on XAUUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 02:35 UTC — new suggested order — place in MT5 (debate FOR 7/AGAINST 1)
+- R128-DOGE-1 DOGE SHORT limit entry 0.06764 · stop 0.06791 · targets 0.06627 / 0.06611 · R 5.1 · expires 2026-11-12 06:33 UTC
+- BASIS: levels are PERP prices (perpRef 0.06761). Before placing in MT5 read spreads.DOGUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price above day VWAP (0.06761 vs 0.06746), h4 RSI 38.2, day +0.2%
+- [FOR] footprint: bull 27 / bear 34; recent: Exhaustion/buy[time], Trapped shorts/buy[vol], Absorption/sell[range]
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:sell×3, div:buy×2, exh:buy×2, exh:sell×2, sdiv:sell×1, trap:buy×1 — net 5 buy-side vs 6 sell-side
+- [FOR] liquidation: long-liq magnet 0.06627 (str 65, ~$6M est, -1.99%) as target
+- [AGAINST] liquidation-hazard: short-liq magnet 0.06798 (str 61) sits between entry and stop — sweep risk
+- [FOR] bookWalls: ±5% depth imbalance -0.005 (5m ago -0.005, falling bids); bid $0.03B vs ask $0.04B
+- [FOR] cvd: taker buy 48.6%, perpCvd -69, spotCvd -10, quadrant both-selling, latestDiv bear (recent)
+- [FOR] notifications: 6h weighted bias -0.9 (7 events)
+- → place on DOGUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
