@@ -2657,3 +2657,34 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R123 · 2026-11-12 01:07 UTC · zai-desk
+
+**Market**: BTC 73,829.3 (-0.2%)  ETH 2,052.01 (-0.2%)  SOL 83.17 (-0.1%)  XAU 4,004.43 (+0.5%)  XAG 51.870 (+1.0%)
+**Bias (|score|≥2)**: BTC-6(TREND)  DOGE-6(TREND)  LTC-5(TREND)  BNB-4(TREND)  XRP-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R123-BTC-1 BTC SHORT limit 74,001.7 · stop 74,297.0 · T1 72,234.2 · R 6.0
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (73,829.3 vs 73,992.1), h4 RSI 41.0, day -0.2%
+      [FOR    ] footprint: bull 18 / bear 19; recent: Divergence/buy[time], Absorption/sell[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, abs:sell×1, div:buy×1, sdiv:sell×1, trap:buy×1 — net 4 buy-side vs 2 sell-side
+      [AGAINST] largeOrders: ask wall $25.4M @ 74,888.0 within 2% opposes
+      [FOR    ] liquidation: long-liq magnet 72,234.2 (str 45, ~$697M est, -2.17%) as target
+      [AGAINST] stops(BTC heatmap): 24h liq exposure below $474M vs above $367M
+      [FOR    ] bookWalls: ±5% depth imbalance +0.067 (5m ago +0.080, falling bids); bid $1.23B vs ask $1.08B
+      [FOR    ] cvd: taker buy 49.9%, perpCvd -517, spotCvd +276, quadrant spot-bid, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -3.9 (14 events)
+- NEW R123-BNB-2 BNB SHORT limit 681.41 · stop 684.13 · T1 669.87 · T2 668.79 · R 4.2
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (679.65 vs 681.15), h4 RSI 41.9, day -0.0%
+      [AGAINST] footprint: bull 28 / bear 21; recent: Divergence/sell[time], Divergence/buy[vol], Divergence/sell[range]
+      [FOR    ] liquidation: long-liq magnet 669.87 (str 42, ~$7M est, -1.47%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.102 (5m ago +0.037, falling bids); bid $0.02B vs ask $0.03B
+      [FOR    ] cvd: taker buy 49.5%, perpCvd -21, spotCvd +3, quadrant spot-bid, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -2.0 (4 events)
+
+### Order lifecycle
+- R113-DOGE-1 re-debated: FOR 6/AGAINST 2 — stands
+- R118-LTC-1 re-debated: FOR 5/AGAINST 1 — stands
+
+### Positions
+- no open positions
+
