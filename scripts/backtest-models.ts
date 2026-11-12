@@ -66,7 +66,7 @@ for (const c of result.calibration.filter((x) => x.regime === "all" && x.tier ==
     `  ${c.model}: n=${c.n} winRate=${c.winRate} avgNetR=${c.avgNetR} fit=${c.logitFit ? `σ(${c.logitFit.intercept} + ${c.logitFit.slope}·logit(prior)) converged=${c.logitFit.converged}` : "n/a"}`
   );
 }
-console.log("== COVERAGE (assets below 80% bar coverage were skipped) ==");
+console.log("== COVERAGE (assets with < 1200 bars — 12.5d of 15m — were skipped; % is vs the requested window) ==");
 for (const c of result.coverage.filter((x) => x.coveragePct < 95)) {
   console.log(`  ${c.sym}: ${c.coveragePct}% bars=${c.bars}/${c.expectedBars} funding=${c.fundingEvents}`);
 }

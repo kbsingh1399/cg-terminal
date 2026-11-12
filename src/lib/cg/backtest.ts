@@ -1022,7 +1022,7 @@ export async function runBacktest(opts: BtRunOpts = {}): Promise<BtRunResult> {
           coveragePct: expectedBars > 0 ? Number(((hist.length / expectedBars) * 100).toFixed(1)) : 0,
           fundingEvents: funding.length,
         });
-        if (hist.length < expectedBars * 0.6) continue; // too gappy — skip honestly
+        if (hist.length < 1200) continue; // < 12.5 days of 15m bars — not enough for honest stats (coverage% still reported per asset)
         if (!h4.length || !d1.length) continue; // no HTF warmup — M1 cannot arm honestly
         const tier = tierOf(a.sym, a.kind);
         const simArgs: SimArgs = { sym: a.sym, tier, m15, h4, d1, funding, params };

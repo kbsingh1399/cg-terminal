@@ -745,7 +745,7 @@ async function toolBacktestSummary(args) {
     assetLine = `\n${sym} historical trades: ${trades.length} · wins ${trades.length ? Math.round((wins / trades.length) * 100) : "–"}% · total ${totalR.toFixed(2)}R`;
   }
   const lines = [
-    `Walk-Forward Backtest — ${d.params.days}d · ${d.universe.length} Curated-58 perps · generated ${new Date(d.generatedAt).toISOString().slice(0, 16)}Z · ${d.trades?.length ?? 0} trades`,
+    `Walk-Forward Backtest — ${d.params.days}d · ${d.universe.length} Curated-58 perps · generated ${new Date(d.generatedAt).toISOString().slice(0, 16)}Z · ${d.metricsAll?.trades ?? 0} closed trades`,
     `ALL: ${fmtM(d.metricsAll)}`,
     `M1 TREND_PULLBACK: ${fmtM(d.byModel?.M1_TREND_PULLBACK)}`,
     `M2 MEAN_REVERSION: ${fmtM(d.byModel?.M2_MEAN_REVERSION)}`,

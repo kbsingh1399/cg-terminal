@@ -367,7 +367,7 @@ export default function BacktestTool({ sym: _sym }: { sym: string }) {
 
           {/* data coverage honesty strip */}
           <div className="rounded-lg border border-neutral-800 bg-[#11151a] px-4 py-2 text-[10px] text-neutral-500">
-            Coverage: {data.coverage?.filter((c) => c.coveragePct >= 60).length ?? 0}/{data.universe?.length ?? 0} assets with ≥ 60% bar coverage
+            Coverage: {data.coverage?.filter((c) => c.bars >= 1200).length ?? 0}/{data.universe?.length ?? 0} assets with ≥ 1200 bars (12.5d — the honest-sample floor)
             {data.coverage?.some((c) => c.coveragePct < 60)
               ? ` · skipped (gaps): ${data.coverage.filter((c) => c.coveragePct < 60).map((c) => c.sym).join(", ")}`
               : ""}
