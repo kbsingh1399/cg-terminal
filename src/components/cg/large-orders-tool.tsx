@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import LargeOrdersCanvas from "./charts/large-orders-canvas";
-import { usePolling, rowsToCandles, type KlinePayload, type LtoPayload } from "./use-cg-data";
+import { usePolling, useTicker, rowsToCandles, type KlinePayload, type LtoPayload } from "./use-cg-data";
 import type { LtoOrder } from "@/lib/cg/types";
 import { fmtAge, fmtNum, fmtPct, fmtUsd } from "@/lib/cg/format";
 import { leadInstr, symDecs } from "@/lib/cg/assets";
@@ -18,14 +18,17 @@ type SortKey = "near-price" | "price-desc" | "price-asc" | "time-desc" | "size-d
 
 const THRESHOLDS = [
   { v: 0, l: "All" },
+  { v: 50_000, l: "≥$50K" },
   { v: 100_000, l: "≥$100K" },
   { v: 500_000, l: "≥$500K" },
   { v: 1_000_000, l: "≥$1M" },
   { v: 5_000_000, l: "≥$5M" },
 ];
 
+const defaultThresholdFor = (s: string) => (s === "BTC" || s === "ETH" ? 1_000_000 : 100_000);
+
 export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
-  const [minVolUsd, setMinVolUsd] = useState(1_000_000);
+  const [minVolUsd, setMinVolUsd] = useState(() => defaultThresholdFor(sym));
   // multi-select exchange set, like the Coinglass dropdown (14/14 venues)
   const [exSelected, setExSelected] = useState<Set<string> | null>(null); // null = all
   const [marketMode, setMarketMode] = useState<"all" | "perp" | "spot">("all");
@@ -38,6 +41,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
 
   const klineQ = usePolling<KlinePayload>(`/api/cg/kline?type=kline&interval=m15&limit=300&symbol=${leadInstr(sym)}`, 30_000);
   const ltoQ = usePolling<LtoPayload>(`/api/cg/lto?symbol=${sym}&minVolUsd=${minVolUsd}`, 20_000);
+  const tk = useTicker(sym);
 
   // symbol switched: drop the detail selection so a stale BTC order can
   // never render under the new symbol's unit labels — render-time adjust
@@ -46,6 +50,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
   if (sym !== prevSym) {
     setPrevSym(sym);
     setSelected(null);
+    setMinVolUsd(defaultThresholdFor(sym));
   }
 
   // payload guard: the kline route now echoes the instrument key — never
@@ -54,9 +59,13 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
     () => rowsToCandles(klineQ.data && klineQ.data.symbol === leadInstr(sym) ? klineQ.data.rows : undefined),
     [klineQ.data, sym]
   );
-  const lastPrice = candles.length ? candles[candles.length - 1].c : null;
+  const hlFb = ltoQ.data?.symbol === sym ? (ltoQ.data.hlFallback ?? null) : null;
+  const lastPrice = tk.price ?? (candles.length ? candles[candles.length - 1].c : null) ?? (hlFb?.recentTrades[0]?.px ?? null);
   // defense-in-depth: never render orders that belong to another symbol
-  const groups = ltoQ.data?.symbol === sym ? ltoQ.data.groups : [];
+  const groups = useMemo(
+    () => (ltoQ.data?.symbol === sym ? ltoQ.data.groups : []),
+    [ltoQ.data, sym]
+  );
   const decs = symDecs(sym, lastPrice);
   const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
 
@@ -173,7 +182,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
         volUsd: o.currentUsd,
         createTime: o.startTime,
       })),
-    [scoped]
+    [scoped, sym]
   );
 
   const err = klineQ.error ?? ltoQ.error;
@@ -185,7 +194,7 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
         <div className="flex items-center gap-1.5 pr-2">
           <span className="text-sm font-semibold text-neutral-100">{sym}</span>
           <span className="rounded bg-neutral-800 px-1.5 py-0.5 text-[10px] text-neutral-400">
-            all exchanges · large resting orders
+            {hlFb && !groups.length ? `Hyperliquid xyz · ${hlFb.coin} L2 & tape` : "all exchanges · large resting orders"}
           </span>
         </div>
         <div className="flex overflow-hidden rounded border border-neutral-700">
@@ -540,6 +549,69 @@ export default function LargeOrdersTool({ sym = "BTC" }: { sym?: string }) {
       {/* whale-order walls — the order-book wall view derived purely from
           open whale orders (subset of the full book: only ≥ threshold) */}
       <WhaleWalls scoped={scoped} lastPrice={lastPrice} fmtP={fmtP} />
+
+      {/* Hyperliquid xyz L2 book + live executed prints fallback when CEX whale feed is unavailable */}
+      {!groups.length && hlFb && (
+        <div className="grid gap-3 lg:grid-cols-2">
+          <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 p-3">
+            <div className="mb-2 flex items-baseline justify-between">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-300">
+                {hlFb.coin} Top Resting Walls (Hyperliquid L2)
+              </h3>
+              <span className="text-[10px] text-neutral-500">Top {hlFb.bids.length} bids / {hlFb.asks.length} asks</span>
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-[11px]">
+              <div className="space-y-1">
+                <div className="text-[10px] font-semibold uppercase text-emerald-400">Bids</div>
+                {hlFb.bids.slice(0, 8).map((b, i) => (
+                  <div key={i} className="flex items-center justify-between rounded bg-[#0e1216] px-2 py-1 font-mono">
+                    <span className="text-emerald-300">{fmtP(b.price)}</span>
+                    <span className="text-neutral-300">{fmtUsd(b.usd)}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-1">
+                <div className="text-[10px] font-semibold uppercase text-red-400">Asks</div>
+                {hlFb.asks.slice(0, 8).map((a, i) => (
+                  <div key={i} className="flex items-center justify-between rounded bg-[#0e1216] px-2 py-1 font-mono">
+                    <span className="text-red-300">{fmtP(a.price)}</span>
+                    <span className="text-neutral-300">{fmtUsd(a.usd)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border border-neutral-800 bg-neutral-900/60 p-3">
+            <div className="mb-2 flex items-baseline justify-between">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-300">
+                {hlFb.coin} Recent Executed Tape
+              </h3>
+              <span className="text-[10px] text-neutral-500">{hlFb.recentTrades.length} prints</span>
+            </div>
+            <div className="max-h-60 space-y-1 overflow-y-auto text-[11px]">
+              {hlFb.recentTrades.slice(0, 14).map((tr, i) => (
+                <div key={i} className="flex items-center justify-between rounded bg-[#0e1216] px-2 py-1 font-mono">
+                  <span className={tr.side === "buy" ? "text-emerald-400" : "text-red-400"}>{tr.side.toUpperCase()}</span>
+                  <span className="text-neutral-200">{fmtP(tr.px)}</span>
+                  <span className="text-neutral-300">{fmtUsd(tr.usd)}</span>
+                  <span className="text-[10px] text-neutral-500">
+                    {new Date(tr.time).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+                  </span>
+                </div>
+              ))}
+              {!hlFb.recentTrades.length && (
+                <div className="py-6 text-center text-xs text-neutral-600">No recent prints returned.</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!groups.length && !hlFb && ltoQ.data?.symbol === sym && ltoQ.data.supported === false && (
+        <div className="rounded-lg border border-neutral-800 bg-[#11151a] px-4 py-3 text-center text-xs text-neutral-400">
+          {sym} is not listed on Coinglass institutional whale-order venues or Hyperliquid xyz — inspect Footprint / Overview for structure.
+        </div>
+      )}
 
       {/* order detail */}
       {selected && (

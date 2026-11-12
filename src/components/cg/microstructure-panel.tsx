@@ -1,21 +1,20 @@
 "use client";
 
 import { usePolling } from "./use-cg-data";
+import { useHlBook } from "@/lib/live/hl-feed";
 
 /**
  * MicrostructurePanel — the L2/L3 layer for classic instruments (R4, 2026-11-11
  * user directive: "continuous fetching live free data … at L2, L3 level too").
  *
- * Three cards from /api/cg/micro (each auto-hidden when its source is unmapped,
- * suppressed-thin, or dead — honest gaps, never fabricated):
- *   1. Perp L2 · Hyperliquid xyz  — ladder with per-level order count, spread,
- *      mark-vs-oracle, 1h funding (+APR-if-persisted), OI (+Δ24h when history
- *      exists), 20-level notional imbalance (snapshot — noisy by design).
+ * Two cards from /api/cg/micro + live Hyperliquid xyz L2 WebSocket overlay:
+ *   1. Perp L2 · Hyperliquid xyz  — live WS L2 ladder with per-level order count,
+ *      spread, mark-vs-oracle, 1h funding (+APR-if-persisted), OI (+Δ24h when
+ *      history exists), 20-level notional imbalance.
  *   2. L3 resting orders · Lighter — true order-by-order book clustered by
  *      owner account: directional whales vs quoting/MM accounts (separated),
  *      visible partial fills (censored sample), maker/taker prints with
  *      count+span labels.
- *   3. Spot L2 · Kraken — real fiat-to-fiat depth for FX majors, staleness-gated.
  *
  * Standing quant disclaimers rendered with the data (RV-QUANT):
  *   · signal-market microstructure — execution stays at broker MT5;
@@ -48,14 +47,9 @@ interface LighterCard {
   printSpanS: number | null; newestPrintAgeS: number | null; takerBuyUsd: number | null; takerSellUsd: number | null;
   suppressed?: string;
 }
-interface KrakenLevel { px: number; sz: number; ts: number }
-interface KrakenCard {
-  ok: boolean; error?: string; pair: string; bestBid: number | null; bestAsk: number | null; spreadPct: number | null;
-  bids: KrakenLevel[]; asks: KrakenLevel[]; imbalance10: number | null; stale: boolean; staleReason?: string;
-}
 interface MicroResp {
   ok: boolean; sym?: string; fetchedAt?: number; note?: string;
-  hl?: HlCard; lighter?: LighterCard; kraken?: KrakenCard; error?: string;
+  hl?: HlCard; lighter?: LighterCard; error?: string;
 }
 
 function fmtN(v: number | null | undefined, decs = 2): string {
@@ -96,20 +90,28 @@ function LadderRow({ px, sz, n, maxSz, side, decs }: { px: number; sz: number; n
 }
 
 export default function MicrostructurePanel({ sym }: { sym: string }) {
-  const q = usePolling<MicroResp>(`/api/cg/micro?sym=${encodeURIComponent(sym)}`, 15_000);
+  const q = usePolling<MicroResp>(`/api/cg/micro?sym=${encodeURIComponent(sym)}&quiet=1`, 15_000);
   const d = q.data && q.data.sym === sym ? q.data : null;
+  const hlCoin = d?.ok && d.hl?.ok ? d.hl.coin : null;
+  const hlWs = useHlBook(hlCoin);
+
   if (!d || !d.ok) return null;
 
   const hl = d.hl;
   const lo = d.lighter;
-  const kr = d.kraken;
   const hlLive = hl?.ok;
   const loLive = lo?.ok;
-  const krLive = kr?.ok;
   // suppressed-with-reason still renders its amber box (RV-QA MAJOR-1):
   // XPT/JP225 must show WHY they are thin, not vanish
-  const hasAny = hlLive || loLive || krLive || hl?.suppressed || lo?.suppressed;
+  const hasAny = hlLive || loLive || hl?.suppressed || lo?.suppressed;
   if (!hasAny) return null;
+
+  const hlWsLive = !!(hlLive && hlWs.book && hlWs.status === "open");
+  const liveMid = hlWsLive ? hlWs.book!.mid ?? hl?.mark ?? null : hl?.mark ?? null;
+  const liveSpread = hlWsLive ? hlWs.book!.spreadPct ?? hl?.spreadPct ?? null : hl?.spreadPct ?? null;
+  const liveBidNotional = hlWsLive ? hlWs.book!.bidNotional : hl?.bids.notionalUsd ?? 0;
+  const liveAskNotional = hlWsLive ? hlWs.book!.askNotional : hl?.asks.notionalUsd ?? 0;
+  const liveImb = hlWsLive ? hlWs.book!.imbalance20 ?? hl?.imbalance20 ?? null : hl?.imbalance20 ?? null;
 
   const decs = (v: number | null | undefined) => {
     if (null == v || !Number.isFinite(v)) return 2;
@@ -118,14 +120,11 @@ export default function MicrostructurePanel({ sym }: { sym: string }) {
     if (v >= 1) return 4;
     return 5;
   };
-  const pxDecs = decs(hl?.mark ?? lo?.bestBid ?? kr?.bestBid);
+  const pxDecs = decs(liveMid ?? lo?.bestBid);
 
-  const hlBids = (hl?.bids.levels ?? []).slice(0, 10);
-  const hlAsks = (hl?.asks.levels ?? []).slice(0, 10);
+  const hlBids = (hlWsLive ? hlWs.book!.bids : hl?.bids.levels ?? []).slice(0, 10);
+  const hlAsks = (hlWsLive ? hlWs.book!.asks : hl?.asks.levels ?? []).slice(0, 10);
   const hlMaxSz = Math.max(0, ...hlBids.map((l) => l.sz), ...hlAsks.map((l) => l.sz));
-  const krBids = (kr?.bids ?? []).slice(0, 8);
-  const krAsks = (kr?.asks ?? []).slice(0, 8);
-  const krMaxSz = Math.max(0, ...krBids.map((l) => l.sz), ...krAsks.map((l) => l.sz));
 
   return (
     <div>
@@ -133,23 +132,33 @@ export default function MicrostructurePanel({ sym }: { sym: string }) {
         <div className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
           Microstructure · L2/L3 <span className="text-neutral-600">— free crypto-rail venues, live</span>
         </div>
-        <span className="text-[9px] text-neutral-600">poll 15s · REST</span>
+        <span className={`text-[9px] font-mono ${hlWsLive ? "text-emerald-400" : "text-neutral-600"}`}>
+          {hlWsLive ? "HL L2 WS live · Lighter 15s" : "poll 15s · REST"}
+        </span>
       </div>
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-2">
         {/* ---- 1. Hyperliquid xyz L2 ---- */}
         {hl && (hlLive || hl.suppressed) && (
           <div className="rounded-lg border border-neutral-800 bg-[#11151a] p-4">
             <div className="mb-2 flex items-baseline justify-between">
               <div className="text-xs font-semibold text-neutral-300">
                 Perp L2 · <span className="text-sky-400">Hyperliquid {hl.coin}</span>
+                {hlWsLive && (
+                  <span className="ml-1.5 rounded bg-emerald-500/15 px-1 py-0.5 text-[9px] font-semibold text-emerald-300">
+                    WS
+                  </span>
+                )}
               </div>
               {hl.vol24hUsd != null && <span className="text-[10px] text-neutral-500">{fmtUsd(hl.vol24hUsd)}/24h</span>}
             </div>
             {hlLive ? (
               <>
                 <div className="mb-2 grid grid-cols-2 gap-x-3 font-mono text-[10px] tabular-nums text-neutral-400">
-                  <div className="flex justify-between"><span className="text-neutral-600">mark</span><span className="text-neutral-200">{fmtN(hl.mark, pxDecs)}</span></div>
-                  <div className="flex justify-between"><span className="text-neutral-600">spread</span><span>{fmtN(hl.spreadPct, 4)}%</span></div>
+                  <div className="flex justify-between">
+                    <span className="text-neutral-600">{hlWsLive ? "book mid" : "mark"}</span>
+                    <span className="text-neutral-200">{fmtN(liveMid, pxDecs)}</span>
+                  </div>
+                  <div className="flex justify-between"><span className="text-neutral-600">spread</span><span>{fmtN(liveSpread, 4)}%</span></div>
                   <div className="flex justify-between">
                     <span className="text-neutral-600">vs oracle</span>
                     <span className={hl.markVsOraclePct != null && hl.markVsOraclePct > 0 ? "text-emerald-400" : "text-rose-400"}>{hl.markVsOraclePct != null ? `${hl.markVsOraclePct > 0 ? "+" : ""}${fmtN(hl.markVsOraclePct, 3)}%` : "–"}</span>
@@ -178,18 +187,18 @@ export default function MicrostructurePanel({ sym }: { sym: string }) {
                 <div className="rounded border border-neutral-800">
                   {hlAsks.slice().reverse().map((l, i) => <LadderRow key={`a${i}`} {...l} maxSz={hlMaxSz} side="ask" decs={pxDecs} />)}
                   <div className="border-y border-neutral-800 bg-neutral-900/50 px-1.5 py-[3px] text-center font-mono text-[9px] text-neutral-500">
-                    {fmtN(hl.bids.notionalUsd / 1000, 0)}K bid ∣ {fmtN(hl.asks.notionalUsd / 1000, 0)}K ask (20 lvls)
+                    {fmtN(liveBidNotional / 1000, 0)}K bid ∣ {fmtN(liveAskNotional / 1000, 0)}K ask (20 lvls)
                   </div>
                   {hlBids.map((l, i) => <LadderRow key={`b${i}`} {...l} maxSz={hlMaxSz} side="bid" decs={pxDecs} />)}
                 </div>
-                {hl.imbalance20 != null && (
+                {liveImb != null && (
                   <div className="mt-2">
                     <div className="flex h-2 overflow-hidden rounded bg-neutral-800">
-                      <div className="bg-emerald-500/70" style={{ width: `${hl.imbalance20 * 100}%` }} />
+                      <div className="bg-emerald-500/70" style={{ width: `${liveImb * 100}%` }} />
                       <div className="flex-1 bg-rose-500/70" />
                     </div>
                     <div className="mt-1 flex justify-between font-mono text-[9px] text-neutral-600">
-                      <span>bid share {(hl.imbalance20 * 100).toFixed(1)}% — single snapshot, noisy</span>
+                      <span>bid share {(liveImb * 100).toFixed(1)}% {hlWsLive ? "— live WS" : "— single snapshot, noisy"}</span>
                       <span>{hl.coin}</span>
                     </div>
                   </div>
@@ -290,35 +299,6 @@ export default function MicrostructurePanel({ sym }: { sym: string }) {
             ) : (
               <div className="rounded border border-dashed border-amber-500/30 bg-amber-500/5 p-3 text-[10px] leading-relaxed text-amber-500/90">{lo.suppressed ?? lo.error}</div>
             )}
-          </div>
-        )}
-
-        {/* ---- 3. Kraken spot FX ---- */}
-        {kr && krLive && (
-          <div className="rounded-lg border border-neutral-800 bg-[#11151a] p-4">
-            <div className="mb-2 flex items-baseline justify-between">
-              <div className="text-xs font-semibold text-neutral-300">
-                Spot L2 · <span className="text-teal-400">Kraken {kr.pair}</span>
-              </div>
-              {kr.stale && <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-[9px] font-bold text-amber-400">STALE</span>}
-            </div>
-            <div className="mb-2 grid grid-cols-2 gap-x-3 font-mono text-[10px] tabular-nums text-neutral-400">
-              <div className="flex justify-between"><span className="text-neutral-600">best bid</span><span className="text-emerald-300">{fmtN(kr.bestBid, pxDecs)}</span></div>
-              <div className="flex justify-between"><span className="text-neutral-600">spread</span><span>{fmtN(kr.spreadPct, 4)}%</span></div>
-              <div className="flex justify-between"><span className="text-neutral-600">best ask</span><span className="text-rose-300">{fmtN(kr.bestAsk, pxDecs)}</span></div>
-              <div className="flex justify-between">
-                <span className="text-neutral-600">size share</span>
-                <span>{kr.imbalance10 != null ? `${(kr.imbalance10 * 100).toFixed(1)}% bid` : "–"}</span>
-              </div>
-            </div>
-            {kr.staleReason && <div className="mb-2 rounded border border-dashed border-amber-500/30 bg-amber-500/5 px-2 py-1 text-[9px] text-amber-500/90">{kr.staleReason}</div>}
-            <div className="rounded border border-neutral-800">
-              {krAsks.slice().reverse().map((l, i) => <LadderRow key={`ka${i}`} px={l.px} sz={l.sz} n={0} maxSz={krMaxSz} side="ask" decs={pxDecs} />)}
-              {krBids.map((l, i) => <LadderRow key={`kb${i}`} px={l.px} sz={l.sz} n={0} maxSz={krMaxSz} side="bid" decs={pxDecs} />)}
-            </div>
-            <div className="mt-2 text-[9px] leading-relaxed text-neutral-600">
-              real fiat-to-fiat spot limit orders (not CFD synthetics) · 10 levels/side · this leg never gates the broker-basis rule when stale
-            </div>
           </div>
         )}
       </div>

@@ -101,16 +101,31 @@ interface ScanState {
 
 interface ScanGlobal {
   states: Map<string, ScanState>;
+  market: Map<string, MarketSnapshot>;
   signals: Map<string, SignalsSnapshot>;
   whale: Map<string, WhaleSnapshot>;
   liq: Map<string, LiqSnapshot>;
   cvd: Map<string, CvdSnapshot>;
+  warming: Map<string, Promise<void>>;
   started: boolean;
   ticks: number;
 }
 
 const g = globalThis as unknown as { __cgScanner?: ScanGlobal };
-const S: ScanGlobal = (g.__cgScanner ??= { states: new Map(), signals: new Map(), whale: new Map(), liq: new Map(), cvd: new Map(), started: false, ticks: 0 });
+const S: ScanGlobal = (g.__cgScanner ??= {
+  states: new Map(),
+  market: new Map(),
+  signals: new Map(),
+  whale: new Map(),
+  liq: new Map(),
+  cvd: new Map(),
+  warming: new Map(),
+  started: false,
+  ticks: 0,
+});
+// dev hot-reload safety: ensure new maps exist on recycled global singleton
+S.market ??= new Map();
+S.warming ??= new Map();
 
 function stateOf(sym: string): ScanState {
   let st = S.states.get(sym);
@@ -230,6 +245,7 @@ function bandIndexOf(price: number, vwap: number, sd1: number): number {
 async function scanMarket(sym: string) {
   const st = stateOf(sym);
   const snap: MarketSnapshot = await buildMarketSnapshot(sym);
+  S.market.set(sym, snap);
   const p = snap.price.last;
   if (null == p) return;
 
@@ -571,6 +587,10 @@ async function scanAssetAll(sym: string) {
   await scanMarket(sym).catch(() => undefined);
 }
 
+export function getMarketSnapshot(sym: string): MarketSnapshot | null {
+  return S.market.get(sym.toUpperCase()) ?? null;
+}
+
 export function getSignalsSnapshot(sym: string): SignalsSnapshot | null {
   return S.signals.get(sym.toUpperCase()) ?? null;
 }
@@ -587,6 +607,25 @@ export function getCvdSnapshot(sym: string): CvdSnapshot | null {
   return S.cvd.get(sym.toUpperCase()) ?? null;
 }
 
+/** On-demand coalesced warm-up for any registered asset (populates Market, Signals, Liq, CVD). */
+export async function warmAssetScan(symRaw: string): Promise<void> {
+  const sym = symRaw.toUpperCase();
+  if (!assetOf(sym)) return;
+  const inflight = S.warming.get(sym);
+  if (inflight) return inflight;
+  const p = Promise.allSettled([
+    scanAssetAll(sym),
+    scanLiq(sym),
+    scanCvd(sym),
+  ])
+    .then(() => undefined)
+    .finally(() => {
+      S.warming.delete(sym);
+    });
+  S.warming.set(sym, p);
+  return p;
+}
+
 export function scannerStatus() {
   const assets = (process.env.CG_SCAN_ASSETS ?? "").split(",").map((s) => s.trim().toUpperCase()).filter(Boolean);
   return {
@@ -594,6 +633,7 @@ export function scannerStatus() {
     started: S.started,
     ticks: S.ticks,
     scanAssets: assets.length ? assets : ASSETS.map((a) => a.sym),
+    marketCached: [...S.market.keys()],
     signalsCached: [...S.signals.keys()],
     whaleCached: [...S.whale.keys()],
     liqCached: [...S.liq.keys()],
@@ -635,25 +675,20 @@ export function startScanner() {
     }, firstDelay);
     first.unref?.();
   };
-  // footprint + market, per-tier lanes with the intended cadence:
-  //   fast tier (BTC/ETH/SOL): every 60 s over 3 assets → each ~every 3 min
-  //   slow tier (13 alts/metals incl. XPT/USO): every 90 s → each ~every 19.5 min (2026-11-11 expansion)
-  // combined work rate ≈ 1.67 scans/min — identical to the previous schedule,
-  // but the primary trading assets now refresh 6× more often (they used to be
-  // the SLOWER tier: 18 min vs the alts' 6 min, an inverted design).
-  t(slowList, 90_000, 20_000, async (sym) => {
+  // footprint + market, scaled cleanly for 33 Tier-1 assets:
+  //   fast tier (8 primary movers): every 45s → each ~every 6 min
+  //   slow tier (25 crucial crypto/metals): every 45s → each ~every 18.75 min (+ instant warm on click)
+  t(slowList, 45_000, 20_000, async (sym) => {
     await scanAssetAll(sym);
   });
-  t(fastList, 60_000, 25_000, async (sym) => {
+  t(fastList, 45_000, 25_000, async (sym) => {
     await scanAssetAll(sym);
   });
-  // whale: slow round-robin every 90s over the full list ≈ every ~18 min per asset
-  t(list, 90_000, 60_000, async (sym) => {
+  // whale: round-robin every 60s across 33 assets (~33m full pass)
+  t(list, 60_000, 60_000, async (sym) => {
     await scanWhale(sym).catch(() => undefined);
   });
-  // liq clusters + cvd: 3 assets per 5-min tick, rotating through the full
-  // list — same upstream load as before, but every asset gets covered
-  // (a full pass over 12 assets ≈ 20 min) instead of only BTC/ETH/SOL.
+  // liq clusters + cvd: 3 assets per 3-min tick (~33m full 33-asset sweep)
   // Same overlap guard as the lanes above, per-symbol: a slow liq/cvd pass
   // for one sym must not stack with the next tick's pass for that sym.
   let laneI = 0;
@@ -667,13 +702,14 @@ export function startScanner() {
       Promise.allSettled([scanLiq(sym), scanCvd(sym)]).finally(() => laneBusy.delete(sym));
     }
     laneI = (laneI + 3) % list.length;
-  }, 5 * 60_000);
+  }, 3 * 60_000);
   laneTimer.unref?.();
-  // initial pass: prime the fast lane + first slow asset immediately
+  // initial pass: prime top fast movers gently staggered
   setTimeout(() => {
-    scanAssetAll("BTC").catch(() => undefined);
-    scanLiq("BTC").catch(() => undefined);
-    scanCvd("BTC").catch(() => undefined);
+    warmAssetScan("BTC").catch(() => undefined);
     scanWhale("BTC").catch(() => undefined);
+    setTimeout(() => warmAssetScan("ETH").catch(() => undefined), 2_500).unref?.();
+    setTimeout(() => warmAssetScan("SOL").catch(() => undefined), 5_000).unref?.();
+    setTimeout(() => warmAssetScan("HYPE").catch(() => undefined), 7_500).unref?.();
   }, 8_000).unref?.();
 }

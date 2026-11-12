@@ -22,6 +22,9 @@ import { Button } from "@/components/ui/button";
 
 interface WallsResponse {
   ok: boolean;
+  supported?: boolean;
+  source?: string;
+  reason?: string;
   error?: string;
   sym: string;
   market: string;
@@ -42,7 +45,7 @@ interface WallsResponse {
     events: { t: number; type: "add" | "fill" | "pull"; side: "b" | "a"; p: number; usd: number }[];
     strip: { t: number; mid: number; cells: [number, number][] }[];
     ladder: { price: number; qty: number; usd: number; side: "b" | "a" }[];
-  };
+  } | null;
 }
 
 interface LiveBookResponse {
@@ -88,7 +91,7 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
     `/api/cg/bookwalls?sym=${sym}&market=${market}&interval=${interval}&limit=150&band=${band}`,
     15_000
   );
-  const grid = q.data && q.data.sym === sym ? q.data.model.grid : 0;
+  const grid = q.data && q.data.sym === sym ? (q.data.model?.grid ?? 0) : 0;
   const lb = usePolling<LiveBookResponse>(
     market === "futures" && grid ? `/api/cg/livebook?sym=${sym}&band=${band}&grid=${grid}` : null,
     2_000
@@ -96,7 +99,7 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
   const tk = useTicker(sym);
 
   // defense-in-depth: never render a model that belongs to another symbol
-  const m = q.data && q.data.sym === sym ? q.data.model : undefined;
+  const m = q.data && q.data.sym === sym ? (q.data.model ?? undefined) : undefined;
   const lm = lb.data && lb.data.sym === sym && lb.data.grid === grid ? lb.data.model : undefined;
   const liveBook = lm && lb.data ? lb.data : undefined;
   const err = q.error;
@@ -191,7 +194,26 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
         </div>
       )}
 
-      {!m ? (
+      {q.data && q.data.sym === sym && q.data.supported === false && !m ? (
+        <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-neutral-800 bg-[#11151a] px-6 py-12 text-center">
+          <div className="text-sm font-semibold text-neutral-200">
+            {sym} · {market === "spot" ? "Spot Order-Book Heatmap Unavailable" : "Order-Book Heatmap Unavailable"}
+          </div>
+          <p className="max-w-lg text-xs leading-relaxed text-neutral-400">
+            {q.data.reason ?? "This instrument does not publish a consolidated spot or resting order book."}
+          </p>
+          {market === "spot" && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-emerald-700/60 bg-emerald-950/30 text-xs text-emerald-300 hover:bg-emerald-900/40"
+              onClick={() => setMarket("futures")}
+            >
+              Switch to Futures Aggregated
+            </Button>
+          )}
+        </div>
+      ) : !m ? (
         <div className="flex h-64 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-900/60 text-sm text-neutral-500">
           {q.loading ? "Streaming aggregate order book…" : "No data"}
         </div>
@@ -202,9 +224,9 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
               depth/imbalance KPIs carry a live Binance top-1000 sub-line */}
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
             <Kpi
-              label={`Last price · ${market === "futures" ? (tk.source === "ws" ? "real-time tape" : "live rest") : "spot agg"}`}
+              label={`Last price · ${market === "futures" ? (tk.source === "ws" ? "real-time tape" : tk.source === "hl-ws" ? "real-time · hl" : "live rest") : "spot agg"}`}
               value={fmtP(tk.price ?? m.last.price)}
-              sub={`Bid ${fmtP(tk.bid ?? m.last.bid)} · Ask ${fmtP(tk.ask ?? m.last.ask)}${tk.source === "ws" ? " · ws" : ""}`}
+              sub={`Bid ${fmtP(tk.bid ?? m.last.bid)} · Ask ${fmtP(tk.ask ?? m.last.ask)}${tk.source === "ws" ? " · ws" : tk.source === "hl-ws" ? " · hl" : ""}`}
             />
             <Kpi
               label={`Bid depth · ${band}% below`}
@@ -270,7 +292,7 @@ export default function BookWallsTool({ sym = "BTC" }: { sym?: string }) {
               {m.snapshots} depth snapshots · grid ${m.grid} · {q.data?.venues.join(" + ")} — books of the same moment are
               summed price-by-price with mid-price shift alignment (their aggregate model).
               {liveOverlay && liveBook
-                ? ` LIVE column = Binance top-1000 levels (${liveBook.covered.loPct.toFixed(2)}%..+${liveBook.covered.hiPct.toFixed(2)}% around mid), ~1.5 s.`
+                ? ` LIVE column = ${q.data?.source === "hl-xyz" ? "Hyperliquid xyz (20-lvl L2)" : "Binance top-1000 levels"} (${liveBook.covered.loPct.toFixed(2)}%..+${liveBook.covered.hiPct.toFixed(2)}% around mid), ~1.5 s.`
                 : ""}
             </div>
           </div>

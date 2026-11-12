@@ -132,11 +132,11 @@ async function pollKline() {
   }
 }
 
-/** round-robin kline poller for every asset of the registry */
+/** round-robin kline poller for every asset of the registry (3/min scales cleanly to 33 Tier-1 assets) */
 let assetPollIdx = 0;
 async function pollAssetKlines() {
   const list = ASSETS.map((a) => leadInstr(a.sym));
-  for (let k = 0; k < 2; k++) {
+  for (let k = 0; k < 3; k++) {
     const inst = list[assetPollIdx % list.length];
     assetPollIdx++;
     const name = `kline:${inst}:m15`;
@@ -368,10 +368,11 @@ async function backfillKlineAndFlows(days: number) {
   }
 }
 
-/** backfill m15 klines for every registered asset (continuity on boot) */
+/** backfill m15 klines on boot for primary fast + metal assets (remaining slow alts hydrate via round-robin poller) */
 async function backfillAllAssets(days: number) {
   const backMs = days * 86_400_000;
   for (const a of ASSETS) {
+    if (a.tier !== "fast" && a.kind !== "metal") continue;
     const inst = leadInstr(a.sym);
     const name = `kline:${inst}:m15`;
     const stored = lastTs(name, keyKline) ?? 0;

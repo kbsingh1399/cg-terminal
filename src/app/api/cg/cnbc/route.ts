@@ -4,11 +4,11 @@ import { perpMapOf } from "@/lib/cg/perpmap";
 export const dynamic = "force-dynamic";
 
 /**
- * GET /api/cg/cnbc?syms=SP500,XAU,USO,EURUSD — CNBC's web quote webservice
+ * GET /api/cg/cnbc?syms=SP500,XAU,USO — CNBC's web quote webservice
  * (unofficial, keyless — live-verified 2026-11-11). Gives us what Yahoo
  * cannot: front-month FUTURES with settle price, open interest, roll
  * calendar (@GC.1 = GCZ26 Dec'26, @CL.1, @SI.1, @PL.1, @BZ.1, @NG.1) plus
- * live index/FX quotes (.SPX .NDX .DJI .DXY, EUR= JPY= GBP=).
+ * live index quotes (.SPX .NDX .DJI).
  *
  * Symbol map is perpmap-driven and only contains VERIFIED forms (probed):
  * @ES.1 returns empty — the S&P futures reference is .SPX instead.
@@ -55,8 +55,11 @@ export async function GET(req: NextRequest) {
     if (e?.cnbc) mapped.push({ sym: s, cnbc: e.cnbc });
   }
   if (!mapped.length) {
+    if (req.nextUrl.searchParams.get("quiet") === "1") {
+      return NextResponse.json({ ok: true, supported: false, quotes: {} });
+    }
     return NextResponse.json(
-      { ok: false, error: `no CNBC symbol mapped for any of: ${syms.join(", ")} — mapped: SP500 NDX100 USO UKO NATGAS EURUSD USDJPY GBPUSD XAU XAG XPT` },
+      { ok: false, error: `no CNBC symbol mapped for any of: ${syms.join(", ")} — mapped: SP500 NDX100 USO UKO NATGAS XAU XAG XPT` },
       { status: 400 }
     );
   }

@@ -5,20 +5,26 @@ import { getMini, useMiniFeed } from "@/lib/binance/mini-feed";
 import { usePolling } from "@/components/cg/use-cg-data";
 
 /**
- * BinanceMarkets — the top-200 liquidity surface, live.
+ * BinanceMarkets — the live Binance USDT-M Crypto & TradFi Perpetuals grid.
  *
- * Prices come from the browser !miniTicker@arr WebSocket (every Binance
- * futures symbol, 1s push, one stream — zero server weight). When the
- * browser cannot hold the WS the grid degrades to /api/binance/quotes
- * (server REST, 5s) — the badge always names the active tier, mirroring
- * the perp live-price ladder. Click a row to open the symbol view.
+ * Prices stream via batched sub-100ms @bookTicker + !bookTicker sweep (plus
+ * 60s /fapi/v1/ticker/24hr open/vol/range seeding). When the browser cannot
+ * hold WS connections, degrades cleanly to /api/binance/quotes (5s REST).
  */
 
 interface UniResp {
   ok: boolean;
   n?: number;
   err?: string;
-  assets: { sym: string; pair: string; rank: number; quoteVol24h: number; priceDecs: number }[];
+  assets: {
+    sym: string;
+    pair: string;
+    rank: number;
+    quoteVol24h: number;
+    priceDecs: number;
+    contractType?: string;
+    underlyingType?: string;
+  }[];
 }
 
 interface QuotesResp {
@@ -27,6 +33,7 @@ interface QuotesResp {
 }
 
 type SortKey = "rank" | "sym" | "last" | "chg" | "vol";
+type CatFilter = "all" | "crypto" | "equity" | "commodity";
 
 function fmtUsd(v: number): string {
   if (v >= 1_000_000_000) return `$${(v / 1_000_000_000).toFixed(2)}B`;
@@ -37,20 +44,46 @@ function fmtUsd(v: number): string {
 
 export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => void }) {
   const uni = usePolling<UniResp>("/api/binance/universe", 300_000);
-  const mini = useMiniFeed();
-  const wsOpen = mini.status === "open";
-  // REST fallback only while the WS is down — zero upstream cost when live
+  const mini = useMiniFeed({ sweepAll: true });
+  const wsOpen = mini.liveStreaming;
+  // REST fallback only while WS stream is not actively flowing
   const rest = usePolling<QuotesResp>(wsOpen ? null : "/api/binance/quotes", 5_000);
 
   const [q, setQ] = useState("");
+  const [cat, setCat] = useState<CatFilter>("all");
   const [sortKey, setSortKey] = useState<SortKey>("rank");
   const [sortAsc, setSortAsc] = useState(true);
 
-  const assets = uni.data?.assets ?? [];
+  const assets = useMemo(() => uni.data?.assets ?? [], [uni.data]);
+
+  const counts = useMemo(() => {
+    let crypto = 0;
+    let equity = 0;
+    let commodity = 0;
+    for (const a of assets) {
+      if (a.contractType === "TRADIFI_PERPETUAL") {
+        if (a.underlyingType === "COMMODITY") commodity++;
+        else equity++;
+      } else {
+        crypto++;
+      }
+    }
+    return { all: assets.length, crypto, equity, commodity };
+  }, [assets]);
 
   const rows = useMemo(() => {
     const s = q.trim().toUpperCase();
-    const filtered = s ? assets.filter((a) => a.sym.includes(s) || a.pair.includes(s)) : assets;
+    const filtered = assets.filter((a) => {
+      if (cat === "crypto" && a.contractType === "TRADIFI_PERPETUAL") return false;
+      if (cat === "equity" && !(a.contractType === "TRADIFI_PERPETUAL" && a.underlyingType !== "COMMODITY")) {
+        return false;
+      }
+      if (cat === "commodity" && !(a.contractType === "TRADIFI_PERPETUAL" && a.underlyingType === "COMMODITY")) {
+        return false;
+      }
+      if (!s) return true;
+      return a.sym.includes(s) || a.pair.includes(s) || (a.underlyingType?.toUpperCase().includes(s) ?? false);
+    });
     const val = (a: (typeof assets)[number]): number | string => {
       const m = getMini(a.pair);
       const r = rest.data?.quotes?.[a.sym];
@@ -82,7 +115,7 @@ export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => vo
     // compute time, so the memo must re-run on every applied batch even
     // though the tick number itself is never referenced in the body
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assets, q, sortKey, sortAsc, rest.data, mini.tick]);
+  }, [assets, cat, q, sortKey, sortAsc, rest.data, mini.tick]);
 
   const sortBtn = (key: SortKey, label: string, cls = "") => (
     <button
@@ -103,14 +136,36 @@ export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => vo
 
   return (
     <div className="space-y-3">
-      {/* header row: search + live badge */}
+      {/* header row: search + category filter + live badge */}
       <div className="flex flex-wrap items-center gap-3 rounded-lg border border-neutral-800 bg-[#11151a] px-4 py-3">
         <div>
-          <div className="text-sm font-semibold text-neutral-100">Binance top-{uni.data?.n ?? 200} · USDT-M perpetuals</div>
+          <div className="text-sm font-semibold text-neutral-100">
+            Binance Futures · {assets.length || uni.data?.n || 250} Perpetuals (Crypto + TradFi)
+          </div>
           <div className="text-[10px] text-neutral-500">
             every TRADING USDT perp ranked by rolling 24h quote volume · universe re-ranked every 4h ·
             {uni.data?.err ? <span className="text-amber-400"> stale list ({uni.data.err})</span> : " live-ranked"}
           </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-1">
+          {[
+            { id: "all" as const, label: `All (${counts.all})` },
+            { id: "crypto" as const, label: `Crypto (${counts.crypto})` },
+            { id: "equity" as const, label: `Equities & ETFs (${counts.equity})` },
+            { id: "commodity" as const, label: `Commodities (${counts.commodity})` },
+          ].map((p) => (
+            <button
+              key={p.id}
+              onClick={() => setCat(p.id)}
+              className={`rounded px-2 py-1 text-[10px] font-medium transition-colors ${
+                cat === p.id
+                  ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-500/40"
+                  : "bg-[#0b0e11] text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
         </div>
         <span
           className={`ml-auto rounded px-2 py-1 text-[10px] font-semibold ${
@@ -122,11 +177,11 @@ export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => vo
           }`}
           title={
             wsOpen
-              ? "browser WebSocket !miniTicker@arr — every symbol, 1s push, zero server weight"
-              : "server REST fallback (fapi bookTicker, 5s) — browser cannot hold the fstream WebSocket"
+              ? "browser WebSocket @bookTicker + !bookTicker sweep + 60s 24h stats seed"
+              : "server REST fallback (fapi bookTicker, 5s) — WS reconnecting"
           }
         >
-          {wsOpen ? "LIVE · WS 1s" : rest.data?.ok ? "REST · 5s" : "connecting…"}
+          {wsOpen ? "LIVE · WS" : rest.data?.ok ? "REST · 5s" : "connecting…"}
         </span>
         <input
           value={q}
@@ -162,6 +217,12 @@ export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => vo
               v == null
                 ? "–"
                 : v.toLocaleString("en-US", { minimumFractionDigits: a.priceDecs, maximumFractionDigits: a.priceDecs });
+            const dirCls =
+              m?.dir === "up"
+                ? "text-emerald-300"
+                : m?.dir === "down"
+                  ? "text-rose-300"
+                  : "text-neutral-100";
             return (
               <button
                 key={a.sym}
@@ -172,8 +233,13 @@ export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => vo
                 <span className="pl-2 text-left font-sans text-[11px] font-bold text-cyan-300">
                   {a.sym}
                   <span className="ml-1 text-[9px] font-normal text-neutral-600">USDT</span>
+                  {a.contractType === "TRADIFI_PERPETUAL" && (
+                    <span className="ml-1.5 rounded bg-sky-500/15 px-1 py-0.5 text-[8px] font-semibold uppercase text-sky-300">
+                      {a.underlyingType === "COMMODITY" ? "CMDTY" : "TRADFI"}
+                    </span>
+                  )}
                 </span>
-                <span className="px-2 text-neutral-100">{px(last)}</span>
+                <span className={`px-2 transition-colors ${dirCls}`}>{px(last)}</span>
                 <span className={`px-2 font-semibold ${chg == null ? "text-neutral-600" : chg >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
                   {chg == null ? "–" : `${chg >= 0 ? "+" : ""}${chg.toFixed(2)}%`}
                 </span>

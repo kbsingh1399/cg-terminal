@@ -21,13 +21,19 @@ import {
   type AuctionSet,
   type VwapResult,
 } from "./indicators";
-import { assetOf, leadInstr, type AssetCfg } from "./assets";
+import { assetOf, isAsset, leadInstr, symDecs, type AssetCfg } from "./assets";
+import { hlCoinOf, resolveCgSym } from "../binance/aliases";
+import { classicOf } from "./classic";
+import { getUniverse, isBinanceSym } from "../binance/universe";
+import { fetchBinCandles, fetchHlCandles, fetchYahooCandles, resolveClassicYahooTicker, type OHLCVCandle } from "./fallbacks";
 
 export interface MarketSnapshot {
   ok: boolean;
   sym: string;
   name: string;
-  kind: "crypto" | "metal";
+  kind: "crypto" | "metal" | "equity" | "commodity" | "index";
+  source?: string;
+  priceDecs?: number;
   price: {
     last: number | null;
     prevDayClose: number | null;
@@ -57,41 +63,125 @@ async function fetchKlines(instKey: string, itv: string, limit: number): Promise
   return rows.filter((x) => x && Number.isFinite(+x[4]));
 }
 
-function toCandles(rows: KlineRow[]): { t: number; o: number; h: number; l: number; c: number; v: number }[] {
+function toCandles(rows: KlineRow[]): OHLCVCandle[] {
   return rows.map((r) => ({ t: 1000 * Number(r[0]), o: +r[1], h: +r[2], l: +r[3], c: +r[4], v: +r[5] }));
 }
 
+function rollupCandles(bars: OHLCVCandle[], stepMs: number): OHLCVCandle[] {
+  const buckets = new Map<number, OHLCVCandle>();
+  for (const b of bars) {
+    const k = Math.floor(b.t / stepMs) * stepMs;
+    const prev = buckets.get(k);
+    if (!prev) {
+      buckets.set(k, { t: k, o: b.o, h: b.h, l: b.l, c: b.c, v: b.v });
+    } else {
+      prev.h = Math.max(prev.h, b.h);
+      prev.l = Math.min(prev.l, b.l);
+      prev.c = b.c;
+      prev.v += b.v;
+    }
+  }
+  return [...buckets.values()].sort((a, b) => a.t - b.t);
+}
+
 export async function buildMarketSnapshot(symRaw: string): Promise<MarketSnapshot> {
-  const sym = symRaw.toUpperCase();
+  const sym = symRaw.trim().toUpperCase();
   const hit = cache.get(sym);
   if (hit && Date.now() - hit.at < TTL) {
     if (hit.snap) return hit.snap;
     throw hit.err ?? new Error("snapshot unavailable");
   }
-  const cfg: AssetCfg | undefined = assetOf(sym);
-  const lead = leadInstr(sym); // centralized (review A2): USO rides an OKX lead
-  const [m15Raw, h1Raw, h4Raw, d1Raw] = await Promise.all([
-    fetchKlines(lead, "m15", 1000),
-    fetchKlines(lead, "h1", 1000),
-    fetchKlines(lead, "h4", 500),
-    fetchKlines(lead, "d1", 500),
-  ]);
-  const m15 = toCandles(m15Raw);
-  const h1 = toCandles(h1Raw);
-  const h4 = toCandles(h4Raw);
-  const d1 = toCandles(d1Raw);
+  const cgSym = resolveCgSym(sym);
+  const cfg: AssetCfg | undefined = assetOf(cgSym) ?? assetOf(sym);
+  const classicCfg = classicOf(sym);
+  await getUniverse();
+  const hasBin = isAsset(cgSym) || isBinanceSym(cgSym) || !!classicCfg?.binPair;
+
+  let m15: OHLCVCandle[] = [];
+  let h1: OHLCVCandle[] = [];
+  let h4: OHLCVCandle[] = [];
+  let d1: OHLCVCandle[] = [];
+  let source = "coinglass";
+
+  // 1) Coinglass primary for any Binance-listed perpetual
+  if (hasBin) {
+    const lead = leadInstr(sym);
+    try {
+      const [m15Raw, h1Raw, h4Raw, d1Raw] = await Promise.all([
+        fetchKlines(lead, "m15", 1000),
+        fetchKlines(lead, "h1", 1000),
+        fetchKlines(lead, "h4", 500),
+        fetchKlines(lead, "d1", 500),
+      ]);
+      m15 = toCandles(m15Raw);
+      h1 = toCandles(h1Raw);
+      h4 = toCandles(h4Raw);
+      d1 = toCandles(d1Raw);
+    } catch {
+      m15 = [];
+    }
+    // 2) Fallback directly to Binance USDT-M klines if Coinglass omits/rate-limits
+    if (!m15.length) {
+      try {
+        [m15, h1, h4, d1] = await Promise.all([
+          fetchBinCandles(sym, "m15", 1000),
+          fetchBinCandles(sym, "h1", 1000),
+          fetchBinCandles(sym, "h4", 500),
+          fetchBinCandles(sym, "d1", 500),
+        ]);
+        if (m15.length) source = "binance-fapi";
+      } catch {
+        m15 = [];
+      }
+    }
+  }
+
+  // 3) Hyperliquid xyz fallback (indices: SPX500, NDX100, JP225, etc.)
+  const hlCoin = hlCoinOf(sym);
+  if (!m15.length && hlCoin) {
+    try {
+      [m15, h1, h4, d1] = await Promise.all([
+        fetchHlCandles(hlCoin, "m15", 800),
+        fetchHlCandles(hlCoin, "h1", 800),
+        fetchHlCandles(hlCoin, "h4", 400),
+        fetchHlCandles(hlCoin, "d1", 300),
+      ]);
+      if (m15.length) source = "hl-xyz";
+    } catch {
+      m15 = [];
+    }
+  }
+
+  // 4) Yahoo Finance fallback for classic benchmarks without crypto rail (US30, VIX, GER30...)
+  const yfInfo = resolveClassicYahooTicker(sym);
+  if (!m15.length && yfInfo) {
+    try {
+      const [ym15, yh1, yd1] = await Promise.all([
+        fetchYahooCandles(yfInfo.yahoo, "15m", "5d"),
+        fetchYahooCandles(yfInfo.yahoo, "1h", "1mo"),
+        fetchYahooCandles(yfInfo.yahoo, "1d", "2y"),
+      ]);
+      m15 = ym15;
+      h1 = yh1.length ? yh1 : ym15;
+      h4 = yh1.length ? rollupCandles(yh1, 4 * 3_600_000) : [];
+      d1 = yd1;
+      if (m15.length) source = "yahoo";
+    } catch {
+      m15 = [];
+    }
+  }
+
   if (!m15.length) throw new Error(`no klines for ${sym}`);
   const now = Date.now();
   const dayStart = utcDayStart(now);
 
   const last = m15[m15.length - 1];
-  // previous UTC day close for day change %
   const prevDayBars = m15.filter((c) => c.t < dayStart);
   const prevDayClose = prevDayBars.length ? prevDayBars[prevDayBars.length - 1].c : null;
   const dayBars = m15.filter((c) => c.t >= dayStart);
 
-  const closesOf = (arr: typeof m15) => arr.map((c) => c.c);
-  const emaSet = (arr: typeof m15) => ({
+  const closesOf = (arr: OHLCVCandle[]) => arr.map((c) => c.c);
+  const emaSet = (arr: OHLCVCandle[]) => ({
     e13: emaLast(closesOf(arr), 13),
     e89: emaLast(closesOf(arr), 89),
     e233: emaLast(closesOf(arr), 233),
@@ -100,8 +190,10 @@ export async function buildMarketSnapshot(symRaw: string): Promise<MarketSnapsho
   const snap: MarketSnapshot = {
     ok: true,
     sym,
-    name: cfg?.name ?? sym,
-    kind: cfg?.kind ?? "crypto",
+    name: cfg?.name ?? classicCfg?.name ?? sym,
+    kind: cfg?.kind ?? classicCfg?.klass ?? "crypto",
+    source,
+    priceDecs: symDecs(sym, last.c),
     price: {
       last: last.c,
       prevDayClose,
@@ -110,7 +202,7 @@ export async function buildMarketSnapshot(symRaw: string): Promise<MarketSnapsho
       dayLow: dayBars.length ? Math.min(...dayBars.map((c) => c.l)) : null,
       dayVolBase: dayBars.reduce((s, c) => s + c.v, 0),
     },
-    auction: auctionLevels(m15, h1, now),
+    auction: auctionLevels(m15, h1.length ? h1 : m15, now),
     ema: {
       m15: emaSet(m15),
       h1: emaSet(h1),

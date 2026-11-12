@@ -248,7 +248,7 @@ export default function CvdCanvas({
       ctx.fillStyle = COLORS.text;
       ctx.fillText(label, x - 14, H - 8);
     }
-  }, [model, mode, showDelta, showRatio, resizeTick]);
+  }, [model, mode, showDelta, showRatio, priceDecs, resizeTick]);
 
   return <canvas ref={ref} style={{ width: "100%", height }} className="rounded-md" />;
 }

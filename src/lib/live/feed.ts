@@ -23,6 +23,8 @@
  * always shows which tier is live.
  */
 
+import { resolveBinPair, resolveBinSym } from "@/lib/binance/aliases";
+
 const WS_URL = "wss://fstream.binance.com/stream";
 const WATCHDOG_MS = 5_000;
 const NOTIFY_THROTTLE_MS = 100; // 10 Hz — real-time for the human eye
@@ -96,8 +98,8 @@ function setStatus(st: FeedState["status"]) {
 }
 
 function streamsOf(sym: string): string[] {
-  // Binance stream names are the FULL pair, lowercase: btcusdt@bookTicker
-  const s = `${sym.toLowerCase()}usdt`;
+  // Resolve canonical Binance USDT pair (e.g. USO → clusdt, NVDA → nvdausdt)
+  const s = resolveBinPair(sym).toLowerCase();
   return [`${s}@bookTicker`, `${s}@trade`];
 }
 
@@ -294,6 +296,7 @@ export function useLiveQuote(sym: string): {
   const [, force] = useState(0);
 
   useEffect(() => {
+    if (!sym.trim()) return;
     const bump = () => force((x) => x + 1);
     S.quoteListeners.add(bump);
     acquire();
@@ -304,10 +307,19 @@ export function useLiveQuote(sym: string): {
     };
   }, [sym]);
 
-  const mine = !!S.quote && S.quote.sym === sym;
-  const tradeMine = !!S.lastTrade && S.lastTrade.sym === sym;
+  if (!sym.trim()) {
+    return { quote: null, lastTrade: null, live: false, status: S.status };
+  }
+  const binSym = resolveBinSym(sym);
+  const mine = !!S.quote && S.quote.sym === binSym;
+  const tradeMine = !!S.lastTrade && S.lastTrade.sym === binSym;
   const live = mine && S.status === "open" && Date.now() - S.lastMsgAt < WATCHDOG_MS;
-  return { quote: mine ? S.quote : null, lastTrade: tradeMine ? S.lastTrade : null, live, status: S.status };
+  return {
+    quote: mine && S.quote ? { ...S.quote, sym } : null,
+    lastTrade: tradeMine && S.lastTrade ? { ...S.lastTrade, sym } : null,
+    live,
+    status: S.status,
+  };
 }
 
 /**
@@ -322,8 +334,9 @@ export function useTradeTape(sym: string, onTrade: (tr: LiveTrade) => void) {
     ref.current = onTrade;
   }, [onTrade]);
   useEffect(() => {
+    const binSym = resolveBinSym(sym);
     const fn = (tr: LiveTrade) => {
-      if (tr.sym === sym) ref.current(tr);
+      if (tr.sym === binSym) ref.current({ ...tr, sym });
     };
     S.tradeListeners.add(fn);
     return () => {

@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
   const a = binAssetOf(sym);
   if (!a) {
     return NextResponse.json(
-      { ok: false, error: `${sym} is not in the Binance top-${200} liquidity universe` },
+      { ok: false, error: `${sym} is not in the Binance universe` },
       { status: 400 }
     );
   }

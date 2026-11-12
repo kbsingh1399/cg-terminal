@@ -181,7 +181,20 @@ export async function accountSnapshot(): Promise<{ ok: false; error: string } | 
             bookTime?: number;
             algoType?: string;
           }[]
-        >("GET", "/fapi/v1/openAlgoOrders", {}).catch(() => [] as { algoId: number }[]),
+        >("GET", "/fapi/v1/openAlgoOrders", {}).catch(
+          () =>
+            [] as {
+              algoId: number;
+              symbol: string;
+              side: string;
+              orderType: string;
+              algoStatus: string;
+              triggerPrice: string;
+              quantity: string;
+              bookTime?: number;
+              algoType?: string;
+            }[]
+        ),
       ]);
       const snap: BinanceAccount = {
         ok: true,

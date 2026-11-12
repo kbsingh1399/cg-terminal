@@ -12,6 +12,9 @@ import { cgGet } from "./client";
 import { BoundedMap } from "./bounded";
 import { fpFromBuckets, mergeFp, type Fp, type FpBar } from "./cg-signals";
 import { fpVenues } from "./assets";
+import { knownSym } from "./sym-gate";
+import { hlCoinOf } from "../binance/aliases";
+import { fetchBinCandles, fetchHlCandles, fetchYahooCandles, resolveClassicYahooTicker } from "./fallbacks";
 
 const INTERVALS = new Set(["m1", "m5", "m15", "m30", "h1", "h4"]);
 
@@ -39,18 +42,21 @@ function parseEnvelope(d: unknown): unknown {
 
 export interface FpLoadResult {
   ok: boolean;
+  supported?: boolean;
+  bucketsAvailable?: boolean;
+  source?: string;
+  reason?: string;
   sym: string;
   itv: string;
   limit: number;
   venues: string[];
   missing: string[];
   bars: FpBar[];
+  candleFlow?: { ts: number; v: number; buyVol?: number; sellVol?: number }[];
   updatedAt: number;
 }
 
-/** module-level snapshot cache: (sym|itv|limit|oi) → {at, result}.
- * BOUNDED: callers validate sym + clamp limit, and the real working set is a
- * handful of combos — but a varying param must never grow server memory. */
+/** module-level snapshot cache: (sym|itv|limit|oi) → {at, result}. */
 const snapCache = new BoundedMap<{ at: number; res: FpLoadResult }>(24);
 
 export async function loadFpBars(
@@ -60,19 +66,72 @@ export async function loadFpBars(
   withOi = false,
   ttlMs = 45_000
 ): Promise<FpLoadResult> {
-  const sym = symRaw.toUpperCase();
+  const sym = symRaw.trim().toUpperCase();
   const ck = `${sym}|${itv}|${limit}|${withOi ? 1 : 0}`;
   const hit = snapCache.get(ck);
   if (hit && Date.now() - hit.at < ttlMs) return hit.res;
 
   if (!INTERVALS.has(itv)) throw new Error(`bad interval ${itv}`);
+
+  const hasPerp = await knownSym(sym);
+
+  // Non-perp Classic assets (e.g. SPX500/NDX100 on HL xyz, US30/VIX on Yahoo):
+  // supply authentic OHLC candles cleanly with bucketsAvailable=false (zero synthetic buckets).
+  if (!hasPerp) {
+    const hlCoin = hlCoinOf(sym);
+    if (hlCoin) {
+      const candles = await fetchHlCandles(hlCoin, itv, limit).catch(() => []);
+      if (candles.length) {
+        const res: FpLoadResult = {
+          ok: true,
+          supported: true,
+          bucketsAvailable: false,
+          source: "hl-xyz",
+          reason: "Price-ladder footprint buckets unavailable on Hyperliquid xyz — showing real HL OHLC + live tape",
+          sym,
+          itv,
+          limit,
+          venues: [`Hyperliquid ${hlCoin}`],
+          missing: [],
+          bars: candles.map((c) => ({ ts: c.t, o: c.o, h: c.h, l: c.l, c: c.c, fp: null, oio: null, oic: null })),
+          candleFlow: candles.map((c) => ({ ts: c.t, v: c.v })),
+          updatedAt: Date.now(),
+        };
+        snapCache.set(ck, { at: Date.now(), res });
+        return res;
+      }
+    }
+    const yf = resolveClassicYahooTicker(sym);
+    if (yf) {
+      const yItv = itv === "d1" ? "1d" : itv === "h1" || itv === "h4" ? "1h" : "15m";
+      const yRange = yItv === "1d" ? "1y" : yItv === "1h" ? "1mo" : "5d";
+      const candles = await fetchYahooCandles(yf.yahoo, yItv, yRange).catch(() => []);
+      if (candles.length) {
+        const sliced = candles.slice(-limit);
+        const res: FpLoadResult = {
+          ok: true,
+          supported: true,
+          bucketsAvailable: false,
+          source: "yahoo",
+          reason: "Footprint order-flow buckets unavailable on cash/CFD index — showing real market OHLC bars",
+          sym,
+          itv,
+          limit,
+          venues: [`Yahoo (${yf.yahoo})`],
+          missing: [],
+          bars: sliced.map((c) => ({ ts: c.t, o: c.o, h: c.h, l: c.l, c: c.c, fp: null, oio: null, oic: null })),
+          candleFlow: sliced.map((c) => ({ ts: c.t, v: c.v })),
+          updatedAt: Date.now(),
+        };
+        snapCache.set(ck, { at: Date.now(), res });
+        return res;
+      }
+    }
+    throw new Error(`no bar history for ${sym}`);
+  }
+
   const keys = fpVenues(sym).map((v) => ({ ...v }));
   const lead = keys[0];
-  // per-venue kline is needed only when a venue prices in a DIFFERENT unit than
-  // the lead (USD-margined Hyperliquid vs USDT-margined Binance/OKX/Bybit):
-  // same-unit venues share the lead's price scale, so buckets merge directly.
-  // Metals (XAU/XAG: Binance+OKX+Bybit, all USDT-margined) intentionally take
-  // this path — same as OKX/Bybit for crypto alts — no shift is required.
   const needKline = (v: (typeof keys)[number]) => v === lead || v.usd !== lead.usd;
 
   const flowP = keys.map((v) =>
@@ -110,7 +169,33 @@ export async function loadFpBars(
   const [flows, klines, ois] = await Promise.all([Promise.all(flowP), Promise.all(klineP), Promise.all(oiP)]);
 
   const leadK = klines.find((k) => k.v === lead);
-  if (!leadK || !leadK.rows) throw new Error("lead kline unavailable");
+  if (!leadK || !leadK.rows) {
+    // Fallback cleanly to Binance USDT-M klines + taker buy/sell bar totals
+    const binCandles = await fetchBinCandles(sym, itv, limit).catch(() => []);
+    if (!binCandles.length) throw new Error("lead kline unavailable");
+    const res: FpLoadResult = {
+      ok: true,
+      supported: true,
+      bucketsAvailable: false,
+      source: "binance-fapi",
+      reason: "Upstream price-ladder buckets unavailable — showing live Binance OHLC + bar taker volume/delta",
+      sym,
+      itv,
+      limit,
+      venues: ["binance-perp (kline fallback)"],
+      missing: keys.map((k) => k.id),
+      bars: binCandles.map((c) => ({ ts: c.t, o: c.o, h: c.h, l: c.l, c: c.c, fp: null, oio: null, oic: null })),
+      candleFlow: binCandles.map((c) => ({
+        ts: c.t,
+        v: c.v,
+        buyVol: c.tbb,
+        sellVol: c.tbb != null ? Math.max(0, c.v - c.tbb) : undefined,
+      })),
+      updatedAt: Date.now(),
+    };
+    snapCache.set(ck, { at: Date.now(), res });
+    return res;
+  }
   const leadOhlc = toMap(
     leadK.rows,
     (row) => [num(row[1]), num(row[2]), num(row[3]), num(row[4])] as [number | null, number | null, number | null, number | null]
@@ -189,14 +274,34 @@ export async function loadFpBars(
   }
 
   if (!bars.length) throw new Error("no bars");
+  const bucketsAvailable = bars.some((b) => !!b.fp);
+  let candleFlow: FpLoadResult["candleFlow"];
+  if (!bucketsAvailable) {
+    const binCandles = await fetchBinCandles(sym, itv, limit).catch(() => []);
+    if (binCandles.length) {
+      candleFlow = binCandles.map((c) => ({
+        ts: c.t,
+        v: c.v,
+        buyVol: c.tbb,
+        sellVol: c.tbb != null ? Math.max(0, c.v - c.tbb) : undefined,
+      }));
+    }
+  }
   const res: FpLoadResult = {
     ok: true,
+    supported: true,
+    bucketsAvailable,
+    source: bucketsAvailable ? "coinglass" : "binance-fapi",
+    ...(bucketsAvailable
+      ? {}
+      : { reason: "Upstream price-ladder buckets unavailable — showing live Binance OHLC + bar taker volume/delta" }),
     sym,
     itv,
     limit,
     venues: keys.map((v) => v.id),
     missing,
     bars,
+    ...(candleFlow ? { candleFlow } : {}),
     updatedAt: Date.now(),
   };
   snapCache.set(ck, { at: Date.now(), res });

@@ -1,4 +1,5 @@
 import { fapiFetch } from "@/lib/live/fapi";
+import { resolveBinSym } from "./aliases";
 
 /**
  * Binance top-liquidity universe — Tier-2 of the terminal.
@@ -31,9 +32,9 @@ import { fapiFetch } from "@/lib/live/fapi";
  */
 
 export interface BinAsset {
-  /** terminal symbol = base asset, e.g. "1000PEPE" */
+  /** terminal symbol = base asset, e.g. "1000PEPE" or "NVDA" */
   sym: string;
-  /** full Binance pair, e.g. "1000PEPEUSDT" */
+  /** full Binance pair, e.g. "1000PEPEUSDT" or "NVDAUSDT" */
   pair: string;
   /** 1..N by 24h quote volume */
   rank: number;
@@ -41,6 +42,8 @@ export interface BinAsset {
   priceDecs: number;
   qtyDecs: number;
   onboard: number;
+  contractType: string;     // "PERPETUAL" | "TRADIFI_PERPETUAL"
+  underlyingType: string;   // "COIN" | "EQUITY" | "COMMODITY" | "INDEX" | "PREMARKET" | ...
 }
 
 export interface UniverseState {
@@ -51,8 +54,8 @@ export interface UniverseState {
   err?: string;
 }
 
-const DEFAULT_N = 200;
-const MAX_N = 400;
+const DEFAULT_N = 250;
+const MAX_N = 500;
 const MIN_N = 10;
 const MAX_AGE_MS = 4 * 60 * 60 * 1000;
 const ERROR_BACKOFF_MS = 30_000;
@@ -62,6 +65,8 @@ interface UState {
   assets: BinAsset[];
   bySym: Map<string, BinAsset>;
   byPair: Map<string, BinAsset>;
+  allBySym: Map<string, BinAsset>;
+  allByPair: Map<string, BinAsset>;
   st: UniverseState;
   lastAttempt: number;
   refreshing: Promise<void> | null;
@@ -76,6 +81,8 @@ const S: UState = (g.__binUniverse ??= {
   assets: [],
   bySym: new Map(),
   byPair: new Map(),
+  allBySym: new Map(),
+  allByPair: new Map(),
   st: { state: "boot", at: 0, n: 0 },
   lastAttempt: 0,
   refreshing: null,
@@ -117,14 +124,20 @@ async function refresh(): Promise<void> {
         symbol: string;
         status: string;
         contractType?: string;
+        underlyingType?: string;
         quoteAsset?: string;
         onboardDate?: number;
         filters?: { filterType: string; tickSize?: string; stepSize?: string }[];
       }[];
     };
-    const perps = new Map<string, { priceDecs: number; qtyDecs: number; onboard: number }>();
+    const perps = new Map<
+      string,
+      { priceDecs: number; qtyDecs: number; onboard: number; contractType: string; underlyingType: string }
+    >();
     for (const s of info.symbols ?? []) {
-      if (s.status !== "TRADING" || s.contractType !== "PERPETUAL") continue;
+      if (s.status !== "TRADING") continue;
+      if (s.contractType !== "PERPETUAL" && s.contractType !== "TRADIFI_PERPETUAL") continue;
+      if (s.underlyingType === "FX") continue; // no forex contracts
       if (s.quoteAsset !== "USDT" || s.symbol.includes("_")) continue; // no delivery contracts
       const pf = (s.filters ?? []).find((f) => f.filterType === "PRICE_FILTER");
       const ls = (s.filters ?? []).find((f) => f.filterType === "LOT_SIZE");
@@ -132,23 +145,27 @@ async function refresh(): Promise<void> {
         priceDecs: decsFromStep(pf?.tickSize),
         qtyDecs: decsFromStep(ls?.stepSize),
         onboard: s.onboardDate ?? 0,
+        contractType: s.contractType,
+        underlyingType: s.underlyingType ?? "COIN",
       });
     }
     const tickers = tickRes as { symbol: string; quoteVolume: string }[];
     if (!Array.isArray(tickers) || tickers.length === 0) throw new Error("ticker/24hr returned no rows");
-    const rows = tickers
+    const rankedAll = tickers
       .filter((t) => perps.has(t.symbol))
       .map((t) => ({ pair: t.symbol, vol: Number(t.quoteVolume) || 0 }))
-      .sort((a, b) => b.vol - a.vol)
-      .slice(0, universeTarget());
-    if (rows.length === 0) throw new Error("no TRADING USDT perpetuals matched");
-    S.assets = rows.map((r, i) => ({
+      .sort((a, b) => b.vol - a.vol);
+    if (rankedAll.length === 0) throw new Error("no TRADING USDT perpetuals matched");
+    const fullList: BinAsset[] = rankedAll.map((r, i) => ({
       sym: r.pair.replace(/USDT$/, ""),
       pair: r.pair,
       rank: i + 1,
       quoteVol24h: r.vol,
       ...perps.get(r.pair)!,
     }));
+    S.allBySym = new Map(fullList.map((a) => [a.sym, a]));
+    S.allByPair = new Map(fullList.map((a) => [a.pair, a]));
+    S.assets = fullList.slice(0, universeTarget());
     S.bySym = new Map(S.assets.map((a) => [a.sym, a]));
     S.byPair = new Map(S.assets.map((a) => [a.pair, a]));
     S.st = { state: "ready", at: Date.now(), n: S.assets.length, scannedPairs: tickers.length };
@@ -196,11 +213,13 @@ export async function getUniverse(): Promise<UniverseState> {
 
 /** Membership test (sync) — only meaningful after a getUniverse() await. */
 export function isBinanceSym(sym: string): boolean {
-  return S.bySym.has(sym.toUpperCase());
+  const s = resolveBinSym(sym);
+  return (S.allBySym?.size ?? 0) > 0 ? S.allBySym.has(s) : S.bySym.has(s);
 }
 
 export function binAssetOf(sym: string): BinAsset | undefined {
-  return S.bySym.get(sym.toUpperCase());
+  const s = resolveBinSym(sym);
+  return S.bySym.get(s) ?? S.allBySym?.get(s);
 }
 
 export function binAssets(): readonly BinAsset[] {
@@ -225,8 +244,9 @@ export async function getQuotes(): Promise<{ at: number; quotes: Record<string, 
           askPrice: string;
         }[];
         const m = new Map<string, BinQuote>();
+        const pairMap = (S.allByPair?.size ?? 0) > 0 ? S.allByPair : S.byPair;
         for (const t of arr) {
-          const a = S.byPair.get(t.symbol);
+          const a = pairMap.get(t.symbol);
           if (!a) continue;
           const bid = Number(t.bidPrice);
           const ask = Number(t.askPrice);

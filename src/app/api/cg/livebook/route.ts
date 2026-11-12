@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { buildWallsModel, WALL_MIN_USD, type BookSnapshot } from "@/lib/cg/book-walls";
-import { isAsset } from "@/lib/cg/assets";
+import { buildWallsModel, minWallForSym, type BookSnapshot } from "@/lib/cg/book-walls";
+import { knownSym, anyTerminalSym } from "@/lib/cg/sym-gate";
+import { hlCoinOf, resolveBinPair } from "@/lib/binance/aliases";
+import { cleanGridStep, fetchHlCtxAndBook } from "@/lib/cg/fallbacks";
 import { fapiFetch, FapiBannedError, fapiBanned } from "@/lib/live/fapi";
 
 export const dynamic = "force-dynamic";
@@ -70,26 +72,30 @@ const ringKey = (sym: string, grid: number, band: number) => `${sym}|${grid}|${b
 function snapGrid(g: number): number {
   if (!(g > 0) || !Number.isFinite(g)) return 0;
   const mag = Math.pow(10, Math.floor(Math.log10(g)));
-  const snapped = Math.round(g / mag) * mag;
+  const snapped = Number((Math.round(g / mag) * mag).toPrecision(6));
   return snapped > 0 && Number.isFinite(snapped) ? snapped : 0;
 }
 
 function niceGrid(mid: number): number {
-  // fallback grid when the client did not pass the aggregate model's grid:
-  // ~1/2000 of price, 1 significant digit, min 1
-  const raw = mid / 2000;
-  if (raw <= 1) return 1;
-  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
-  return Math.max(1, Math.round(raw / mag) * mag);
+  return cleanGridStep(mid);
 }
 
 async function fetchDepthSnapshot(sym: string, grid: number): Promise<BookSnapshot | null> {
-  const d = (await fapiFetch(`/fapi/v1/depth?symbol=${sym}USDT&limit=1000`)) as {
-    bids?: [string, string][];
-    asks?: [string, string][];
-  };
-  const bids = d.bids ?? [];
-  const asks = d.asks ?? [];
+  let bids: [string | number, string | number][] = [];
+  let asks: [string | number, string | number][] = [];
+  if (await knownSym(sym)) {
+    const pair = resolveBinPair(sym);
+    const d = (await fapiFetch(`/fapi/v1/depth?symbol=${encodeURIComponent(pair)}&limit=1000`)) as {
+      bids?: [string, string][];
+      asks?: [string, string][];
+    };
+    bids = d.bids ?? [];
+    asks = d.asks ?? [];
+  } else if (hlCoinOf(sym)) {
+    const hl = await fetchHlCtxAndBook(sym).catch(() => null);
+    bids = (hl?.book?.bids ?? []).map((b) => [b.px, b.sz]);
+    asks = (hl?.book?.asks ?? []).map((a) => [a.px, a.sz]);
+  }
   if (!bids.length || !asks.length) return null;
   let bb = -Infinity;
   let ba = Infinity;
@@ -101,7 +107,7 @@ async function fetchDepthSnapshot(sym: string, grid: number): Promise<BookSnapsh
   let kMin = Infinity;
   let kMax = -Infinity;
   const flat: number[] = [];
-  const add = (rows: [string, string][], side: "b" | "a") => {
+  const add = (rows: [string | number, string | number][], side: "b" | "a") => {
     for (const [ps, qs] of rows) {
       const p = +ps;
       const q = +qs;
@@ -154,11 +160,9 @@ async function pollOnce(sym: string, ring: Ring): Promise<void> {
       market: "futures-live",
       band: ring.band,
       grid: ring.grid,
-      venues: ["Binance (live top-1000 levels)"],
-      minWallUsd: WALL_MIN_USD[sym] ?? 100_000,
+      venues: [hlCoinOf(sym) && !(await knownSym(sym)) ? `Hyperliquid ${hlCoinOf(sym)}` : "Binance (live top-1000 levels)"],
+      minWallUsd: minWallForSym(sym),
       covered: {
-        // the live book's honest coverage — depth/imbalance are computed over
-        // exactly this range, never presented as the full aggregate
         lo: coverLo,
         hi: coverHi,
         loPct: pctFrom(coverLo),
@@ -171,14 +175,12 @@ async function pollOnce(sym: string, ring: Ring): Promise<void> {
     };
   } catch (e) {
     if (e instanceof FapiBannedError) {
-      // mark the existing body as degraded rather than failing
       if (ring.body && typeof ring.body === "object") {
         (ring.body as Record<string, unknown>).fapiBanned = true;
       }
     } else {
       console.warn("[livebook] poll failed:", e instanceof Error ? e.message : e);
     }
-    /* transient errors keep the last body — the poller retries next tick */
   } finally {
     ring.busy = false;
   }
@@ -186,18 +188,21 @@ async function pollOnce(sym: string, ring: Ring): Promise<void> {
 
 async function resolveGrid(sym: string, clientGrid: number | null): Promise<number> {
   if (clientGrid && clientGrid > 0) return clientGrid;
-  // any existing ring for this sym is a better default than a fresh probe
   for (const [k, r] of rings) if (k.startsWith(`${sym}|`) && r.snaps.length) return r.grid;
-  // derive from a live probe only on the very first call
-  const t = (await fapiFetch(`/fapi/v1/ticker/bookTicker?symbol=${sym}USDT`)) as { bidPrice?: string };
-  return niceGrid(Number(t.bidPrice) || 0);
+  if (await knownSym(sym)) {
+    const pair = resolveBinPair(sym);
+    const t = (await fapiFetch(`/fapi/v1/ticker/bookTicker?symbol=${encodeURIComponent(pair)}`)) as { bidPrice?: string };
+    return niceGrid(Number(t.bidPrice) || 0);
+  }
+  const hl = await fetchHlCtxAndBook(sym).catch(() => null);
+  const px = hl?.book?.bids[0]?.px ?? Number(hl?.ctx?.markPx ?? 0);
+  return px > 0 ? niceGrid(px) : 0;
 }
 
 function ensurePoller(sym: string, grid: number, band: number): Ring {
   const key = ringKey(sym, grid, band);
   let ring = rings.get(key);
   if (!ring) {
-    // ring cap: evict the least-recently-requested ring before creating one
     if (rings.size >= MAX_RINGS) {
       let oldestKey: string | null = null;
       let oldestAt = Infinity;
@@ -218,7 +223,6 @@ function ensurePoller(sym: string, grid: number, band: number): Ring {
   }
   ring.lastRequestAt = Date.now();
   if (ring.timer) return ring;
-  // first poll immediately, then on the fixed cadence; idle-stop guard inside
   pollOnce(sym, ring).catch(() => undefined);
   ring.timer = setInterval(() => {
     const r = rings.get(ringKey(sym, grid, band));
@@ -240,14 +244,16 @@ function ensurePoller(sym: string, grid: number, band: number): Ring {
 
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
-  const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!isAsset(sym)) {
+  const sym = (sp.get("sym") ?? "BTC").trim().toUpperCase();
+  if (!(await anyTerminalSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+  }
+  const hasPerp = await knownSym(sym);
+  if (!hasPerp && !hlCoinOf(sym)) {
+    return NextResponse.json({ ok: true, supported: false, sym, model: null, updatedAt: Date.now() });
   }
   const band = [0.5, 1, 2, 5].includes(Number(sp.get("band"))) ? Number(sp.get("band")) : 5;
   const gridRaw = Number(sp.get("grid") ?? 0);
-  // quantize BEFORE the ring lookup so distinct attacker grids collapse onto
-  // the same ring key (see snapGrid)
   const clientGrid = Number.isFinite(gridRaw) && gridRaw > 0 ? snapGrid(gridRaw) : null;
 
   // find an existing fresh-enough ring — exact (sym,grid,band) first, then

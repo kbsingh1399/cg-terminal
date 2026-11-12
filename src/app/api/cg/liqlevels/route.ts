@@ -2,40 +2,42 @@ import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import { buildLiqModel, liqStats, type RawLiqPayload, type LiqStats } from "@/lib/cg/liq-model";
 import { liqVenues, symDecs } from "@/lib/cg/assets";
-import { knownSym } from "@/lib/cg/sym-gate";
+import { anyTerminalSym, knownSym } from "@/lib/cg/sym-gate";
 import { getLivePrice } from "@/lib/live/server-price";
 import type { LiquidationLevel } from "@/lib/cg/types";
 
 export const dynamic = "force-dynamic";
 
-/**
- * GET /api/cg/liqlevels?sym=BTC&range=3d|7d|30d&lvR=4
- *
- * Aggregated liquidation levels over the perp venues — Binance, OKX, Bybit,
- * Bitget (+ Hyperliquid where listed; metals keep their curated 3) — using
- * the EXACT model of the live Coinglass liquidation-levels page (ported to
- * src/lib/cg/liq-model.ts): 520-row price grid, unhit levels only, top key
- * levels within ±lvR% with strength normalized to the strongest row,
- * leverage tiers h1/h2/h3.
- *
- * Pure API data: every value comes from /api/liquidationLevels/v2 per venue.
- * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: venues
- * without the pair return no payload (honest 0 in perVenue), never a fake
- * cluster.
- */
-
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
-  const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!(await knownSym(sym))) {
+  const sym = (sp.get("sym") ?? "BTC").trim().toUpperCase();
+  if (!(await anyTerminalSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
+  const hasPerp = await knownSym(sym);
   const VENUES = liqVenues(sym);
   const rangeRaw = sp.get("range") ?? "3d";
   const range = ["3d", "7d", "30d"].includes(rangeRaw) ? rangeRaw : "3d";
   const lvR = Math.min(Math.max(Number(sp.get("lvR") ?? 4) || 4, 1), 8);
   const limit = Math.min(Number(sp.get("limit") ?? 4000) || 4000, 6000);
   try {
+    const live = await getLivePrice(sym).catch(() => null);
+    if (!hasPerp) {
+      return NextResponse.json({
+        ok: true,
+        supported: false,
+        sym,
+        range,
+        lvR,
+        venues: [],
+        perVenue: {},
+        stats: null,
+        livePrice: live?.price ?? null,
+        reason: "Coinglass estimated liquidation clusters apply only to multi-venue perpetual futures",
+        updatedAt: Date.now(),
+      });
+    }
+
     const results = await Promise.allSettled(
       VENUES.map((v) =>
         cgGet(`/api/liquidationLevels/v2?symbol=${encodeURIComponent(v.key)}&limit=${limit}&range=${range}`, 30_000)
@@ -56,17 +58,37 @@ export async function GET(req: NextRequest) {
     });
 
     if (!venues.some((v) => v.payload)) {
-      return NextResponse.json({ ok: false, error: "no liquidation-level data from any venue" }, { status: 502 });
+      return NextResponse.json({
+        ok: true,
+        supported: false,
+        sym,
+        range,
+        lvR,
+        venues: VENUES.map((v) => v.name),
+        perVenue,
+        stats: null,
+        livePrice: live?.price ?? null,
+        reason: "Upstream Coinglass liquidation-level heatmap does not cover this instrument yet",
+        updatedAt: Date.now(),
+      });
     }
 
     const model = buildLiqModel(venues);
     if (!model) {
-      return NextResponse.json({ ok: false, error: "no usable price series" }, { status: 502 });
+      return NextResponse.json({
+        ok: true,
+        supported: false,
+        sym,
+        range,
+        lvR,
+        venues: VENUES.map((v) => v.name),
+        perVenue,
+        stats: null,
+        livePrice: live?.price ?? null,
+        reason: "No usable liquidation price grid returned by upstream",
+        updatedAt: Date.now(),
+      });
     }
-    // Anchor sides/distances to the LIVE market price — the payload's embedded
-    // candle close can lag minutes behind the market (verified: false
-    // "approaching" distances on XRP/ADA). stats.last reports the price used.
-    const live = await getLivePrice(sym).catch(() => null);
     const stats: LiqStats = liqStats(model, lvR, {
       livePrice: live?.price ?? null,
       priceDecs: symDecs(sym, live?.price ?? null),
@@ -74,6 +96,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       ok: true,
+      supported: true,
       sym,
       range,
       lvR,
@@ -90,5 +113,4 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// keep the old types import referenced for back-compat consumers
 export type { LiquidationLevel };

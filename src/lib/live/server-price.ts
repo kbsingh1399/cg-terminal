@@ -1,6 +1,7 @@
 import { cgGet } from "../cg/client";
 import { assetOf, isAsset, leadInstr } from "../cg/assets";
 import { binAssetOf } from "../binance/universe";
+import { resolveBinPair } from "../binance/aliases";
 import { fapiFetch } from "./fapi";
 
 /**
@@ -34,7 +35,8 @@ const cache = (g.__cgLivePrice ??= new Map<string, LivePrice>());
 async function refresh(sym: string): Promise<LivePrice> {
   const base: LivePrice = { at: Date.now(), sym, source: "binance-fapi", price: null, bid: null, ask: null };
   try {
-    const d = (await fapiFetch(`/fapi/v1/ticker/bookTicker?symbol=${sym}USDT`, 4_000)) as {
+    const pair = binAssetOf(sym)?.pair ?? resolveBinPair(sym);
+    const d = (await fapiFetch(`/fapi/v1/ticker/bookTicker?symbol=${pair}`, 4_000)) as {
       bidPrice?: string;
       askPrice?: string;
     };

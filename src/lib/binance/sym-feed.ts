@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { resolveBinPair } from "./aliases";
 
 /**
  * Binance per-symbol real-time feed — the "all levels" engine of the
@@ -108,7 +109,7 @@ function setStatus(st: Status) {
 }
 
 function streamsOf(sym: string, iv: string): string[] {
-  const p = sym.toLowerCase() + "usdt";
+  const p = resolveBinPair(sym).toLowerCase();
   return [`${p}@depth20@100ms`, `${p}@kline_${iv}`, `${p}@forceOrder`];
 }
 

@@ -19,8 +19,33 @@ interface CacheEntry {
 
 /** on globalThis: dev mode can instantiate this module per route bundle —
  *  one shared cache keeps TTL politeness intact (project convention). */
-const gC = globalThis as unknown as { __cgClientCache?: Map<string, CacheEntry>; __cgClientInflight?: Map<string, Promise<unknown>>; __cgClientCacheBytes?: { n: number } };
+const gC = globalThis as unknown as {
+  __cgClientCache?: Map<string, CacheEntry>;
+  __cgClientInflight?: Map<string, Promise<unknown>>;
+  __cgClientCacheBytes?: { n: number };
+  __cgHostCooldown?: Map<string, number>;
+  __cgHostSem?: { active: number; queue: (() => void)[] };
+};
 const cache = (gC.__cgClientCache ??= new Map());
+/** host-level 429 cooldown window so a single rate-limit backs off ALL concurrent callers */
+const hostCooldown = (gC.__cgHostCooldown ??= new Map<string, number>());
+/** global concurrency gate for uncached upstream Coinglass fetches (prevents burst 429s) */
+const hostSem = (gC.__cgHostSem ??= { active: 0, queue: [] });
+const MAX_CG_CONCURRENCY = 6;
+
+async function withCgSlot<T>(fn: () => Promise<T>): Promise<T> {
+  if (hostSem.active >= MAX_CG_CONCURRENCY) {
+    await new Promise<void>((resolve) => hostSem.queue.push(resolve));
+  }
+  hostSem.active++;
+  try {
+    return await fn();
+  } finally {
+    hostSem.active--;
+    const next = hostSem.queue.shift();
+    if (next) next();
+  }
+}
 /** running total of cached raw bytes — the OOM guard reads this (debug/mem route) */
 const cacheBytes = (gC.__cgClientCacheBytes ??= { n: 0 });
 // resync ONCE at module init: the Map is the source of truth, so any counter
@@ -44,15 +69,14 @@ const inflight = (gC.__cgClientInflight ??= new Map());
  * ones every restart) would otherwise grow the Map forever. Insertion-order
  * eviction keeps the newest entries — they are the ones likely to be re-hit.
  */
-const CACHE_MAX = Math.max(50, Number(process.env.CG_CLIENT_CACHE_MAX ?? 800) || 800);
+const CACHE_MAX = Math.max(50, Number(process.env.CG_CLIENT_CACHE_MAX ?? 1500) || 1500);
 /**
- * BYTE budget (R6 OOM fix): an 800-ENTRY cap alone allowed hundreds of
- * multi-MB payloads (stopmap ~3-6MB, orderflow ~1-3MB, liqlevels/largeorder
- * ~0.4MB) to pile up to GBs and get the process kernel-OOM-killed. Entries
- * are now also evicted oldest-first once the cache holds more than this
- * many raw bytes (~96MB default).
+ * BYTE budget (R6 OOM fix): an entry cap alone allowed multi-MB payloads
+ * (stopmap ~3-6MB, orderflow ~1-3MB, liqlevels/largeorder ~0.4MB) to pile up.
+ * Entries are evicted LRU-first once either cap is reached, and ttlMs === 0
+ * engine writers never pollute the read-through TTL cache.
  */
-const CACHE_MAX_BYTES = Math.max(8_000_000, Number(process.env.CG_CLIENT_CACHE_BYTES ?? 96_000_000) || 96_000_000);
+const CACHE_MAX_BYTES = Math.max(8_000_000, Number(process.env.CG_CLIENT_CACHE_BYTES ?? 128_000_000) || 128_000_000);
 
 function cacheSet(url: string, data: unknown, rawBytes = 0) {
   // OVERWRITE LEAK (R6 follow-up): re-setting an existing URL never returned
@@ -98,25 +122,49 @@ async function rawGet(url: string, cacheTs: string): Promise<{ status: number; h
 async function cgGetInner(pathAndQuery: string, ttlMs: number, host: string): Promise<unknown> {
   const url = `${host}${pathAndQuery}`;
   const hit = cache.get(url);
-  if (hit && Date.now() - hit.at < ttlMs) return hit.data;
+  if (hit && Date.now() - hit.at < ttlMs) {
+    // True LRU promotion: bump recently hit entries to tail
+    cache.delete(url);
+    cache.set(url, hit);
+    return hit.data;
+  }
+
+  // If this host recently returned 429, serve stale cached payload immediately
+  // when available, or wait out the remaining cooldown window instead of piling
+  // another burst onto upstream.
+  const coolUntil = hostCooldown.get(host) ?? 0;
+  if (Date.now() < coolUntil) {
+    const stale = cache.get(url);
+    if (stale && ttlMs > 0 && Date.now() - stale.at < Math.max(20 * ttlMs, 300_000)) {
+      return stale.data;
+    }
+    const rem = coolUntil - Date.now();
+    if (rem > 0 && rem <= 15_000) {
+      await new Promise((r) => setTimeout(r, rem));
+    }
+  }
 
   const cacheTs = String(Date.now());
-  let resp = await rawGet(url, cacheTs);
-  // rate-limited: honor Retry-After (fallback 5 s) and retry once — a burst
-  // of 429s must back off, not hammer upstream in a hot retry loop
+  let resp = await withCgSlot(() => rawGet(url, cacheTs));
+  // rate-limited: honor Retry-After (fallback 5 s), set shared host cooldown,
+  // and retry once only when not racing an empty TTL.
   if (resp.status === 429) {
     const ra = Number(resp.headers["retry-after"]);
-    const waitMs = Math.min(Math.max(Number.isFinite(ra) && ra > 0 ? ra * 1000 : 5_000, 1_000), 30_000);
+    const waitMs = Math.min(Math.max(Number.isFinite(ra) && ra > 0 ? ra * 1000 : 5_000, 2_000), 25_000);
+    hostCooldown.set(host, Date.now() + waitMs);
+    const stale = cache.get(url);
+    if (stale && ttlMs > 0 && Date.now() - stale.at < Math.max(20 * ttlMs, 300_000)) {
+      return stale.data;
+    }
     await new Promise((r) => setTimeout(r, waitMs));
-    resp = await rawGet(url, String(Date.now()));
+    resp = await withCgSlot(() => rawGet(url, String(Date.now())));
+    if (resp.status === 429) {
+      hostCooldown.set(host, Date.now() + 12_000);
+    }
   }
   if (resp.status !== 200) {
-    // stale-serve is a soft-fail LADDER, only for cached endpoints with a
-    // real TTL and only within a bounded age. ttlMs === 0 means "always
-    // fresh" (engine writers): returning stale there would silently freeze
-    // a series while engineStatus reports it healthy — fail loudly instead.
     const stale = cache.get(url);
-    if (stale && ttlMs > 0 && Date.now() - stale.at < Math.max(10 * ttlMs, 60_000)) return stale.data;
+    if (stale && ttlMs > 0 && Date.now() - stale.at < Math.max(10 * ttlMs, 120_000)) return stale.data;
     throw new Error(`upstream HTTP ${resp.status} for ${pathAndQuery}`);
   }
   let parsed: unknown;
@@ -129,12 +177,12 @@ async function cgGetInner(pathAndQuery: string, ttlMs: number, host: string): Pr
   const body = parsed as { code?: string; msg?: string; data?: unknown };
   if (body && typeof body === "object" && "data" in body && typeof (body as { data?: unknown }).data !== "string") {
     if (body.code !== "0" && Number(body.code) !== 0) throw new Error(`upstream code ${body.code}: ${body.msg ?? ""}`);
-    cacheSet(url, body.data, resp.bodyText.length);
+    if (ttlMs > 0) cacheSet(url, body.data, resp.bodyText.length);
     return body.data;
   }
   // Encrypted responses carry a string data field
   const data = decryptCgResponse({ status: resp.status, headers: resp.headers, bodyText: resp.bodyText }, cacheTs, url);
-  cacheSet(url, data, resp.bodyText.length);
+  if (ttlMs > 0) cacheSet(url, data, resp.bodyText.length);
   return data;
 }
 

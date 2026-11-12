@@ -46,7 +46,6 @@ export async function GET() {
   push(mapSize("__microHlBook", "micro HL book cache"));
   push(mapSize("__microLoBook", "micro Lighter book cache"));
   push(mapSize("__microLoTrades", "micro Lighter trades cache"));
-  push(mapSize("__microKraken", "micro Kraken cache"));
 
   // engine store map: per-series rows/keys (capped 60k rows each)
   const stores = gVal<Map<string, { rows: unknown[]; keys: Set<string>; hydrated?: boolean }>>("__cgStores");

@@ -12,25 +12,13 @@ import {
   type TickerRow,
 } from "@/lib/cg/cvd";
 import type { KlineRow } from "@/lib/cg/types";
-import { knownSym } from "@/lib/cg/sym-gate";
+import { anyTerminalSym, knownSym } from "@/lib/cg/sym-gate";
+import { symDecs } from "@/lib/cg/assets";
 import { BoundedMap } from "@/lib/cg/bounded";
+import { hlCoinOf, resolveCgSym } from "@/lib/binance/aliases";
+import { fetchBinCandles, fetchHlCandles, fetchHlRecentTrades } from "@/lib/cg/fallbacks";
 
 export const dynamic = "force-dynamic";
-
-/**
- * GET /api/cg/cvd?itv=m15&limit=1500&mode=perp|spot|total|split&anchor=all|day|week
- *
- * Cumulative Volume Delta — the Coinglass /cvd/BTC page:
- * futures CVD, spot CVD, taker-buy share, spot-vs-futures quadrant and the
- * Bull/Bear divergence list, all computed by their exact client-side engine
- * (src/lib/cg/cvd.ts) over per-venue taker flows (#bs_usd klines).
- *
- * Pure API data: /api/select/coins/tickers + /api/v2/kline (#kline, #bs_usd).
- * Tier-2 (Binance top-200) symbols are accepted since 2026-11-11: instrument
- * discovery is keyword-driven and covers every venue that lists the coin
- * (13 perp venues incl. Binance/OKX/Bybit/Gate/Bitget/Bitfinex/Kraken + 9
- * spot venues incl. Coinbase and Crypto.com).
- */
 
 const ITVS: Record<string, { api: string; ms: number }> = {
   "1m": { api: "m1", ms: 60_000 },
@@ -42,9 +30,17 @@ const ITVS: Record<string, { api: string; ms: number }> = {
   "1d": { api: "d1", ms: 86_400_000 },
 };
 
-/** module-level cache per (sym, itv, limit) — the flow fan-out is expensive.
- * BOUNDED: sym is allowlisted and limit clamped, so the key space is small. */
-const cache = new BoundedMap<{ at: number; body: unknown }>(16);
+const cache = new BoundedMap<{ at: number; body: unknown }>(24);
+
+interface BuiltCvd {
+  inst: CvdInstrument[];
+  priceKey: string;
+  series: CvdSeries;
+  loaded: { key: string; ok: boolean }[];
+  itv: { api: string; ms: number };
+  source: string;
+  reqSym: string;
+}
 
 async function mapLimit<T, R>(items: T[], limit: number, fn: (t: T, i: number) => Promise<R>): Promise<(R | null)[]> {
   const out: (R | null)[] = new Array(items.length).fill(null);
@@ -63,89 +59,199 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (t: T, i: number) =
   return out;
 }
 
-async function buildCvd(sym: string, itvKey: string, limit: number): Promise<{ inst: CvdInstrument[]; priceKey: string; series: CvdSeries; loaded: { key: string; ok: boolean }[]; itv: { api: string; ms: number } }> {
+async function buildFromBinanceFapi(reqSym: string, itvKey: string, limit: number): Promise<BuiltCvd> {
   const itv = ITVS[itvKey];
-  // 1) instruments (their er(): FUTURES + SPOT tickers, per-venue best)
-  const [fut, spot] = await Promise.all([
-    cgGet(`/api/select/coins/tickers?type=FUTURES&keyword=${encodeURIComponent(sym)}`, 120_000) as Promise<TickerRow[] | { data: TickerRow[] }>,
-    cgGet(`/api/select/coins/tickers?type=SPOT&keyword=${encodeURIComponent(sym)}`, 120_000)
-      .then((d) => d as TickerRow[] | { data: TickerRow[] })
-      .catch(() => [] as TickerRow[]),
-  ]);
-  const futRows = Array.isArray(fut) ? fut : ((fut as { data?: TickerRow[] }).data ?? []);
-  const spotRows = Array.isArray(spot) ? spot : ((spot as { data?: TickerRow[] }).data ?? []);
-  const { inst, priceKey } = pickInstruments(futRows, spotRows, sym);
-  if (!inst.length || !priceKey) throw new Error("no CVD instruments");
+  const candles = await fetchBinCandles(reqSym, itv.api, Math.min(limit, 1500));
+  if (!candles.length) throw new Error("no binance candles for CVD");
+  const last = candles[candles.length - 1];
+  const dayStart = candles[0].t;
+  let vol24hUsd = 0;
+  const cutoff = last.t - 86_400_000;
+  for (const c of candles) if (c.t >= cutoff) vol24hUsd += c.q ?? c.v * c.c;
+  void dayStart;
 
-  // 2) price candles (their C(): <priceKey>#kline)
-  const kl = (await cgGet(
-    `/api/v2/kline?symbol=${encodeURIComponent(priceKey + "#kline")}&interval=${itv.api}&limit=${limit}&minLimit=false`,
-    60_000
-  )) as { data?: KlineRow[] } | KlineRow[];
-  const klRows = Array.isArray(kl) ? kl : (kl.data ?? []);
-  const candles = klRows.filter((r) => r && Number.isFinite(+r[4]));
-  if (!candles.length) throw new Error("no price kline");
-
-  // 3) per-instrument flows (#bs_usd), 6 concurrent like the page
+  const pair = `${resolveCgSym(reqSym)}USDT`;
+  const inst: CvdInstrument[] = [
+    { key: `Binance_${pair}`, venue: "Binance", kind: "perp", instrumentId: pair, volUsd: vol24hUsd, price: last.c },
+  ];
   const grid = new FlowGrid(itv.ms, inst.map((i) => i.key));
-  grid.setCandles(candles as unknown as [number, string | number, string | number, string | number, string | number][]);
-  const loaded: { key: string; ok: boolean }[] = [];
-  const flows = await mapLimit(inst, 6, async (v: CvdInstrument) => {
-    const r = (await cgGet(
-      `/api/v2/kline?symbol=${encodeURIComponent(v.key + "#bs_usd")}&interval=${itv.api}&limit=${limit}&minLimit=false`,
-      60_000
-    )) as { data?: [number, string | number, string | number][] } | [number, string | number, string | number][];
-    return (Array.isArray(r) ? r : (r.data ?? [])) as [number, string | number, string | number][];
+  grid.setCandles(
+    candles.map((c) => [Math.floor(c.t / 1000), c.o, c.h, c.l, c.c]) as [number, number, number, number, number][]
+  );
+  const bFlows: [number, number, number][] = candles.map((c) => {
+    const q = c.q ?? c.v * c.c;
+    const tbq = c.tbq ?? q * 0.5;
+    const sellQ = Math.max(0, q - tbq);
+    return [Math.floor(c.t / 1000), tbq, sellQ];
   });
-  flows.forEach((rows, i) => {
-    const ok = Array.isArray(rows) && rows.length > 0;
-    loaded.push({ key: inst[i].key, ok });
-    if (ok) grid.mergeFlow(i, flowRows(rows as [number, string | number, string | number][]));
-  });
-
+  grid.mergeFlow(0, flowRows(bFlows));
   const series = recompute(grid, inst);
-  if (!series) throw new Error("recompute failed");
-  return { inst, priceKey, series: series as NonNullable<ReturnType<typeof recompute>>, loaded, itv };
+  if (!series) throw new Error("binance fapi cvd recompute failed");
+  return {
+    inst,
+    priceKey: inst[0].key,
+    series: series as NonNullable<ReturnType<typeof recompute>>,
+    loaded: [{ key: inst[0].key, ok: true }],
+    itv,
+    source: "binance-fapi",
+    reqSym,
+  };
+}
+
+async function buildCvd(reqSym: string, itvKey: string, limit: number): Promise<BuiltCvd> {
+  const itv = ITVS[itvKey];
+  const cgSym = resolveCgSym(reqSym);
+
+  // 1) Long-TTL discovery (30m) so symbol switching doesn't hit Coinglass 429
+  let inst: CvdInstrument[] = [];
+  let priceKey = "";
+  try {
+    const [fut, spot] = await Promise.all([
+      cgGet(`/api/select/coins/tickers?type=FUTURES&keyword=${encodeURIComponent(cgSym)}`, 1_800_000) as Promise<TickerRow[] | { data: TickerRow[] }>,
+      cgGet(`/api/select/coins/tickers?type=SPOT&keyword=${encodeURIComponent(cgSym)}`, 1_800_000)
+        .then((d) => d as TickerRow[] | { data: TickerRow[] })
+        .catch(() => [] as TickerRow[]),
+    ]);
+    const futRows = Array.isArray(fut) ? fut : ((fut as { data?: TickerRow[] }).data ?? []);
+    const spotRows = Array.isArray(spot) ? spot : ((spot as { data?: TickerRow[] }).data ?? []);
+    const picked = pickInstruments(futRows, spotRows, cgSym);
+    inst = picked.inst;
+    priceKey = picked.priceKey;
+  } catch {
+    /* fallback below */
+  }
+
+  // Deterministic probe if /select/coins/tickers 429'd
+  if (!inst.length || !priceKey) {
+    inst = [
+      { key: `Binance_${cgSym}USDT`, venue: "Binance", kind: "perp", instrumentId: `${cgSym}USDT`, volUsd: 0, price: 0 },
+      { key: `OKX_${cgSym}-USDT-SWAP`, venue: "OKX", kind: "perp", instrumentId: `${cgSym}-USDT-SWAP`, volUsd: 0, price: 0 },
+      { key: `Bybit_${cgSym}USDT`, venue: "Bybit", kind: "perp", instrumentId: `${cgSym}USDT`, volUsd: 0, price: 0 },
+      { key: `Bitget_${cgSym}USDT_UMCBL`, venue: "Bitget", kind: "perp", instrumentId: `${cgSym}USDT_UMCBL`, volUsd: 0, price: 0 },
+    ];
+    priceKey = inst[0].key;
+  }
+
+  try {
+    const kl = (await cgGet(
+      `/api/v2/kline?symbol=${encodeURIComponent(priceKey + "#kline")}&interval=${itv.api}&limit=${limit}&minLimit=false`,
+      60_000
+    )) as { data?: KlineRow[] } | KlineRow[];
+    const klRows = Array.isArray(kl) ? kl : (kl.data ?? []);
+    const candles = klRows.filter((r) => r && Number.isFinite(+r[4]));
+    if (candles.length) {
+      const grid = new FlowGrid(itv.ms, inst.map((i) => i.key));
+      grid.setCandles(candles as unknown as [number, string | number, string | number, string | number, string | number][]);
+      const loaded: { key: string; ok: boolean }[] = [];
+      const flows = await mapLimit(inst, 4, async (v: CvdInstrument) => {
+        const r = (await cgGet(
+          `/api/v2/kline?symbol=${encodeURIComponent(v.key + "#bs_usd")}&interval=${itv.api}&limit=${limit}&minLimit=false`,
+          60_000
+        )) as { data?: [number, string | number, string | number][] } | [number, string | number, string | number][];
+        return (Array.isArray(r) ? r : (r.data ?? [])) as [number, string | number, string | number][];
+      });
+      let anyFlow = false;
+      flows.forEach((rows, i) => {
+        const ok = Array.isArray(rows) && rows.length > 0;
+        if (ok) anyFlow = true;
+        loaded.push({ key: inst[i].key, ok });
+        if (ok) grid.mergeFlow(i, flowRows(rows as [number, string | number, string | number][]));
+      });
+      if (anyFlow) {
+        const series = recompute(grid, inst);
+        if (series) {
+          return {
+            inst,
+            priceKey,
+            series: series as NonNullable<ReturnType<typeof recompute>>,
+            loaded,
+            itv,
+            source: "coinglass",
+            reqSym,
+          };
+        }
+      }
+    }
+  } catch {
+    /* fallback cleanly to Binance exchange taker flow */
+  }
+
+  // Fallback: exact exchange taker buy/sell USD directly from Binance /fapi/v1/klines
+  return buildFromBinanceFapi(reqSym, itvKey, limit);
 }
 
 function round1e6(x: number) {
   return Math.round(x / 1e6);
 }
 
-function symOf(built: { priceKey: string }): string {
-  const m = /^\w+_(.+?)(USDT|USD|USDC|PERPETUAL|-)/.exec(built.priceKey);
-  return (m?.[1] ?? built.priceKey).toUpperCase();
-}
-
-/** accept both "m15" (app convention) and "15m" (page convention) */
 const NORMALIZE: Record<string, string> = { m1: "1m", m5: "5m", m15: "15m", m30: "30m", h1: "1h", h4: "4h", d1: "1d" };
 
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
-  const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!(await knownSym(sym))) {
+  const sym = (sp.get("sym") ?? "BTC").trim().toUpperCase();
+  if (!(await anyTerminalSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   const rawItv = sp.get("itv") ?? "m15";
   const itvKey = ITVS[rawItv] ? rawItv : (NORMALIZE[rawItv] ?? "m15");
-  const itv = ITVS[itvKey];
   const limit = Math.min(Math.max(Number(sp.get("limit") ?? 1500) || 1500, 300), 1500);
   const mode = ["perp", "spot", "total", "split"].includes(sp.get("mode") ?? "") ? (sp.get("mode") as string) : "total";
   const anchor = ["all", "day", "week"].includes(sp.get("anchor") ?? "") ? (sp.get("anchor") as "all" | "day" | "week") : "all";
 
-  void itv;
+  if (!(await knownSym(sym))) {
+    const hlCoin = hlCoinOf(sym);
+    if (hlCoin) {
+      const [candles, trades] = await Promise.all([
+        fetchHlCandles(hlCoin, ITVS[itvKey].api, 300).catch(() => []),
+        fetchHlRecentTrades(hlCoin).catch(() => []),
+      ]);
+      const buyUsd = trades.filter((t) => t.side === "buy").reduce((a, t) => a + t.usd, 0);
+      const sellUsd = trades.filter((t) => t.side === "sell").reduce((a, t) => a + t.usd, 0);
+      return NextResponse.json({
+        ok: true,
+        supported: false,
+        sym,
+        itv: ITVS[itvKey].api,
+        mode,
+        anchor,
+        source: "hl-xyz",
+        hlTape: {
+          coin: hlCoin,
+          trades: trades.length,
+          buyUsd: Math.round(buyUsd),
+          sellUsd: Math.round(sellUsd),
+          netUsd: Math.round(buyUsd - sellUsd),
+          buyPct: buyUsd + sellUsd > 0 ? +((buyUsd / (buyUsd + sellUsd)) * 100).toFixed(1) : null,
+          lastPrice: candles[candles.length - 1]?.c ?? trades[0]?.px ?? null,
+        },
+        reason: "Historical multi-venue CVD bars unavailable on Hyperliquid xyz — showing real-time HL recent-trades taker split",
+        updatedAt: Date.now(),
+      });
+    }
+    return NextResponse.json({
+      ok: true,
+      supported: false,
+      sym,
+      itv: ITVS[itvKey].api,
+      mode,
+      anchor,
+      reason: "Cumulative Volume Delta requires a perpetual or spot exchange order tape (unavailable for cash/CFD index)",
+      updatedAt: Date.now(),
+    });
+  }
+
   const key = `${sym}|${itvKey}|${limit}`;
-  let built: { inst: CvdInstrument[]; priceKey: string; series: CvdSeries; loaded: { key: string; ok: boolean }[]; itv: { api: string; ms: number } };
+  let built: BuiltCvd;
   const hit = cache.get(key);
   if (hit && Date.now() - hit.at < 15_000 && hit.body && typeof hit.body === "object" && "built" in (hit.body as object)) {
-    built = (hit.body as { built: typeof built }).built;
+    built = (hit.body as { built: BuiltCvd }).built;
   } else {
     try {
       built = await buildCvd(sym, itvKey, limit);
     } catch (e) {
       const stale = cache.get(key);
       if (stale) {
-        const b = (stale.body as { built: typeof built }).built;
+        const b = (stale.body as { built: BuiltCvd }).built;
         return render(b, mode, anchor, stale.at);
       }
       return NextResponse.json(
@@ -155,25 +261,27 @@ export async function GET(req: NextRequest) {
     }
     cache.set(key, { at: Date.now(), body: { built } });
   }
-  return render(built, mode, anchor, (cache.get(key)?.at ?? Date.now()));
+  return render(built, mode, anchor, cache.get(key)?.at ?? Date.now());
 }
 
 function render(
-  built: { inst: CvdInstrument[]; priceKey: string; series: CvdSeries; loaded: { key: string; ok: boolean }[]; itv: { api: string; ms: number } },
+  built: BuiltCvd,
   mode: string,
   anchor: "all" | "day" | "week",
   at: number
 ) {
   const { series, inst, loaded } = built;
-  // divergences follow the selected market (their X(): split → total)
   const cvdArr = mode === "spot" ? series.spot : mode === "perp" ? series.perp : series.total;
   const divs = detectDivergences(series, cvdArr);
   const kpis = cvdKpis(series, anchor, divs);
 
-  const dec = series.c[series.n - 1] >= 1000 ? 1 : 2;
+  const lastPx = series.c[series.n - 1] ?? 0;
+  const dec = symDecs(built.reqSym, lastPx);
   return NextResponse.json({
     ok: true,
-    sym: symOf(built),
+    supported: true,
+    source: built.source,
+    sym: built.reqSym,
     itv: built.itv.api,
     mode,
     anchor,
@@ -182,7 +290,6 @@ function render(
     flowsLoaded: loaded,
     n: series.n,
     candles: series.ts.map((t, i) => [t, series.o[i], series.h[i], series.l[i], series.c[i]]),
-    // CVD in USD millions for compact transport
     perp: Array.from(series.perp.slice(1), round1e6),
     spot: Array.from(series.spot.slice(1), round1e6),
     total: Array.from(series.total.slice(1), round1e6),
@@ -211,7 +318,7 @@ function render(
         ? {
             type: kpis.latestDiv.t,
             ts: kpis.latestDiv.ts,
-            price: +(kpis.latestDiv.t === "bear" ? kpis.latestDiv.priceB : kpis.latestDiv.priceB).toFixed(dec),
+            price: +kpis.latestDiv.priceB.toFixed(dec),
           }
         : null,
     },

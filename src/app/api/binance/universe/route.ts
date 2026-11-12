@@ -24,6 +24,8 @@ export async function GET() {
       quoteVol24h: a.quoteVol24h,
       priceDecs: a.priceDecs,
       qtyDecs: a.qtyDecs,
+      contractType: a.contractType,
+      underlyingType: a.underlyingType,
     })),
     serverTime: Date.now(),
   });

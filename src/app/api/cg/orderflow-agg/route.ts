@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import { fpVenues } from "@/lib/cg/assets";
-import { knownSym } from "@/lib/cg/sym-gate";
+import { anyTerminalSym } from "@/lib/cg/sym-gate";
 import { parseInterval, clampLimit } from "@/lib/cg/params";
 import type { OrderFlowBucket, OrderFlowBar } from "@/lib/cg/types";
 
@@ -78,8 +78,8 @@ function parseRows(d: unknown): [number, unknown[][]][] {
 
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
-  const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!(await knownSym(sym))) {
+  const sym = (sp.get("sym") ?? "BTC").trim().toUpperCase();
+  if (!(await anyTerminalSym(sym))) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   const VENUES = fpVenues(sym).map((v) => v.key);

@@ -35,13 +35,16 @@ const VENUE_COLORS: Record<string, string> = {
 
 interface LiqResponse {
   ok: boolean;
+  supported?: boolean;
+  reason?: string;
+  livePrice?: number | null;
   error?: string;
   sym: string;
   range: string;
   lvR: number;
   venues: string[];
   perVenue: Record<string, number>;
-  stats: LiqStats;
+  stats: LiqStats | null;
   updatedAt: number;
 }
 
@@ -61,7 +64,7 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
   // defense-in-depth: never render stats that belong to another symbol
   const stats = liqQ.data?.sym === sym ? liqQ.data.stats ?? null : null;
   const err = liqQ.error;
-  const decs = symDecs(sym, stats?.last ?? null);
+  const decs = symDecs(sym, stats?.last ?? liqQ.data?.livePrice ?? null);
   const fmtP = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: decs, maximumFractionDigits: decs });
   // venues that actually carry this symbol's liquidation data (response-
   // driven once loaded — Tier-2 symbols discover their venue set live)
@@ -96,7 +99,7 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
         <div className="flex items-center gap-1.5 pr-2">
           <span className="text-sm font-semibold text-neutral-100">{sym}</span>
           <span className="rounded bg-neutral-800 px-1.5 py-0.5 text-[10px] text-neutral-400">
-            aggregated · {venueList}
+            {venueList ? `aggregated · ${venueList}` : liqQ.data?.supported === false ? "no liq map" : "scanning venues"}
           </span>
         </div>
         <div className="flex overflow-hidden rounded border border-neutral-700">
@@ -175,7 +178,19 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
         </div>
       )}
 
-      {!stats ? (
+      {liqQ.data?.sym === sym && liqQ.data.supported === false && !stats ? (
+        <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-neutral-800 bg-[#11151a] px-6 py-12 text-center">
+          <div className="text-sm font-semibold text-neutral-200">{sym} · No Exchange Liquidation Clusters</div>
+          <p className="max-w-lg text-xs leading-relaxed text-neutral-400">
+            {liqQ.data.reason ?? "This instrument does not publish aggregated Coinglass perpetual liquidation clusters."}
+          </p>
+          {liqQ.data.livePrice != null && (
+            <div className="mt-2 rounded border border-neutral-800 bg-[#0e1216] px-4 py-2 text-xs text-neutral-300">
+              Reference mark: <span className="font-mono font-semibold text-neutral-100">{fmtP(liqQ.data.livePrice)}</span>
+            </div>
+          )}
+        </div>
+      ) : !stats ? (
         <div className="flex h-64 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-900/60 text-sm text-neutral-500">
           {liqQ.loading ? "Loading aggregated liquidation levels…" : "No data"}
         </div>

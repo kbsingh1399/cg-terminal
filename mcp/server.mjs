@@ -463,6 +463,39 @@ async function toolAnalyzeSetup(args) {
   };
 }
 
+async function toolAlphaScreener(args) {
+  const sector = args?.sector ? String(args.sector).toLowerCase() : null;
+  const d = await api(`/api/cg/screener`);
+  if (!d?.ok) throw new Error(d?.error || "screener failed");
+  let rows = Array.isArray(d.crypto) ? d.crypto : [];
+  if (sector) rows = rows.filter((r) => String(r.sector || "").toLowerCase() === sector);
+  rows = [...rows].sort((a, b) => Math.abs(b.confluence?.score ?? 0) - Math.abs(a.confluence?.score ?? 0));
+  const lines = [
+    `Alpha Screener — ${rows.length} Tier-1 assets (${d.warmCount}/${d.totalCount} warmed) · TradFi core: ${(d.tradfi || []).length}`,
+    ...rows.slice(0, 20).map((r) => {
+      const conf = r.confluence ? `${r.confluence.bias} ${r.confluence.score} (${r.confluence.readiness})` : "cold";
+      const chg = r.chg24hPct != null ? `${r.chg24hPct >= 0 ? "+" : ""}${r.chg24hPct}%` : "–";
+      const vw = r.vwapZ != null ? `z=${r.vwapZ}` : "";
+      const mag = r.liqMagnet ? `mag:${r.liqMagnet.side}@${r.liqMagnet.distPct}%` : "";
+      return `${r.sym.padEnd(9)} px=${r.price ?? "–"} (${chg}) · 4h=${r.ema4h ?? "–"} · ${conf} ${vw} ${mag}`.trim();
+    }),
+  ];
+  return { text: lines.join("\n"), data: d };
+}
+
+async function toolDeskStatus() {
+  const d = await api(`/api/desk/live`);
+  if (!d?.ok) throw new Error(d?.error || "desk status failed");
+  const acc = d.mt5?.account;
+  const lines = [
+    `Desk ${d.analysis?.lastRound ?? "–"} · MT5 slots ${d.mt5?.slotsUsed ?? 0}/${d.mt5?.maxSlots ?? 4}` +
+      (acc ? ` · eq=$${acc.equity} bal=$${acc.balance} pnl=$${acc.profit}` : ""),
+    `MT5 positions: ${(d.mt5?.positions || []).length} · pending orders: ${(d.mt5?.orders || []).length}`,
+    ...(d.mt5?.orders || []).map((o) => `  #${o.ticket} ${o.sym} ${o.side.toUpperCase()} @ ${o.entry} (live ${o.livePrice ?? "–"}, dist ${o.distToEntryPct ?? "–"}%) SL ${o.sl} TP ${o.tp} R=${o.riskR ?? "–"}`),
+  ];
+  return { text: lines.join("\n"), data: d };
+}
+
 // ---------------------------------------------------------------------------
 // MCP protocol plumbing (JSON-RPC 2.0 over stdio, line-delimited)
 // ---------------------------------------------------------------------------
@@ -636,6 +669,18 @@ const TOOLS = [
     description: "One-call trade-formulation context for an asset: market snapshot + footprint signals + liquidation clusters + whale walls + book walls + CVD state + recent events + the formulation guide (bias / entry / stop / targets).",
     inputSchema: { type: "object", properties: { sym: { type: "string" } }, required: ["sym"] },
     handler: toolAnalyzeSetup,
+  },
+  {
+    name: "alpha_screener",
+    description: "Ranked cross-asset screener across all 30 crucial crypto + 3 metals + TradFi core: live price, 24h%, VWAP σ, 4H EMA, footprint signal, liquidation magnet, and multi-factor confluence score.",
+    inputSchema: { type: "object", properties: { sector: { type: "string", description: "Optional sector filter (major, l1, defi, ai, l2, meme, privacy, metal)" } } },
+    handler: toolAlphaScreener,
+  },
+  {
+    name: "desk_status",
+    description: "Read-only live snapshot of MT5 account, open positions, pending limit orders, live distance-to-fill, and recent desk rounds.",
+    inputSchema: { type: "object", properties: {} },
+    handler: toolDeskStatus,
   },
 ];
 

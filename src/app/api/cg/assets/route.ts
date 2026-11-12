@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   return NextResponse.json({
     ok: true,
-    assets: ASSETS.map((a) => ({ sym: a.sym, name: a.name, kind: a.kind, tier: a.tier, hyperliquid: a.hl })),
+    assets: ASSETS.map((a) => ({ sym: a.sym, name: a.name, kind: a.kind, sector: a.sector, tier: a.tier, hyperliquid: a.hl })),
     engine: engineStatus(),
     scanner: scannerStatus(),
     feed: feedStats(),

@@ -1,17 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { usePolling } from "./use-cg-data";
+import { usePolling, useTicker } from "./use-cg-data";
+import { hlCoinOf, resolveBinPair } from "@/lib/binance/aliases";
 import DerivativesPanel from "./derivatives-panel";
 import MicrostructurePanel from "./microstructure-panel";
 
 /**
- * ClassicOverview — the Tier-3 instrument snapshot (indices · FX · equities ·
- * commodities without perp venues). Everything here is computed CLIENT-SIDE
- * from the OHLCV bars of /api/cg/classic: EMA 13/89/233, RSI(14), VWAP ±σ,
- * and a coarse bar-volume profile (POC/VAH/VAL) when upstream volume exists.
- * Honest by design: no footprint / CVD / liquidations / walls / funding —
- * those need perp order-book data that does not exist for this class.
+ * ClassicOverview — TradFi / Classic instrument quant & cross-venue snapshot.
+ * Computes EMA 13/89/233, RSI(14), VWAP ±σ, and bar-volume profile from
+ * /api/cg/classic OHLCV bars while overlaying sub-second live WS quotes
+ * from Binance TRADIFI_PERPETUAL / Hyperliquid xyz whenever listed.
  */
 
 interface Bar {
@@ -27,7 +26,7 @@ interface LiveBlock {
   ok: boolean;
   sym: string;
   price: number | null;
-  source: "kraken" | "hl-xyz" | "lighter" | null;
+  source: "hl-xyz" | "lighter" | null;
   sourceDetail: string | null;
   at: number;
   err?: string;
@@ -49,6 +48,7 @@ interface ClassicResp {
   klass: string;
   broker: string;
   yahoo: string;
+  binPair?: string | null;
   note: string | null;
   price: number | null;
   prevClose: number | null;
@@ -162,7 +162,13 @@ function volumeProfile(bars: Bar[]): { poc: number; vah: number; val: number } |
   return { poc: lo + (pi + 0.5) * w, vah: lo + (hiI + 1) * w, val: lo + loI * w };
 }
 
-export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
+export default function ClassicOverview({
+  sym = "US30",
+  liveHint = null,
+}: {
+  sym?: string;
+  liveHint?: "binance" | "hl" | null;
+}) {
   const [preset, setPreset] = useState(1); // default 15m · 5D
   const p = PRESETS[preset];
   const q = usePolling<ClassicResp>(
@@ -172,6 +178,10 @@ export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
   // defense-in-depth (same contract as the perp tools): never render a
   // payload that belongs to another symbol or another interval
   const d = q.data && q.data.sym === sym ? q.data : null;
+  const isHlIndex = sym === "SPX500" || sym === "SP500" || sym === "NDX100" || sym === "JP225";
+  const hlIndexCoin = isHlIndex ? hlCoinOf(sym) : undefined;
+  const binPairName = d?.binPair ?? (liveHint === "binance" ? resolveBinPair(sym) : null);
+  const ticker = useTicker(liveHint || d?.binPair || hlIndexCoin ? sym : "", 1_000);
   const bars = useMemo(() => (d?.bars ?? []).filter((b) => b.c != null), [d]);
   const price = d?.price ?? (bars.length ? bars[bars.length - 1].c : null);
   const decs = decsFor(price);
@@ -202,28 +212,41 @@ export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
     };
   }, [bars, d?.hasVolume]);
 
-  // ---- headline-quote ladder (2026-11-11 stale-values fix) ----
-  // Yahoo cash indices freeze outside their cash session (US cash frozen
-  // 19.5h/day) and delayed feeds lag 10-15min — the headline therefore rides
-  // the freshest HONEST source: 24/7 micro anchor → 24/5 futures lead →
-  // Yahoo cash quote. Cash always stays visible (basis-labelled) because the
-  // indicator suite below is computed from cash bars.
+  // ---- headline-quote ladder: WebSocket live (Binance TradFi / HL xyz) → 24/7 REST anchor → futures lead → Yahoo cash ----
   const liveOk = !!d?.live?.ok && d.live.price != null && Number.isFinite(d.live.price);
   const futOk = !!d?.fut?.ok && d.fut.price != null && Number.isFinite(d.fut.price);
   const cashAgeS = typeof d?.regularMarketTime === "number" ? Math.max(0, Math.round(Date.now() / 1000 - d.regularMarketTime)) : null;
   const cashStale = cashAgeS == null || cashAgeS > 1800;
-  const useLive = liveOk;
-  const useFut = !useLive && futOk && cashStale;
-  const headline = useLive ? d!.live!.price! : useFut ? d!.fut!.price! : price;
+  const wsPrice = ticker.live && ticker.price != null && Number.isFinite(ticker.price) ? ticker.price : null;
+  const useWs = wsPrice != null;
+  const useLive = !useWs && liveOk;
+  const useFut = !useWs && !useLive && futOk && cashStale;
+  const headline = useWs ? wsPrice : useLive ? d!.live!.price! : useFut ? d!.fut!.price! : price;
   const liveAgeS = d?.live?.at ? Math.max(0, Math.round((Date.now() - d.live.at) / 1000)) : null;
   const futDelayS = d?.fut?.rmt ? Math.max(0, Math.round(Date.now() / 1000 - d.fut.rmt)) : null;
-  const headlineSrc = useLive
-    ? `live · ${d!.live!.sourceDetail ?? d!.live!.source} · ${liveAgeS != null ? `${liveAgeS}s ago` : ""}`
-    : useFut
-      ? `${d!.fut!.yahoo} futures · Globex 24/5${futDelayS != null ? ` · feed ${Math.round(futDelayS / 60)}m delayed` : ""}`
-      : d?.exchange
-        ? `Yahoo ${String(d.exchange)} cash${cashAgeS != null ? ` · quote ${cashAgeS > 5400 ? `${Math.round(cashAgeS / 3600)}h` : `${Math.round(cashAgeS / 60)}m`} old` : ""}`
-        : "Yahoo cash";
+  const headlineSrc = useWs
+    ? ticker.source === "hl-ws"
+      ? `HL xyz WS · ${hlIndexCoin} · real-time`
+      : ticker.source === "ws"
+        ? `Binance WS · ${binPairName ?? `${sym}USDT`} · sub-100ms`
+        : `Binance REST · ${binPairName ?? `${sym}USDT`} · 1s`
+    : useLive
+      ? `live · ${d!.live!.sourceDetail ?? d!.live!.source} · ${liveAgeS != null ? `${liveAgeS}s ago` : ""}`
+      : useFut
+        ? `${d!.fut!.yahoo} futures · Globex 24/5${futDelayS != null ? ` · feed ${Math.round(futDelayS / 60)}m delayed` : ""}`
+        : d?.exchange
+          ? `Yahoo ${String(d.exchange)} cash${cashAgeS != null ? ` · quote ${cashAgeS > 5400 ? `${Math.round(cashAgeS / 3600)}h` : `${Math.round(cashAgeS / 60)}m`} old` : ""}`
+          : "Yahoo cash";
+  const displayChg24 = useMemo(() => {
+    if (d?.chg24hPct == null) return null;
+    if (useWs && headline != null && price != null && price > 0) {
+      const ref24 = price / (1 + d.chg24hPct / 100);
+      if (Number.isFinite(ref24) && ref24 > 0) {
+        return +(((headline - ref24) / ref24) * 100).toFixed(2);
+      }
+    }
+    return d.chg24hPct;
+  }, [useWs, headline, price, d?.chg24hPct]);
   // basis of the headline venue vs the Yahoo cash quote (both real numbers —
   // perp premium / futures basis is information, never hidden)
   const basisPct =
@@ -232,7 +255,7 @@ export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
       : null;
 
   // stale = no live anchor, no usable futures lead, and cash bars went quiet
-  const stale = !useLive && !useFut && calc != null && calc.lastBarAgeMin > Math.max(30, p.minutes * 10);
+  const stale = !useWs && !useLive && !useFut && calc != null && calc.lastBarAgeMin > Math.max(30, p.minutes * 10);
 
   return (
     <div className="space-y-4">
@@ -254,26 +277,41 @@ export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
         </span>
       </div>
 
-      {/* quote header — headline rides the freshest honest source (micro live
-          anchor → futures lead → Yahoo cash); the cash quote and its basis to
-          the headline stay visible because every indicator below is cash-bar based */}
+      {/* quote header — headline rides the freshest honest source (WS → micro anchor → futures → Yahoo cash) */}
       <div className="flex flex-wrap items-end gap-x-8 gap-y-3 rounded-lg border border-neutral-800 bg-[#11151a] p-4">
         <div>
           <div className="text-[10px] uppercase tracking-wider text-neutral-500">
             {d?.name ?? sym} · {d?.klass ?? "?"} · broker {d?.broker ?? "–"} · Yahoo {d?.yahoo ?? "–"}
+            {binPairName ? ` · Binance ${binPairName}` : ""}
             {d?.exchange ? ` · ${d.exchange}` : ""}
           </div>
           <div className="flex items-baseline gap-3">
-            <div className={`text-3xl font-bold tabular-nums ${(d?.chg24hPct ?? d?.chgPct ?? 0) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+            <div
+              className={`text-3xl font-bold tabular-nums transition-colors duration-150 ${
+                useWs && ticker.dir === "up"
+                  ? "text-emerald-300"
+                  : useWs && ticker.dir === "down"
+                    ? "text-rose-300"
+                    : (displayChg24 ?? d?.chgPct ?? 0) >= 0
+                      ? "text-emerald-400"
+                      : "text-rose-400"
+              }`}
+            >
               {fmt(headline, decs)}
             </div>
-            <div className={`text-sm font-semibold ${(d?.chg24hPct ?? d?.chgPct ?? 0) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
-              {d?.chg24hPct != null ? (
-                <span title="change vs the close 24h ago">24h {pct(d.chg24hPct)}</span>
+            <div className={`text-sm font-semibold ${(displayChg24 ?? d?.chgPct ?? 0) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+              {displayChg24 != null ? (
+                <span title="change vs the close 24h ago">24h {pct(displayChg24)}</span>
               ) : (
                 <span title={`change over the visible ${p.label} window`}>{p.label.split("·")[1]?.trim() ?? "range"} {pct(d?.chgPct)}</span>
               )}
             </div>
+            {useWs && ticker.bid != null && ticker.ask != null && (
+              <span className="font-mono text-xs text-neutral-500">
+                bid <span className="text-emerald-400/90">{fmt(ticker.bid, decs)}</span> / ask{" "}
+                <span className="text-rose-400/90">{fmt(ticker.ask, decs)}</span>
+              </span>
+            )}
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-neutral-500">
             {headline !== price && price != null && (
@@ -290,8 +328,30 @@ export default function ClassicOverview({ sym = "US30" }: { sym?: string }) {
           </div>
         </div>
         <div className="ml-auto text-right">
-          <div className={`rounded-md px-2 py-1 text-[10px] font-semibold ${useLive ? "bg-emerald-500/15 text-emerald-300" : useFut ? "bg-sky-500/15 text-sky-300" : stale ? "bg-amber-500/15 text-amber-300" : "bg-neutral-800 text-neutral-400"}`}>
-            {useLive ? "LIVE — 24/7 anchor" : useFut ? "futures lead" : stale ? "⚠ stale — cash market likely closed" : "live"}
+          <div
+            className={`rounded-md px-2 py-1 text-[10px] font-semibold ${
+              useWs
+                ? "bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40"
+                : useLive
+                  ? "bg-emerald-500/15 text-emerald-300"
+                  : useFut
+                    ? "bg-sky-500/15 text-sky-300"
+                    : stale
+                      ? "bg-amber-500/15 text-amber-300"
+                      : "bg-neutral-800 text-neutral-400"
+            }`}
+          >
+            {useWs
+              ? ticker.source?.includes("ws")
+                ? "LIVE · WebSocket"
+                : "LIVE · REST 1s"
+              : useLive
+                ? "LIVE — 24/7 anchor"
+                : useFut
+                  ? "futures lead"
+                  : stale
+                    ? "⚠ stale — cash market likely closed"
+                    : "live"}
           </div>
           <div className="mt-1 max-w-[240px] text-[10px] text-neutral-600">{headlineSrc}</div>
           {calc && (
