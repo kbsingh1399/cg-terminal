@@ -31,6 +31,7 @@ const SOURCES: { key: string; label: string }[] = [
   { key: "whale-orders", label: "Whale orders" },
   { key: "liqlevels", label: "Liq clusters" },
   { key: "cvd", label: "CVD" },
+  { key: "paperbook", label: "Paper book" },
   { key: "engine", label: "Engine" },
 ];
 
@@ -40,6 +41,7 @@ const SOURCE_COLOR: Record<string, string> = {
   "whale-orders": "bg-amber-500/15 text-amber-300",
   liqlevels: "bg-rose-500/15 text-rose-300",
   cvd: "bg-teal-500/15 text-teal-300",
+  paperbook: "bg-fuchsia-500/15 text-fuchsia-300",
   engine: "bg-neutral-500/15 text-neutral-300",
 };
 

@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 import { usePolling } from "./use-cg-data";
 import type { DeskLiveSnapshot } from "@/lib/desk/live";
+import type { PaperBookTicketView, PbStats } from "@/lib/cg/paperbook";
 
 /**
  * DeskBlotter — Strictly Read-Only Live MT5 + `zai-desk` / `atg-exec` Coordination Blotter.
  *
  * Reads `/api/desk/live` (`desk/mt5.json`, `desk/state.json`, `desk/log.md` tail) with
  * live terminal price overlays. Never writes or modifies any desk file or broker order.
+ * The Virtual Book section reads `/api/cg/paperbook` — the paper-trade outcome
+ * tracker for every agent setup (fills · rung ladder · SL/BE · live R · MFE/MAE).
  */
 
 function fmtMoney(v: number | null | undefined, currency = "USD"): string {
@@ -58,14 +61,55 @@ function KpiTile({
   );
 }
 
+interface PaperBookPayload {
+  ok: boolean;
+  tickets: PaperBookTicketView[];
+  stats: PbStats[];
+  telemetry?: {
+    armed: number;
+    open: number;
+    closed: number;
+    universe: number;
+    sweepPos: number;
+    lastSweepAt: number;
+    lastPassAt: number;
+  };
+  freshness?: { dataAt: number; ageMs: number; stale: boolean; source: string };
+}
+
+const PB_MODEL_SHORT: Record<string, string> = {
+  M1_TREND_PULLBACK: "M1",
+  WAIT_PULLBACK: "M1w",
+  M2_MEAN_REVERSION: "M2",
+};
+
+const PB_STATUS_BADGE: Record<string, string> = {
+  ARMED: "bg-amber-500/15 text-amber-300",
+  OPEN: "bg-emerald-500/15 text-emerald-300",
+};
+
+const PB_OUTCOME_BADGE: Record<string, string> = {
+  TP1: "bg-emerald-500/20 text-emerald-300",
+  TP2: "bg-emerald-500/20 text-emerald-300",
+  SL: "bg-rose-500/20 text-rose-300",
+  BE: "bg-neutral-800 text-neutral-300",
+  TIME_STOP: "bg-amber-500/15 text-amber-300",
+  FLIP_CLOSE: "bg-amber-500/15 text-amber-300",
+  EXPIRED: "bg-neutral-800 text-neutral-500",
+  CANCELLED: "bg-neutral-800 text-neutral-500",
+};
+
 export default function DeskBlotter({
   onPickAsset,
 }: {
   onPickAsset: (sym: string) => void;
 }) {
   const q = usePolling<DeskLiveSnapshot>("/api/desk/live", 10_000);
+  const pbq = usePolling<PaperBookPayload>("/api/cg/paperbook", 15_000);
   const d = q.data;
+  const pb = pbq.data;
   const [orderFilter, setOrderFilter] = useState<"active" | "all">("active");
+  const [pbFilter, setPbFilter] = useState<"live" | "closed" | "all">("live");
   const [expandedRound, setExpandedRound] = useState<string | null>(null);
   const [now, setNow] = useState(() => Date.now());
 
@@ -90,6 +134,13 @@ export default function DeskBlotter({
       ? ["pending", "suggested", "armed", "open", "placed"].includes(o.status.toLowerCase())
       : true
   );
+  const pbTickets = (pb?.tickets ?? []).filter((t) =>
+    pbFilter === "live" ? t.status === "ARMED" || t.status === "OPEN" : pbFilter === "closed" ? t.status === "CLOSED" : true
+  );
+  const pbAll = pb?.stats?.find((s) => s.bucket === "ALL") ?? null;
+  const pbM1 = pb?.stats?.find((s) => s.bucket === "M1_TREND_PULLBACK") ?? null;
+  const pbM2 = pb?.stats?.find((s) => s.bucket === "M2_MEAN_REVERSION") ?? null;
+  const pbStale = pb?.freshness?.stale ?? false;
 
   return (
     <div className="space-y-4">
@@ -393,6 +444,192 @@ export default function DeskBlotter({
             ))}
           </div>
         )}
+      </div>
+
+      {/* Virtual Book — paper-trade outcomes for the agent setups */}
+      <div className="rounded-lg border border-neutral-800 bg-[#11151a] p-4">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-300">
+              Virtual Book — Agent Setup Outcomes
+            </h3>
+            <span
+              className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
+                pbStale ? "bg-amber-500/15 text-amber-300" : "bg-fuchsia-500/15 text-fuchsia-300"
+              }`}
+            >
+              PAPER · {pb?.freshness?.stale ? "STALE" : `LIVE · track ${Math.round((pb?.freshness?.ageMs ?? 0) / 1000)}s ago`}
+            </span>
+            <span className="font-mono text-[10px] text-neutral-500">
+              sweep {pb?.telemetry ? `${pb.telemetry.sweepPos + 1}/${pb.telemetry.universe}` : "–"} ·{" "}
+              {pb?.telemetry ? `${pb.telemetry.armed} armed · ${pb.telemetry.open} open · ${pb.telemetry.closed} closed` : "booting…"}
+            </span>
+          </div>
+          <div className="flex items-center gap-1 rounded border border-neutral-800 bg-[#0b0e11] p-0.5 text-[11px]">
+            {(["live", "closed", "all"] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setPbFilter(f)}
+                className={`rounded px-2 py-0.5 capitalize ${pbFilter === f ? "bg-neutral-800 text-neutral-100" : "text-neutral-500"}`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* scoreboard */}
+        <div className="mb-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
+          <KpiTile
+            label="Expectancy (all)"
+            value={pbAll?.expectancyR != null ? `${pbAll.expectancyR >= 0 ? "+" : ""}${pbAll.expectancyR.toFixed(2)}R` : "–"}
+            sub={pbAll ? `${pbAll.wins}W / ${pbAll.losses}L of ${pbAll.filled} filled` : "no closed trades yet"}
+            cls={pbAll?.expectancyR != null ? (pbAll.expectancyR >= 0 ? "text-emerald-400" : "text-rose-400") : "text-neutral-500"}
+          />
+          <KpiTile
+            label="Total R"
+            value={pbAll?.totalR != null ? `${pbAll.totalR >= 0 ? "+" : ""}${pbAll.totalR.toFixed(1)}R` : "–"}
+            sub={pbAll?.winRatePct != null ? `win rate ${pbAll.winRatePct.toFixed(0)}%` : undefined}
+            cls={pbAll?.totalR != null ? (pbAll.totalR >= 0 ? "text-emerald-400" : "text-rose-400") : "text-neutral-500"}
+          />
+          <KpiTile
+            label="M1 expectancy"
+            value={pbM1?.expectancyR != null ? `${pbM1.expectancyR >= 0 ? "+" : ""}${pbM1.expectancyR.toFixed(2)}R` : "–"}
+            sub={pbM1 ? `${pbM1.filled} filled · fill ${pbM1.fillRatePct?.toFixed(0) ?? "–"}%` : undefined}
+            cls={pbM1?.expectancyR != null ? (pbM1.expectancyR >= 0 ? "text-emerald-400" : "text-rose-400") : "text-neutral-500"}
+          />
+          <KpiTile
+            label="M2 expectancy"
+            value={pbM2?.expectancyR != null ? `${pbM2.expectancyR >= 0 ? "+" : ""}${pbM2.expectancyR.toFixed(2)}R` : "–"}
+            sub={pbM2 ? `${pbM2.filled} filled · fill ${pbM2.fillRatePct?.toFixed(0) ?? "–"}%` : undefined}
+            cls={pbM2?.expectancyR != null ? (pbM2.expectancyR >= 0 ? "text-emerald-400" : "text-rose-400") : "text-neutral-500"}
+          />
+          <KpiTile
+            label="Avg win / loss"
+            value={pbAll?.avgWinR != null || pbAll?.avgLossR != null ? `${pbAll?.avgWinR?.toFixed(2) ?? "–"} / ${pbAll?.avgLossR?.toFixed(2) ?? "–"}R` : "–"}
+            sub={pbAll?.avgHoldMin != null ? `avg hold ${pbAll.avgHoldMin}m` : undefined}
+          />
+          <KpiTile
+            label="Armed zones"
+            value={`${pb?.telemetry?.armed ?? 0}`}
+            sub={`waiting for fill · cap 24`}
+            cls="text-amber-300"
+          />
+        </div>
+
+        {/* tickets table */}
+        {pbTickets.length === 0 ? (
+          <div className="rounded border border-dashed border-neutral-800 py-4 text-center text-xs text-neutral-500">
+            No {pbFilter === "live" ? "armed or open" : pbFilter === "closed" ? "closed" : ""} virtual tickets yet — the sweep
+            arms setups across all 61 assets as narratives qualify (M1 trend-pullback · M1 wait-zone · M2 ±2σ stretch).
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[980px] border-collapse text-left text-xs">
+              <thead>
+                <tr className="border-b border-neutral-800 text-[10px] uppercase tracking-wider text-neutral-500">
+                  <th className="px-2 py-2">Sym</th>
+                  <th className="px-2 py-2">Model · Dir</th>
+                  <th className="px-2 py-2">Status</th>
+                  <th className="px-2 py-2 text-right">Entry → Mark</th>
+                  <th className="px-2 py-2 text-right">Stop</th>
+                  <th className="px-2 py-2 text-right">Rung ladder</th>
+                  <th className="px-2 py-2 text-right">R (live/final)</th>
+                  <th className="px-2 py-2 text-right">MFE / MAE</th>
+                  <th className="px-2 py-2 text-right">Age</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-800/60 font-mono tabular-nums">
+                {pbTickets.map((t) => (
+                  <tr key={t.id} onClick={() => onPickAsset(t.sym)} className="cursor-pointer hover:bg-neutral-800/40">
+                    <td className="px-2 py-2 font-bold text-neutral-100">{t.sym}</td>
+                    <td className="px-2 py-2">
+                      <span className="text-neutral-300">{PB_MODEL_SHORT[t.model] ?? t.model}</span>{" "}
+                      <span className={t.direction === "LONG" ? "text-emerald-300" : "text-rose-300"}>{t.direction}</span>
+                      <span className="ml-1 text-[10px] text-neutral-500">{t.grade}</span>
+                    </td>
+                    <td className="px-2 py-2">
+                      <span
+                        className={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase ${
+                          t.status === "CLOSED"
+                            ? PB_OUTCOME_BADGE[t.outcome ?? ""] ?? "bg-neutral-800 text-neutral-400"
+                            : PB_STATUS_BADGE[t.status] ?? "bg-neutral-800 text-neutral-400"
+                        }`}
+                      >
+                        {t.status === "CLOSED" ? t.outcome ?? "CLOSED" : t.status}
+                      </span>
+                    </td>
+                    <td className="px-2 py-2 text-right">
+                      {t.status === "ARMED" ? (
+                        <span className="text-neutral-300">
+                          {fmtLevel(t.entryZone[0])} – {fmtLevel(t.entryZone[1])}
+                        </span>
+                      ) : (
+                        <>
+                          <span className="text-neutral-200">{fmtLevel(t.filledPrice)}</span>
+                          {t.lastMark != null && (
+                            <>
+                              <span className="text-neutral-600"> → </span>
+                              <span className={t.lastMark >= (t.filledPrice ?? 0) ? "text-emerald-300" : "text-rose-300"}>
+                                {fmtLevel(t.lastMark)}
+                              </span>
+                            </>
+                          )}
+                        </>
+                      )}
+                    </td>
+                    <td className="px-2 py-2 text-right text-rose-300">
+                      {fmtLevel(t.stop)}
+                      {t.stopAtBe && <span className="ml-1 text-[9px] uppercase text-emerald-400/80">BE</span>}
+                    </td>
+                    <td className="px-2 py-2 text-right text-[11px]">
+                      {t.targets.filter((x) => x.level != null).length === 0 && <span className="text-neutral-600">–</span>}
+                      {t.targets
+                        .filter((x) => x.level != null)
+                        .map((x, i) => (
+                          <span key={i} className={x.hitAt != null ? "text-emerald-300" : "text-neutral-400"}>
+                            {i > 0 && <span className="text-neutral-700"> / </span>}
+                            {x.hitAt != null ? "✓" : ""}
+                            {fmtLevel(x.level)}
+                          </span>
+                        ))}
+                    </td>
+                    <td className="px-2 py-2 text-right">
+                      {t.totalR != null ? (
+                        <span className={`font-bold ${t.totalR >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                          {t.totalR >= 0 ? "+" : ""}
+                          {t.totalR.toFixed(2)}R
+                        </span>
+                      ) : (
+                        <span className="text-neutral-600">–</span>
+                      )}
+                      {t.status === "OPEN" && t.remainingFrac < 1 && (
+                        <span className="ml-1 text-[10px] text-neutral-500">{Math.round(t.remainingFrac * 100)}% on</span>
+                      )}
+                    </td>
+                    <td className="px-2 py-2 text-right text-[11px]">
+                      <span className="text-emerald-300/80">+{t.mfeR.toFixed(2)}</span>
+                      <span className="text-neutral-600"> / </span>
+                      <span className="text-rose-300/80">{t.maeR.toFixed(2)}</span>
+                    </td>
+                    <td className="px-2 py-2 text-right text-[10px] text-neutral-500">
+                      {t.status === "ARMED"
+                        ? fmtRelTime(t.armedAt, now)
+                        : t.status === "OPEN"
+                          ? fmtRelTime(t.filledAt ?? t.armedAt, now)
+                          : fmtRelTime(t.closedAt ?? t.armedAt, now)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <p className="mt-2 text-[10px] leading-relaxed text-neutral-600">
+          Paper accounting: entry/stop/rungs frozen at arm time · fills on m1 wicks (fapi for the 58 perps, Hyperliquid xyz for
+          SPX500/NDX100/UKO) · rung 1 books 50% and moves the stop to breakeven · stop wins ties inside one bar (pessimistic) ·
+          M2 is a market-entry model. Every number traces to a real bar or mark — no fabrication.
+        </p>
       </div>
 
       {/* Multi-Asset Round Matrix + Digest Tail */}

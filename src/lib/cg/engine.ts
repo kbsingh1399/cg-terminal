@@ -27,6 +27,7 @@ import type { KlineRow } from "./types";
 import { ASSETS, aggVenues, isCuratedPerp, leadInstr, liqVenues } from "./assets";
 import { curatedPerps } from "@/lib/universe/curated";
 import { startScanner } from "./scan";
+import { ensurePaperBook } from "./paperbook";
 import { parseLiqLevelsPayload, type RawLiqLevel } from "./liq-model";
 
 const STEP_MS = 900_000; // m15 master step
@@ -586,6 +587,9 @@ export function ensureEngine(): { started: boolean; startedAt: number; bootDone:
   t(3 * 60_000, 60_000, () => pollLiqLevelsAssets(4));
   // live notification scanner (all assets, all tabs)
   startScanner();
+  // virtual book — paper-trade outcome tracker for the agent setups
+  // (60 s track pass + 90 s arm sweep over the full 61-asset universe)
+  ensurePaperBook();
   // never let an unexpected rejection kill the host process
   process.on?.("unhandledRejection", (r) => console.warn("[cg-engine] unhandled rejection:", r));
   return engine;

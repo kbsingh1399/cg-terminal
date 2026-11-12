@@ -41,8 +41,10 @@ Under the hood:
   Alerts tab, `GET /api/cg/notifications`, and the SSE stream
   `GET /api/cg/stream`. For a real-time price in any analysis, poll
   `GET /api/cg/ticker?sym=BTC` (1 s-safe, shared upstream cache).
-- **MCP server** (`mcp/server.mjs`) — 10 tools incl. `analyze_setup` for
-  one-call trade formulation.
+- **MCP server** (`mcp/server.mjs`) — 20 tools incl. `analyze_setup` for
+  one-call trade formulation, `trade_narrative` for the deterministic M1/M2
+  verdict, and `paper_book` for the live Virtual Book (agent-setup paper
+  outcomes: fills, rung ladder, SL/BE, live R, MFE/MAE, per-model expectancy).
 - **Binance top-200 tier** (2026-11-11) — every TRADING USDT-M perpetual on
   Binance, ranked by rolling 24h quote volume, top 200 (auto re-ranked every
   4h). The `BINANCE 200` header button opens the live markets grid

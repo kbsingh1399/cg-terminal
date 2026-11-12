@@ -623,6 +623,48 @@ async function toolDeskStatus() {
   return { text: lines.join("\n"), data: d };
 }
 
+async function toolPaperBook(args) {
+  const sym = (args?.sym ?? "").toUpperCase();
+  const status = args?.status;
+  const limit = args?.limit ?? 30;
+  const params = new URLSearchParams();
+  if (sym) params.set("sym", sym);
+  if (status) params.set("status", String(status).toUpperCase());
+  params.set("limit", String(limit));
+  const d = await api(`/api/cg/paperbook?${params.toString()}`);
+  if (d?.ok === false) throw new Error(d?.error || "paper book failed");
+  const statsAll = (d.stats ?? []).find((s) => s.bucket === "ALL");
+  const tel = d.telemetry ?? {};
+  const lines = [
+    `Virtual Book — ${tel.armed ?? 0} armed · ${tel.open ?? 0} open · ${tel.closed ?? 0} closed · sweep ${tel.sweepPos ?? 0}/${tel.universe ?? "?"} of the 61-asset universe`,
+    `Scoreboard (ALL): ${statsAll?.filled ?? 0} filled · ${statsAll?.wins ?? 0}W/${statsAll?.losses ?? 0}L` +
+      ` · win ${statsAll?.winRatePct != null ? `${statsAll.winRatePct}%` : "–"}` +
+      ` · expectancy ${statsAll?.expectancyR != null ? `${statsAll.expectancyR}R` : "–"}` +
+      ` · total ${statsAll?.totalR != null ? `${statsAll.totalR}R` : "–"}` +
+      ` · avg hold ${statsAll?.avgHoldMin != null ? `${statsAll.avgHoldMin}m` : "–"}`,
+    `Freshness: dataAt ${d.freshness?.dataAt} · ageMs ${d.freshness?.ageMs} · stale ${d.freshness?.stale}`,
+  ];
+  const tickets = d.tickets ?? [];
+  if (sym && d.ticket) lines.push(``, `Most relevant ticket for ${sym}: ${d.ticket.status}${d.ticket.outcome ? ` · ${d.ticket.outcome}` : ""} · ${d.ticket.totalR != null ? `${d.ticket.totalR.toFixed(2)}R` : "no R yet"}`);
+  if (!tickets.length) {
+    lines.push("", "No tickets match the filter — the sweep arms setups as narratives qualify (M1 pullback · M1 wait-zone · M2 stretch).");
+  } else {
+    lines.push("", "Tickets:");
+    for (const t of tickets) {
+      const rungStr = (t.targets ?? []).filter((x) => x.level != null).map((x, i) => `${x.hitAt ? "✓" : ""}T${i + 1} ${x.level}`).join(" / ");
+      lines.push(
+        `  ${t.sym} ${t.model} ${t.direction} ${t.status}${t.outcome ? `·${t.outcome}` : ""}` +
+          ` · entry ${t.filledPrice ?? `zone ${t.entryZone?.[0]}–${t.entryZone?.[1]}`}` +
+          ` · mark ${t.lastMark ?? "–"} · stop ${t.stop}${t.stopAtBe ? " (BE)" : ""}` +
+          ` · R ${t.totalR != null ? t.totalR.toFixed(2) : "–"}` +
+          ` · MFE ${t.mfeR.toFixed(2)}/MAE ${t.maeR.toFixed(2)}` +
+          (rungStr ? ` · ${rungStr}` : "")
+      );
+    }
+  }
+  return { text: lines.join("\n"), data: d };
+}
+
 // ---------------------------------------------------------------------------
 // MCP protocol plumbing (JSON-RPC 2.0 over stdio, line-delimited)
 // ---------------------------------------------------------------------------
@@ -675,7 +717,7 @@ const TOOLS = [
       properties: {
         since: { type: "number", description: "Return events with id > since (default: stored cursor)" },
         asset: { type: "string" },
-        source: { type: "string", enum: ["footprint", "indicators", "whale-orders", "liqlevels", "cvd", "engine"] },
+        source: { type: "string", enum: ["footprint", "indicators", "whale-orders", "liqlevels", "cvd", "paperbook", "engine"] },
         limit: { type: "number" },
         advance_cursor: { type: "boolean", description: "Advance the persistent cursor to the newest id (default true)" },
       },
@@ -838,6 +880,19 @@ const TOOLS = [
     description: "Read-only live snapshot of MT5 account, open positions, pending limit orders, live distance-to-fill, and recent desk rounds.",
     inputSchema: { type: "object", properties: {} },
     handler: toolDeskStatus,
+  },
+  {
+    name: "paper_book",
+    description: "The Virtual Book: live paper-trade outcome tracker for every agent setup (M1 trend-pullback · M1 wait-zone · M2 VWAP ±2σ mean-reversion) across the full 61-asset universe. Tickets carry frozen entry zone/stop/rung ladder, real fills on m1 wicks, live unrealized R, MFE/MAE excursions, and closed outcomes (TP1/TP2/SL/BE/TIME_STOP/FLIP_CLOSE/EXPIRED). Per-model scoreboard: win rate, expectancy in R, total R, fill rate, avg hold.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        sym: { type: "string", description: "Optional asset filter, e.g. BTC, NVDA, SPX500 — also returns the most relevant ticket for the symbol" },
+        status: { type: "string", enum: ["ARMED", "OPEN", "CLOSED"], description: "Optional status filter (default all)" },
+        limit: { type: "number", description: "Max tickets returned (default 30)" },
+      },
+    },
+    handler: toolPaperBook,
   },
 ];
 

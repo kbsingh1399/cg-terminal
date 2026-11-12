@@ -65,7 +65,7 @@ function record(name, ok, note) {
   const tl = await rpc("tools/list");
   const names = (tl.result?.tools ?? []).map((t) => t.name);
   console.log("tools/list:", names.join(", "));
-  record("tools/list has 19 tools", names.length === 19, `${names.length} tools`);
+  record("tools/list has 20 tools", names.length === 20, `${names.length} tools`);
 
   const expectOk = async (name, args, check, label) => {
     const r = await call(name, args);
@@ -131,6 +131,13 @@ function record(name, ok, note) {
   // V2 screener + desk tools
   await expectOk("alpha_screener", { mode: "all" }, (t) => t.split("\n")[0].slice(0, 100), "alpha_screener (V2 tool)");
   await expectOk("desk_status", {}, (t) => t.split("\n")[0].slice(0, 100), "desk_status (V2 tool)");
+
+  // Virtual Book — paper-trade outcome tracker for the agent setups
+  await expectOk("paper_book", {}, (t) => {
+    const head = t.split("\n")[0];
+    return /Virtual Book — \d+ armed · \d+ open · \d+ closed/.test(head) ? head.slice(0, 110) : "header mismatch: " + head.slice(0, 90);
+  }, "paper_book (book-wide scoreboard)");
+  await expectOk("paper_book", { sym: "BTC" }, (t) => /Virtual Book/.test(t.split("\n")[0]) || /Most relevant ticket/.test(t) ? "sym filter ok" : "no sym-scoped output", "paper_book BTC (sym filter)");
 
   const fails = results.filter((r) => !r.ok).length;
   console.log(`\n===== ${results.length - fails}/${results.length} passed =====`);

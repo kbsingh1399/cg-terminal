@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePolling } from "./use-cg-data";
 import type { NarrativeVerdict } from "@/lib/cg/narrative";
+import type { PaperBookTicketView } from "@/lib/cg/paperbook";
 
 /**
  * NarrativeCard — the deterministic M1/M2 trade verdict, always visible at
@@ -18,6 +19,51 @@ import type { NarrativeVerdict } from "@/lib/cg/narrative";
 interface AcctLite {
   ok: boolean;
   totalWalletBalance?: number;
+}
+
+interface PaperBookLite {
+  ok: boolean;
+  ticket: PaperBookTicketView | null;
+  freshness?: { dataAt: number; ageMs: number; stale: boolean; source: string };
+}
+
+const PB_STATUS_STYLE: Record<string, string> = {
+  ARMED: "bg-amber-500/15 text-amber-300 ring-1 ring-amber-500/40",
+  OPEN: "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-500/40",
+  CLOSED: "bg-neutral-800 text-neutral-400 ring-1 ring-neutral-700",
+};
+
+const PB_OUTCOME_STYLE: Record<string, string> = {
+  TP1: "text-emerald-300",
+  TP2: "text-emerald-300",
+  SL: "text-rose-300",
+  BE: "text-neutral-300",
+  TIME_STOP: "text-amber-300",
+  FLIP_CLOSE: "text-amber-300",
+  EXPIRED: "text-neutral-400",
+  CANCELLED: "text-neutral-400",
+};
+
+function fmtRelTime(from: number | null | undefined, now: number): string {
+  if (!from) return "–";
+  const s = Math.max(0, Math.round((now - from) / 1000));
+  if (s < 90) return `${s}s`;
+  const m = Math.round(s / 60);
+  if (m < 90) return `${m}m`;
+  const h = Math.round(m / 60);
+  if (h < 36) return `${h}h`;
+  return `${Math.round(h / 24)}d`;
+}
+
+function fmtInTime(until: number | null | undefined, now: number): string {
+  if (!until) return "–";
+  const s = Math.max(0, Math.round((until - now) / 1000));
+  if (s < 90) return `${s}s`;
+  const m = Math.round(s / 60);
+  if (m < 90) return `${m}m`;
+  const h = Math.round(m / 60);
+  if (h < 36) return `${h}h`;
+  return `${Math.round(h / 24)}d`;
 }
 
 const MODEL_LABEL: Record<string, string> = {
@@ -59,12 +105,21 @@ function fmtUsd(v: number | null | undefined): string {
 export default function NarrativeCard({ sym }: { sym: string }) {
   const q = usePolling<NarrativeVerdict>(`/api/cg/narrative?sym=${encodeURIComponent(sym)}`, 30_000);
   const acct = usePolling<AcctLite>("/api/binance/account", 30_000);
+  const pb = usePolling<PaperBookLite>(`/api/cg/paperbook?sym=${encodeURIComponent(sym)}`, 20_000);
   const v = q.data;
+  const ticket = pb.data?.ticket ?? null;
   const [showDetail, setShowDetail] = useState(false);
   const [riskPct, setRiskPct] = useState(1);
   const [equity, setEquity] = useState<number | null>(null);
   const [staged, setStaged] = useState<string | null>(null);
+  const [now, setNow] = useState(() => Date.now());
   const stagedForSym = staged === sym;
+
+  // 30 s clock for elapsed-time labels (one interval, cleaned up on unmount)
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(t);
+  }, []);
 
   const effEquity = equity ?? acct.data?.totalWalletBalance ?? null;
 
@@ -236,6 +291,81 @@ export default function NarrativeCard({ sym }: { sym: string }) {
             )}
             {v.plan.bestR != null && (
               <div className="mt-1 font-mono text-[9px] text-neutral-500">bestR {v.plan.bestR.toFixed(2)} · min 1.5</div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* virtual book outcome — what this setup is doing as a paper trade */}
+      {ticket && (
+        <div className="border-t border-neutral-800/70 px-4 py-2.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[9px] uppercase tracking-wider text-fuchsia-300/80">Virtual book · paper outcome</span>
+            <span className={`rounded px-1.5 py-0.5 font-mono text-[10px] font-bold ${PB_STATUS_STYLE[ticket.status] ?? PB_STATUS_STYLE.CLOSED}`}>
+              {ticket.status === "CLOSED" ? ticket.outcome ?? "CLOSED" : ticket.status}
+            </span>
+            {ticket.totalR != null && (
+              <span className={`font-mono text-xs font-bold ${ticket.totalR >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                {ticket.totalR >= 0 ? "+" : ""}
+                {ticket.totalR.toFixed(2)}R
+                {ticket.status === "OPEN" ? " live" : " final"}
+              </span>
+            )}
+            {ticket.status === "CLOSED" && ticket.totalR == null && <span className="font-mono text-[10px] text-neutral-500">no fill</span>}
+            <span className="font-mono text-[10px] text-neutral-500">
+              {ticket.status === "ARMED"
+                ? `waiting for fill · expires in ${fmtInTime(ticket.expiresAt, now)}`
+                : ticket.status === "OPEN"
+                  ? `filled ${fmtRelTime(ticket.filledAt, now)} ago · ${ticket.legs.length ? `${Math.round(ticket.remainingFrac * 100)}% still on` : "full size on"}`
+                  : `closed ${fmtRelTime(ticket.closedAt, now)} ago · ${ticket.outcome ?? ""}`}
+            </span>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent("cg-open-desk"))}
+              className="ml-auto rounded border border-fuchsia-500/30 px-2 py-0.5 text-[10px] text-fuchsia-300/90 hover:border-fuchsia-400/60 hover:text-fuchsia-200"
+              title="Open the Desk view with the full Virtual Book"
+            >
+              Open Paper Book →
+            </button>
+          </div>
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[10px] tabular-nums text-neutral-400">
+            {ticket.status !== "ARMED" && ticket.filledPrice != null && (
+              <span>
+                entry <span className="text-neutral-100">{fmtPx(ticket.filledPrice, decs)}</span>
+                {ticket.lastMark != null && (
+                  <>
+                    {" → mark "}
+                    <span className={ticket.lastMark >= ticket.filledPrice ? "text-emerald-300" : "text-rose-300"}>{fmtPx(ticket.lastMark, decs)}</span>
+                  </>
+                )}
+              </span>
+            )}
+            {ticket.status === "ARMED" && (
+              <span>
+                zone <span className="text-neutral-100">{fmtPx(ticket.entryZone[0], decs)} – {fmtPx(ticket.entryZone[1], decs)}</span>
+              </span>
+            )}
+            <span>
+              stop <span className="text-rose-300">{fmtPx(ticket.stop, decs)}</span>
+              {ticket.stopAtBe && <span className="ml-1 text-[9px] uppercase text-emerald-400/80">(BE)</span>}
+            </span>
+            {ticket.targets.filter((t) => t.level != null).map((t, i) => (
+              <span key={i} className={t.hitAt != null ? "text-emerald-300" : ""}>
+                {t.hitAt != null ? "✓" : "·"} T{i + 1} {fmtPx(t.level, decs)}
+                {t.rMultiple != null && <span className="text-neutral-500"> {t.rMultiple.toFixed(1)}R</span>}
+              </span>
+            ))}
+            <span>
+              MFE <span className="text-emerald-300/80">+{ticket.mfeR.toFixed(2)}R</span> · MAE{" "}
+              <span className="text-rose-300/80">{ticket.maeR.toFixed(2)}R</span>
+            </span>
+            {ticket.legs.length > 0 && (
+              <span>
+                booked: {ticket.legs.map((l) => `${Math.round(l.frac * 100)}% @ ${l.r >= 0 ? "+" : ""}${l.r.toFixed(2)}R`).join(" · ")}
+              </span>
+            )}
+            {ticket.status === "CLOSED" && ticket.outcome && (
+              <span className={PB_OUTCOME_STYLE[ticket.outcome] ?? "text-neutral-400"}>outcome {ticket.outcome}</span>
             )}
           </div>
         </div>

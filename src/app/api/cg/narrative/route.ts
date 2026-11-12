@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { buildNarrative } from "@/lib/cg/narrative";
 import { anyTerminalSym } from "@/lib/cg/sym-gate";
 import { markViewed } from "@/lib/cg/scan";
+import { armFromVerdict, ensurePaperBook } from "@/lib/cg/paperbook";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
   markViewed(sym); // priority continuity: keep the viewed asset on the hot scan lane
+  ensurePaperBook(); // tracker lives even if the wider engine never booted
   const hit = cache.get(sym);
   if (hit && Date.now() - hit.at < TTL) {
     return NextResponse.json(hit.body);
@@ -36,6 +38,14 @@ export async function GET(req: NextRequest) {
   try {
     const verdict = await buildNarrative(sym);
     cache.set(sym, { at: Date.now(), body: verdict });
+    // Virtual Book: arm the paper-ticket for this setup the moment the
+    // narrative is built for a viewed symbol (idempotent by setup hash;
+    // M2 market-entries are freshness-gated inside armFromVerdict).
+    try {
+      armFromVerdict(verdict, "route");
+    } catch {
+      /* arming must never break the verdict */
+    }
     return NextResponse.json(verdict);
   } catch (e) {
     // stale-while-revalidate: serve the last verdict rather than a 502

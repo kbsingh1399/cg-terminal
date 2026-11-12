@@ -339,6 +339,14 @@ function TerminalCockpit() {
     window.history.replaceState(null, "", u.toString());
   }, [sym, view, tab]);
 
+  // NarrativeCard "Open Paper Book →" — jump straight to the Desk view where
+  // the Virtual Book (agent-setup paper outcomes) lives
+  useEffect(() => {
+    const h = () => switchCockpit("desk");
+    window.addEventListener("cg-open-desk", h);
+    return () => window.removeEventListener("cg-open-desk", h);
+  }, [switchCockpit]);
+
   // BinanceView props — enriched when the universe payload has landed,
   // curated defaults before that (rank = fixed curated position)
   const binProps = useMemo(() => {
