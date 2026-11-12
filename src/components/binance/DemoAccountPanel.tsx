@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePolling } from "@/components/cg/use-cg-data";
 
 /**
@@ -69,6 +69,23 @@ function OrderTicket({
   const [reduceOnly, setReduceOnly] = useState(false);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [staged, setStaged] = useState<{ stop: number | null; direction: string } | null>(null);
+
+  // NarrativeCard "Stage Setup into Ticket" — fills the form from the M1/M2
+  // verdict (entry price + risk-sized qty) so execution is one click away.
+  useEffect(() => {
+    const onStage = (e: Event) => {
+      const d = (e as CustomEvent<{ sym: string; side: "BUY" | "SELL"; price: number; qty: number; stop: number; direction: string }>).detail;
+      if (d.sym !== sym) return;
+      setSide(d.side);
+      setType("LIMIT");
+      setPrice(String(d.price));
+      setQty(String(d.qty));
+      setStaged({ stop: d.stop ?? null, direction: d.direction });
+    };
+    window.addEventListener("cg-stage-setup", onStage);
+    return () => window.removeEventListener("cg-stage-setup", onStage);
+  }, [sym]);
 
   const step = Math.pow(10, -qtyDecs);
   const px = (v: number) => v.toLocaleString("en-US", { minimumFractionDigits: priceDecs, maximumFractionDigits: priceDecs });
@@ -138,6 +155,13 @@ function OrderTicket({
 
   return (
     <div className="mt-3 border-t border-neutral-800 pt-3">
+      {staged && (
+        <div className="mb-2 rounded border border-emerald-800/50 bg-emerald-950/30 px-2 py-1.5 text-[10px] leading-relaxed text-emerald-300">
+          Staged from the M1/M2 narrative — {staged.direction} entry sized to your risk budget. Narrative stop:{" "}
+          <span className="font-mono">{staged.stop != null ? staged.stop.toLocaleString("en-US") : "n/a"}</span>. Place the
+          limit, then add the stop-market protective order yourself (or re-stage with a stop type).
+        </div>
+      )}
       {!punchable && (
         <div className="mb-2 rounded border border-amber-800/50 bg-amber-950/30 px-2 py-1.5 text-[10px] leading-relaxed text-amber-300">
           {sym}USDT is NOT listed on the futures testnet — live data only, demo order execution unavailable for this

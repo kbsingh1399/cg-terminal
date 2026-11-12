@@ -219,17 +219,21 @@ export function utcMonthStart(tsMs: number): number {
 export interface AuctionSet {
   session: Profile; // trailing 8h intraday auction
   day: Profile; // current UTC calendar day
+  week: Profile; // current UTC calendar week (Mon 00:00)
   month: Profile; // current UTC calendar month
 }
 
-/** All three auction profiles from one m15/h1 candle set. */
+/** All the auction profiles from one m15/h1 candle set. */
 export function auctionLevels(m15: Candle[], h1: Candle[], nowMs = Date.now()): AuctionSet {
   const sessionStart = nowMs - 8 * 3_600_000;
   const dayStart = utcDayStart(nowMs);
   const monthStart = utcMonthStart(nowMs);
+  const wd = new Date(dayStart);
+  const weekStart = dayStart - ((wd.getUTCDay() + 6) % 7) * 86_400_000; // Monday = 0
   return {
     session: volumeProfile(m15.filter((c) => c.t >= sessionStart)),
     day: volumeProfile(m15.filter((c) => c.t >= dayStart)),
+    week: volumeProfile((h1.length ? h1 : m15).filter((c) => c.t >= weekStart), 90),
     month: volumeProfile(h1.filter((c) => c.t >= monthStart), 120),
   };
 }

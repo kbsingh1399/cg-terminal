@@ -5,6 +5,7 @@ import { usePolling, useTicker } from "./use-cg-data";
 import { symDecs } from "@/lib/cg/assets";
 import { classicOf } from "@/lib/cg/classic";
 import MicrostructurePanel from "./microstructure-panel";
+import NarrativeCard from "./narrative-card";
 import DerivativesPanel from "./derivatives-panel";
 
 /**
@@ -159,6 +160,9 @@ export default function OverviewTool({ sym = "BTC" }: { sym?: string }) {
 
   return (
     <div className="space-y-4">
+      {/* M1/M2 trade narrative — always visible at the top (Phase 4 directive) */}
+      <NarrativeCard sym={sym} />
+
       {/* price header */}
       <div className="flex flex-wrap items-end gap-x-8 gap-y-3 rounded-lg border border-neutral-800 bg-[#11151a] p-4">
         <div>
