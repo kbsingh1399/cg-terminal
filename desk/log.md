@@ -3999,3 +3999,26 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R193 · 2026-11-12 20:31 UTC · zai-desk
+
+**Market**: BTC 71,480.3 (-3.4%)  ETH 2,017.64 (-1.8%)  SOL 81.44 (-2.1%)  XAU 3,888.77 (-2.4%)  XAG 50.100 (-2.5%)
+**Bias (|score|≥2)**: XRP-6(TRANS)  AVAX-6(TREND)  ADA-5(TRANS)  BNB-4(TREND)  DOGE-5(TRANS)  SOL-2(TREND)  ETH-3(TRANS)  LTC-3(TREND)  BTC-3(TREND)  XAU-3(TREND)  LINK-2(TRANS)  XAG-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- ADA SHORT confluence -4.9 — REJECTED: opposite liq magnet 0.1735 (str 92, ~$5M est) within 1.2R of entry — wait for sweep
+- NEW R193-DOGE-1 DOGE SHORT limit 0.06587 · stop 0.06671 · T1 0.06400 · T2 0.06349 · R 2.2
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.06582 vs 0.06606), h4 RSI 32.5, day -2.4%
+      [AGAINST] footprint: bull 51 / bear 46; recent: Absorption/buy[vol], Absorption/buy[range]
+      [FOR    ] liquidation: long-liq magnet 0.06438 (str 77, ~$5M est, -2.17%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.010 (5m ago +0.004, rising bids); bid $0.03B vs ask $0.03B
+      [FOR    ] cvd: taker buy 48.5%, perpCvd -83, spotCvd -2, quadrant both-selling, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -3.9 (4 events)
+
+### Order lifecycle
+- R183-AVAX-1 re-debated: FOR 6/AGAINST 0 — stands
+- R183-XRP-2 re-debated: FOR 7/AGAINST 0 — stands
+- R187-BNB-1 re-debated: FOR 7/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
