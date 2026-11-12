@@ -23,7 +23,7 @@ import {
   type SigUnit,
 } from "@/lib/cg/cg-signals";
 import { fmtPrice } from "@/lib/cg/format";
-import { assetOf, fpVenues } from "@/lib/cg/assets";
+import { assetOf, fpVenues, symDecs } from "@/lib/cg/assets";
 import { useTicker } from "./use-cg-data";
 import { useLiveForming, foldTapeIntoFp } from "@/lib/live/forming";
 import { Button } from "@/components/ui/button";
@@ -61,12 +61,24 @@ type BarType = "time" | "vol" | "range";
 type TypeFilter = "all" | "abs" | "trap" | "div" | "exh";
 type PanelTab = "details" | "signals" | "imbalances";
 
+interface CandleFlowRow {
+  ts: number;
+  v: number;
+  buyVol?: number;
+  sellVol?: number;
+}
+
 interface FpResponse {
   ok: boolean;
+  supported?: boolean;
+  bucketsAvailable?: boolean;
+  source?: string;
+  reason?: string;
   error?: string;
   sym: string;
   itv?: string;
   bars: FpBar[];
+  candleFlow?: CandleFlowRow[];
   missing?: string[];
   updatedAt?: number;
 }
@@ -306,16 +318,14 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
     return diagonalImbalances(focusBar.fp, ratio);
   }, [focusBar, ratio]);
 
-  // stats strip
+  // stats strip + live ticker — the same real-time price the header shows (one truth)
+  const tk = useTicker(sym);
   const lastBar = displayBars[displayBars.length - 1] ?? null;
-  const dp = assetOf(sym)?.priceDecs ?? priceDecimals(lastBar?.c ?? 0);
+  const dp = symDecs(sym, tk.price ?? lastBar?.c ?? null);
   const latestSignal = currentSigs.length ? currentSigs.reduce((a, b) => (b.ts > a.ts ? b : a)) : null;
   const err = tfQ.error ?? m1Q.error;
-  const missing = [...(tfQ.data?.sym === sym ? tfQ.data.missing ?? [] : []), ...(m1Q.data?.sym === sym ? m1Q.data.missing ?? [] : [])];
+  const missing = [...new Set([...(tfQ.data?.sym === sym ? tfQ.data.missing ?? [] : []), ...(m1Q.data?.sym === sym ? m1Q.data.missing ?? [] : [])])];
   const sigUnit: SigUnit = unit === "usd" ? "usd" : "qty";
-
-  // live ticker — the same real-time price the header shows (one truth)
-  const tk = useTicker(sym);
   const livePrice = tk.price ?? lastBar?.c ?? null;
 
   const marks = useMemo(
@@ -527,6 +537,18 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
         />
       </div>
 
+      {tfQ.data?.sym === sym && tfQ.data.bucketsAvailable === false && (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-sky-800/40 bg-sky-950/20 px-3 py-2 text-[11px] text-sky-200/90">
+          <span>
+            <span className="font-semibold text-sky-300">{sym} · OHLC + Bar Flow Mode:</span>{" "}
+            {tfQ.data.reason ?? "Price-ladder footprint buckets unavailable upstream; showing live OHLC candles & bar taker volume."}
+          </span>
+          <span className="rounded border border-sky-800/50 bg-[#0e1216] px-2 py-0.5 text-[10px] uppercase tracking-wider text-sky-300">
+            {tfQ.data.source ?? "live"}
+          </span>
+        </div>
+      )}
+
       {/* chart + right panel */}
       <div className="flex flex-col gap-3 xl:flex-row">
         <div className="h-[560px] min-w-0 flex-1 overflow-hidden rounded-lg border border-neutral-800 bg-[#0b0e11]">
@@ -734,6 +756,42 @@ export default function FootprintTool({ sym = "BTC" }: { sym?: string }) {
                     </tbody>
                   </table>
                 </>
+              ) : tfQ.data?.sym === sym && tfQ.data.candleFlow?.length ? (
+                <div className="p-2">
+                  <div className="border-b border-neutral-800 px-1 pb-2 text-[11px] text-neutral-400">
+                    Bar Taker Flow Summary ({tfQ.data.source ?? "live"} · recent {Math.min(20, tfQ.data.candleFlow.length)} bars)
+                  </div>
+                  <table className="w-full text-[11px]">
+                    <thead className="sticky top-0 bg-neutral-900 text-neutral-500">
+                      <tr>
+                        <th className="px-2 py-1.5 text-left font-medium">Time</th>
+                        <th className="px-2 py-1.5 text-right font-medium">Vol</th>
+                        <th className="px-2 py-1.5 text-right font-medium">Buy</th>
+                        <th className="px-2 py-1.5 text-right font-medium">Sell</th>
+                        <th className="px-2 py-1.5 text-right font-medium">Delta</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[...tfQ.data.candleFlow].slice(-20).reverse().map((cf) => {
+                        const buy = cf.buyVol ?? 0;
+                        const sell = cf.sellVol ?? Math.max(0, cf.v - buy);
+                        const d = buy - sell;
+                        const hasSplit = cf.buyVol != null;
+                        return (
+                          <tr key={cf.ts} className="border-t border-neutral-800/50 font-mono">
+                            <td className="px-2 py-1 text-neutral-400">{fmtTs(cf.ts, true)}</td>
+                            <td className="px-2 py-1 text-right text-neutral-300">{fmtQty(cf.v)}</td>
+                            <td className="px-2 py-1 text-right text-emerald-400">{hasSplit ? fmtQty(buy) : "–"}</td>
+                            <td className="px-2 py-1 text-right text-red-400">{hasSplit ? fmtQty(sell) : "–"}</td>
+                            <td className={`px-2 py-1 text-right ${!hasSplit ? "text-neutral-500" : d >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                              {hasSplit ? `${d >= 0 ? "+" : ""}${fmtQty(d)}` : "–"}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               ) : (
                 <div className="px-3 py-8 text-center text-xs text-neutral-600">Hover a bar to inspect it.</div>
               )}

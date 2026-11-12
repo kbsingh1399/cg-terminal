@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLiveQuote } from "@/lib/live/feed";
+import { hlCoinOf } from "@/lib/binance/aliases";
+import { getHlMid, useHlAllMids } from "@/lib/live/hl-feed";
 import type {
   KlineRow,
   OiKlineRow,
@@ -16,8 +18,15 @@ import type {
 export function usePolling<T>(url: string | null, intervalMs: number) {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(url));
   const [updatedAt, setUpdatedAt] = useState<number>(0);
+  const [prevUrl, setPrevUrl] = useState<string | null>(url);
+  if (url !== prevUrl) {
+    setPrevUrl(url);
+    setData(null);
+    setError(null);
+    setLoading(Boolean(url));
+  }
   const alive = useRef(true);
   // fetch generation: only the latest request may commit state, so a slow
   // response for a previous URL (e.g. the old symbol) can never clobber it
@@ -50,15 +59,13 @@ export function usePolling<T>(url: string | null, intervalMs: number) {
 
   useEffect(() => {
     alive.current = true;
-    // url changed (symbol/mode/interval switch): drop the previous payload
-    // immediately so it can never render under the new selection
-    setData(null);
-    setError(null);
-    setLoading(true);
-    load();
+    const init = setTimeout(() => {
+      void load();
+    }, 0);
     const t = setInterval(load, intervalMs);
     return () => {
       alive.current = false;
+      clearTimeout(init);
       clearInterval(t);
     };
   }, [load, intervalMs]);
@@ -88,68 +95,102 @@ export interface TickerPayload {
   ttlMs?: number;
 }
 
-export type TickerSource = "ws" | "rest" | "rest-cg" | null;
+export type TickerSource = "ws" | "hl-ws" | "rest" | "rest-cg" | null;
+
+const HL_INDEX_SYMS = new Set(["SPX500", "SP500", "NDX100", "JP225"]);
 
 /**
- * REAL-TIME price — 3-tier ladder, fastest tier wins:
+ * REAL-TIME price — fastest tier wins:
  *
- *  1. Binance USDT-M futures WebSocket (browser → fstream, bookTicker +
- *     aggTrade): sub-100 ms — the price the exchange itself shows.
- *  2. /api/cg/live — server-side Binance futures bookTicker at 250 ms
- *     shared TTL (kicked in when the browser cannot hold the WS).
- *  3. Coinglass m1 forming-candle close (inside the same route, ~3 s) —
- *     the legacy source, last resort.
- *
- * The returned `source` always names the tier currently driving the price —
- * no silent mixing. `dir` is computed tick-to-tick from the live tape.
+ *  1. Hyperliquid `xyz` WebSocket (`allMids`) for index CFDs (SPX500/NDX100/JP225).
+ *  2. Binance USDT-M futures WebSocket (browser → fstream, bookTicker + aggTrade)
+ *     for all crypto, metals, and Binance TRADIFI_PERPETUAL contracts.
+ *  3. /api/cg/live — server-side Binance futures bookTicker at 250 ms TTL.
+ *  4. Coinglass m1 forming-candle close (~3 s) — last resort.
  */
 export function useTicker(sym: string, restIntervalMs = 500) {
-  const { quote, lastTrade, live: wsLive, status } = useLiveQuote(sym);
-  const wsUsable = wsLive && !!quote;
-  // REST fallback only runs while the WS is down — zero upstream cost when live
-  const q = usePolling<TickerPayload>(wsUsable ? null : `/api/cg/live?sym=${encodeURIComponent(sym)}`, restIntervalMs);
+  const cleanSym = sym.trim().toUpperCase();
+  const hlCoin = cleanSym && HL_INDEX_SYMS.has(cleanSym) ? hlCoinOf(cleanSym) : undefined;
+  const binSym = !cleanSym || hlCoin ? "" : cleanSym;
 
-  // tick-to-tick direction from whichever tier is feeding us.
-  // The refs are READ during render but WRITTEN post-commit (effect) —
-  // mutating them during render would let a discarded concurrent render
-  // advance the baseline and flip the next committed tick's color.
-  const prevRef = useRef<number | null>(null);
-  const prevSrcRef = useRef<TickerSource>(null);
+  const { quote, lastTrade, live: wsLive, status } = useLiveQuote(binSym);
+  const hlMids = useHlAllMids(Boolean(hlCoin));
+  const hlTick = hlCoin ? getHlMid(hlCoin) : undefined;
+
+  const wsUsable = Boolean(binSym && wsLive && quote);
+  const hlUsable = Boolean(hlCoin && hlTick && hlTick.mid > 0);
+  // REST fallback only runs while Binance WS is down (and never for empty or HL-index symbols)
+  const q = usePolling<TickerPayload>(
+    !binSym || wsUsable ? null : `/api/cg/live?sym=${encodeURIComponent(binSym)}`,
+    restIntervalMs
+  );
+
   const priceWs = lastTrade?.p ?? quote?.mid ?? null;
-  const priceRest = q.data?.sym === sym ? q.data?.price ?? null : null;
-  const price = wsUsable ? priceWs : priceRest;
-  const source: TickerSource = wsUsable ? "ws" : q.data?.source === "coinglass" ? "rest-cg" : q.data?.source ? "rest" : null;
-  // tier switch (or a null-price gap across one) → no bogus flash: never
-  // compare prices across tiers
-  const prevPrice = prevSrcRef.current !== source ? null : prevRef.current;
-  const dir =
-    price == null || prevPrice == null || price === prevPrice
-      ? "flat"
-      : price > prevPrice
-        ? "up"
-        : "down";
-  useEffect(() => {
-    if (price != null) prevRef.current = price;
-    prevSrcRef.current = source;
-  }, [price, source]);
+  const priceRest = q.data?.sym === binSym ? q.data?.price ?? null : null;
+  const price = hlCoin ? (hlTick?.mid ?? null) : wsUsable ? priceWs : binSym ? priceRest : null;
+  const source: TickerSource = hlUsable
+    ? "hl-ws"
+    : wsUsable
+      ? "ws"
+      : q.data?.source === "coinglass"
+        ? "rest-cg"
+        : q.data?.source
+          ? "rest"
+          : null;
 
-  const fetchedAt = wsUsable ? quote?.t ?? null : q.updatedAt || null;
-  const ageMs = wsUsable ? Math.max(0, Date.now() - (lastTrade?.t ?? quote?.t ?? Date.now())) : q.data?.ageMs ?? null;
+  // Track previous price + tier without reading refs during render.
+  const [tickTrack, setTickTrack] = useState<{
+    src: TickerSource;
+    seenPrice: number | null;
+    lastNonNull: number | null;
+    dir: "up" | "down" | "flat";
+  }>({
+    src: source,
+    seenPrice: price,
+    lastNonNull: price,
+    dir: "flat",
+  });
+  if (tickTrack.src !== source || tickTrack.seenPrice !== price) {
+    const sameSrc = tickTrack.src === source;
+    const prevPrice = sameSrc ? tickTrack.lastNonNull : null;
+    const nextDir: "up" | "down" | "flat" =
+      price == null || prevPrice == null || price === prevPrice
+        ? "flat"
+        : price > prevPrice
+          ? "up"
+          : "down";
+    setTickTrack({
+      src: source,
+      seenPrice: price,
+      lastNonNull: price ?? prevPrice,
+      dir: nextDir,
+    });
+  }
+  const dir = hlUsable && hlTick ? hlTick.dir : tickTrack.dir;
+
+  const fetchedAt = hlUsable ? hlTick?.at ?? null : wsUsable ? quote?.t ?? null : q.updatedAt || null;
+  const ageMs = hlUsable
+    ? Math.max(0, Date.now() - (hlTick?.at ?? Date.now()))
+    : wsUsable
+      ? Math.max(0, Date.now() - (lastTrade?.t ?? quote?.t ?? Date.now()))
+      : q.data?.ageMs ?? null;
   const live =
     price != null &&
-    (wsUsable || (q.data?.ok === true && q.data?.sym === sym && source === "rest" && !q.error));
+    (hlUsable ||
+      wsUsable ||
+      (q.data?.ok === true && q.data?.sym === binSym && source === "rest" && !q.error));
 
   return {
     price,
-    bid: wsUsable ? quote?.bid ?? null : (q.data?.sym === sym ? q.data?.bid ?? null : null),
-    ask: wsUsable ? quote?.ask ?? null : (q.data?.sym === sym ? q.data?.ask ?? null : null),
+    bid: wsUsable ? quote?.bid ?? null : binSym && q.data?.sym === binSym ? q.data?.bid ?? null : null,
+    ask: wsUsable ? quote?.ask ?? null : binSym && q.data?.sym === binSym ? q.data?.ask ?? null : null,
     dir,
     live,
     source,
-    wsStatus: status,
+    wsStatus: hlCoin ? hlMids.status : status,
     ageMs,
     fetchedAt,
-    error: wsUsable ? null : q.error,
+    error: hlCoin || wsUsable ? null : q.error,
     updatedAt: q.updatedAt,
   };
 }
@@ -173,11 +214,18 @@ export interface LargeOrderPayload {
 
 export interface LtoPayload {
   ok: boolean;
+  supported?: boolean;
   symbol: string;
   minVolUsd: number;
   support: LtoSupport;
   perExchange: Record<string, { market: string; instruments: number; openOrders: number; hasData: boolean }>;
   groups: LtoGroup[];
+  hlFallback?: {
+    coin: string;
+    bids: { price: number; usd: number; sz: number }[];
+    asks: { price: number; usd: number; sz: number }[];
+    recentTrades: { time: number; px: number; sz: number; usd: number; side: "buy" | "sell" }[];
+  } | null;
   updatedAt: number;
 }
 

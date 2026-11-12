@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cgGet } from "@/lib/cg/client";
 import { fpVenues } from "@/lib/cg/assets";
-import { knownSym, gateReject } from "@/lib/cg/sym-gate";
+import { anyTerminalSym, knownSym } from "@/lib/cg/sym-gate";
 import { parseInterval, clampLimit } from "@/lib/cg/params";
 import type { OrderFlowBucket, OrderFlowBar } from "@/lib/cg/types";
 
@@ -78,9 +78,19 @@ function parseRows(d: unknown): [number, unknown[][]][] {
 
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
-  const sym = (sp.get("sym") ?? "BTC").toUpperCase();
+  const sym = (sp.get("sym") ?? "BTC").trim().toUpperCase();
+  if (!(await anyTerminalSym(sym))) {
+    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+  }
+  // classic instruments have no perp order flow — degrade honestly, never 502.
   if (!(await knownSym(sym))) {
-    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
+    return NextResponse.json({
+      ok: true,
+      supported: false,
+      sym,
+      reason: "Aggregated order flow requires perp venues (unavailable for classic cash/CFD instruments)",
+      updatedAt: Date.now(),
+    });
   }
   const VENUES = fpVenues(sym).map((v) => v.key);
   const interval = parseInterval(sp.get("interval"));

@@ -202,7 +202,17 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       ok: true,
       counts: classicCounts(),
-      assets: CLASSIC_ASSETS.map((a) => ({ sym: a.sym, name: a.name, klass: a.klass, broker: a.broker, yahoo: a.yahoo, volume: a.volume, ...(a.note ? { note: a.note } : {}) })),
+      assets: CLASSIC_ASSETS.map((a) => ({
+        sym: a.sym,
+        name: a.name,
+        klass: a.klass,
+        broker: a.broker,
+        yahoo: a.yahoo,
+        ...(a.binPair ? { binPair: a.binPair } : {}),
+        volume: a.volume,
+        ...(a.tradfiCore ? { tradfiCore: true } : {}),
+        ...(a.note ? { note: a.note } : {}),
+      })),
     });
   }
   const sym = (sp.get("sym") ?? "").toUpperCase();
@@ -266,6 +276,7 @@ export async function GET(req: NextRequest) {
         klass: cfg.klass,
         broker: cfg.broker,
         yahoo: cfg.yahoo,
+        binPair: cfg.binPair ?? null,
         note: cfg.note ?? null,
         price: live?.ok ? live.price : fut?.price,
         prevClose: null,
@@ -302,6 +313,7 @@ export async function GET(req: NextRequest) {
     klass: cfg.klass,
     broker: cfg.broker,
     yahoo: cfg.yahoo,
+    binPair: cfg.binPair ?? null,
     note: cfg.note ?? null,
     ...(live ? { live } : {}),
     ...(fut ? { fut } : {}),

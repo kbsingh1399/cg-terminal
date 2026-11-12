@@ -14,7 +14,6 @@
  *       order_id, owner_account_index, initial/remaining_base_amount, price, order_expiry.
  *     · recentTrades → maker/taker attribution (ask_account_id, bid_account_id,
  *       is_maker_ask, usd_amount) + market_symbol echo (drift guard).
- *  3. Kraken spot FX — api.kraken.com/0/public/Depth (real fiat-to-fiat L2).
  *
  * Honest rules (never fabricate):
  *  · THIN suppression per source: HL card dies below $5M vol24h (JP225, XPT, xyz:EUR,
@@ -38,12 +37,10 @@ export interface MicroLighterCfg { id: number; symbol: string }
 export interface MicroMapEntry {
   hl?: MicroHlCfg;
   lighter?: MicroLighterCfg;
-  kraken?: string;
   note?: string;
 }
 
 // Terminal symbol -> verified source keys. SP500 aliases SPX500 (perpmap B3 lesson).
-// Kraken NZDUSD probed = "Unknown asset pair" — dropped (6 majors live).
 // GOOG (registry) rides xyz:GOOGL — share-class proxy, labeled in note.
 export const MICRO_MAP: Record<string, MicroMapEntry> = {
   // metals (perp-registry assets get their L3 here; Coinglass engine stays untouched)
@@ -59,13 +56,6 @@ export const MICRO_MAP: Record<string, MicroMapEntry> = {
   USO: { hl: { coin: "xyz:CL" }, lighter: { id: 145, symbol: "WTI" }, note: "WTI crude" },
   UKO: { hl: { coin: "xyz:BRENTOIL" }, lighter: { id: 159, symbol: "BRENTOIL" } },
   NATGAS: { hl: { coin: "xyz:NATGAS" }, lighter: { id: 158, symbol: "NATGAS" }, note: "watchlist — not broker-listed" },
-  // FX
-  EURUSD: { hl: { coin: "xyz:EUR" }, lighter: { id: 96, symbol: "EURUSD" }, kraken: "EURUSD" },
-  USDJPY: { hl: { coin: "xyz:JPY" }, lighter: { id: 98, symbol: "USDJPY" }, kraken: "USDJPY" },
-  GBPUSD: { lighter: { id: 97, symbol: "GBPUSD" }, kraken: "GBPUSD", note: "xyz:GBP dead ($37k/day) — omitted by design" },
-  AUDUSD: { kraken: "AUDUSD" },
-  USDCAD: { kraken: "USDCAD" },
-  USDCHF: { kraken: "USDCHF" },
   // US equities (xyz HIP-3 perps; thin ones auto-suppress below $5M vol24h)
   AAPL: { hl: { coin: "xyz:AAPL" } },
   AMZN: { hl: { coin: "xyz:AMZN" } },
@@ -76,7 +66,17 @@ export const MICRO_MAP: Record<string, MicroMapEntry> = {
   AMD: { hl: { coin: "xyz:AMD" } },
   META: { hl: { coin: "xyz:META" } },
   INTC: { hl: { coin: "xyz:INTC" } },
-  MU: { hl: { coin: "xyz:MU" } },
+  MU: { hl: { coin: "xyz:MU" }, lighter: { id: 164, symbol: "MU" } },
+  // Curated V2 high-OI TradFi watchlist equities & ETFs (live-verified HL xyz + Lighter IDs)
+  SNDK: { hl: { coin: "xyz:SNDK" }, lighter: { id: 139, symbol: "SNDK" } },
+  CRCL: { hl: { coin: "xyz:CRCL" }, lighter: { id: 121, symbol: "CRCL" } },
+  MSTR: { hl: { coin: "xyz:MSTR" }, lighter: { id: 122, symbol: "MSTR" } },
+  NBIS: { hl: { coin: "xyz:NBIS" }, lighter: { id: 189, symbol: "NBIS" } },
+  COIN: { hl: { coin: "xyz:COIN" }, lighter: { id: 109, symbol: "COIN" } },
+  AVGO: { hl: { coin: "xyz:AVGO" }, lighter: { id: 210, symbol: "AVGO" } },
+  TSM: { hl: { coin: "xyz:TSM" }, lighter: { id: 168, symbol: "TSM" } },
+  SOXL: { hl: { coin: "xyz:SOXL" }, lighter: { id: 197, symbol: "SOXL" }, note: "3x Semiconductor Bull ETF — signal/macro gauge only" },
+  SOXS: { lighter: { id: 222, symbol: "SOXS" }, note: "3x Semiconductor Bear ETF — Lighter L3 signal gauge only" },
   // BABA/NFLX verified live but <$5M/day — auto-suppress; no entry needed (honest absence).
 };
 
@@ -162,28 +162,12 @@ export interface LighterCard {
   suppressed?: string;
 }
 
-export interface KrakenLevel { px: number; sz: number; ts: number }
-export interface KrakenCard {
-  ok: boolean;
-  error?: string;
-  pair: string;
-  bestBid: number | null;
-  bestAsk: number | null;
-  spreadPct: number | null;
-  bids: KrakenLevel[];
-  asks: KrakenLevel[];
-  imbalance10: number | null;
-  stale: boolean;                 // newest level >120s old (RV-QUANT B4)
-  staleReason?: string;
-}
-
 export interface MicroResp {
   ok: boolean;
   sym: string;
   fetchedAt: number;
   hl?: HlCard;
   lighter?: LighterCard;
-  kraken?: KrakenCard;
   error?: string;
 }
 
@@ -492,39 +476,6 @@ export function buildLighterCard(
 }
 
 // ---------------------------------------------------------------------------
-// Kraken spot FX
-
-interface KDepthResp { error?: string[]; result?: Record<string, { bids?: [string, string, string][]; asks?: [string, string, string][] }> }
-
-export async function krakenDepth(pair: string): Promise<KrakenCard> {
-  const j = await getJson<KDepthResp>(`https://api.kraken.com/0/public/Depth?pair=${encodeURIComponent(pair)}&count=10`, 8_000);
-  if (j.error?.length) throw new Error(`kraken: ${j.error.join("; ")}`);
-  const key0 = Object.keys(j.result ?? {})[0];
-  const r = j.result?.[key0];
-  if (!r) throw new Error("kraken: empty result");
-  const mapLv = (arr: [string, string, string][] | undefined): KrakenLevel[] =>
-    (arr ?? []).map(([p, s, t]) => ({ px: +p, sz: +s, ts: +t })).filter((l) => Number.isFinite(l.px));
-  const bids = mapLv(r.bids), asks = mapLv(r.asks);
-  const bestBid = bids.length ? Math.max(...bids.map((l) => l.px)) : null;
-  const bestAsk = asks.length ? Math.min(...asks.map((l) => l.px)) : null;
-  const bidVol = bids.reduce((a, l) => a + l.sz, 0), askVol = asks.reduce((a, l) => a + l.sz, 0);
-  const newest = Math.max(0, ...bids.map((l) => l.ts), ...asks.map((l) => l.ts));
-  const ageS = Math.round(Date.now() / 1000 - newest);
-  const spreadPct = bestBid && bestAsk && bestBid > 0 ? +(((bestAsk - bestBid) / bestBid) * 100).toFixed(5) : null;
-  const stale = newest > 0 && (ageS > 120 || (spreadPct != null && spreadPct > 0.5));
-  return {
-    ok: true, pair: key0, bestBid, bestAsk, spreadPct, bids, asks,
-    imbalance10: bidVol + askVol > 0 ? +(bidVol / (bidVol + askVol)).toFixed(3) : null,
-    stale,
-    staleReason: stale
-      ? ageS > 120
-        ? `newest level ${ageS}s old (>120s) — spot book stale, never gate basis on this`
-        : `spread ${spreadPct}% (>0.5%) — one-sided/weekend book, never gate basis on this`
-      : undefined,
-  };
-}
-
-// ---------------------------------------------------------------------------
 // Shared micro caches — single source of truth for /api/cg/micro AND
 // microLiveQuote() below (same globalThis maps ⇒ warm-cache sharing: the
 // classic route's live anchors ride the exact entries the micro panel just
@@ -564,16 +515,15 @@ export function microStore<T>(m: Map<string, MicroCacheEntry<T>>, key: string, v
 // indices" — Yahoo cash indices freeze outside their cash session for up to
 // 19.5h/day while broker CFDs keep quoting; the R4 micro sources trade 24/7).
 //
-// Ladder: Kraken real spot FX (closest to broker FX CFDs) → Hyperliquid xyz
-// perp mark (one shared snapshot request covers every coin) → Lighter DEX L3
-// top-of-book mid. `at` is the epoch-ms the quote was computed so consumers
-// can age it themselves even when served from a cached body.
+// Ladder: Hyperliquid xyz perp mark (one shared snapshot request covers every
+// coin) → Lighter DEX L3 top-of-book mid. `at` is the epoch-ms the quote was
+// computed so consumers can age it themselves even when served from a cached body.
 
 export interface LiveQuote {
   ok: boolean;
   sym: string;
   price: number | null;
-  source: "kraken" | "hl-xyz" | "lighter" | null;
+  source: "hl-xyz" | "lighter" | null;
   sourceDetail: string | null;
   at: number;
   err?: string;
@@ -585,28 +535,7 @@ export async function microLiveQuote(sym: string): Promise<LiveQuote> {
     return { ok: false, sym, price: null, source: null, sourceDetail: null, at: Date.now(), err: "no micro source mapped" };
   }
 
-  // 1) Kraken spot FX — real interbank-adjacent spot, not a perp mark
-  if (cfg.kraken) {
-    const krCache = microCache<KrakenCard>("__microKraken");
-    const hit = microCached(krCache, cfg.kraken, BOOK_TTL);
-    let kc: KrakenCard | null = hit.hit;
-    if (!kc && !hit.err) {
-      try {
-        kc = await krakenDepth(cfg.kraken);
-        microStore(krCache, cfg.kraken, kc);
-      } catch (e) {
-        microStore(krCache, cfg.kraken, null, e instanceof Error ? e.message : "kraken failed");
-      }
-    }
-    if (kc?.ok && !kc.stale && kc.bestBid != null && kc.bestAsk != null) {
-      const mid = +(((kc.bestBid + kc.bestAsk) / 2).toFixed(6)); // toFixed kills FP noise (1.11364000…2)
-      if (Number.isFinite(mid) && mid > 0) {
-        return { ok: true, sym, price: mid, source: "kraken", sourceDetail: `Kraken ${cfg.kraken} spot mid`, at: Date.now() };
-      }
-    }
-  }
-
-  // 2) Hyperliquid xyz mark — the shared dex snapshot covers every coin in
+  // 1) Hyperliquid xyz mark — the shared dex snapshot covers every coin in
   //    ONE request, so this is the cheapest 24/7 anchor in the whole system
   if (cfg.hl) {
     const snapCache = microCache<Record<string, HlCtx>>("__microHlSnap");

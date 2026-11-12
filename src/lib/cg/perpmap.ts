@@ -5,8 +5,8 @@
  * probe_cg_engine_surface.py + CFTC/CNBC probes; user screenshot discovery:
  * coinglass.com lists index perps — tradeXYZ SP500-USD $463M vol):
  *   - Coinglass carries REAL perp markets for SP500 / JP225 / WTI(CL) /
- *     Brent / NatGas / EURUSD / USDJPY / GBPUSD (+ tradeXYZ GOLD/SILVER/
- *     PLATINUM as extra venues for XAU/XAG/XPT).
+ *     Brent / NatGas (+ tradeXYZ GOLD/SILVER/PLATINUM as extra venues for
+ *     XAU/XAG/XPT).
  *   - Surface per instrument: price klines ✓ everywhere; OI klines ✓;
  *     order_flow buckets only on Binance/Bybit/Bitget venues (NOT tradeXYZ);
  *     funding only where fundingRate/v2/home carries a rate (CL, NATGAS,
@@ -124,36 +124,6 @@ export const PERP_MAP: Record<string, PerpMapEntry> = {
     cnbc: "@NG.1",
     liquidity: "real",
     note: "not listed at FundedNext — watchlist only, no execution path",
-  },
-  EURUSD: {
-    venues: [
-      { id: "Bybit", key: "Bybit_EURUSDUSDT", lead: true, flow: true },
-      { id: "Bitget", key: "Bitget_EURUSDUSDT_UMCBL" },
-      { id: "tradeXYZ", key: "tradeXYZ_EUR-USD" },
-    ],
-    cot: { code: "099741", contract: "EURO FX" },
-    cnbc: "EUR=",
-    liquidity: "real",
-    note: "Bybit 14k contracts/15m at probe",
-  },
-  USDJPY: {
-    venues: [
-      { id: "Bybit", key: "Bybit_USDJPYUSDT", lead: true, flow: true },
-      { id: "Bitget", key: "Bitget_USDJPYUSDT_UMCBL" },
-      { id: "tradeXYZ", key: "tradeXYZ_JPY-USD" },
-    ],
-    cot: { code: "097741", contract: "JAPANESE YEN" },
-    cnbc: "JPY=",
-    liquidity: "thin",
-  },
-  GBPUSD: {
-    venues: [
-      { id: "Bybit", key: "Bybit_GBPUSDUSDT", lead: true, flow: true },
-      { id: "Bitget", key: "Bitget_GBPUSDUSDT_UMCBL" },
-    ],
-    cot: { code: "096742", contract: "BRITISH POUND" },
-    cnbc: "GBP=",
-    liquidity: "thin",
   },
   XAU: {
     venues: [{ id: "tradeXYZ", key: "tradeXYZ_GOLD-USD" }],

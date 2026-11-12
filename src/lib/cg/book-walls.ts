@@ -17,6 +17,8 @@
  * mid-shift alignment — the exact data their page renders.
  */
 
+import { resolveCgSym } from "../binance/aliases";
+
 export interface BookSnapshot {
   t: number; // ms
   g: number; // grid step (price units per bucket)
@@ -525,6 +527,11 @@ export const WALL_MIN_USD: Record<string, number> = {
   XAG: 300_000,
 };
 
+export function minWallForSym(sym: string): number {
+  const cg = resolveCgSym(sym);
+  return WALL_MIN_USD[cg] ?? WALL_MIN_USD[sym.toUpperCase()] ?? 25_000;
+}
+
 export interface WallsModel {
   snapshots: number; // snapshot count
   from: number;
@@ -565,7 +572,7 @@ export function buildWallsModel(
   if (!snapshots.length) return null;
   const sorted = [...snapshots].sort((a, b) => a.t - b.t);
   const grid = sorted[sorted.length - 1].g;
-  const minUsd = WALL_MIN_USD[coin] ?? 100_000;
+  const minUsd = minWallForSym(coin);
   const scanner = new WallScanner();
   const cByTs = new Map(candles.map((c) => [Math.floor(c.ts / stepMs) * stepMs, c]));
   for (const s of sorted) {
@@ -615,7 +622,7 @@ export function buildWallsModel(
       const qty = scratch[i];
       if (!(qty > 0)) continue;
       const price = (lo + i) * stripGrid + stripGrid / 2;
-      cells.push([+price.toFixed(1), +(qty * price).toFixed(0)]);
+      cells.push([Number(price.toPrecision(6)), +(qty * price).toFixed(0)]);
     }
     return { t: s.t, mid: s.mid, cells };
   });

@@ -41,13 +41,13 @@ const gC = globalThis as unknown as {
   __cgHostSem?: { active: number; queue: (() => void)[] };
 };
 const cache = (gC.__cgClientCache ??= new Map());
+/** host-level 429 cooldown window so a single rate-limit backs off ALL concurrent callers */
+const hostCooldown = (gC.__cgHostCooldown ??= new Map<string, number>());
+/** global concurrency gate for uncached upstream Coinglass fetches (prevents burst 429s) */
+const hostSem = (gC.__cgHostSem ??= { active: 0, queue: [] });
+const MAX_CG_CONCURRENCY = 6;
 /** running total of cached raw bytes — the OOM guard reads this (debug/mem route) */
 const cacheBytes = (gC.__cgClientCacheBytes ??= { n: 0 });
-/** host-level 429 cooldown: host → epoch-ms until which callers back off */
-const hostCooldown = (gC.__cgHostCooldown ??= new Map<string, number>());
-/** global concurrency gate for uncached upstream fetches (burst 429 control) */
-const hostSem = (gC.__cgHostSem ??= { active: 0, queue: [] as (() => void)[] });
-const MAX_CG_CONCURRENCY = 6;
 
 async function withCgSlot<T>(fn: () => Promise<T>): Promise<T> {
   if (hostSem.active >= MAX_CG_CONCURRENCY) {
@@ -200,12 +200,8 @@ async function cgGetInner(pathAndQuery: string, ttlMs: number, host: string): Pr
     }
   }
   if (resp.status !== 200) {
-    // stale-serve is a soft-fail LADDER, only for cached endpoints with a
-    // real TTL and only within a bounded age. ttlMs === 0 means "always
-    // fresh" (engine writers): returning stale there would silently freeze
-    // a series while engineStatus reports it healthy — fail loudly instead.
     const stale = cache.get(url);
-    if (stale && ttlMs > 0 && Date.now() - stale.at < Math.max(10 * ttlMs, 60_000)) return stale.data;
+    if (stale && ttlMs > 0 && Date.now() - stale.at < Math.max(10 * ttlMs, 120_000)) return stale.data;
     throw new Error(`upstream HTTP ${resp.status} for ${pathAndQuery}`);
   }
   let parsed: unknown;

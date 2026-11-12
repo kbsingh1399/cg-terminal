@@ -78,10 +78,18 @@ export async function GET(req: NextRequest) {
   if (!sym) return NextResponse.json({ ok: false, error: "missing sym" }, { status: 400 });
   const entry = perpMapOf(sym);
   if (!entry || entry.venues.length === 0) {
+    if (req.nextUrl.searchParams.get("quiet") === "1") {
+      return NextResponse.json({
+        ok: true,
+        supported: false,
+        sym,
+        reason: `No Coinglass perp depth venues mapped for ${sym}`,
+      });
+    }
     // review RV-ARCH B2: US2000 has a COT mapping but ZERO perp venues —
     // return an honest 400 instead of crashing on lead=undefined (500)
     return NextResponse.json(
-      { ok: false, error: `no verified perp venues for ${sym}` + (entry ? ` (COT-only instrument — use /api/cg/cot?sym=${sym})` : ` — registry: SP500/SPX500 NDX100 US2000 JP225 HK50 USO UKO NATGAS EURUSD USDJPY GBPUSD XAU XAG XPT`) },
+      { ok: false, error: `no verified perp venues for ${sym}` + (entry ? ` (COT-only instrument — use /api/cg/cot?sym=${sym})` : ` — registry: SP500/SPX500 NDX100 US2000 JP225 HK50 USO UKO NATGAS XAU XAG XPT`) },
       { status: 400 }
     );
   }

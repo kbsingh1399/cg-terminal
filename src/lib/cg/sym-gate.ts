@@ -1,6 +1,8 @@
 import { isAsset } from "./assets";
 import { isCuratedPerp } from "./assets";
 import { CURATED_BY_SYM } from "@/lib/universe/curated";
+import { isClassic } from "./classic";
+import { resolveCgSym } from "../binance/aliases";
 import { isBinanceSym } from "../binance/universe";
 
 /**
@@ -13,6 +15,9 @@ import { isBinanceSym } from "../binance/universe";
  *     XAUUSDT / CLUSDT) — plus the legacy Tier-1 registry (src/lib/cg/
  *     assets.ts) so XPT and any other legacy member keep working in Tier-1
  *     code paths even though they left the main palette.
+ *   - Aliases resolve first through `resolveCgSym` (USO->CL / GOOG->GOOGL /
+ *     UKO->BZ), so watchlist spellings match their canonical Binance /
+ *     Coinglass symbol.
  *
  * Curated perp membership is STATIC (the universe module builds it from the
  * canonical list at load), so no refresh await is needed — a cold gate
@@ -23,10 +28,18 @@ import { isBinanceSym } from "../binance/universe";
  * via isClassic() and the perp routes reject them honestly (see gateReject).
  */
 export async function knownSym(sym: string): Promise<boolean> {
-  const s = sym.toUpperCase();
-  if (isAsset(s)) return true;
-  if (isCuratedPerp(s)) return true;
-  return isBinanceSym(s);
+  const raw = sym.trim().toUpperCase();
+  const s = resolveCgSym(raw);
+  if (isAsset(s) || isAsset(raw)) return true;
+  if (isCuratedPerp(s) || isCuratedPerp(raw)) return true;
+  return isBinanceSym(s) || isBinanceSym(raw);
+}
+
+/** Unified-terminal gate: perp registry OR classic instruments — used by
+ * tabs that can render a graceful classic fallback instead of HTTP 400. */
+export async function anyTerminalSym(sym: string): Promise<boolean> {
+  if (await knownSym(sym)) return true;
+  return isClassic(sym.trim().toUpperCase());
 }
 
 /** Honest 400 message for a symbol the perp routes cannot serve. */

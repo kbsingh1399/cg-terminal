@@ -35,6 +35,8 @@ export async function GET() {
       ...(a.spotPair ? { spotPair: a.spotPair } : {}),
       punchable: a.punchable,
       origin: a.origin,
+      contractType: a.contractType,
+      underlyingType: a.underlyingType,
     })),
     serverTime: Date.now(),
   });

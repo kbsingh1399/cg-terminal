@@ -1,5 +1,6 @@
 import { fapiFetch } from "@/lib/live/fapi";
 import { curatedPerps, type CuratedAsset } from "@/lib/universe/curated";
+import { resolveBinSym } from "./aliases";
 
 /**
  * CURATED Binance universe — the terminal's FIXED 58-perp membership.
@@ -46,19 +47,22 @@ export interface BinAsset {
   priceDecs: number;
   qtyDecs: number;
   onboard: number;
-  /** curated metadata (static, from src/lib/universe/curated.ts) */
-  kind: "crypto-perp" | "tradfi-perp";
-  name: string;
-  category: "Crypto" | "TradFi";
+  /** curated metadata (static, from src/lib/universe/curated.ts) — present on
+   *  the curated 58; the full-exchange all-index rows omit them */
+  kind?: "crypto-perp" | "tradfi-perp";
+  name?: string;
+  category?: "Crypto" | "TradFi";
   /** sub-category label ("Semiconductors", "Metal", "Meme" …) */
-  sub: string;
+  sub?: string;
   /** Binance SPOT B-token leg (NVDABUSDT) or XAUTUSDT for gold, if any */
   spotPair?: string;
   /** tradable on futures TESTNET (demo order execution) */
-  punchable: boolean;
-  origin: "user" | "fill";
+  punchable?: boolean;
+  origin?: "user" | "fill";
   /** live exchange status from the enrichment loop */
   state: "trading" | "delisted" | "unverified";
+  contractType?: string;     // "PERPETUAL" | "TRADIFI_PERPETUAL"
+  underlyingType?: string;   // "COIN" | "EQUITY" | "COMMODITY" | "INDEX" | "PREMARKET" | ...
 }
 
 export interface UniverseState {
@@ -78,6 +82,8 @@ interface UState {
   assets: BinAsset[];
   bySym: Map<string, BinAsset>;
   byPair: Map<string, BinAsset>;
+  allBySym: Map<string, BinAsset>;
+  allByPair: Map<string, BinAsset>;
   st: UniverseState;
   lastAttempt: number;
   refreshing: Promise<void> | null;
@@ -128,6 +134,8 @@ const S: UState = (g.__binUniverse ??= {
   assets: staticAssets(),
   bySym: new Map(),
   byPair: new Map(),
+  allBySym: new Map(),
+  allByPair: new Map(),
   st: { state: "boot", at: 0, n: 0 },
   lastAttempt: 0,
   refreshing: null,
@@ -176,6 +184,7 @@ async function refresh(): Promise<void> {
         symbol: string;
         status: string;
         contractType?: string;
+        underlyingType?: string;
         quoteAsset?: string;
         onboardDate?: number;
         filters?: { filterType: string; tickSize?: string; stepSize?: string }[];
@@ -184,8 +193,14 @@ async function refresh(): Promise<void> {
     // BOTH perp families are members: crypto PERPETUAL + TradFi
     // TRADIFI_PERPETUAL (plain names — the old !== "PERPETUAL" filter is what
     // used to exclude NVDA/XAU/CL from every route).
-    const perps = new Map<string, { status: string; priceDecs: number; qtyDecs: number; onboard: number }>();
+    const perps = new Map<
+      string,
+      { status: string; priceDecs: number; qtyDecs: number; onboard: number; contractType?: string; underlyingType?: string }
+    >();
     for (const s of info.symbols ?? []) {
+      if (s.status !== "TRADING") continue;
+      if (s.contractType !== "PERPETUAL" && s.contractType !== "TRADIFI_PERPETUAL") continue;
+      if (s.underlyingType === "FX") continue; // no forex contracts
       if (s.quoteAsset !== "USDT" || s.symbol.includes("_")) continue; // no delivery contracts
       if (s.contractType !== "PERPETUAL" && s.contractType !== "TRADIFI_PERPETUAL") continue;
       const pf = (s.filters ?? []).find((f) => f.filterType === "PRICE_FILTER");
@@ -195,12 +210,36 @@ async function refresh(): Promise<void> {
         priceDecs: decsFromStep(pf?.tickSize),
         qtyDecs: decsFromStep(ls?.stepSize),
         onboard: s.onboardDate ?? 0,
+        contractType: s.contractType,
+        underlyingType: s.underlyingType ?? "COIN",
       });
     }
     const tickers = tickRes as { symbol: string; quoteVolume: string }[];
     if (!Array.isArray(tickers) || tickers.length === 0) throw new Error("ticker/24hr returned no rows");
     const vols = new Map<string, number>();
     for (const t of tickers) vols.set(t.symbol, Number(t.quoteVolume) || 0);
+
+    // full TRADING-perp index (allBySym/allByPair) so isBinanceSym() answers
+    // for EVERY live Binance perp — not just the curated 58 (feat-v2 idea).
+    S.allBySym = new Map();
+    S.allByPair = new Map();
+    for (const [pair, meta] of perps) {
+      const sym = pair.replace(/USDT$/, "");
+      const entry: BinAsset = {
+        sym,
+        pair,
+        rank: 0,
+        quoteVol24h: vols.get(pair) ?? 0,
+        priceDecs: meta.priceDecs,
+        qtyDecs: meta.qtyDecs,
+        onboard: meta.onboard,
+        state: "trading",
+        ...(meta.contractType ? { contractType: meta.contractType } : {}),
+        ...(meta.underlyingType ? { underlyingType: meta.underlyingType } : {}),
+      };
+      S.allBySym.set(sym, entry);
+      S.allByPair.set(pair, entry);
+    }
 
     // enrich the FIXED membership — never re-rank, never drop: a curated pair
     // that fapi no longer carries (or is not TRADING) keeps its slot flagged
@@ -216,7 +255,7 @@ async function refresh(): Promise<void> {
         ...base,
         quoteVol24h: vol != null ? vol : 0,
         ...(meta
-          ? { priceDecs: meta.priceDecs, qtyDecs: meta.qtyDecs, onboard: meta.onboard, state: meta.status === "TRADING" ? ("trading" as const) : ("delisted" as const) }
+          ? { priceDecs: meta.priceDecs, qtyDecs: meta.qtyDecs, onboard: meta.onboard, state: meta.status === "TRADING" ? ("trading" as const) : ("delisted" as const), ...(meta.contractType ? { contractType: meta.contractType } : {}), ...(meta.underlyingType ? { underlyingType: meta.underlyingType } : {}) }
           : { state: "delisted" as const }),
       };
     });
@@ -271,11 +310,13 @@ export async function getUniverse(): Promise<UniverseState> {
  * authoritative at any time — no getUniverse() await required.
  */
 export function isBinanceSym(sym: string): boolean {
-  return S.bySym.has(sym.toUpperCase());
+  const s = resolveBinSym(sym);
+  return (S.allBySym?.size ?? 0) > 0 ? S.allBySym.has(s) : S.bySym.has(s);
 }
 
 export function binAssetOf(sym: string): BinAsset | undefined {
-  return S.bySym.get(sym.toUpperCase());
+  const s = resolveBinSym(sym);
+  return S.bySym.get(s) ?? S.allBySym?.get(s);
 }
 
 export function binAssets(): readonly BinAsset[] {
@@ -300,8 +341,9 @@ export async function getQuotes(): Promise<{ at: number; quotes: Record<string, 
           askPrice: string;
         }[];
         const m = new Map<string, BinQuote>();
+        const pairMap = (S.allByPair?.size ?? 0) > 0 ? S.allByPair : S.byPair;
         for (const t of arr) {
-          const a = S.byPair.get(t.symbol);
+          const a = pairMap.get(t.symbol);
           if (!a) continue;
           const bid = Number(t.bidPrice);
           const ask = Number(t.askPrice);

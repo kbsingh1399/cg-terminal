@@ -16,6 +16,7 @@ import { usePolling } from "./use-cg-data";
 
 interface PerpDepthResp {
   ok: boolean;
+  supported?: boolean;
   sym?: string;
   liquidity?: string;
   note?: string | null;
@@ -32,6 +33,7 @@ interface PerpDepthResp {
 
 interface CotResp {
   ok: boolean;
+  supported?: boolean;
   sym?: string;
   contract?: string;
   asOf?: string;
@@ -54,6 +56,7 @@ interface CotResp {
 
 interface CnbcResp {
   ok: boolean;
+  supported?: boolean;
   quotes?: Record<string, { ok: boolean; name?: string | null; last?: number | null; changePct?: number | null; settle?: number | null; openInterest?: number | null; activeContract?: string | null; expiry?: string | null; isFuture?: boolean; lastTime?: string | null }>;
   error?: string;
 }
@@ -102,14 +105,14 @@ function Delta({ v, suffix = "%" }: { v: number | null | undefined; suffix?: str
 }
 
 export default function DerivativesPanel({ sym, cashPrice }: { sym: string; cashPrice: number | null }) {
-  const depthQ = usePolling<PerpDepthResp>(`/api/cg/perpdepth?sym=${sym}`, 60_000);
-  const cotQ = usePolling<CotResp>(`/api/cg/cot?sym=${sym}`, 6 * 60 * 60_000);
-  const cnbcQ = usePolling<CnbcResp>(`/api/cg/cnbc?syms=${sym}`, 60_000);
+  const depthQ = usePolling<PerpDepthResp>(`/api/cg/perpdepth?sym=${sym}&quiet=1`, 60_000);
+  const cotQ = usePolling<CotResp>(`/api/cg/cot?sym=${sym}&quiet=1`, 6 * 60 * 60_000);
+  const cnbcQ = usePolling<CnbcResp>(`/api/cg/cnbc?syms=${sym}&quiet=1`, 60_000);
 
-  const depth = depthQ.data && depthQ.data.sym === sym ? depthQ.data : null;
-  const cot = cotQ.data && cotQ.data.sym === sym ? cotQ.data : null;
+  const depth = depthQ.data && depthQ.data.supported !== false && depthQ.data.sym === sym ? depthQ.data : null;
+  const cot = cotQ.data && cotQ.data.supported !== false && cotQ.data.sym === sym ? cotQ.data : null;
   const cnbc = cnbcQ.data?.quotes?.[sym] ?? null;
-  const hasAny = (depth && !depthQ.error) || (cot && !cotQ.error) || (cnbc && cnbc.ok);
+  const hasAny = (depth && depth.ok && !depthQ.error) || (cot && cot.ok && !cotQ.error) || (cnbc && cnbc.ok);
   if (!hasAny) return null;
 
   const cotHist = [...(cot?.history ?? [])].reverse().map((h) => h.net);

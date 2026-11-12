@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loadFpBars } from "@/lib/cg/fp-load";
-import { knownSym, gateReject } from "@/lib/cg/sym-gate";
+import { anyTerminalSym, knownSym } from "@/lib/cg/sym-gate";
 import { parseInterval } from "@/lib/cg/params";
 
 export const dynamic = "force-dynamic";
@@ -26,9 +26,20 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
-  const sym = (sp.get("sym") ?? "BTC").toUpperCase();
+  const sym = (sp.get("sym") ?? "BTC").trim().toUpperCase();
+  if (!(await anyTerminalSym(sym))) {
+    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+  }
+  // classic instruments (SPX500/NDX100/UKO) pass the terminal gate but have
+  // no perp order flow anywhere — degrade honestly, never a dead 400/502.
   if (!(await knownSym(sym))) {
-    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
+    return NextResponse.json({
+      ok: true,
+      supported: false,
+      sym,
+      reason: "Footprint requires perp order flow (unavailable for classic cash/CFD instruments)",
+      updatedAt: Date.now(),
+    });
   }
   const itv = parseInterval(sp.get("itv"));
   if (!itv) {

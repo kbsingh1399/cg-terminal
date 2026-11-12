@@ -102,16 +102,31 @@ interface ScanState {
 
 interface ScanGlobal {
   states: Map<string, ScanState>;
+  market: Map<string, MarketSnapshot>;
   signals: Map<string, SignalsSnapshot>;
   whale: Map<string, WhaleSnapshot>;
   liq: Map<string, LiqSnapshot>;
   cvd: Map<string, CvdSnapshot>;
+  warming: Map<string, Promise<void>>;
   started: boolean;
   ticks: number;
 }
 
 const g = globalThis as unknown as { __cgScanner?: ScanGlobal };
-const S: ScanGlobal = (g.__cgScanner ??= { states: new Map(), signals: new Map(), whale: new Map(), liq: new Map(), cvd: new Map(), started: false, ticks: 0 });
+const S: ScanGlobal = (g.__cgScanner ??= {
+  states: new Map(),
+  market: new Map(),
+  signals: new Map(),
+  whale: new Map(),
+  liq: new Map(),
+  cvd: new Map(),
+  warming: new Map(),
+  started: false,
+  ticks: 0,
+});
+// dev hot-reload safety: ensure new maps exist on recycled global singleton
+S.market ??= new Map();
+S.warming ??= new Map();
 
 function stateOf(sym: string): ScanState {
   let st = S.states.get(sym);
@@ -231,6 +246,7 @@ function bandIndexOf(price: number, vwap: number, sd1: number): number {
 async function scanMarket(sym: string) {
   const st = stateOf(sym);
   const snap: MarketSnapshot = await buildMarketSnapshot(sym);
+  S.market.set(sym, snap);
   const p = snap.price.last;
   if (null == p) return;
 
@@ -572,6 +588,10 @@ async function scanAssetAll(sym: string) {
   await scanMarket(sym).catch(() => undefined);
 }
 
+export function getMarketSnapshot(sym: string): MarketSnapshot | null {
+  return S.market.get(sym.toUpperCase()) ?? null;
+}
+
 export function getSignalsSnapshot(sym: string): SignalsSnapshot | null {
   return S.signals.get(sym.toUpperCase()) ?? null;
 }
@@ -586,6 +606,25 @@ export function getLiqSnapshot(sym: string): LiqSnapshot | null {
 
 export function getCvdSnapshot(sym: string): CvdSnapshot | null {
   return S.cvd.get(sym.toUpperCase()) ?? null;
+}
+
+/** On-demand coalesced warm-up for any registered asset (populates Market, Signals, Liq, CVD). */
+export async function warmAssetScan(symRaw: string): Promise<void> {
+  const sym = symRaw.toUpperCase();
+  if (!assetOf(sym)) return;
+  const inflight = S.warming.get(sym);
+  if (inflight) return inflight;
+  const p = Promise.allSettled([
+    scanAssetAll(sym),
+    scanLiq(sym),
+    scanCvd(sym),
+  ])
+    .then(() => undefined)
+    .finally(() => {
+      S.warming.delete(sym);
+    });
+  S.warming.set(sym, p);
+  return p;
 }
 
 export function scannerStatus() {
@@ -689,9 +728,10 @@ export function startScanner() {
   laneTimer.unref?.();
   // initial pass: prime the fast lane immediately
   setTimeout(() => {
-    scanAssetAll("BTC").catch(() => undefined);
-    scanLiq("BTC").catch(() => undefined);
-    scanCvd("BTC").catch(() => undefined);
+    warmAssetScan("BTC").catch(() => undefined);
     scanWhale("BTC").catch(() => undefined);
+    setTimeout(() => warmAssetScan("ETH").catch(() => undefined), 2_500).unref?.();
+    setTimeout(() => warmAssetScan("SOL").catch(() => undefined), 5_000).unref?.();
+    setTimeout(() => warmAssetScan("HYPE").catch(() => undefined), 7_500).unref?.();
   }, 8_000).unref?.();
 }

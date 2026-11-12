@@ -65,7 +65,7 @@ function record(name, ok, note) {
   const tl = await rpc("tools/list");
   const names = (tl.result?.tools ?? []).map((t) => t.name);
   console.log("tools/list:", names.join(", "));
-  record("tools/list has 14 tools", names.length === 14, `${names.length} tools`);
+  record("tools/list has 16 tools", names.length === 16, `${names.length} tools`);
 
   const expectOk = async (name, args, check, label) => {
     const r = await call(name, args);
@@ -108,6 +108,10 @@ function record(name, ok, note) {
     !!st.result?.isError && /BTC-only/.test(st.result?.content?.[0]?.text ?? ""),
     (st.result?.content?.[0]?.text ?? "").slice(0, 80)
   );
+
+  // V2 screener + desk tools
+  await expectOk("alpha_screener", { mode: "all" }, (t) => t.split("\n")[0].slice(0, 100), "alpha_screener (V2 tool)");
+  await expectOk("desk_status", {}, (t) => t.split("\n")[0].slice(0, 100), "desk_status (V2 tool)");
 
   const fails = results.filter((r) => !r.ok).length;
   console.log(`\n===== ${results.length - fails}/${results.length} passed =====`);

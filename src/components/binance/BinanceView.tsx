@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { usePolling, useTicker } from "@/components/cg/use-cg-data";
+import { resolveBinPair, resolveBinSym } from "@/lib/binance/aliases";
 import { useDepth20, useLiveBar, type LiveBar } from "@/lib/binance/sym-feed";
 import { useTradeTape } from "@/lib/live/feed";
 import { fetchKlinesDirect, fetchMarketDirect, type DirectMarket } from "@/lib/binance/direct";
@@ -67,6 +68,15 @@ function countdown(ms: number): string {
   return h > 0 ? `${h}h ${m}m` : m > 0 ? `${m}m ${s}s` : `${s}s`;
 }
 
+function Stat({ label, value, cls = "text-neutral-100", title }: { label: string; value: string; cls?: string; title?: string }) {
+  return (
+    <div className="min-w-[86px]" title={title}>
+      <div className="text-[9px] uppercase tracking-wider text-neutral-600">{label}</div>
+      <div className={`font-mono text-[12px] font-semibold tabular-nums ${cls}`}>{value}</div>
+    </div>
+  );
+}
+
 export default function BinanceView({
   sym,
   rank,
@@ -82,14 +92,13 @@ export default function BinanceView({
 }) {
   const [presetIdx, setPresetIdx] = useState(2); // 15m
   const iv = PRESETS[presetIdx].iv;
-  const [liveBar, setLiveBar] = useState<LiveBar | null>(null);
-  // Athena Oracle confluence panel — collapsed by default so the layout is
-  // unchanged for existing users; while collapsed the panel is unmounted and
-  // therefore polls nothing.
   const [oracleOpen, setOracleOpen] = useState(false);
-  useEffect(() => {
-    setLiveBar(null); // never carry the previous symbol's forming bar
-  }, [sym]);
+  const [liveBarState, setLiveBarState] = useState<{ sym: string; iv: string; bar: LiveBar | null }>({
+    sym,
+    iv,
+    bar: null,
+  });
+  const liveBar = liveBarState.sym === sym && liveBarState.iv === iv ? liveBarState.bar : null;
 
   const mkt = usePolling<MarketResp>(`/api/binance/market?sym=${encodeURIComponent(sym)}`, 5_000);
   const kl = usePolling<KlinesResp>(
@@ -104,22 +113,27 @@ export default function BinanceView({
   // bucket exactly the way the exchange aggregates klines; the 60s REST
   // poll re-syncs closed bars.
   const ivMs = PRESETS[presetIdx].ms;
-  useLiveBar(sym, iv, (b) => setLiveBar(b));
+  useLiveBar(sym, iv, (b) => setLiveBarState({ sym, iv, bar: b }));
   useTradeTape(sym, (tr) => {
-    setLiveBar((prev) => {
+    setLiveBarState((prevState) => {
+      const prev = prevState.sym === sym && prevState.iv === iv ? prevState.bar : null;
       const bucket = Math.floor(tr.t / ivMs) * ivMs;
       if (prev && prev.t === bucket) {
         return {
-          t: bucket,
-          o: prev.o,
-          h: Math.max(prev.h, tr.p),
-          l: Math.min(prev.l, tr.p),
-          c: tr.p,
-          v: prev.v + tr.q,
-          final: false,
+          sym,
+          iv,
+          bar: {
+            t: bucket,
+            o: prev.o,
+            h: Math.max(prev.h, tr.p),
+            l: Math.min(prev.l, tr.p),
+            c: tr.p,
+            v: prev.v + tr.q,
+            final: false,
+          },
         };
       }
-      return { t: bucket, o: tr.p, h: tr.p, l: tr.p, c: tr.p, v: tr.q, final: false };
+      return { sym, iv, bar: { t: bucket, o: tr.p, h: tr.p, l: tr.p, c: tr.p, v: tr.q, final: false } };
     });
   });
 
@@ -127,23 +141,25 @@ export default function BinanceView({
   // terminal host's egress IP carries a transient Binance weight ban): the
   // same public endpoints fetched from the user's own IP, the one already
   // holding the fstream WebSockets. Mirrors the perp live-price ladder.
-  const pair = `${sym}USDT`;
+  const pairSym = resolveBinSym(sym);
+  const pair = resolveBinPair(sym);
   const mktFailed = !!mkt.error || (mkt.data != null && mkt.data.ok !== true);
-  const [dm, setDm] = useState<DirectMarket | null>(null);
+  const [dmState, setDmState] = useState<{ pair: string; val: DirectMarket | null }>({ pair, val: null });
+  const dm = mktFailed && dmState.pair === pair ? dmState.val : null;
   useEffect(() => {
-    if (!mktFailed) {
-      setDm(null);
-      return;
-    }
+    if (!mktFailed) return;
     let alive = true;
     const tick = async () => {
       const d = await fetchMarketDirect(pair);
-      if (alive && d) setDm(d);
+      if (alive && d) setDmState({ pair, val: d });
     };
-    void tick();
+    const init = setTimeout(() => {
+      void tick();
+    }, 0);
     const t = setInterval(tick, 10_000);
     return () => {
       alive = false;
+      clearTimeout(init);
       clearInterval(t);
     };
   }, [mktFailed, pair]);
@@ -153,24 +169,29 @@ export default function BinanceView({
   // otherwise the chart paints a near-empty frame for a whole poll cycle.
   const klFailed =
     !!kl.error || (kl.data != null && (kl.data.ok !== true || !(kl.data.rows?.length ?? 0)));
-  const [dk, setDk] = useState<[number, number, number, number, number, number, number][] | null>(null);
+  const dkKey = `${pair}:${iv}`;
+  const [dkState, setDkState] = useState<{
+    key: string;
+    val: [number, number, number, number, number, number, number][] | null;
+  }>({ key: dkKey, val: null });
+  const dk = klFailed && dkState.key === dkKey ? dkState.val : null;
   useEffect(() => {
-    if (!klFailed) {
-      setDk(null);
-      return;
-    }
+    if (!klFailed) return;
     let alive = true;
     const tick = async () => {
       const r = await fetchKlinesDirect(pair, iv, 300);
-      if (alive && r) setDk(r);
+      if (alive && r) setDkState({ key: dkKey, val: r });
     };
-    void tick();
+    const init = setTimeout(() => {
+      void tick();
+    }, 0);
     const t = setInterval(tick, 30_000);
     return () => {
       alive = false;
+      clearTimeout(init);
       clearInterval(t);
     };
-  }, [klFailed, pair, iv]);
+  }, [klFailed, pair, iv, dkKey]);
 
   // live mid for the order ticket + mark-basis math (WS ladder shared with LivePrice)
   const t = useTicker(sym, 1_000);
@@ -205,13 +226,6 @@ export default function BinanceView({
   const basisPct = mk && refPx && refPx > 0 ? ((mk.markPrice - refPx) / refPx) * 100 : null;
   const fundingApr = mk ? mk.fundingRatePct * 3 * 365 : null; // 8h funding → APR
 
-  const Stat = ({ label, value, cls = "text-neutral-100", title }: { label: string; value: string; cls?: string; title?: string }) => (
-    <div className="min-w-[86px]" title={title}>
-      <div className="text-[9px] uppercase tracking-wider text-neutral-600">{label}</div>
-      <div className={`font-mono text-[12px] font-semibold tabular-nums ${cls}`}>{value}</div>
-    </div>
-  );
-
   return (
     <div className="space-y-4">
       {/* interval presets */}
@@ -221,7 +235,7 @@ export default function BinanceView({
             key={p.iv}
             onClick={() => {
               setPresetIdx(i);
-              setLiveBar(null);
+              setLiveBarState({ sym, iv: p.iv, bar: null });
             }}
             className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
               i === presetIdx ? "bg-cyan-500/20 text-cyan-300 ring-1 ring-cyan-500/40" : "text-neutral-400 hover:bg-neutral-900"
@@ -231,7 +245,7 @@ export default function BinanceView({
           </button>
         ))}
         <span className="ml-2 text-[10px] text-neutral-600">
-          {sym}USDT · Binance USDT-M perp · curated #{rank} · candles REST-bootstrapped then WS-live · stats: {statsSrc}
+          {pair} · Binance USDT-M perp · liquidity rank #{rank} · candles REST-bootstrapped then WS-live · stats: {statsSrc}
         </span>
         <button
           onClick={() => setOracleOpen((v) => !v)}

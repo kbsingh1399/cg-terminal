@@ -8,7 +8,7 @@ import { usePolling } from "@/components/cg/use-cg-data";
  * BinanceMarkets — the CURATED 61 grid, live.
  *
  * 30 crypto + 28 TradFi USDT-M perpetuals (fixed membership — the top-200
- * era is over), plus category badges and per-asset state. Prices come from
+ * era is over), plus category badges and per-asset state. Prices stream via the sub-100ms batched @bookTicker + !bookTicker sweep feed (the !miniTicker@arr socket empirically delivers zero frames).
  * the browser !miniTicker@arr WebSocket (every Binance futures symbol, 1s
  * push, one stream — zero server weight). When the browser cannot hold the
  * WS the grid degrades to /api/binance/quotes (server REST, 5s) — the badge
@@ -32,7 +32,8 @@ interface UniResp {
     name: string;
     category: "Crypto" | "TradFi";
     sub: string;
-    punchable: boolean;
+    punchable: boolean;    contractType?: string;
+    underlyingType?: string;
   }[];
 }
 
@@ -42,6 +43,7 @@ interface QuotesResp {
 }
 
 type SortKey = "rank" | "sym" | "last" | "chg" | "vol";
+type KindFilter = "all" | "crypto-perp" | "tradfi-perp";
 
 function fmtUsd(v: number): string {
   if (v >= 1_000_000_000) return `$${(v / 1_000_000_000).toFixed(2)}B`;
@@ -52,24 +54,28 @@ function fmtUsd(v: number): string {
 
 export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => void }) {
   const uni = usePolling<UniResp>("/api/binance/universe", 300_000);
-  const mini = useMiniFeed();
-  // DATA-AWARE fallback (2026-11-12 fix): some egress IPs ACCEPT the
-  // !miniTicker@arr socket but deliver zero frames — status says "open"
-  // while every column stays dead. The WS tier is only trusted once it has
-  // actually delivered a batch (tick > 0); otherwise the REST tier keeps
-  // the grid fully populated (last · chg · range · vol).
-  const wsUseful = mini.status === "open" && mini.tick > 0;
-  const wsOpen = wsUseful;
-  // REST fallback while the WS is not delivering — zero upstream cost when live
-  const rest = usePolling<QuotesResp>(wsUseful ? null : "/api/binance/quotes", 5_000);
+  const mini = useMiniFeed({ sweepAll: true });
+  const wsOpen = mini.liveStreaming;
+  // REST fallback only while WS stream is not actively flowing
+  const rest = usePolling<QuotesResp>(wsOpen ? null : "/api/binance/quotes", 5_000);
 
   const [q, setQ] = useState("");
-  const [kindFilter, setKindFilter] = useState<"all" | "crypto-perp" | "tradfi-perp">("all");
+  const [kindFilter, setKindFilter] = useState<KindFilter>("all");
+  const delisted = useMemo(() => new Set(uni.data?.delisted ?? []), [uni.data]);
   const [sortKey, setSortKey] = useState<SortKey>("rank");
   const [sortAsc, setSortAsc] = useState(true);
 
-  const assets = uni.data?.assets ?? [];
-  const delisted = new Set(uni.data?.delisted ?? []);
+  const assets = useMemo(() => uni.data?.assets ?? [], [uni.data]);
+
+  const counts = useMemo(() => {
+    let crypto = 0;
+    let tradfi = 0;
+    for (const a of assets) {
+      if (a.kind === "crypto-perp") crypto++;
+      else if (a.kind === "tradfi-perp") tradfi++;
+    }
+    return { all: assets.length, crypto, tradfi };
+  }, [assets]);
 
   const rows = useMemo(() => {
     const s = q.trim().toUpperCase();
@@ -135,7 +141,7 @@ export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => vo
 
   return (
     <div className="space-y-3">
-      {/* header row: search + live badge */}
+      {/* header row: search + category filter + live badge */}
       <div className="flex flex-wrap items-center gap-3 rounded-lg border border-neutral-800 bg-[#11151a] px-4 py-3">
         <div>
           <div className="text-sm font-semibold text-neutral-100">Curated {uni.data?.n ?? 58} · Binance USDT-M perps</div>
@@ -173,12 +179,12 @@ export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => vo
                 : "bg-neutral-800 text-neutral-400"
           }`}
           title={
-            wsUseful
-              ? "browser WebSocket !miniTicker@arr — every symbol, 1s push, zero server weight"
-              : "server REST fallback (fapi ticker/24hr + bookTicker batch, 5s) — the browser's fstream stream is not delivering"
+            wsOpen
+              ? "browser WebSocket @bookTicker + !bookTicker sweep + 60s 24h stats seed"
+              : "server REST fallback (fapi bookTicker, 5s) — WS reconnecting"
           }
         >
-          {wsUseful ? "LIVE · WS 1s" : rest.data?.ok ? "REST · 5s" : "connecting…"}
+          {wsOpen ? "LIVE · WS" : rest.data?.ok ? "REST · 5s" : "connecting…"}
         </span>
         <input
           value={q}
@@ -217,6 +223,12 @@ export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => vo
                 ? "–"
                 : v.toLocaleString("en-US", { minimumFractionDigits: a.priceDecs, maximumFractionDigits: a.priceDecs });
             const dead = a.state === "delisted" || delisted.has(a.sym);
+            const dirCls =
+              m?.dir === "up"
+                ? "text-emerald-300"
+                : m?.dir === "down"
+                  ? "text-rose-300"
+                  : "text-neutral-300";
             return (
               <button
                 key={a.sym}
@@ -244,7 +256,7 @@ export default function BinanceMarkets({ onPick }: { onPick: (sym: string) => vo
                     </span>
                   )}
                 </span>
-                <span className="px-2 text-neutral-100">{px(last)}</span>
+                <span className={`px-2 transition-colors ${dirCls}`}>{px(last)}</span>
                 <span className={`px-2 font-semibold ${chg == null ? "text-neutral-600" : chg >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
                   {chg == null ? "–" : `${chg >= 0 ? "+" : ""}${chg.toFixed(2)}%`}
                 </span>

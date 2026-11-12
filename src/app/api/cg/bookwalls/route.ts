@@ -4,13 +4,18 @@ import {
   buildWallsModel,
   decodeRow,
   fetchAggregateWithDiscovery,
-  WALL_MIN_USD,
+  minWallForSym,
   type BookSnapshot,
 } from "@/lib/cg/book-walls";
 import type { KlineRow } from "@/lib/cg/types";
 import { aggVenues } from "@/lib/cg/assets";
-import { knownSym, gateReject } from "@/lib/cg/sym-gate";
+import { anyTerminalSym, knownSym } from "@/lib/cg/sym-gate";
 import { BoundedMap } from "@/lib/cg/bounded";
+import { hlCoinOf, resolveBinPair, resolveCgSym } from "@/lib/binance/aliases";
+import { binAssetOf, getUniverse } from "@/lib/binance/universe";
+import { isClassic } from "@/lib/cg/classic";
+import { fapiFetch } from "@/lib/live/fapi";
+import { cleanGridStep, fetchHlCtxAndBook } from "@/lib/cg/fallbacks";
 
 export const dynamic = "force-dynamic";
 
@@ -43,19 +48,51 @@ const STEP_MS: Record<string, number> = {
   "4h": 14_400_000,
   "1d": 86_400_000,
 };
-/** accept both "m15" (app convention) and "15m" (page convention) */
 const NORMALIZE: Record<string, string> = { m1: "1m", m5: "5m", m15: "15m", h1: "1h", h4: "4h", d1: "1d" };
 
-/** module-level cache per (sym, market, interval, limit, band, endTime) — streams
- *  are heavy. BOUNDED: a varying query param must never grow server memory. */
 const cache = new BoundedMap<{ at: number; body: unknown }>(24);
+
+function buildSnapFromBook(
+  bids: [number, number][],
+  asks: [number, number][],
+  grid: number
+): BookSnapshot | null {
+  if (!bids.length || !asks.length || !(grid > 0)) return null;
+  let bb = -Infinity;
+  let ba = Infinity;
+  for (const [p, q] of bids) if (q > 0 && p > bb) bb = p;
+  for (const [p, q] of asks) if (q > 0 && p < ba) ba = p;
+  if (!(bb > 0) || !Number.isFinite(ba) || ba <= bb) return null;
+  let kMin = Infinity;
+  let kMax = -Infinity;
+  const flat: number[] = [];
+  for (const [p, q] of bids) {
+    if (!(q > 0) || p > bb) continue;
+    const k = Math.round(p / grid);
+    if (k < kMin) kMin = k;
+    if (k > kMax) kMax = k;
+    flat.push(k, q);
+  }
+  for (const [p, q] of asks) {
+    if (!(q > 0) || p < ba) continue;
+    const k = Math.round(p / grid);
+    if (k < kMin) kMin = k;
+    if (k > kMax) kMax = k;
+    flat.push(k, q);
+  }
+  if (!flat.length || kMax - kMin + 1 > 200_000) return null;
+  const arr = new Float64Array(kMax - kMin + 1);
+  for (let i = 0; i < flat.length; i += 2) arr[flat[i] - kMin] += flat[i + 1];
+  return { t: Date.now(), g: grid, k0: kMin, q: arr, bb, ba, mid: (bb + ba) / 2 };
+}
 
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
-  const sym = (sp.get("sym") ?? "BTC").toUpperCase();
-  if (!(await knownSym(sym))) {
-    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
+  const sym = (sp.get("sym") ?? "BTC").trim().toUpperCase();
+  if (!(await anyTerminalSym(sym))) {
+    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
   }
+  const cgSym = resolveCgSym(sym);
   const market = sp.get("market") === "spot" ? "spot" : "futures";
   const rawItv = sp.get("interval") ?? "m15";
   const interval = INTERVALS.includes(rawItv as (typeof INTERVALS)[number])
@@ -67,9 +104,6 @@ export async function GET(req: NextRequest) {
   if (Number.isFinite(endTimeRaw) && endTimeRaw !== 0 && !(endTimeRaw > 0)) {
     return NextResponse.json({ ok: false, error: "endTime must be a positive unix-seconds value" }, { status: 400 });
   }
-  // history windows only: heatmap history reaches back ~30 days on the
-  // anonymous API — reject anything outside it (also keeps the cache key
-  // from being used as a memory-growth primitive)
   const MAX_LOOKBACK_S = 30 * 86_400;
   let endTime: number | undefined;
   if (Number.isFinite(endTimeRaw) && endTimeRaw > 0) {
@@ -82,81 +116,174 @@ export async function GET(req: NextRequest) {
 
   const key = `${sym}|${market}|${interval}|${limit}|${band}|${endTime ?? "now"}`;
   const hit = cache.get(key);
-  // 18s: the aggregate resync cadence — the client polls every 15s and the
-  // REAL-TIME layer (WS price + /api/cg/livebook) covers the gap between
   if (hit && Date.now() - hit.at < 18_000) return NextResponse.json(hit.body);
 
+  const minUsd = minWallForSym(sym);
+  await getUniverse();
+  const hasPerp = await knownSym(sym);
+  const isTradifi = !!isClassic(sym) || binAssetOf(cgSym)?.contractType === "TRADIFI_PERPETUAL";
+
   try {
-    // per-coin venue discovery: the stream itself names any venue without a
-    // (coin, market) heatmap pair — discovery drops it, retries and caches
-    // the winning set (1h). BTC/ETH keep their curated full lists.
     const candidates = aggVenues(sym, market);
-    if (!candidates.length) {
-      return NextResponse.json(
-        { ok: false, error: `no ${market} aggregate for ${sym} on the liquidity-heatmap stream — use market=futures` },
-        { status: 400 }
-      );
-    }
-    const { venues, result: stream } = await fetchAggregateWithDiscovery({
-      coin: sym,
-      exchanges: candidates,
-      market,
-      interval: API_ITV[interval],
-      limit,
-      endTime,
-    });
-    if (!(stream.size > 0) || !stream.rows.length) {
-      return NextResponse.json(
-        { ok: false, error: "aggregate stream returned no rows (retrying next poll)" },
-        { status: 502 }
-      );
+    if (market === "spot" && (!candidates.length || isTradifi || !hasPerp)) {
+      return NextResponse.json({
+        ok: true,
+        supported: false,
+        sym,
+        market,
+        interval,
+        limit,
+        band,
+        venues: [],
+        minWallUsd: minUsd,
+        reason: "No spot order-book heatmap upstream — perpetual futures contract only",
+        model: null,
+        updatedAt: Date.now(),
+      });
     }
 
-    const snapshots: BookSnapshot[] = [];
-    for (const row of stream.rows) {
-      const s = decodeRow(row, stream.size);
-      if (s) snapshots.push(s);
-    }
-    snapshots.sort((a, b) => a.t - b.t);
+    // 1) Coinglass multi-venue aggregate stream when supported
+    if (hasPerp && candidates.length) {
+      try {
+        const { venues, result: stream } = await fetchAggregateWithDiscovery({
+          coin: cgSym,
+          exchanges: candidates,
+          market,
+          interval: API_ITV[interval],
+          limit,
+          endTime,
+        });
+        if (stream.size > 0 && stream.rows.length) {
+          const snapshots: BookSnapshot[] = [];
+          for (const row of stream.rows) {
+            const s = decodeRow(row, stream.size);
+            if (s) snapshots.push(s);
+          }
+          snapshots.sort((a, b) => a.t - b.t);
 
-    // candle path from the lead venue for wall touch detection
-    let candles: { ts: number; h: number; l: number }[] = [];
-    try {
-      const leadKey = market === "futures" ? `Binance_${sym}USDT` : `Binance_SPOT_${sym}USDT`;
-      const kl = (await cgGet(
-        `/api/v2/kline?symbol=${encodeURIComponent(leadKey + "#kline")}&interval=${API_ITV[interval]}&limit=${Math.min(
-          limit + 2,
-          302
-        )}${endTime ? `&endTime=${endTime + 1}` : ""}`,
-        60_000
-      )) as { data?: KlineRow[] } | KlineRow[];
-      const klRows = Array.isArray(kl) ? kl : (kl.data ?? []);
-      candles = klRows
-        .map((r) => ({ ts: 1000 * Number(r[0]), h: Number(r[2]), l: Number(r[3]) }))
-        .filter((c) => Number.isFinite(c.h));
-    } catch {
-      /* wall touch falls back to book-only range */
+          let candles: { ts: number; h: number; l: number }[] = [];
+          try {
+            const leadKey = market === "futures" ? `Binance_${cgSym}USDT` : `Binance_SPOT_${cgSym}USDT`;
+            const kl = (await cgGet(
+              `/api/v2/kline?symbol=${encodeURIComponent(leadKey + "#kline")}&interval=${API_ITV[interval]}&limit=${Math.min(
+                limit + 2,
+                302
+              )}${endTime ? `&endTime=${endTime + 1}` : ""}`,
+              60_000
+            )) as { data?: KlineRow[] } | KlineRow[];
+            const klRows = Array.isArray(kl) ? kl : (kl.data ?? []);
+            candles = klRows
+              .map((r) => ({ ts: 1000 * Number(r[0]), h: Number(r[2]), l: Number(r[3]) }))
+              .filter((c) => Number.isFinite(c.h));
+          } catch {
+            candles = [];
+          }
+
+          const model = buildWallsModel(snapshots, sym, band, candles, STEP_MS[interval]);
+          if (model) {
+            const body = {
+              ok: true,
+              supported: true,
+              source: "coinglass",
+              sym,
+              market,
+              interval,
+              limit,
+              band,
+              venues,
+              minWallUsd: minUsd,
+              model,
+              updatedAt: Date.now(),
+            };
+            cache.set(key, { at: Date.now(), body });
+            return NextResponse.json(body);
+          }
+        }
+      } catch {
+        /* fallback gracefully below */
+      }
     }
 
-    const model = buildWallsModel(snapshots, sym, band, candles, STEP_MS[interval]);
-    if (!model) {
-      return NextResponse.json({ ok: false, error: "no decodable snapshots" }, { status: 502 });
+    // 2) Fallback: Direct Binance top-1000 depth snapshot
+    if (hasPerp && market === "futures") {
+      try {
+        const pair = resolveBinPair(sym);
+        const rawDepth = (await fapiFetch(`/fapi/v1/depth?symbol=${encodeURIComponent(pair)}&limit=1000`, 5_000)) as {
+          bids?: [string, string][];
+          asks?: [string, string][];
+        };
+        const bids = (rawDepth.bids ?? []).map(([p, q]): [number, number] => [Number(p), Number(q)]);
+        const asks = (rawDepth.asks ?? []).map(([p, q]): [number, number] => [Number(p), Number(q)]);
+        const mid = bids.length && asks.length ? (bids[0][0] + asks[0][0]) / 2 : 0;
+        const snap = buildSnapFromBook(bids, asks, cleanGridStep(mid));
+        const model = snap ? buildWallsModel([snap], sym, band, [], STEP_MS[interval]) : null;
+        if (model) {
+          const body = {
+            ok: true,
+            supported: true,
+            source: "binance-fapi",
+            sym,
+            market,
+            interval,
+            limit,
+            band,
+            venues: [`Binance ${pair} (live depth)`],
+            minWallUsd: minUsd,
+            model,
+            updatedAt: Date.now(),
+          };
+          cache.set(key, { at: Date.now(), body });
+          return NextResponse.json(body);
+        }
+      } catch {
+        /* try HL xyz */
+      }
     }
 
-    const body = {
+    // 3) Fallback: Hyperliquid xyz 20-level L2 book (SPX500, NDX100, JP225)
+    if (market === "futures" && hlCoinOf(sym)) {
+      const hl = await fetchHlCtxAndBook(sym).catch(() => null);
+      if (hl?.book?.bids.length && hl.book.asks.length) {
+        const bids = hl.book.bids.map((l): [number, number] => [l.px, l.sz]);
+        const asks = hl.book.asks.map((l): [number, number] => [l.px, l.sz]);
+        const mid = (bids[0][0] + asks[0][0]) / 2;
+        const snap = buildSnapFromBook(bids, asks, cleanGridStep(mid));
+        const model = snap ? buildWallsModel([snap], sym, band, [], STEP_MS[interval]) : null;
+        if (model) {
+          const body = {
+            ok: true,
+            supported: true,
+            source: "hl-xyz",
+            sym,
+            market,
+            interval,
+            limit,
+            band,
+            venues: [`Hyperliquid ${hl.coin} (20-lvl L2)`],
+            minWallUsd: minUsd,
+            model,
+            updatedAt: Date.now(),
+          };
+          cache.set(key, { at: Date.now(), body });
+          return NextResponse.json(body);
+        }
+      }
+    }
+
+    return NextResponse.json({
       ok: true,
+      supported: false,
       sym,
       market,
       interval,
       limit,
       band,
-      venues,
-      minWallUsd: WALL_MIN_USD[sym] ?? 100_000,
-      model,
+      venues: [],
+      minWallUsd: minUsd,
+      reason: "Order-book heatmap unavailable for this cash/CFD benchmark",
+      model: null,
       updatedAt: Date.now(),
-    };
-    cache.set(key, { at: Date.now(), body });
-    return NextResponse.json(body);
+    });
   } catch (e) {
     const stale = cache.get(key);
     if (stale) return NextResponse.json(stale.body);

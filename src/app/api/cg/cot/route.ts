@@ -56,8 +56,16 @@ export async function GET(req: NextRequest) {
   if (!sym) return NextResponse.json({ ok: false, error: "missing sym" }, { status: 400 });
   const entry = perpMapOf(sym);
   if (!entry?.cot) {
+    if (req.nextUrl.searchParams.get("quiet") === "1") {
+      return NextResponse.json({
+        ok: true,
+        supported: false,
+        sym,
+        reason: `No CFTC COT contract mapped for ${sym}`,
+      });
+    }
     return NextResponse.json(
-      { ok: false, error: `no COT contract mapped for ${sym} — mapped: SP500 NDX100 US2000 JP225 USO UKO EURUSD USDJPY GBPUSD XAU XAG XPT` },
+      { ok: false, error: `no COT contract mapped for ${sym} — mapped: SP500 NDX100 US2000 JP225 USO UKO XAU XAG XPT` },
       { status: 400 }
     );
   }

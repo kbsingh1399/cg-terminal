@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildMarketSnapshot } from "@/lib/cg/market";
-import { knownSym, gateReject } from "@/lib/cg/sym-gate";
+import { anyTerminalSym, knownSym } from "@/lib/cg/sym-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -10,15 +10,22 @@ export const dynamic = "force-dynamic";
  * The Overview tab data: live price, auction VAL/POC/VAH (session · day ·
  * month), Fib-prime EMA 13/89/233, RSI(14) — m15/h1/h4/d1 — and day-anchored
  * VWAP ±1σ/2σ/3σ (UTC day open anchor, timezone-independent).
- *
- * Pure API data: computed from live Binance-perp klines via Coinglass
- * (leadInstr → Binance_<SYM>USDT — works for every curated perp, crypto and
- * TradFi plain names alike, all verified TRADING with kline history).
  */
 export async function GET(req: NextRequest) {
   const sym = (req.nextUrl.searchParams.get("sym") ?? "BTC").toUpperCase();
+  if (!(await anyTerminalSym(sym))) {
+    return NextResponse.json({ ok: false, error: `unknown asset ${sym}` }, { status: 400 });
+  }
+  // classic instruments pass the terminal gate but have no perp/spot kline
+  // history — the classic route owns them; degrade honestly, never 502.
   if (!(await knownSym(sym))) {
-    return NextResponse.json({ ok: false, error: gateReject(sym) }, { status: 400 });
+    return NextResponse.json({
+      ok: true,
+      supported: false,
+      sym,
+      reason: "Market overview requires an exchange-listed instrument (classic instruments use /api/cg/classic)",
+      updatedAt: Date.now(),
+    });
   }
   try {
     const snap = await buildMarketSnapshot(sym);
