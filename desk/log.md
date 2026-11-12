@@ -3079,3 +3079,32 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R144 · 2026-11-12 07:09 UTC · zai-desk
+
+**Market**: BTC 73,536.0 (-0.6%)  ETH 2,047.22 (-0.4%)  SOL 82.80 (-0.5%)  XAU 3,970.57 (-0.4%)  XAG 51.260 (-0.2%)
+**Bias (|score|≥2)**: BTC-6(TREND)  ADA-4(TREND)  XAG-2(TREND)  XRP-4(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- NEW R144-ADA-1 ADA SHORT limit 0.1742 · stop 0.1750 · T1 0.1722 · T2 0.1706 · T3 0.1702 · R 2.4
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.1729 vs 0.1733), h4 RSI 39.4, day -0.7%
+      [AGAINST] footprint: bull 55 / bear 46; recent: Absorption/buy[time], Absorption/buy[vol], Absorption/sell[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×6, abs:sell×5, div:buy×4, exh:buy×5, exh:sell×1, sdiv:buy×1, trap:buy×4, trap:sell×1 — net 20 buy-side vs 7 sell-side
+      [FOR    ] liquidation: long-liq magnet 0.1706 (str 100, ~$3M est, -1.28%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.127 (5m ago -0.106, falling bids); bid $0.01B vs ask $0.02B
+      [FOR    ] cvd: taker buy 49.3%, perpCvd -10, spotCvd -3, quadrant both-selling, latestDiv bear (stale/none)
+      [FOR    ] notifications: 6h weighted bias -4.8 (6 events)
+- NEW R144-XRP-2 XRP SHORT limit 1.0513 · stop 1.0570 · T1 1.0352 · T2 1.0332 · R 2.8
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (1.0435 vs 1.0475), h4 RSI 31.2, day -0.8%
+      [AGAINST] footprint: bull 18 / bear 11; recent: Divergence/sell[time], Absorption/buy[vol], Absorption/sell[range]
+      [FOR    ] liquidation: long-liq magnet 1.0352 (str 86, ~$31M est, -0.78%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.027 (5m ago +0.044, falling bids); bid $0.07B vs ask $0.07B
+      [FOR    ] cvd: taker buy 48.6%, perpCvd -102, spotCvd -117, quadrant both-selling, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -1.0 (5 events)
+
+### Order lifecycle
+- R137-BTC-1 re-debated: FOR 7/AGAINST 1 — stands
+- R137-LTC-2 WITHDRAWN (re-debate lost: FOR 3/AGAINST 3)
+
+### Positions
+- no open positions
+
