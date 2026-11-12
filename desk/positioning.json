@@ -1,47 +1,47 @@
 {
-  "ts": 1794455210966,
+  "ts": 1794455264470,
   "positioning": {
     "BTC": {
-      "fundingPct8h": 0.00786,
-      "oiUsd": 50546166331,
-      "oiDelta1hPct": 0.01,
-      "oiDelta4hPct": 0.1,
-      "oiDelta24hPct": -2.3
-    },
-    "ETH": {
-      "fundingPct8h": 0.004181,
-      "oiUsd": 24852864868,
-      "oiDelta1hPct": -0.17,
-      "oiDelta4hPct": 0.4,
-      "oiDelta24hPct": -1.03
-    },
-    "SOL": {
-      "fundingPct8h": -0.00098,
-      "oiUsd": 5192025487,
-      "oiDelta1hPct": -0.1,
-      "oiDelta4hPct": 1.89,
-      "oiDelta24hPct": -0.04
-    },
-    "BNB": {
-      "fundingPct8h": 0.001698,
-      "oiUsd": 1075796507,
-      "oiDelta1hPct": -0.18,
-      "oiDelta4hPct": -0.21,
-      "oiDelta24hPct": -0.8
-    },
-    "DOGE": {
-      "fundingPct8h": -0.004602,
-      "oiUsd": 904033452,
-      "oiDelta1hPct": 0.46,
-      "oiDelta4hPct": 0.74,
+      "fundingPct8h": 0.007885,
+      "oiUsd": 50555681645,
+      "oiDelta1hPct": 0.03,
+      "oiDelta4hPct": 0.12,
       "oiDelta24hPct": -2.28
     },
+    "ETH": {
+      "fundingPct8h": 0.004171,
+      "oiUsd": 24855782795,
+      "oiDelta1hPct": -0.16,
+      "oiDelta4hPct": 0.41,
+      "oiDelta24hPct": -1.02
+    },
+    "SOL": {
+      "fundingPct8h": -0.000956,
+      "oiUsd": 5194838404,
+      "oiDelta1hPct": -0.04,
+      "oiDelta4hPct": 1.94,
+      "oiDelta24hPct": 0.02
+    },
+    "BNB": {
+      "fundingPct8h": 0.001694,
+      "oiUsd": 1075921295,
+      "oiDelta1hPct": -0.17,
+      "oiDelta4hPct": -0.19,
+      "oiDelta24hPct": -0.79
+    },
+    "DOGE": {
+      "fundingPct8h": -0.004587,
+      "oiUsd": 904594799,
+      "oiDelta1hPct": 0.52,
+      "oiDelta4hPct": 0.81,
+      "oiDelta24hPct": -2.22
+    },
     "XAU": {
-      "fundingPct8h": 0.004332,
-      "oiUsd": 1666818740,
-      "oiDelta1hPct": 0.13,
-      "oiDelta4hPct": 2.15,
-      "oiDelta24hPct": 9.19
+      "fundingPct8h": 0.004351,
+      "oiUsd": 1666339350,
+      "oiDelta1hPct": 0.1,
+      "oiDelta4hPct": 2.12,
+      "oiDelta24hPct": 9.16
     }
   }
 }
