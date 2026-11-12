@@ -265,3 +265,15 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] cvd: taker buy 49.6%, perpCvd -17, spotCvd +5, quadrant spot-bid, latestDiv bear (recent)
 - [FOR] notifications: 6h weighted bias -1.0 (6 events)
 - → place on AVAXUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-12 12:48 UTC — new suggested order — place in MT5 (debate FOR 4/AGAINST 3)
+- R164-XAU-1 XAU SHORT limit entry 3984.27 · stop 4004.48 · targets 3930.3 / 3914.22 / 3905.03 · R 2.7 · expires 2026-11-12 16:48 UTC
+- BASIS: levels are PERP prices (perpRef 3943.86). Before placing in MT5 read spreads.XAUUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (3,943.86 vs 3,968.84), h4 RSI 27.6, day -1.0%
+- [AGAINST] footprint: bull 16 / bear 15; recent: Divergence/sell[vol], Exhaustion/buy[range]
+- [AGAINST] microFlow(abs/trap/exh): 6h micro-events: div:buy×1, div:sell×1, exh:buy×3, exh:sell×1, sdiv:buy×1 — net 5 buy-side vs 2 sell-side
+- [AGAINST] largeOrders: ask wall $6.0M @ 3,944.00 within 2% opposes
+- [FOR] liquidation: long-liq magnet 3,930.30 (str 48, ~$36M est, -0.35%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.190 (5m ago +0.190, falling bids); bid $0.06B vs ask $0.04B
+- [FOR] notifications: 6h weighted bias -4.9 (7 events)
+- → place on XAUUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
