@@ -395,3 +395,16 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] cvd: taker buy 48.5%, perpCvd -124, spotCvd -94, quadrant both-selling, latestDiv bear (recent)
 - [FOR] notifications: 6h weighted bias -2.0 (7 events)
 - → place on XRPUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-13 00:43 UTC — new suggested order — place in MT5 (debate FOR 7/AGAINST 1)
+- R211-SOL-1 SOL SHORT limit entry 81.57 · stop 81.89 · targets 80.35 / 80.05 / 79.8 · R 3.7 · expires 2026-11-13 04:43 UTC
+- BASIS: levels are PERP prices (perpRef 81.05). Before placing in MT5 read spreads.SOLUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (81.05 vs 81.40), h4 RSI 28.7, day -0.8%
+- [FOR] footprint: bull 32 / bear 38; recent: Absorption/sell[time], Exhaustion/sell[vol], Exhaustion/sell[range]
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:sell×2, div:buy×1, div:sell×1, exh:buy×3, exh:sell×3, sdiv:sell×4, trap:sell×2 — net 4 buy-side vs 12 sell-side
+- [AGAINST] largeOrders: ask wall $7.5M @ 81.70 within 2% opposes
+- [FOR] liquidation: long-liq magnet 80.35 (str 69, ~$28M est, -0.96%) as target
+- [FOR] bookWalls: ±5% depth imbalance -0.013 (5m ago -0.098, rising bids); bid $0.13B vs ask $0.13B
+- [FOR] cvd: taker buy 48.9%, perpCvd -333, spotCvd +6, quadrant spot-bid, latestDiv bull (recent)
+- [FOR] notifications: 6h weighted bias -5.9 (9 events)
+- → place on SOLUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
