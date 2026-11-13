@@ -4746,3 +4746,8 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## EXEC · 2026-11-13 10:28 UTC · atg-exec
+- **ETHUSD SHORT FILLED**: Ticket #210050569 | 0.20 lots @ 1,950.00 | SL 1,965.50 | TP 1,890.00 | Floating: -$0.22. Mode: M1_TREND_PULLBACK into Day VWAP + negative GEX expansion.
+- **XAUUSD SHORT STANDING**: Ticket #210049839 | 0.01 lots @ 3,910.05 | SL 3,914.55 | TP 3,815.00 | Standing limit at Day VWAP / 15m midline.
+
+
