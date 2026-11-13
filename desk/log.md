@@ -4293,3 +4293,30 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R209 · 2026-11-13 00:11 UTC · zai-desk
+
+**Market**: BTC 71,336.0 (-0.1%)  ETH 2,015.81 (-0.2%)  SOL 81.61 (-0.1%)  XAU 3,896.16 (+0.2%)  XAG 50.330 (+0.2%)
+**Bias (|score|≥2)**: XRP-5(TRANS)  AVAX-5(TREND)  SOL-3(TRANS)  BNB-3(TRANS)  LINK-3(TRANS)  ADA-4(TRANS)  BTC-2(TREND)  LTC-2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- XRP SHORT confluence -5.3 — REJECTED: opposite liq magnet 1.0481 (str 70, ~$21M est) within 1.2R of entry — wait for sweep
+- NEW R209-AVAX-1 AVAX SHORT limit 8.355 · stop 8.389 · T1 8.210 · T2 8.190 · R 4.4
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (8.346 vs 8.355), h4 RSI 46.9, day -0.1%
+      [FOR    ] footprint: bull 40 / bear 58; recent: Absorption/buy[vol], Bull div/buy[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×3, div:buy×1, exh:buy×1, exh:sell×3, sdiv:buy×1, trap:buy×2 — net 8 buy-side vs 3 sell-side
+      [FOR    ] liquidation: long-liq magnet 8.210 (str 100, ~$3M est, -1.61%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.036 (5m ago +0.038, falling bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 49.0%, perpCvd -26, spotCvd +2, quadrant spot-bid, latestDiv bear (recent)
+- NEW R209-BNB-2 BNB SHORT limit 661.20 · stop 664.48 · T1 646.68 · R 4.4
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (657.80 vs 657.91), h4 RSI 30.4, day +0.1%
+      [FOR    ] footprint: bull 28 / bear 32; recent: Divergence/sell[time], Exhaustion/buy[vol], Absorption/sell[range]
+      [FOR    ] liquidation: long-liq magnet 646.68 (str 62, ~$5M est, -1.68%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.042 (5m ago +0.043, falling bids); bid $0.03B vs ask $0.02B
+      [FOR    ] cvd: taker buy 48.4%, perpCvd -42, spotCvd -8, quadrant both-selling, latestDiv bear (stale/none)
+      [AGAINST] notifications: 6h weighted bias +2.9 (6 events)
+- LINK SHORT confluence -3.3 — REJECTED: no structural target >= 2.0R (nearest magnet none = 0.0R)
+- ADA SHORT confluence -3.9 — REJECTED: opposite liq magnet 0.1759 (str 91, ~$5M est) within 1.2R of entry — wait for sweep
+
+### Positions
+- no open positions
+
