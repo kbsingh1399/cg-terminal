@@ -4881,3 +4881,60 @@ analysis script rc=1
 
 analysis script rc=1
 
+## R233 · 2026-11-13 21:37 UTC · zai-desk
+
+**Market**: BTC 68,320.0 (-4.3%)  ETH 1,928.61 (-4.5%)  SOL 79.29 (-2.9%)  XAU 3,882.15 (-0.1%)  XAG 48.610 (-3.2%)
+**Bias (|score|≥2)**: LINK-6(TRANS)  BNB-7(TREND)  XRP-7(TREND)  DOGE-6(TRANS)  ADA-4(TREND)  AVAX-2(TRANS)  LTC-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- NEW R233-LINK-1 LINK SHORT limit 9.900 · stop 10.035 · T1 9.611 · T2 9.546 · R 2.1
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (9.882 vs 9.914), h4 RSI 39.5, day -2.6%
+      [FOR    ] footprint: bull 37 / bear 61; recent: Absorption/sell[time], Divergence/sell[vol], Divergence/buy[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×4, abs:sell×9, div:buy×5, div:sell×5, exh:buy×1, exh:sell×4, sdiv:sell×1, trap:buy×2, trap:sell×2 — net 12 buy-side vs 21 sell-side
+      [FOR    ] liquidation: long-liq magnet 9.716 (str 72, ~$3M est, -1.59%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.038 (5m ago -0.021, rising bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.7%, perpCvd -25, spotCvd -5, quadrant both-selling, latestDiv bear (stale/none)
+      [FOR    ] notifications: 6h weighted bias -5.9 (6 events)
+- NEW R233-BNB-2 BNB SHORT limit 633.44 · stop 640.89 · T1 617.38 · T2 608.72 · R 2.2
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (631.53 vs 637.46), h4 RSI 28.6, day -3.9%
+      [FOR    ] footprint: bull 27 / bear 37; recent: Absorption/sell[vol], Absorption/sell[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:sell×4, div:sell×2, exh:buy×1, exh:sell×3 — net 1 buy-side vs 9 sell-side
+      [FOR    ] liquidation: long-liq magnet 617.38 (str 100, ~$19M est, -2.16%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.085 (5m ago +0.067, rising bids); bid $0.03B vs ask $0.02B
+      [FOR    ] cvd: taker buy 47.8%, perpCvd -77, spotCvd -11, quadrant both-selling, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -7.9 (7 events)
+
+### Order lifecycle
+- R232-ADA-1 EXPIRED (unfilled past expiry)
+- R232-LINK-2 EXPIRED (unfilled past expiry)
+
+### Positions
+- XLM — data missing, HOLD (manual check)
+
+
+
+## 360 FULL-UNIVERSE TRADE FORMULATION ROUND · 2026-11-13 21:45 UTC · atg-exec
+- **SCOPE & ARCHITECTURE**:
+  - Swept all 61 Curated Assets (30 Crypto USDT-M · 28 TradFi USDT-M · 3 Classic) via 3-tier funnel per `desk/TRADE_FORMULATION_MANUAL.md` v1.1.0.
+  - **Tier A (Narrative Sweep)**: 61 swept. 2 Grade A+ (`ATOM`, `NVDA`), 29 Grade B, 30 SKIP/NO_TRADE.
+  - **Tier B (Deep Qualifiers)**: 12 assets deep-scanned with 16-dimension DECIDE telemetry (`ATOM`, `NVDA`, `BTC`, `XAU`, `ETH`, `XLM`, `XAG`, `INTC`, `ADA`, `UNI`, `FIL`, `ARB`).
+  - **Tier C (Gates & Scoring)**: Enforced Table 7 scoring, LSR Magnet Gate (±2% window), FundedNext spread drag gate (<0.15%), and desk R-standard (≥2.0R continuation).
+- **FORMULATED CANDIDATES & SUGGESTED ORDERS**:
+  1. `BTCUSD` (0.01 lots Sell Limit #210156552 @ 69,500.00 | SL 70,280.00 | TP 67,200.00):
+     - Score: **10.0 / 11.5 (Grade A)**.
+     - LSR: 2.34:1 (longs below) → GATE OPEN for passive shorts.
+     - Validated 100% — maintains active standing order.
+  2. `XAUUSD` (0.01 lots Sell Limit SUG-XAUUSD @ 3,900.50 | SL 3,916.50 | TP 3,865.00):
+     - Score: **7.5 / 11.5 (Grade B+)** · Reward-to-Risk: **2.22R** to T2.
+     - LSR: 1.76:1 (GATE OPEN). Broker spread 0.0206% (<0.15%).
+     - Fills Macro Commodity Slot 3 cleanly ($16.00 risk / 0.34% heat).
+  3. `ETHUSD` (0.20 lots Sell Limit Standby @ 1,948.00 | SL 1,995.00 | TP 1,894.00):
+     - Score: **10.0 / 11.5 (Grade A Standby)** · LSR: 1.90:1 (GATE OPEN).
+     - Standby awaiting release of Crypto Slot 2.
+- **ACTIVE POSITION AUDIT**:
+  - `XLMUSD` Short (#210060728 | 20.0 lots @ 0.14863 | Floating: +$1.98):
+    - **8-Bar Time Stop Breach**: Elapsed > 20 bars (> 5 hours) without reaching +0.5R.
+    - **LSR Magnet Veto**: 15.28:1 long liquidations dominate below ($66M vs $4.3M).
+    - **Action**: Tighten SL from 0.15233 to 0.14920 or close at current market (+0.27R / +$1.98) to liberate Crypto Slot 2 for ETHUSD.
+- **FULL 360 REPORT COMMITTED**:
+  - `desk/deepscan/UNIVERSE-360-1794604145766.md`: Complete 61-asset tier table, formulation cards, magnet watchlist, and order specifications.
