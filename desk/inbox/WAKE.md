@@ -1,5 +1,34 @@
 # WAKE — pending tasks for atg-exec (daemon appends; agent handles then clears)
 
+## 2026-11-13 14:50 UTC — HIGH PRIORITY TASK FOR ZAI-DESK (USER DIRECTIVE)
+- **TASK**: Author the canonical, unified **`desk/TRADE_FORMULATION_MANUAL.md`** that the desk will follow permanently for all trade formulations.
+- **CANONICAL SPECIFICATION**: Ground strictly in `C:\Users\SIGMA\Downloads\Trade-Formulation-Playbook (1).pdf` (10 Nov 2026 canonical specification).
+- **MANDATORY DATA POINTS (ALL 16 MUST BE INCLUDED & FORMALIZED)**:
+  1. Live Spot & MT5 Broker Basis (`basisPct` offset between Cash CFD and USDT-M perp).
+  2. Auction Market Profile (VAL, POC, VAH across session 8h, UTC day, and UTC month).
+  3. Day-Anchored VWAP Regime & Bands ($\pm 1\sigma, \pm 2\sigma, \pm 3\sigma$).
+  4. Trend Momentum Alignment (Fib-prime EMA 13/89/233 across M15, H1, H4, D1).
+  5. Multi-Timeframe RSI(14) Divergence.
+  6. Footprint Delta & Volume Clusters (Per-bar taker buy/sell USD, delta %, bar POC).
+  7. Footprint Discrete Signal Patterns (Absorption, Divergence, Strong Divergence, Trap, Exhaustion).
+  8. Cumulative Volume Delta (CVD) (Perp CVD, Spot CVD, taker buy share, active divergences).
+  9. Multi-Exchange BookWalls (`/api/cg/bookwalls`: Depth $\pm 5\%$, imbalance, confirmed resting walls with USD value, age, and touched state).
+  10. LTO Large Resting Orders (`/api/cg/lto`: Individual institutional limit orders $\ge \$100\text{k}$).
+  11. Liquidation Heatmap Clusters (`/api/cg/liqlevels`: 3d/7d/30d clusters $\pm 4\%$).
+  12. **The Liquidation Magnet Gate (LSR)**: If Liquidation Skew Ratio $\ge 2.5:1$ (short stops heavily dominate above), **BAN passive wall front-running (Setup S3)**; **WAIT for the sweep (Setup S1)**.
+  13. Options Open Interest & Gamma Exposure (GEX: positive dampening vs negative expansion, Gamma Flip level).
+  14. Open Interest (OI) Dynamics (Rising OI on trend vs falling OI on liquidation covering).
+  15. Broker Spread & Liquidity Drag Gate (MT5 spread $< 0.15\%$ and $< 20\%$ of stop distance).
+  16. Risk & Position Management Invariants:
+      - Max 0.5%–1.0% equity heat ($23–$46).
+      - Max 2 concurrent crypto positions (Commodities/Metals in slot 3).
+      - **The +1.0R Breakeven Invariant**: Move SL to entry immediately upon reaching $\ge +1.0\text{R}$ excursion.
+      - **8-Bar (2-hour) Time Stop**: Tighten/close if price fails to reach +0.5R within 8 bars.
+      - **40/40/20 Liquidity Scale-Out**: 40% @ Day VAL/VAH, 40% @ Month POC, 20% Runner into liquidation sweep.
+- **STANDARDIZED SETUPS**: Explicit rules for Setups S1 to S8.
+- **SCORING TABLE**: Complete 11.5-point Confluence Scoring Table (Table 7: Grade A $\ge 7.0$, Grade B $5.0–6.5$, $<5.0$ VETO).
+- **FILE TO CREATE**: `desk/TRADE_FORMULATION_MANUAL.md`. Please author and commit to `origin/main`.
+
 <!-- DIRECTIVE PROTOCOL v1 ACTIVE (16:10 UTC) — spec: desk/PROTOCOL.md §Directive protocol.
      zai issues structured directives via desk/inbox/*DIR-*.json. Every directive
      REQUIRES a reply file desk/outbox/<same-basename>.reply.md:
