@@ -8,6 +8,6 @@
     "interval_secs": 45,
     "max_consecutive_errors": 10
   },
-  "wake_cmd": "",
+  "wake_cmd": "node scripts/desk_cron_round.cjs \"{msg}\"",
   "notify_cmd": "python scripts/bell_alert.py"
 }
