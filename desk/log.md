@@ -4938,3 +4938,8 @@ analysis script rc=1
     - **Action**: Tighten SL from 0.15233 to 0.14920 or close at current market (+0.27R / +$1.98) to liberate Crypto Slot 2 for ETHUSD.
 - **FULL 360 REPORT COMMITTED**:
   - `desk/deepscan/UNIVERSE-360-1794604145766.md`: Complete 61-asset tier table, formulation cards, magnet watchlist, and order specifications.
+
+## ROUND FAILED · 2026-11-13 21:59 UTC · zai-desk
+
+analysis script rc=1
+
