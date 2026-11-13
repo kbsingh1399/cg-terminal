@@ -237,17 +237,6 @@
   ],
   "positions": [
     {
-      "ticket": 210088411,
-      "sym": "XAG",
-      "side": "sell",
-      "volume": 0.01,
-      "entry": 50.18,
-      "stop": 50.18,
-      "target": 49.4,
-      "openedTs": 1794582000000,
-      "profit": 19.25
-    },
-    {
       "ticket": 210060728,
       "sym": "XLM",
       "side": "sell",
@@ -256,7 +245,7 @@
       "stop": 0.15233,
       "target": 0.14113,
       "openedTs": 1794579786000,
-      "profit": -1.84
+      "profit": 0.16
     }
   ],
   "closed": [
@@ -4842,7 +4831,7 @@
       "notes": null
     }
   ],
-  "updatedAt": "2026-11-13T14:37:16.947Z",
+  "updatedAt": "2026-11-13T15:23:34.396Z",
   "closedPositions": [
     {
       "ticket": 210050569,
@@ -4864,6 +4853,20 @@
       "exitPrice": 1.0325,
       "profit": -4.5,
       "reason": "sl"
+    },
+    {
+      "ticket": 210088411,
+      "sym": "XAG",
+      "entryPrice": 50.18,
+      "exitPrice": 49.4,
+      "profit": 39,
+      "reason": "tp",
+      "closedTs": "2026-11-13T15:23:34.394Z"
     }
-  ]
+  ],
+  "account": {
+    "balance": 4652.3,
+    "equity": 4652.66,
+    "profit": 0.36
+  }
 }
