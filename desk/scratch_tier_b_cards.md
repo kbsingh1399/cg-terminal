@@ -1,0 +1,347 @@
+### Tier B: Deep Telemetry & Analysis on Top Qualifiers
+
+#### AVAX (Grade A+ · Conf 92% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `8.216` (24h Chg: `-1.68%`)
+- **Auction Value Areas**:
+  - Session: VAL `8.2823` | POC `8.3813` | VAH `8.4341`
+  - Day: VAL `8.187875` | POC `8.316875` | VAH `8.478125`
+  - Month: VAL `8.23105` | POC `8.57545` | VAH `8.73535`
+- **VWAP & Bands**: Day VWAP `8.31` | +1σ `8.45` | +2σ `8.59` | -1σ `8.17` | -2σ `8.03` (Z-score: `-0.75σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `8.344608832599919` · EMA89 `8.391049234859711` | RSI `41.28654687214927`
+  - H4: EMA13 `8.356496235969114` · EMA89 `8.524954701734291` | RSI `44.58553611342957`
+  - D1: EMA13 `8.448093239614833` · EMA89 `8.791276038698586` | RSI `41.367055085847895`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$2.20M`
+  - Short Liquidations (up 0–2%): `$36.2k`
+  - **LSR (±2%)**: `60.72:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `8.51` (3.81% dist, str 12.5) | Below `8.12` (-0.98% dist, str 47.6)
+- **Liquidation Magnet Gate**: **BANNED (LSR 60.7:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **NO MT5 VENUE** (AVAXUSD not tradeable on broker account)
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 22 / Bearish 45 (Total: 67)
+  - Recent Footprint Triggers: EXH sell @ 8.445 (Volume 200,000 AVAX); EXH buy @ 8.306 (Range 0.025); DIV sell @ 8.305 (Range 0.025); EXH buy @ 8.223 (Range 0.025)
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `8.20 – 8.68` | Composite: `8.41`
+  - Structural Stop: `8.73` | Best R: `2.20R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 8.10 (0.96R) | T2 · same-direction liquidation cluster: 8.23 (0.55R) | T3 · whale wall / PWH-PWL: 7.70 (2.20R)
+  - **Active Vetoes**: None (Clean)
+
+#### ATOM (Grade A+ · Conf 92% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `1.371` (24h Chg: `-4.39%`)
+- **Auction Value Areas**:
+  - Session: VAL `1.3794666666666666` | POC `1.3901333333333334` | VAH `1.4114666666666666`
+  - Day: VAL `1.371125` | POC `1.395425` | VAH `1.406225`
+  - Month: VAL `1.3607208333333334` | POC `1.3900791666666665` | VAH `1.4600875`
+- **VWAP & Bands**: Day VWAP `1.40` | +1σ `1.41` | +2σ `1.43` | -1σ `1.38` | -2σ `1.36` (Z-score: `-1.87σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `1.3898029022350058` · EMA89 `1.3950889259818917` | RSI `36.57077149470005`
+  - H4: EMA13 `1.3946911593553408` · EMA89 `1.4411376288902782` | RSI `44.183516004926496`
+  - D1: EMA13 `1.421637425947396` · EMA89 `1.6002492204908554` | RSI `39.257173439440656`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$5.12M`
+  - Short Liquidations (up 0–2%): `$75.7k`
+  - **LSR (±2%)**: `67.59:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `1.424` (4.00% dist, str 16.8) | Below `1.358` (-0.83% dist, str 72.1)
+- **Liquidation Magnet Gate**: **BANNED (LSR 67.6:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **NO MT5 VENUE** (ATOMUSD not tradeable on broker account)
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 67 / Bearish 58 (Total: 125)
+  - Recent Footprint Triggers: SDIV buy @ 1.369 (Volume 100,000 ATOM); SDIV buy @ 1.369 (Range 0.005); DIV buy @ 1.37 (Range 0.005); ABS buy @ 1.37 (Range 0.005)
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `1.38 – 1.44` | Composite: `1.41`
+  - Structural Stop: `1.45` | Best R: `3.51R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 1.37 (0.89R) | T2 · same-direction liquidation cluster: 1.36 (1.15R) | T3 · whale wall / PWH-PWL: 1.27 (3.51R)
+  - **Active Vetoes**: None (Clean)
+
+#### XLM (Grade A+ · Conf 92% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `0.14573` (24h Chg: `-1.80%`)
+- **Auction Value Areas**:
+  - Session: VAL `0.14706308333333334` | POC `0.14901958333333334` | VAH `0.14976491666666666`
+  - Day: VAL `0.14557325` | POC `0.14815191666666666` | VAH `0.14976358333333334`
+  - Month: VAL `0.141070625` | POC `0.147668125` | VAH `0.160609375`
+- **VWAP & Bands**: Day VWAP `0.15` | +1σ `0.15` | +2σ `0.15` | -1σ `0.14` | -2σ `0.14` (Z-score: `-0.56σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `0.14744386295376744` · EMA89 `0.14725183253298932` | RSI `44.764952721664734`
+  - H4: EMA13 `0.14678096792904882` · EMA89 `0.1552574082065262` | RSI `46.67451872889911`
+  - D1: EMA13 `0.15321171579712528` · EMA89 `0.1780869734147214` | RSI `32.097311158008324`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$46.59M`
+  - Short Liquidations (up 0–2%): `$632.9k`
+  - **LSR (±2%)**: `73.62:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `0.1513` (3.91% dist, str 47.5) | Below `0.1439` (-1.23% dist, str 51)
+- **Liquidation Magnet Gate**: **BANNED (LSR 73.6:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **PASS (Spread 0.1157% < 0.15%)** — MT5 executable on XLMUSD.
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 36 / Bearish 49 (Total: 85)
+  - Recent Footprint Triggers: DIV buy @ 0.14616 (Volume 5,000,000 XLM); ABS sell @ 0.14859 (Range 0.0005); SDIV buy @ 0.14606 (Range 0.0005); EXH buy @ 0.14506 (Range 0.0005)
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `0.14 – 0.15` | Composite: `0.15`
+  - Structural Stop: `0.15` | Best R: `2.84R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 0.14 (2.02R) | T2 · same-direction liquidation cluster: 0.14 (2.84R) | T3 · whale wall / PWH-PWL: 0.14 (2.44R)
+  - **Active Vetoes**: None (Clean)
+
+#### BTC (Grade B · Conf 88% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `68282.9` (24h Chg: `-4.40%`)
+- **Auction Value Areas**:
+  - Session: VAL `68403.7875` | POC `68862.3375` | VAH `69091.6125`
+  - Day: VAL `68156.2975` | POC `68762.5525` | VAH `69436.16916666666`
+  - Month: VAL `73001.84583333333` | POC `75749.64583333333` | VAH `78497.44583333333`
+- **VWAP & Bands**: Day VWAP `69141.63` | +1σ `69908.44` | +2σ `70675.25` | -1σ `68374.81` | -2σ `67608.00` (Z-score: `-1.38σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `68906.08838704294` · EMA89 `71839.10117071643` | RSI `30.78980189372477`
+  - H4: EMA13 `70478.27956997145` · EMA89 `75337.73773534535` | RSI `22.490864188207084`
+  - D1: EMA13 `74596.28397309741` · EMA89 `77451.51838088738` | RSI `24.43277274033774`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$78.8k`
+  - Short Liquidations (up 0–2%): `$12.7k`
+  - **LSR (±2%)**: `6.19:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `70664.2` (3.75% dist, str 88.6) | Below `67606.8` (-0.74% dist, str 68.8)
+- **Liquidation Magnet Gate**: **BANNED (LSR 6.2:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **PASS (Spread 0.0348% < 0.15%)** — MT5 executable on BTCUSD.
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 27 / Bearish 19 (Total: 46)
+  - Recent Footprint Triggers: ABS sell @ 68466.3 (Volume 2,000 BTC); ABS buy @ 68830 (Range 200); ABS buy @ 68355.1 (Range 200); DIV sell @ 68173.1 (Range 200)
+- **Deribit Options Surface (Institutional Positioning)**:
+  - DVOL: `39.18` | Term Structure: 7d `36.66` · 30d `37.86` · 90d `39.24`
+  - 25-Delta Skew: `-4.48` (Puts favored/bearish skew)
+  - Max Pain Strike: `77000`
+  - Dealer GEX Regime: `NEGATIVE_GAMMA_EXPANSION` | Gamma Flip Price: `73330.8` (Spot `68282.9` is BELOW flip -> Negative gamma accelerates selloffs)
+  - Put/Call Ratio: OI `1.33` | 24h Vol `0.353`
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `68530.44 – 75602.96` | Composite: `69453.44`
+  - Structural Stop: `75896.33` | Best R: `0.60R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 68001.19 (0.23R) | T2 · same-direction liquidation cluster: 73001.85 (0.55R) | T3 · whale wall / PWH-PWL: 73333.00 (0.60R)
+  - **Active Vetoes**: M1 R 0.60 < 1.5 — reward does not pay the risk; opposing $1M+ wall at 68052.9 blocks T1
+
+#### ETH (Grade B · Conf 88% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `1919.24` (24h Chg: `0.00%`)
+- **Auction Value Areas**:
+  - Session: VAL `None` | POC `None` | VAH `None`
+  - Day: VAL `None` | POC `None` | VAH `None`
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `None` · EMA89 `None` | RSI `n/a`
+  - H4: EMA13 `None` · EMA89 `None` | RSI `n/a`
+  - D1: EMA13 `None` · EMA89 `None` | RSI `n/a`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$1.60M`
+  - Short Liquidations (up 0–2%): `$45.3k`
+  - **LSR (±2%)**: `35.45:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `1995.68` (4.00% dist, str 36.5) | Below `1894.81` (-1.26% dist, str 67.2)
+- **Liquidation Magnet Gate**: **BANNED (LSR 35.4:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **PASS (Spread 0.0285% < 0.15%)** — MT5 executable on ETHUSD.
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 25 / Bearish 21 (Total: 46)
+  - Recent Footprint Triggers: ABS sell @ 1930.44 (Volume 50,000 ETH); EXH buy @ 1927.65 (Range 5); DIV buy @ 1925.2 (Range 5); DIV sell @ 1920.94 (Range 5)
+- **Deribit Options Surface (Institutional Positioning)**:
+  - DVOL: `55.34` | Term Structure: 7d `50.24` · 30d `53.14` · 90d `53.46`
+  - 25-Delta Skew: `-5.09` (Puts favored/bearish skew)
+  - Max Pain Strike: `2300`
+  - Dealer GEX Regime: `NEGATIVE_GAMMA_EXPANSION` | Gamma Flip Price: `1991.3` (Spot `1919.24` is BELOW flip -> Negative gamma accelerates selloffs)
+  - Put/Call Ratio: OI `1.939` | 24h Vol `0.581`
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `1927.65 – 2229.05` | Composite: `1955.78`
+  - Structural Stop: `2239.51` | Best R: `0.46R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 1909.86 (0.16R) | T2 · same-direction liquidation cluster: 2085.87 (0.46R) | T3 · whale wall / PWH-PWL: 2050.32 (0.33R)
+  - **Active Vetoes**: M1 R 0.46 < 1.5 — reward does not pay the risk; opposing $1M+ wall at 1918.62 blocks T1
+
+#### XRP (Grade B · Conf 92% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `1.0096` (24h Chg: `-3.02%`)
+- **Auction Value Areas**:
+  - Session: VAL `1.0084466666666665` | POC `1.0216333333333334` | VAH `1.0256466666666666`
+  - Day: VAL `1.0093625` | POC `1.0228208333333333` | VAH `1.0323208333333334`
+  - Month: VAL `1.0842670833333332` | POC `1.25154875` | VAH `1.3409579166666667`
+- **VWAP & Bands**: Day VWAP `1.02` | +1σ `1.03` | +2σ `1.04` | -1σ `1.01` | -2σ `1.00` (Z-score: `-1.47σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `1.0206751205512323` · EMA89 `1.0507315773280739` | RSI `38.711478159714886`
+  - H4: EMA13 `1.031483036885418` · EMA89 `1.1514043248615211` | RSI `33.51769417050967`
+  - D1: EMA13 `1.1301029270001837` · EMA89 `1.28451900648876` | RSI `20.753671752302154`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$237.78M`
+  - Short Liquidations (up 0–2%): `$15.82M`
+  - **LSR (±2%)**: `15.04:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `1.0478` (4.01% dist, str 100) | Below `0.9996` (-0.77% dist, str 55.9)
+- **Liquidation Magnet Gate**: **BANNED (LSR 15.0:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **PASS (Spread 0.0987% < 0.15%)** — MT5 executable on XRPUSD.
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 22 / Bearish 23 (Total: 45)
+  - Recent Footprint Triggers: DIV sell @ 1.0338 (Volume 10,000,000 XRP); ABS sell @ 1.0264 (Range 0.005); ABS buy @ 1.0098 (Range 0.005); DIV buy @ 1.0093 (Range 0.005)
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `1.01 – 1.25` | Composite: `1.02`
+  - Structural Stop: `1.25` | Best R: `0.28R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 1.01 (0.08R) | T2 · same-direction liquidation cluster: 1.08 (0.26R) | T3 · whale wall / PWH-PWL: 1.09 (0.28R)
+  - **Active Vetoes**: M1 R 0.28 < 1.5 — reward does not pay the risk
+
+#### TRX (Grade B · Conf 92% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `0.3121` (24h Chg: `-1.10%`)
+- **Auction Value Areas**:
+  - Session: VAL `0.3125256666666667` | POC `0.312881` | VAH `0.313291`
+  - Day: VAL `0.31040075` | POC `0.31086824999999996` | VAH `0.31311225`
+  - Month: VAL `0.31507120833333335` | POC `0.31778137500000003` | VAH `0.3239760416666667`
+- **VWAP & Bands**: Day VWAP `0.31` | +1σ `0.31` | +2σ `0.31` | -1σ `0.31` | -2σ `0.31` (Z-score: `-0.15σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `0.3127613455239141` · EMA89 `0.31531315697107265` | RSI `39.812066188271956`
+  - H4: EMA13 `0.3140097970574904` · EMA89 `0.3192581220955406` | RSI `33.670290318697695`
+  - D1: EMA13 `0.3184134779371807` · EMA89 `0.32869495669181614` | RSI `38.90251203315011`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$58.56M`
+  - Short Liquidations (up 0–2%): `$43.31M`
+  - **LSR (±2%)**: `1.35:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `0.32275` (3.41% dist, str 93.9) | Below `0.30894` (-1.02% dist, str 45.5)
+- **Liquidation Magnet Gate**: **OPEN (LSR 1.4:1 < 2.0:1)** — Eligible for passive front-running (S3) or pullback (M1).
+- **Broker Spread & Executability**: **NO MT5 VENUE** (TRXUSD not tradeable on broker account)
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 38 / Bearish 28 (Total: 66)
+  - Recent Footprint Triggers: ABS sell @ 0.3132 (Volume 1,000,000 TRX); ABS buy @ 0.3126 (Volume 1,000,000 TRX); DIV buy @ 0.31237 (Volume 1,000,000 TRX); EXH sell @ 0.31357 (Range 0.001)
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `0.31 – 0.32` | Composite: `0.31`
+  - Structural Stop: `0.32` | Best R: `1.12R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 0.31 (0.39R) | T2 · same-direction liquidation cluster: 0.32 (0.47R) | T3 · whale wall / PWH-PWL: 0.32 (1.12R)
+  - **Active Vetoes**: M1 R 1.12 < 1.5 — reward does not pay the risk
+
+#### SOL (Grade B · Conf 88% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `78.57` (24h Chg: `-3.81%`)
+- **Auction Value Areas**:
+  - Session: VAL `78.83766666666668` | POC `79.937` | VAH `80.45433333333334`
+  - Day: VAL `78.56725` | POC `80.00175` | VAH `80.90775`
+  - Month: VAL `85.04312499999999` | POC `89.782125` | VAH `97.229125`
+- **VWAP & Bands**: Day VWAP `79.87` | +1σ `80.91` | +2σ `81.94` | -1σ `78.84` | -2σ `77.81` (Z-score: `-1.71σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `79.77063658987397` · EMA89 `82.4782369567633` | RSI `34.772031957452555`
+  - H4: EMA13 `80.97446970032404` · EMA89 `89.07949042754151` | RSI `30.54396426877875`
+  - D1: EMA13 `87.40388334778534` · EMA89 `97.62722352910902` | RSI `19.599809164986624`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$4.27M`
+  - Short Liquidations (up 0–2%): `$262.6k`
+  - **LSR (±2%)**: `16.27:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `81.11` (3.78% dist, str 40) | Below `77.6` (-0.71% dist, str 72.1)
+- **Liquidation Magnet Gate**: **BANNED (LSR 16.3:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **NO MT5 VENUE** (SOLUSD not tradeable on broker account)
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 36 / Bearish 30 (Total: 66)
+  - Recent Footprint Triggers: DIV buy @ 78.51 (Volume 500,000 SOL); DIV buy @ 78.63 (Range 0.2); ABS buy @ 77.9 (Range 0.2); TRAP buy @ 77.9 (Range 0.2)
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `79.10 – 89.55` | Composite: `80.55`
+  - Structural Stop: `90.02` | Best R: `0.47R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 78.34 (0.23R) | T2 · same-direction liquidation cluster: 85.04 (0.47R) | T3 · whale wall / PWH-PWL: 84.66 (0.43R)
+  - **Active Vetoes**: M1 R 0.47 < 1.5 — reward does not pay the risk; opposing $1M+ wall at 78.52 blocks T1
+
+#### BNB (Grade B · Conf 92% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `630.32` (24h Chg: `-4.08%`)
+- **Auction Value Areas**:
+  - Session: VAL `629.3425` | POC `631.7935` | VAH `636.6954999999999`
+  - Day: VAL `629.1560833333333` | POC `633.4389166666667` | VAH `642.6164166666667`
+  - Month: VAL `678.5729583333333` | POC `695.5512916666667` | VAH `715.076375`
+- **VWAP & Bands**: Day VWAP `637.29` | +1σ `644.73` | +2σ `652.17` | -1σ `629.85` | -2σ `622.41` (Z-score: `-1.15σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `636.2141513725919` · EMA89 `661.0821184318212` | RSI `36.0675161052102`
+  - H4: EMA13 `648.9754600043224` · EMA89 `689.5315423632177` | RSI `28.215510582375956`
+  - D1: EMA13 `683.279510659061` · EMA89 `706.285875163785` | RSI `27.02158508659592`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$159.4k`
+  - Short Liquidations (up 0–2%): `$12.6k`
+  - **LSR (±2%)**: `12.63:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `652.02` (3.70% dist, str 24.9) | Below `619.55` (-1.47% dist, str 30.1)
+- **Liquidation Magnet Gate**: **BANNED (LSR 12.6:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **NO MT5 VENUE** (BNBUSD not tradeable on broker account)
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 28 / Bearish 36 (Total: 64)
+  - Recent Footprint Triggers: EXH buy @ 629.16 (Volume 5,000 BNB); EXH sell @ 637.13 (Range 2); ABS sell @ 639.27 (Range 2); ABS sell @ 635.11 (Range 2)
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `631.35 – 694.09` | Composite: `640.24`
+  - Structural Stop: `697.01` | Best R: `0.68R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 626.17 (0.25R) | T2 · same-direction liquidation cluster: 678.57 (0.68R) | T3 · whale wall / PWH-PWL: 678.23 (0.67R)
+  - **Active Vetoes**: M1 R 0.68 < 1.5 — reward does not pay the risk
+
+#### SUI (Grade B · Conf 92% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `0.7908` (24h Chg: `-1.80%`)
+- **Auction Value Areas**:
+  - Session: VAL `0.7977716666666667` | POC `0.802415` | VAH `0.8117016666666667`
+  - Day: VAL `0.7839183333333334` | POC `0.8022216666666667` | VAH `0.8183716666666667`
+  - Month: VAL `0.7985433333333334` | POC `0.8692366666666667` | VAH `0.8901233333333334`
+- **VWAP & Bands**: Day VWAP `0.80` | +1σ `0.81` | +2σ `0.83` | -1σ `0.78` | -2σ `0.77` (Z-score: `-0.58σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `0.8024855769801666` · EMA89 `0.8149785874643665` | RSI `41.77700684060164`
+  - H4: EMA13 `0.8060993678910452` · EMA89 `0.8607349559980588` | RSI `40.54469008268544`
+  - D1: EMA13 `0.8476219380456009` · EMA89 `0.9068143926565609` | RSI `34.604965461683776`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$2.36M`
+  - Short Liquidations (up 0–2%): `$58.4k`
+  - **LSR (±2%)**: `40.33:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `0.82` (3.89% dist, str 28.4) | Below `0.7796` (-1.22% dist, str 34.5)
+- **Liquidation Magnet Gate**: **BANNED (LSR 40.3:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **NO MT5 VENUE** (SUIUSD not tradeable on broker account)
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 64 / Bearish 66 (Total: 130)
+  - Recent Footprint Triggers: EXH buy @ 0.7971 (Volume 2,000,000 SUI); TRAP buy @ 0.7947 (Range 0.002); ABS buy @ 0.7952 (Range 0.002); DIV buy @ 0.7928 (Range 0.002)
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `0.79 – 0.87` | Composite: `0.81`
+  - Structural Stop: `0.87` | Best R: `0.58R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 0.78 (0.58R) | T2 · same-direction liquidation cluster: 0.80 (0.21R) | T3 · whale wall / PWH-PWL: 0.80 (0.18R)
+  - **Active Vetoes**: M1 R 0.58 < 1.5 — reward does not pay the risk
+
+#### ADA (Grade B · Conf 92% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `0.1678` (24h Chg: `-3.73%`)
+- **Auction Value Areas**:
+  - Session: VAL `0.168865` | POC `0.17146166666666665` | VAH `0.172145`
+  - Day: VAL `0.16776249999999998` | POC `0.1715575` | VAH `0.1725475`
+  - Month: VAL `0.17003791666666665` | POC `0.17302958333333332` | VAH `0.18978291666666666`
+- **VWAP & Bands**: Day VWAP `0.17` | +1σ `0.17` | +2σ `0.17` | -1σ `0.17` | -2σ `0.17` (Z-score: `-1.92σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `0.17053329379531887` · EMA89 `0.1736093501669108` | RSI `36.47145296646884`
+  - H4: EMA13 `0.17172823473684778` · EMA89 `0.18431307634996819` | RSI `37.19179358391468`
+  - D1: EMA13 `0.18119895657082544` · EMA89 `0.20782244682955486` | RSI `28.17993468302369`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$258.26M`
+  - Short Liquidations (up 0–2%): `$3.24M`
+  - **LSR (±2%)**: `79.62:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `0.1734` (3.92% dist, str 36.3) | Below `0.1657` (-0.71% dist, str 77.3)
+- **Liquidation Magnet Gate**: **BANNED (LSR 79.6:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **FAIL (Spread 2.2512% ≥ 0.15%)** — High broker spread disqualifies order execution.
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 46 / Bearish 55 (Total: 101)
+  - Recent Footprint Triggers: EXH buy @ 0.1662 (Volume 10,000,000 ADA); ABS sell @ 0.1678 (Range 0.0005); ABS sell @ 0.167 (Range 0.0005); EXH buy @ 0.1662 (Range 0.0005)
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `0.17 – 0.17` | Composite: `0.17`
+  - Structural Stop: `0.18` | Best R: `1.28R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 0.17 (1.28R) | T2 · same-direction liquidation cluster: 0.17 (0.62R) | T3 · whale wall / PWH-PWL: 0.17 (0.36R)
+  - **Active Vetoes**: M1 R 1.28 < 1.5 — reward does not pay the risk
+
+#### DOGE (Grade B · Conf 88% · SHORT · Regime: `TREND_DOWN`)
+- **Market Price**: `0.06439` (24h Chg: `-3.14%`)
+- **Auction Value Areas**:
+  - Session: VAL `0.06451950000000001` | POC `0.06494950000000001` | VAH `0.0655945`
+  - Day: VAL `0.06357625` | POC `0.06470125` | VAH `0.06563875`
+  - Month: VAL `0.06851700000000001` | POC `0.07533633333333334` | VAH `0.07752366666666667`
+- **VWAP & Bands**: Day VWAP `0.06` | +1σ `0.07` | +2σ `0.07` | -1σ `0.06` | -2σ `0.06` (Z-score: `-0.86σ`)
+- **HTF Trend EMAs & RSI**:
+  - H1: EMA13 `0.06511570030445209` · EMA89 `0.0668778648364252` | RSI `39.546437796978104`
+  - H4: EMA13 `0.06580839991832921` · EMA89 `0.07130146049994197` | RSI `35.662412371423656`
+  - D1: EMA13 `0.07027341828050356` · EMA89 `0.08034633142253539` | RSI `26.142438340060366`
+- **Exact ±2% Liquidation Telemetry**:
+  - Long Liquidations (down 0–2%): `$841.82M`
+  - Short Liquidations (up 0–2%): `$10.47M`
+  - **LSR (±2%)**: `80.41:1` (LONG_BELOW)
+  - Nearest Sweep Magnets: Above `0.06669` (4.00% dist, str 44.7) | Below `0.06366` (-0.73% dist, str 66)
+- **Liquidation Magnet Gate**: **BANNED (LSR 80.4:1 ≥ 2.5:1 LONG_BELOW)** — Passive limit orders into magnet banned; WAIT for liquidation sweep (S1).
+- **Broker Spread & Executability**: **FAIL (Spread 1.3921% ≥ 0.15%)** — High broker spread disqualifies order execution.
+- **Footprint Signals & Order Flow**:
+  - Signal Counts: Bullish 51 / Bearish 48 (Total: 99)
+  - Recent Footprint Triggers: EXH buy @ 0.06464 (Volume 50,000,000 DOGE); ABS sell @ 0.06556 (Range 0.0002); EXH buy @ 0.06441 (Range 0.0002); DIV buy @ 0.06444 (Range 0.0002)
+- **M1/M2 Engine Status & Plan**:
+  - M1: `TRIGGERED` | M2: `OFF`
+  - Proposed Entry Zone: `0.06 – 0.08` | Composite: `0.07`
+  - Structural Stop: `0.08` | Best R: `0.31R`
+  - Targets: T1 · Day VAH/VAL or ±1.5σ: 0.06 (0.18R) | T2 · same-direction liquidation cluster: 0.07 (0.31R) | T3 · whale wall / PWH-PWL: 0.07 (0.17R)
+  - **Active Vetoes**: M1 R 0.31 < 1.5 — reward does not pay the risk; opposing $1M+ wall at 0.06381 blocks T1

@@ -4972,3 +4972,23 @@ analysis script rc=1
 ### Positions
 - ETH ETH SELL: +0.6R open @ 1,920.50 → HOLD
 
+## R235 · 2026-11-13 22:29 UTC · zai-desk
+
+**Market**: BTC 68,294.0 (-4.4%)  ETH 1,927.24 (-4.5%)  SOL 78.57 (-3.8%)  XAU 3,890.75 (+0.1%)  XAG 48.900 (-2.6%)
+**Bias (|score|≥2)**: XRP-7(TREND)  BNB-5(TREND)  AVAX-5(TRANS)  ADA-3(TREND)  LINK-3(TREND)  DOGE-2(TRANS)  XAU-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- none meeting the gates this round
+
+### Order lifecycle
+- R234-ADA-1 re-debated: FOR 5/AGAINST 2 — stands
+- R234-AVAX-2 re-debated: FOR 5/AGAINST 1 — stands
+
+### Positions
+- ETH ETH SELL: +0.5R open @ 1,927.24 → HOLD
+
+
+## ROUND FAILED · 2026-11-13 22:31 UTC · zai-desk
+
+analysis script rc=1
+
