@@ -4856,3 +4856,8 @@ analysis script rc=1
   - `XLMUSD`: **LSR MAGNET VETO FIRED (40.66:1 shorts above)**. Explains stalled momentum and 8-bar time stop warning. Recommend closing at market (-$2.72) or tightening stop to 0.15070.
 - **FORMULATION CARD COMMITTED**:
   - `desk/deepscan/FORMULATION-XAU-1794590000.md`: Full 16-dimension DECIDE card for Gold (XAUUSD).
+
+## ROUND FAILED · 2026-11-13 19:29 UTC · zai-desk
+
+analysis script rc=1
+
