@@ -4772,3 +4772,40 @@ analysis script rc=1
 
 analysis script rc=1
 
+## R232 · 2026-11-13 16:49 UTC · zai-desk
+
+**Market**: BTC 68,620.0 (-3.9%)  ETH 1,925.00 (-4.7%)  SOL 79.32 (-2.9%)  XAU 3,886.34 (-0.0%)  XAG 49.080 (-2.3%)
+**Bias (|score|≥2)**: ADA-6(TRANS)  LINK-6(TRANS)  AVAX-6(TRANS)  XRP-4(TRANS)  BNB-5(TREND)  LTC-4(TRANS)  XAU-3(TREND)  DOGE-3(TRANS)  SOL-3(TREND)  ETH-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- NEW R232-ADA-1 ADA SHORT limit 0.1716 · stop 0.1737 · T1 0.1657 · T2 0.1644 · R 2.7
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.1706 vs 0.1709), h4 RSI 41.6, day -2.1%
+      [FOR    ] footprint: bull 46 / bear 67; recent: Exhaustion/sell[time], Absorption/buy[vol], Divergence/sell[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×6, abs:sell×5, div:buy×1, div:sell×2, exh:buy×3, exh:sell×5, sdiv:buy×3, sdiv:sell×1, trap:sell×3 — net 13 buy-side vs 16 sell-side
+      [FOR    ] liquidation: long-liq magnet 0.1657 (str 59, ~$4M est, -2.87%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.107 (5m ago -0.204, rising bids); bid $0.01B vs ask $0.02B
+      [FOR    ] cvd: taker buy 48.8%, perpCvd -23, spotCvd -4, quadrant both-selling, latestDiv bear (stale/none)
+      [FOR    ] notifications: 6h weighted bias -9.9 (10 events)
+- NEW R232-LINK-2 LINK SHORT limit 9.900 · stop 10.042 · T1 9.611 · T2 9.546 · T3 9.467 · R 2.0
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (9.853 vs 9.909), h4 RSI 37.7, day -2.9%
+      [FOR    ] footprint: bull 35 / bear 45; recent: Exhaustion/sell[time], Trapped shorts/buy[vol], Divergence/buy[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×1, abs:sell×3, div:buy×2, div:sell×3, exh:buy×3, exh:sell×5, sdiv:sell×1, trap:buy×2, trap:sell×1 — net 8 buy-side vs 13 sell-side
+      [FOR    ] liquidation: long-liq magnet 9.716 (str 82, ~$2M est, -1.35%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.015 (5m ago +0.044, falling bids); bid $0.01B vs ask $0.02B
+      [FOR    ] cvd: taker buy 48.8%, perpCvd -25, spotCvd -5, quadrant both-selling, latestDiv bear (stale/none)
+      [FOR    ] notifications: 6h weighted bias -3.9 (7 events)
+
+### Positions
+- XLM — data missing, HOLD (manual check)
+
+
+## EXEC · 2026-11-13 16:55 UTC · atg-exec (MANUAL-BOUND INSTITUTIONAL PASS)
+- **BUG FIX IN desk_round.py**: Resolved `KeyError: 'sym'` on line 245 by safely extracting `sym = o.get("sym") or o.get("asset")`. This was the root cause of zai-desk's consecutive `analysis script rc=1` round failures. Round R232 completed with exit code 0.
+- **DIMENSION 15 SPREAD DRAG VETO APPLIED (R232 SUGGESTIONS)**:
+  - `R232-ADA-1` (ADA Short limit 0.1716): **VETOED**. Broker spread is 2.21% (consumes >100% of planned stop distance). Disqualified asset.
+  - `R232-LINK-2` (LINK Short limit 9.900): **VETOED**. Broker spread is 0.58% (consumes 40.8% of stop distance > 20% limit). Disqualified asset.
+- **CANONICAL FORMULATION CARDS PRODUCED (MANUAL §9.2)**:
+  - `desk/deepscan/FORMULATION-BTC-1794586000.md`: S1 Sweep Reversal (Post-Sweep Re-Short). Table 7 Score: **10.0 / 11.5 (Grade A)**. LSR 3.85:1 ($55.6M long liquidations below dominate vs $14.4M above). Target T2 is 67,465 (str 88 liq cluster) and T3 is 67,200. Standing MT5 Ticket #210156552 (0.01 lots @ 69,500.00, SL 70,280.00, TP 67,200.00).
+  - `desk/deepscan/FORMULATION-ETH-1794586000.md`: S7 High-Volume Absorption / S1 Sweep Reversal. Table 7 Score: **10.0 / 11.5 (Grade A)**. LSR 3.51:1 (long liquidations below dominate). Entry 1,948.00, SL 1,995.00, TP 1,894.00. Status: **STANDBY CANDIDATE** (enforcing Dimension 16 max 2 crypto slots; slot 1 = XLM open, slot 2 = BTC limit).
+- **OPEN POSITIONS AUDIT**:
+  - `XLMUSD` Short (#210060728, 20.0 lots @ 0.14863, SL 0.15233, TP 0.14113): Floating in profit @ 0.14809 (+0.10R). +1.0R Breakeven trigger level is 0.14493. 8-bar time stop monitoring active.
