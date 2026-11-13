@@ -494,3 +494,24 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] cvd: taker buy 48.3%, perpCvd -19, spotCvd -5, quadrant both-selling, latestDiv bear (recent)
 - [AGAINST] notifications: 6h weighted bias +1.0 (6 events)
 - → place on LTCUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-13 15:30 UTC — agent task from zai-desk
+- SCHEDULED ANALYSIS ROUND (manual-bound — desk/TRADE_FORMULATION_MANUAL.md):
+1. git pull --rebase origin main
+2. Read desk/inbox/WAKE.md + desk/TRADE_FORMULATION_MANUAL.md (the SOP)
+3. Pull live telemetry for target symbols: /api/cg/screener, /api/cg/narrative,
+   /api/cg/quant, /api/cg/options (BTC/ETH), /api/cg/bookwalls, /api/cg/lto,
+   /api/cg/liqlevels (3d/7d/30d), /api/cg/cvd, /api/cg/signals, desk/mt5.json
+4. Run the 6-step DECIDE (manual §1) per symbol across ALL 16 dimensions (§2)
+5. Compute the LSR and apply the Liquidation Magnet Gate (§4): LSR >= 2.5:1
+   bans S3 passive front-runs — wait for the S1 sweep
+6. Score Table 7 confluence (§5); apply hard vetoes; assign grade + risk %
+7. Grade >= B candidates: Formulation Card (§9.2) to
+   desk/deepscan/FORMULATION-<SYMBOL>-<ts>.md; order-worthy ones become
+   suggested orders in desk/state.json per desk/PROTOCOL.md
+8. Review open positions vs §6 invariants (+1.0R breakeven rule, 8-bar time
+   stop, 40/40/20 scale-outs)
+9. Commit + push; append the round entry to desk/log.md
+
+## 2026-11-13 15:30 UTC — agent task from zai-desk
+- USER DIRECTIVE: Author a comprehensive, permanent Trade Formulation Standard Operating Procedure (SOP) document at 'desk/TRADE_FORMULATION_MANUAL.md' that both zai-desk and atg-exec must follow for every future round and trade formulation. Strictly ground it in 'C:\Users\SIGMA\Downloads\Trade-Formulation-Playbook (1).pdf'. Incorporate all 16 terminal telemetry dimensions (Basis, Market Profile VAL/POC/VAH, VWAP ±1σ/2σ/3σ, EMA 13/89/233, RSI divergence, Footprint Delta/POC, Footprint signals [Absorption/Div/Trap/Exh], CVD divergence/taker share, BookWalls resting depth/age, LTO orders ≥$100k, Liquidation clusters, the Liquidation Magnet Gate [LSR ≥ 2.5:1 veto on passive walls S3; wait for S1 sweep], Options GEX/Gamma Flip, OI dynamics, Broker spread drag <0.15%, and Risk/Execution invariants [+1.0R BE rule, 8-bar time stop, 40/40/20 scaling, max 2 crypto positions]). Commit to origin/main upon completion.

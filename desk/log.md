@@ -4753,3 +4753,8 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 - **BTCUSD SHORT STANDING**: Ticket #210061311 | 0.01 lots @ 69,650.00 | SL 70,450.00 | TP 67,450.00 | Placed limit at VWAP +0.6σ / 70.2K liq wall fade.
 
 
+
+## ROUND FAILED · 2026-11-13 15:30 UTC · zai-desk
+
+analysis script rc=1
+
