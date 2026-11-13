@@ -223,7 +223,7 @@
   },
   "orders": [
     {
-      "id": "MT5-210156552",
+      "id": "MT5-210199407",
       "asset": "BTC",
       "sym": "BTC",
       "mt5Symbol": "BTCUSD",
@@ -231,12 +231,30 @@
       "side": "sell",
       "type": "sell_limit",
       "volume": 0.01,
-      "limitPrice": 69500,
-      "stopPrice": 70280,
-      "targetPrice": 67200,
+      "limitPrice": 69500.0,
+      "stopPrice": 70280.0,
+      "targetPrice": 67200.0,
       "status": "placed",
-      "ticket": 210156552,
-      "placedTs": 1794603572000
+      "ticket": 210199407,
+      "placedTs": 1794609137000,
+      "notes": "Grade A (10.0/11.5) \u00b7 retest of Day VAH & +1\u03c3 VWAP band \u00b7 targeting 67,200 long liquidation sweep \u00b7 active in MT5"
+    },
+    {
+      "id": "MT5-210199455",
+      "asset": "XAU",
+      "sym": "XAU",
+      "mt5Symbol": "XAUUSD",
+      "action": "sell",
+      "side": "sell",
+      "type": "sell_limit",
+      "volume": 0.01,
+      "limitPrice": 3900.5,
+      "stopPrice": 3916.5,
+      "targetPrice": 3865.0,
+      "status": "placed",
+      "ticket": 210199455,
+      "placedTs": 1794609201000,
+      "notes": "Grade A/B+ (8.5/11.5) \u00b7 retest of Day POC & -1\u03c3 VWAP \u00b7 broker spread 0.0224% (<0.05%) \u00b7 fills Macro Slot 3 \u00b7 active in MT5"
     },
     {
       "id": "R234-ADA-1",
@@ -260,8 +278,8 @@
       ],
       "riskR": 2.8,
       "expiresTs": 1794621991747,
-      "status": "suggested",
-      "statusTs": 1794607591747,
+      "status": "withdrawn",
+      "statusTs": 1794609247804,
       "perpRefPrice": 0.1678,
       "regime": "TREND-DOWN",
       "mode": "trend-pullback",
@@ -316,7 +334,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "VETOED by atg-exec: MT5 spread 2.25% exceeds 0.15% Broker Spread Gate; LSR 79.6:1 bans passive limit front-running (S3)."
     },
     {
       "id": "R234-AVAX-2",
@@ -336,8 +354,8 @@
       ],
       "riskR": 2.3,
       "expiresTs": 1794621991747,
-      "status": "suggested",
-      "statusTs": 1794607591747,
+      "status": "withdrawn",
+      "statusTs": 1794609247804,
       "perpRefPrice": 8.24,
       "regime": "TREND-DOWN",
       "mode": "trend-pullback",
@@ -392,7 +410,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "VETOED by atg-exec: No MT5 broker venue on FundedNext (no tick); LSR 60.7:1 bans passive limit front-running (S3)."
     }
   ],
   "positions": [
@@ -403,11 +421,12 @@
       "side": "sell",
       "volume": 0.2,
       "entry": 1948.29,
-      "current": 1930.27,
-      "stop": 1995,
-      "target": 1894,
+      "current": 1928.09,
+      "stop": 1948.29,
+      "target": 1894.0,
       "openedTs": 1794610024000,
-      "profit": 3.6
+      "profit": 4.04,
+      "notes": "Breakeven invariant applied: peak excursion reached 1893.39 (+1.17R), moving SL from 1995.00 to Breakeven 1948.29."
     }
   ],
   "closed": [
@@ -5226,7 +5245,7 @@
       "withdrawReason": "debate lost (FOR 3/AGAINST 3) on fresh data"
     }
   ],
-  "updatedAt": "2026-11-13T15:28:30.060Z",
+  "updatedAt": "2026-11-13T22:34:07.804Z",
   "closedPositions": [
     {
       "ticket": 210050569,
@@ -5260,8 +5279,11 @@
     }
   ],
   "account": {
-    "balance": 4652.3,
-    "equity": 4654.26,
-    "profit": 1.96
+    "login": 11808165,
+    "balance": 4643.54,
+    "equity": 4647.58,
+    "margin": 389.66,
+    "margin_free": 4257.92,
+    "profit": 4.04
   }
 }

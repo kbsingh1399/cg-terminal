@@ -4992,3 +4992,34 @@ analysis script rc=1
 
 analysis script rc=1
 
+
+
+## 360 FULL-UNIVERSE TRADE FORMULATION ROUND · 2026-11-13 22:34 UTC · atg-exec (Swarm Lead)
+- **SWARM ARCHITECTURE & SCOPE**:
+  - Executed full 61-asset universe scan across 30 Crypto USDT-M, 28 TradFi USDT-M, and 3 Classic benchmarks per `desk/TRADE_FORMULATION_MANUAL.md` v1.1.0.
+  - Multi-agent swarm division of labor: @crypto (30 Crypto perps), @tradfi (28 TradFi perps + 3 Classic), synthesized by @lead, independently verified by @verifier.
+  - **Tier A (Narrative Sweep)**: 61/61 swept. 5 Grade A+ (`AVAX`, `ATOM`, `XLM`, `NVDA`, `INTC`), 28 Grade B, 28 Grade C/SKIP.
+  - **Tier B (Deep Qualifiers)**: 22 candidates deep-scanned with 16-dimension DECIDE telemetry.
+  - **Tier C (Gates & Scoring)**: Table 7 Confluence Scoring, LSR Magnet Gate (±2% window), Broker Spread Gate (<0.15%), and Desk R-Standard (≥2.0R continuation).
+- **CRITICAL GATE ENFORCEMENTS**:
+  - **LSR Magnet Gate (§3)**: 27 of 30 crypto assets have ±2% LSR ≥ 2.5:1 (`LONG_BELOW`), with skew ratios up to 163.4:1 (`LINK`). Invariant §3 strictly enforced: **All passive limit front-running (S3) and passive limit buy/bid orders inside the lower magnet path are FORMALLY BANNED**. Bids are dams under imminent sweep pressure; posture is **WAIT FOR THE SWEEP (Setup S1)**.
+  - **Broker Spread Gate (MT5)**: Spread < 0.15% passed for `BTCUSD` (0.0348%), `ETHUSD` (0.0285%), `XAUUSD` (0.0224%), `UKOUSD` (0.0794%), `USOUSD` (0.0831%), `XRPUSD` (0.0986%), `XLMUSD` (0.1157%). High-spread alts disqualified: `ADAUSD` (2.25%), `DOGUSD` (1.39%), `LNKUSD` (0.57%), `LTCUSD` (2.42%), `XAGUSD` (0.1784%).
+  - **Suggested Orders Arbitration**: Withdrew `R234-ADA-1` (Spread 2.25% veto + LSR 79.6:1 veto) and `R234-AVAX-2` (No MT5 broker quote + LSR 60.7:1 veto).
+- **ACTIVE POSITIONS & STANDING ORDERS AUDIT (§6 INVARIANTS)**:
+  1. `ETHUSD` Short (#210199486 | 0.20 lots @ 1,948.29 | Floating: +$4.04):
+     - **Peak Excursion**: Session low touched 1,893.39 (+54.90 pts = **+1.175R excursion**).
+     - **§6 Breakeven Invariant**: Mandates moving Stop Loss from 1,995.00 to **1,948.29 (Breakeven)** immediately. Open risk reduced to $0.00 (0.00% heat).
+     - **Time Stop**: 35 minutes elapsed (2.3 bars) < 8 bars; +0.5R exceeded. Valid.
+     - **Scale-Out**: 40% @ 1,915.63 (Day VAL), 40% @ 1,894.00 (Month POC / liq pocket), 20% Runner @ 1,820.00.
+  2. `BTCUSD` Sell Limit (#210199407 / #210156552 | 0.01 lots @ 69,500.00 | SL 70,280.00 | TP 67,200.00):
+     - **Table 7 Score**: 10.0 / 11.5 (Grade A). Risk: $7.80 (0.17% heat). Reward: 2.95R.
+     - Fades upside bounce into Day VAH / +1σ VWAP; does not front-run lower magnet path. Valid standing limit.
+  3. `XAUUSD` Sell Limit (#210199455 | 0.01 lots @ 3,900.50 | SL 3,916.50 | TP 3,865.00):
+     - **Table 7 Score**: 8.5 / 11.5 (Grade A / B+). Risk: $16.00 (0.34% heat). Reward: 2.22R to T2.
+     - Retest of Day POC & VWAP. Broker spread 0.0224% (<0.05%). Cleanly occupies Macro Slot 3. Valid standing limit.
+- **PORTFOLIO HEAT & SLOTS**:
+  - Balance: $4,643.54 | Equity: $4,647.58 | Heat cap: 1.0% ($46.48).
+  - Committed heat: ETH ($0.00 at BE) + BTC ($7.80) + XAU ($16.00) = **$23.80 (0.51% heat)**.
+  - Slots: Crypto 2/2 (BTC limit, ETH position), Macro 1/1 (XAU limit). Full capacity maintained with zero correlation breach.
+- **CANONICAL DELIVERABLES**:
+  - Full report committed to `desk/deepscan/UNIVERSE-360-1794609247804.md`.
