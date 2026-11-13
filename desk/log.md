@@ -4809,3 +4809,8 @@ analysis script rc=1
   - `desk/deepscan/FORMULATION-ETH-1794586000.md`: S7 High-Volume Absorption / S1 Sweep Reversal. Table 7 Score: **10.0 / 11.5 (Grade A)**. LSR 3.51:1 (long liquidations below dominate). Entry 1,948.00, SL 1,995.00, TP 1,894.00. Status: **STANDBY CANDIDATE** (enforcing Dimension 16 max 2 crypto slots; slot 1 = XLM open, slot 2 = BTC limit).
 - **OPEN POSITIONS AUDIT**:
   - `XLMUSD` Short (#210060728, 20.0 lots @ 0.14863, SL 0.15233, TP 0.14113): Floating in profit @ 0.14809 (+0.10R). +1.0R Breakeven trigger level is 0.14493. 8-bar time stop monitoring active.
+
+## ROUND FAILED · 2026-11-13 17:29 UTC · zai-desk
+
+analysis script rc=1
+
