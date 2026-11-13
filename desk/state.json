@@ -223,51 +223,57 @@
   "orders": [
     {
       "id": "USER-210049839",
-      "ticket": 210049839,
-      "sym": "XAU",
-      "mt5Symbol": "XAUUSD",
-      "side": "sell",
-      "type": "limit",
-      "entry": 3910.05,
-      "stop": 3914.55,
-      "targets": [
-        3815
-      ],
+      "asset": "XAU",
+      "action": "sell",
+      "type": "sell_limit",
       "volume": 0.01,
+      "limitPrice": 3910.05,
+      "stopPrice": 3914.55,
+      "targetPrice": 3815,
       "status": "placed",
+      "ticket": 210049839,
       "placedTs": 1794570003000
     },
     {
-      "id": "USER-210060728",
-      "ticket": 210060728,
-      "sym": "XLM",
-      "mt5Symbol": "XLMUSD",
-      "side": "sell",
-      "type": "limit",
-      "entry": 0.14863,
-      "stop": 0.15233,
-      "targets": [
-        0.14113
-      ],
-      "volume": 20,
+      "id": "USER-210061311",
+      "asset": "BTC",
+      "action": "sell",
+      "type": "sell_limit",
+      "volume": 0.01,
+      "limitPrice": 69420,
+      "stopPrice": 69820,
+      "targetPrice": 67220.22,
       "status": "placed",
-      "placedTs": 1794573711000
+      "ticket": 210061311,
+      "placedTs": 1794573913000
     },
     {
-      "id": "USER-210061311",
-      "ticket": 210061311,
-      "sym": "BTC",
-      "mt5Symbol": "BTCUSD",
-      "side": "sell",
-      "type": "limit",
-      "entry": 69650,
-      "stop": 70450,
-      "targets": [
-        67450
-      ],
-      "volume": 0.01,
+      "id": "USER-210079913",
+      "asset": "XRP",
+      "action": "sell",
+      "type": "sell_limit",
+      "volume": 10,
+      "limitPrice": 1.028,
+      "stopPrice": 1.0325,
+      "targetPrice": 0.996,
       "status": "placed",
-      "placedTs": 1794573913000
+      "ticket": 210079913,
+      "placedTs": 1794580059000
+    },
+    {
+      "id": "USER-210060728",
+      "asset": "XLM",
+      "action": "sell",
+      "type": "sell_limit",
+      "volume": 20,
+      "limitPrice": 0.14863,
+      "actualEntry": 0.14863,
+      "stopPrice": 0.15233,
+      "targetPrice": 0.14113,
+      "status": "filled",
+      "ticket": 210060728,
+      "placedTs": 1794571840000,
+      "filledTs": 1794579786000
     }
   ],
   "positions": [
@@ -280,7 +286,18 @@
       "stop": 1965.5,
       "target": 1890,
       "openedTs": 1794571840000,
-      "profit": -0.14
+      "profit": -2.03
+    },
+    {
+      "ticket": 210060728,
+      "sym": "XLM",
+      "side": "sell",
+      "volume": 20,
+      "entry": 0.14863,
+      "stop": 0.15233,
+      "target": 0.14113,
+      "openedTs": 1794579786000,
+      "profit": 1.8
     }
   ],
   "closed": [
@@ -4865,5 +4882,6 @@
       "filledTs": null,
       "notes": null
     }
-  ]
+  ],
+  "updatedAt": "2026-11-13T12:57:06.025Z"
 }
