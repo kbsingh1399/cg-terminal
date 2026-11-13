@@ -26,6 +26,8 @@ async function runRound() {
   const ts = new Date().toISOString();
   console.log(`\n===============================================================`);
   console.log(`[DESK CRON ROUND] Active at ${ts}`);
+  console.log(`Canonical Playbook: C:\\Users\\SIGMA\\Downloads\\Trade-Formulation-Playbook (1).pdf`);
+  console.log(`Rules Enforced: 6-Step DECIDE | Table 7 Scoring | +1.0R BE | Liq Magnet Gate`);
   console.log(`===============================================================`);
 
   // 1. Sync MT5 snapshot via mt5_report.py
