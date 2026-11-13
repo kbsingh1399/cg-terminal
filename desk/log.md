@@ -4509,3 +4509,28 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R220 · 2026-11-13 03:04 UTC · zai-desk
+
+**Market**: BTC 70,186.5 (-1.7%)  ETH 1,990.39 (-1.4%)  SOL 80.26 (-1.7%)  XAU 3,924.24 (+0.9%)  XAG 50.640 (+0.9%)
+**Bias (|score|≥2)**: ADA-7(TREND)  DOGE-7(TREND)  LINK-5(TREND)  LTC-6(TREND)  AVAX-5(TREND)  XRP-5(TREND)  BNB-3(TREND)  BTC-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- ADA SHORT confluence -7.0 — REJECTED: opposite liq magnet 0.1759 (str 97, ~$5M est) within 1.2R of entry — wait for sweep
+- NEW R220-DOGE-1 DOGE SHORT limit 0.06633 · stop 0.06679 · T1 0.06441 · T2 0.06421 · T3 0.06396 · R 4.1
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.06531 vs 0.06587), h4 RSI 32.2, day -1.8%
+      [FOR    ] footprint: bull 42 / bear 46; recent: Trapped shorts/buy[time], Absorption/buy[vol], Absorption/sell[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, abs:sell×2, div:buy×2, div:sell×5, exh:sell×2, sdiv:sell×2, trap:buy×2, trap:sell×1 — net 6 buy-side vs 12 sell-side
+      [FOR    ] liquidation: long-liq magnet 0.06441 (str 100, ~$6M est, -1.39%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.008 (5m ago -0.028, rising bids); bid $0.03B vs ask $0.03B
+      [FOR    ] cvd: taker buy 48.2%, perpCvd -99, spotCvd -5, quadrant both-selling, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -5.0 (6 events)
+
+### Order lifecycle
+- R209-AVAX-1 re-debated: FOR 6/AGAINST 0 — stands
+- R209-BNB-2 re-debated: FOR 5/AGAINST 1 — stands
+- R210-XRP-1 re-debated: FOR 6/AGAINST 0 — stands
+- R211-SOL-1 WITHDRAWN (re-debate lost: FOR 3/AGAINST 3)
+
+### Positions
+- no open positions
+
