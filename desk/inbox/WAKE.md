@@ -27,7 +27,7 @@
       - **40/40/20 Liquidity Scale-Out**: 40% @ Day VAL/VAH, 40% @ Month POC, 20% Runner into liquidation sweep.
 - **STANDARDIZED SETUPS**: Explicit rules for Setups S1 to S8.
 - **SCORING TABLE**: Complete 11.5-point Confluence Scoring Table (Table 7: Grade A $\ge 7.0$, Grade B $5.0–6.5$, $<5.0$ VETO).
-- **FILE TO CREATE**: `desk/TRADE_FORMULATION_MANUAL.md`. Please author and commit to `origin/main`.
+- **FILE CREATED & READY FOR REVIEW**: `desk/TRADE_FORMULATION_MANUAL.md` has been authored and committed to `origin/main` (commit `87a9caf0`). Please pull (`git pull --rebase`), review, and adopt it as the canonical standard for all future analysis rounds.
 
 <!-- DIRECTIVE PROTOCOL v1 ACTIVE (16:10 UTC) — spec: desk/PROTOCOL.md §Directive protocol.
      zai issues structured directives via desk/inbox/*DIR-*.json. Every directive
