@@ -4602,3 +4602,36 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R225 · 2026-11-13 04:24 UTC · zai-desk
+
+**Market**: BTC 68,822.7 (-3.6%)  ETH 1,929.17 (-4.4%)  SOL 78.32 (-4.1%)  XAU 3,916.86 (+0.8%)  XAG 50.380 (+0.3%)
+**Bias (|score|≥2)**: SOL-4(TREND)  AVAX-5(TREND)  DOGE-5(TREND)  ADA-5(TREND)  XRP-5(TREND)  BNB-4(TREND)  LTC-3(TREND)  XAG-3(TREND)  LINK-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- SOL SHORT confluence -3.6 — REJECTED: opposite liq magnet 79.20 (str 73, ~$19M est) within 1.2R of entry — wait for sweep
+- NEW R225-AVAX-1 AVAX SHORT limit 8.308 · stop 8.414 · T1 7.980 · T2 7.870 · T3 7.820 · R 3.1
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (8.031 vs 8.201), h4 RSI 37.6, day -3.9%
+      [FOR    ] footprint: bull 35 / bear 49; recent: Exhaustion/buy[time], Exhaustion/buy[vol], Divergence/sell[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×1, abs:sell×5, div:buy×2, div:sell×4, exh:buy×4, sdiv:sell×2, trap:buy×2 — net 9 buy-side vs 11 sell-side
+      [FOR    ] liquidation: long-liq magnet 7.980 (str 58, ~$1M est, -0.74%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.086 (5m ago +0.085, rising bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.6%, perpCvd -36, spotCvd +1, quadrant spot-bid, latestDiv bear (recent)
+- ADA SHORT confluence -5.0 — REJECTED: no structural target >= 2.0R (nearest magnet 0.1730 = 1.2R)
+- NEW R225-BNB-2 BNB SHORT limit 635.74 · stop 643.54 · T1 616.26 · R 2.5
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (633.61 vs 644.01), h4 RSI 20.4, day -3.6%
+      [FOR    ] footprint: bull 28 / bear 33; recent: Exhaustion/buy[time], Exhaustion/buy[vol], Divergence/buy[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:sell×1, div:buy×2, div:sell×5, exh:buy×4, exh:sell×1, sdiv:sell×2 — net 6 buy-side vs 9 sell-side
+      [FOR    ] liquidation: long-liq magnet 628.58 (str 54, ~$2M est, -0.82%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.041 (5m ago +0.094, falling bids); bid $0.03B vs ask $0.03B
+      [FOR    ] cvd: taker buy 47.6%, perpCvd -68, spotCvd -16, quadrant both-selling, latestDiv bear (recent)
+      [AGAINST] notifications: 6h weighted bias +2.0 (2 events)
+
+### Order lifecycle
+- R209-AVAX-1 EXPIRED (unfilled past expiry)
+- R209-BNB-2 EXPIRED (unfilled past expiry)
+- R210-XRP-1 re-debated: FOR 5/AGAINST 1 — stands
+- R220-DOGE-1 re-debated: FOR 7/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
