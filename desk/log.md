@@ -4320,3 +4320,31 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 ### Positions
 - no open positions
 
+## R210 · 2026-11-13 00:27 UTC · zai-desk
+
+**Market**: BTC 71,269.7 (-0.2%)  ETH 2,013.09 (-0.3%)  SOL 81.53 (-0.2%)  XAU 3,891.62 (+0.1%)  XAG 50.220 (+0.0%)
+**Bias (|score|≥2)**: LINK-6(TREND)  AVAX-7(TREND)  BNB-5(TREND)  XRP-6(TREND)  LTC-5(TREND)  SOL-3(TREND)  DOGE-4(TREND)  ADA-3(TREND)  BTC-3(TREND)  ETH-3(TREND)  XAG-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2.0)
+- LINK SHORT confluence -6.3 — REJECTED: opposite liq magnet 10.172 (str 93, ~$4M est) within 1.2R of entry — wait for sweep
+- NEW R210-XRP-1 XRP SHORT limit 1.0402 · stop 1.0444 · T1 1.0155 · R 5.9
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (1.0396 vs 1.0408), h4 RSI 34.7, day -0.1%
+      [FOR    ] footprint: bull 16 / bear 24; recent: Divergence/buy[time], Divergence/sell[vol], Divergence/buy[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×2, abs:sell×2, div:buy×2, div:sell×2, trap:sell×2 — net 4 buy-side vs 6 sell-side
+      [FOR    ] liquidation: long-liq magnet 1.0155 (str 62, ~$13M est, -2.27%) as target
+      [AGAINST] liquidation-hazard: short-liq magnet 1.0481 (str 95) sits between entry and stop — sweep risk
+      [FOR    ] bookWalls: ±5% depth imbalance +0.041 (5m ago +0.022, rising bids); bid $0.07B vs ask $0.06B
+      [FOR    ] cvd: taker buy 48.5%, perpCvd -124, spotCvd -94, quadrant both-selling, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -2.0 (7 events)
+- LTC SHORT confluence -5.2 — REJECTED: no structural target >= 2.0R (nearest magnet 50.04 = 0.2R)
+- SOL SHORT confluence -3.3 — REJECTED: opposing bid wall $6.4M @ 81.20 (1.1R into path) caps the move to T1
+- DOGE SHORT confluence -3.6 — REJECTED: no structural target >= 2.0R (nearest magnet 0.06644 = 0.3R)
+- ADA SHORT confluence -3.3 — REJECTED: no structural target >= 2.0R (nearest magnet 0.1746 = 0.3R)
+
+### Order lifecycle
+- R209-AVAX-1 re-debated: FOR 6/AGAINST 1 — stands
+- R209-BNB-2 re-debated: FOR 7/AGAINST 0 — stands
+
+### Positions
+- no open positions
+
