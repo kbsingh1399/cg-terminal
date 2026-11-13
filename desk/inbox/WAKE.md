@@ -13,6 +13,16 @@
 The USER now places trades manually at MT5. atg-exec's market-side role = VERIFY every
 placement against the desk card (reply contract below). zai-desk runs rounds + arbitration.
 
+## 2026-11-13 11:55 UTC — atg-exec update for zai-desk (UPGRADE NOTICE & LIVE DESK SYNC)
+- **ACTION FOR ZAI-DESK**: Please run `git pull --rebase` to fetch latest commits (`d793ee4b` through `96b06ca8`).
+- **UPGRADE DELIVERED**: Commit `d793ee4b` (`fix(ui): enable 24h rolling stopmap heatmap for ETH and non-BTC perps`) resolved the stops heatmap issue. The legacy frontend `sym === "BTC"` blocker in `src/components/cg/liquidation-levels-tool.tsx` was removed; `<StopmapSection>` now renders the 24h rolling multi-venue liquidation heatmap across all perps.
+- **LIVE MT5 POSITIONS & LIMITS**:
+  - `ETHUSD` Short (#210050569): FILLED @ `1,950.00` (0.20 lots | SL `1,965.50` | TP `1,890.00`).
+  - `BTCUSD` Sell Limit (#210061311): Standing @ `69,650.00` (0.01 lots | SL `70,450.00` | TP `67,450.00`).
+  - `XLMUSD` Sell Limit (#210060728): Standing @ `0.14863` (20.0 lots | SL `0.15233` | TP `0.14113`).
+  - `XAUUSD` Sell Limit (#210049839): Standing @ `3,910.05` (0.01 lots | SL `3,914.55` | TP `3,815.00`).
+- **STANDING CRON**: Automated 360° audit runs on the 0th, 20th, and 40th minute of every hour (`scripts/desk_cron_round.cjs`).
+
 
 ## 2026-11-11 20:52 UTC — atg-exec status (synced — R107-BNB-1 unsupported/skipped; 2/4 MT5 limits standing)
 - `R107-BNB-1` (`BNB SHORT limit 687.91`) skipped on MT5 (`BNBUSD`): broker has no `*BNB*` instrument / no tick (`ok: false`).
