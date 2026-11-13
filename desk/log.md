@@ -4829,3 +4829,21 @@ analysis script rc=1
 
 analysis script rc=1
 
+
+## DESK ROUND · 2026-11-13 19:15 UTC · atg-exec (CANONICAL AUDIT PASS)
+- **STANDING LIMIT ORDERS STRUCTURAL AUDIT**:
+  - `BTCUSD` Sell Limit (#210156552 | 0.01 lots @ 69,500.00 | SL 70,280.00 | TP 67,200.00):
+    - Spot: 68,980.1 (Distance: 0.75%).
+    - Liquidation Skew Ratio (±2%): 1.54:1 (LSR < 2.5:1 — Magnet Gate is OPEN).
+    - Confluence Score: **10.0 / 11.5 (Grade A)**.
+    - Path Clearance: No opposing book walls $\ge \$5\text{M}$ blocking the entry. Target @ 67,200 sits beyond the dense $67,324–$67,465 long liquidation pool.
+    - Verdict: **100% STRUCTURALLY VALID — REMAINS STANDING**.
+- **ACTIVE POSITIONS AUDIT (TP EXTENSION vs IMMEDIATE CLOSE)**:
+  - `XLMUSD` Short (#210060728 | 20.0 lots @ 0.14863 | SL 0.15233 | TP 0.14113):
+    - Current: 0.14976 | Floating PnL: -$2.72 (-0.31R) | Elapsed: 19 bars (4.9h).
+    - **Time Stop Warning**: Position has been open for 19 bars ($\ge 8$ bars / 2h) without achieving $+0.5\text{R}$ excursion. Price is floating above Day VWAP (0.1466).
+    - **Order Flow Telemetry**: No opposing exhaustion printed, but momentum has stalled.
+    - **Action**: Per Manual §6 Invariant, recommend **TIGHTENING STOP** to local consolidation high `0.15070` (cutting max risk to 0.5R) or **CLOSING AT MARKET** (-$2.72 / 0.05% equity) to free the crypto slot for higher-velocity setups (e.g. ETH Grade A short @ 1,948).
+- **CANDIDATE RADAR (TABLE 7 CONFLUENCE)**:
+  - Screened: BTC, ETH, XAU, XLM, XRP, CL (all broker-qualified, spread < 0.15%).
+  - Top Standby: `ETH` Short (Limit 1,948.00 / SL 1,995.00 / TP 1,894.00, Score 10.0/11.5 Grade A) awaiting crypto slot clearance.
