@@ -1,20 +1,11 @@
 {
   "fired": {
     "A10": 1794410063418,
-    "A6": 1794336827979
+    "A6": 1794336827979,
+    "A5": 1794602248085
   },
-  "prevOrders": [
-    {
-      "ticket": 210156552,
-      "symbol": "BTCUSD"
-    }
-  ],
-  "prevPositions": [
-    {
-      "ticket": 210060728,
-      "symbol": "XLMUSD"
-    }
-  ],
+  "prevOrders": [],
+  "prevPositions": [],
   "prevOutboxFiles": [
     "2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md",
     "2026-11-10T17-36-00_DIR-0004-funding-oi-endpoints.reply.md",
