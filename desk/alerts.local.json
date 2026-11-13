@@ -4,8 +4,22 @@
     "A6": 1794336827979,
     "A5": 1794602248085
   },
-  "prevOrders": [],
-  "prevPositions": [],
+  "prevOrders": [
+    {
+      "ticket": 210199407,
+      "symbol": "BTCUSD"
+    },
+    {
+      "ticket": 210199455,
+      "symbol": "XAUUSD"
+    }
+  ],
+  "prevPositions": [
+    {
+      "ticket": 210199486,
+      "symbol": "ETHUSD"
+    }
+  ],
   "prevOutboxFiles": [
     "2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md",
     "2026-11-10T17-36-00_DIR-0004-funding-oi-endpoints.reply.md",
