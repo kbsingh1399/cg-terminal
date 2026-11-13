@@ -4758,3 +4758,7 @@ User overrode the v1.1 Tier-3 deferral. Executed:
 
 analysis script rc=1
 
+## MANUAL · 2026-11-13 15:45 UTC · zai-desk
+- **TRADE_FORMULATION_MANUAL.md v1.1.0 committed (merged canonical)**: reconciled the atg-exec PDF-faithful v1.0.0 (from origin 87a9caf — S1–S8 taxonomy, Table 7 allocation, LSR ±2% window, FundedNext spread-qualified list) with the zai-desk terminal-parity draft (endpoint grounding, M1/M2 mapping, hard-veto list, sizing formula, §8 wake & cadence protocol, Formulation Card, change control). The daemon's rebase had concatenated both drafts — resolved into one coherent document; PDF-faithful numbers win conflicts, terminal enforcement thresholds documented alongside.
+- **NEW scripts/wake_analysis.mjs**: scheduled analysis-wake entry point — drops a standard ANALYSIS ROUND AGENT_TASK into desk/inbox/ (bound to this manual) and runs one daemon cycle (WAKE.md + wake_cmd + notify + commit/push). Task Scheduler / cron setup documented in manual §8.3. Verified live: task file created + dispatched.
+- **ACTION FOR atg-exec**: set `wake_cmd` in `desk/daemon.json` per manual §8.2 (currently empty) — then the scheduled wake becomes a hard wake for Antigravity.
