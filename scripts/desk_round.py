@@ -242,9 +242,10 @@ for o in orders:
         o["withdrawReason"] = f"riskR {o['riskR']} below mandated minimum {cfg['min_r_multiple']}"
         lifecycle_events.append(f"{o['id']} WITHDRAWN (R {o['riskR']} < min {cfg['min_r_multiple']} — user mandate 1:2)")
         continue
-    sc = (scored.get(o["sym"]) or {}).get("score")
-    flipped = o.get("side") == "long" and (sc is not None and sc < 0) or \
-              o.get("side") == "short" and (sc is not None and sc > 0)
+    sc = (scored.get(o.get("sym") or o.get("asset")) or {}).get("score")
+    o_side = o.get("side") or (("long" if o.get("action") == "buy" else "short") if o.get("action") else None)
+    flipped = o_side == "long" and (sc is not None and sc < 0) or \
+              o_side == "short" and (sc is not None and sc > 0)
     if flipped and o.get("status") == "suggested":
         o["status"] = "withdrawn"
         o["statusTs"] = now_ms
@@ -601,13 +602,14 @@ def deep_for(sym):
 for o in state["orders"]:
     if o.get("status") != "suggested":
         continue
-    sym = o["sym"]
+    sym = o.get("sym") or o.get("asset")
     if scored.get(sym, {}).get("score") is None:
         continue
-    deb = build_debate(sym, o["side"], assets[sym], deep_for(sym), regime=regimes.get(sym))
+    o_side = o.get("side") or (("long" if o.get("action") == "buy" else "short") if o.get("action") else None)
+    deb = build_debate(sym, o_side, assets[sym], deep_for(sym), regime=regimes.get(sym))
     o["debate"] = deb
     o["perpRefPrice"] = assets[sym].get("price")
-    ok, nf, na = debate_ok(deb, o["side"])
+    ok, nf, na = debate_ok(deb, o_side)
     if not ok:
         o["status"] = "withdrawn"
         o["statusTs"] = now_ms
@@ -637,7 +639,7 @@ for sym in cands:
               1 if parts.get("vwap", 0) * (1 if side == "long" else -1) > 0 else 0)
         if sum(al) < 2:
             continue
-    if any(o.get("sym") == sym and o.get("side") == side and o.get("status") in ("suggested", "placed", "filled")
+    if any((o.get("sym") or o.get("asset")) == sym and (o.get("side") or o.get("action")) in (side, "buy" if side == "long" else "sell") and o.get("status") in ("suggested", "placed", "filled")
            for o in state["orders"] + live_positions):
         continue
     if n_open_positions + len([o for o in state["orders"] if o.get("status") in ("suggested", "placed")]) >= cfg["max_concurrent_positions"]:

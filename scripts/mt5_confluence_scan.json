@@ -1,0 +1,2095 @@
+[
+  {
+    "asset": "AVAX",
+    "mt5Sym": "AVAXUSD",
+    "supported": true,
+    "price": 8.294,
+    "chgDay": -0.7419818094782119,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack down · EMA spread -1.33 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "A+",
+    "confidence": 92,
+    "activeModel": "M1_TREND_PULLBACK",
+    "m1": "TRIGGERED",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 7,
+    "fails": 1,
+    "stale": true,
+    "lsr": 1.53,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 13457016.24,
+    "longsBelow": 8818488.289999995,
+    "funding8hPct": 1,
+    "plan": {
+      "entryZone": [
+        8.182133268180278,
+        8.673480341315727
+      ],
+      "compositeEntry": 8.398277173504814,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 8.736519658684271,
+      "invalidation": "structure beyond 8.74 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 8.075562528429497,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.9540925791864933
+        },
+        {
+          "level": 8.27,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.37924618912599467
+        },
+        {
+          "level": 7.696,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 2.076253588109184
+        }
+      ],
+      "bestR": 2.076253588109184,
+      "vetoes": []
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 down · spread -1.33 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "-0.04σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "13 confirmation signals (8h window) · latest abs@8.56"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-6.6M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid – · ask $3.4M@8.55"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 8.61 · below 8.27"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": true,
+        "value": "bestR 2.08"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 1.53 < 2.0 — S3 fully eligible",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution"
+    ],
+    "tradable": true,
+    "score": 112.8
+  },
+  {
+    "asset": "ADA",
+    "mt5Sym": "ADAUSD",
+    "supported": true,
+    "price": 0.1707,
+    "chgDay": -2.0654044750430405,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack down · EMA spread -5.31 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 92,
+    "activeModel": "M1_TREND_PULLBACK",
+    "m1": "TRIGGERED",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 6,
+    "fails": 2,
+    "stale": true,
+    "lsr": 1.62,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 867286443.2599995,
+    "longsBelow": 536643533.7100002,
+    "funding8hPct": 0.4131,
+    "plan": {
+      "entryZone": [
+        0.16927030656619893,
+        0.17491454035484108
+      ],
+      "compositeEntry": 0.17245074951334344,
+      "triggerRule": "footprint exh fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 0.17608545964515893,
+      "invalidation": "structure beyond 0.1761 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 0.16759449635407359,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 1.336077151452025
+        },
+        {
+          "level": 0.17063625,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.49921436580614764
+        },
+        {
+          "level": 0.171,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.3991376095289323
+        }
+      ],
+      "bestR": 1.336077151452025,
+      "vetoes": [
+        "M1 R 1.34 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 down · spread -5.31 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "-0.08σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "26 confirmation signals (8h window) · latest abs@0.1692"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-6.5M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $1.3M@0.1674 · ask $1.3M@0.1742"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 0.1774 · below 0.1657"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "bestR 1.34"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 1.62 < 2.0 — S3 fully eligible",
+      "R 1.34 < 1.5 floor — NOT tradable",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "veto: M1 R 1.34 < 1.5 — reward does not pay the risk"
+    ],
+    "tradable": false,
+    "score": 97.4
+  },
+  {
+    "asset": "LINK",
+    "mt5Sym": "LNKUSD",
+    "supported": true,
+    "price": 9.865,
+    "chgDay": -2.7408064675145463,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack tangled · EMA spread -5.49 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 92,
+    "activeModel": "M1_TREND_PULLBACK",
+    "m1": "TRIGGERED",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 6,
+    "fails": 2,
+    "stale": true,
+    "lsr": 1.99,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 14286167.079999998,
+    "longsBelow": 7183214.599999999,
+    "funding8hPct": 0.8789,
+    "plan": {
+      "entryZone": [
+        9.800467404760633,
+        10.824845750145766
+      ],
+      "compositeEntry": 9.999975380989794,
+      "triggerRule": "footprint exh fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 10.892445916520904,
+      "invalidation": "structure beyond 10.892 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 9.68825,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.3492836666078677
+        },
+        {
+          "level": 9.825104166666666,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.1959406023629246
+        },
+        {
+          "level": 10.1,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.11207610226670543
+        }
+      ],
+      "bestR": 0.3492836666078677,
+      "vetoes": [
+        "M1 R 0.35 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 tangled · spread -5.49 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "-0.31σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "22 confirmation signals (8h window) · latest trap@9.792"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-6.2M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $1.9M@9.560 · ask $2.0M@10.212"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 10.292 · below 9.716"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "bestR 0.35"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 1.99 < 2.0 — S3 fully eligible",
+      "R 0.35 < 1.5 floor — NOT tradable",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "veto: M1 R 0.35 < 1.5 — reward does not pay the risk"
+    ],
+    "tradable": false,
+    "score": 87.5
+  },
+  {
+    "asset": "SOL",
+    "mt5Sym": "SOLUSD",
+    "supported": true,
+    "price": 79.56,
+    "chgDay": -2.595494613124393,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack down · EMA spread -8.01 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 88,
+    "activeModel": "M1_TREND_PULLBACK",
+    "m1": "TRIGGERED",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 6,
+    "fails": 2,
+    "stale": true,
+    "lsr": 2.27,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 18891579.35000001,
+    "longsBelow": 8328082.120000002,
+    "funding8hPct": 0.8965000000000001,
+    "plan": {
+      "entryZone": [
+        79.1585536500213,
+        89.53158243857654
+      ],
+      "compositeEntry": 80.70995929200765,
+      "triggerRule": "footprint div fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 90.03266756142344,
+      "invalidation": "structure beyond 90.03 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 78.38086415574413,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.24983031421291843
+        },
+        {
+          "level": 85.212375,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.48295147481585726
+        },
+        {
+          "level": 84.66,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.4237009883652485
+        }
+      ],
+      "bestR": 0.48295147481585726,
+      "vetoes": [
+        "M1 R 0.48 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 79.70 blocks T1"
+      ]
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 down · spread -8.01 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "-0.38σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "18 confirmation signals (8h window) · latest trap@78.87"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-155.7M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $7.7M@79.70 · ask $14.7M@82.13"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 82.71 · below 78.24"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "bestR 0.48"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 2.27 2.0–2.5 — S3 half-size at Grade B max",
+      "R 0.48 < 1.5 floor — NOT tradable",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "veto: M1 R 0.48 < 1.5 — reward does not pay the risk",
+      "veto: opposing $1M+ wall at 79.70 blocks T1"
+    ],
+    "tradable": false,
+    "score": 86.8
+  },
+  {
+    "asset": "XAU",
+    "mt5Sym": "XAUUSD",
+    "supported": true,
+    "price": 3884.9,
+    "chgDay": -0.07125090349746717,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack down · EMA spread -5.24 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 92,
+    "activeModel": "M1_TREND_PULLBACK",
+    "m1": "TRIGGERED",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 5,
+    "fails": 3,
+    "stale": true,
+    "lsr": 2.42,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 1010282.6,
+    "longsBelow": 418144.5999999999,
+    "funding8hPct": 1.1532,
+    "plan": {
+      "entryZone": [
+        3893.7600613360387,
+        4049.6234200427352
+      ],
+      "compositeEntry": 3934.015869991671,
+      "triggerRule": "footprint exh fired sell in short direction at the zone",
+      "stop": 4058.130163290598,
+      "invalidation": "structure beyond 4058.13 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 3883.0567499999997,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.41058220320311717
+        },
+        {
+          "level": 3952.746875,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.15091738840437602
+        },
+        {
+          "level": 4045.11,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.8950953758465273
+        }
+      ],
+      "bestR": 0.8950953758465273,
+      "vetoes": [
+        "M1 R 0.90 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 down · spread -5.24 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": false,
+        "value": "-1.39σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "4 confirmation signals (8h window) · latest exh@3891.21"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-128.6M · latest div bearish"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $5.5M@3876.08 · ask $6.5M@3891.60"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 3981.28 · below 3855.67"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "bestR 0.90"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: walls"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 2.42 2.0–2.5 — S3 half-size at Grade B max",
+      "R 0.90 < 1.5 floor — NOT tradable",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "veto: M1 R 0.90 < 1.5 — reward does not pay the risk"
+    ],
+    "tradable": false,
+    "score": 85
+  },
+  {
+    "asset": "XRP",
+    "mt5Sym": "XRPUSD",
+    "supported": true,
+    "price": 1.016,
+    "chgDay": -2.40153698366954,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack down · EMA spread -9.35 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 88,
+    "activeModel": "M1_TREND_PULLBACK",
+    "m1": "TRIGGERED",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 6,
+    "fails": 2,
+    "stale": true,
+    "lsr": 1.98,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 763839241.3200003,
+    "longsBelow": 385029288.1900001,
+    "funding8hPct": 1,
+    "plan": {
+      "entryZone": [
+        1.013093422357058,
+        1.248314487896631
+      ],
+      "compositeEntry": 1.0277725011067824,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 1.2547830121033692,
+      "invalidation": "structure beyond 1.2548 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 1.004752074855952,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.10140687384813021
+        },
+        {
+          "level": 1.08715125,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.26156827995559373
+        },
+        {
+          "level": 1.0882,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.266188110092075
+        }
+      ],
+      "bestR": 0.266188110092075,
+      "vetoes": [
+        "M1 R 0.27 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 1.0140 blocks T1"
+      ]
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 down · spread -9.35 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "-0.40σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "9 confirmation signals (8h window) · latest div@1.0206"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-36.4M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $7.3M@1.0140 · ask $8.1M@1.0449"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 1.0523 · below 1.0080"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "bestR 0.27"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 1.98 < 2.0 — S3 fully eligible",
+      "R 0.27 < 1.5 floor — NOT tradable",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "veto: M1 R 0.27 < 1.5 — reward does not pay the risk",
+      "veto: opposing $1M+ wall at 1.0140 blocks T1"
+    ],
+    "tradable": false,
+    "score": 84.7
+  },
+  {
+    "asset": "ETH",
+    "mt5Sym": "ETHUSD",
+    "supported": true,
+    "price": 1928.61,
+    "chgDay": -4.477441914601715,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack down · EMA spread -8.10 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 88,
+    "activeModel": "M1_TREND_PULLBACK",
+    "m1": "TRIGGERED",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 5,
+    "fails": 3,
+    "stale": true,
+    "lsr": 3.28,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 6255677.660000002,
+    "longsBelow": 1907778.6400000004,
+    "funding8hPct": 0.4202,
+    "plan": {
+      "entryZone": [
+        1928.2067876440844,
+        2228.5492821563794
+      ],
+      "compositeEntry": 1957.8426576583975,
+      "triggerRule": "footprint exh fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 2240.0167178436204,
+      "invalidation": "structure beyond 2240.02 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 1909.4200910040254,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.17160530851980807
+        },
+        {
+          "level": 2085.867,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.45370698588511565
+        },
+        {
+          "level": 2050.32,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.3277315508055535
+        }
+      ],
+      "bestR": 0.45370698588511565,
+      "vetoes": [
+        "M1 R 0.45 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 1932.70 blocks T1"
+      ]
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 down · spread -8.10 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": false,
+        "value": "-0.76σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "13 confirmation signals (8h window) · latest abs@1953.57"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-786.5M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $55.2M@1932.70 · ask $40.0M@1952.11"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 2000.99 · below 1894.81"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "bestR 0.45"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 3.28 ≥ 2.5 — MAGNET GATE: passive entries BANNED (S3/S2); S1 sweep-reversal only",
+      "R 0.45 < 1.5 floor — NOT tradable",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "veto: M1 R 0.45 < 1.5 — reward does not pay the risk",
+      "veto: opposing $1M+ wall at 1932.70 blocks T1"
+    ],
+    "tradable": false,
+    "score": 78.5
+  },
+  {
+    "asset": "BNB",
+    "mt5Sym": "BNBUSD",
+    "supported": true,
+    "price": 631.45,
+    "chgDay": -3.9035154466595614,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack tangled · EMA spread -6.24 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 83,
+    "activeModel": "M1_TREND_PULLBACK",
+    "m1": "TRIGGERED",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 5,
+    "fails": 3,
+    "stale": true,
+    "lsr": 2.63,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 758040.1499999993,
+    "longsBelow": 288723.54000000004,
+    "funding8hPct": 0.5126999999999999,
+    "plan": {
+      "entryZone": [
+        631.5337441395758,
+        693.959293912134
+      ],
+      "compositeEntry": 650.4678220235553,
+      "triggerRule": "footprint div fired sell in short direction at the zone",
+      "stop": 697.1432894211994,
+      "invalidation": "structure beyond 697.14 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 626.0889349819236,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.5223062221089244
+        },
+        {
+          "level": 678.5729583333333,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.6021393652117258
+        },
+        {
+          "level": 678.23,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.5947916437542949
+        }
+      ],
+      "bestR": 0.6021393652117258,
+      "vetoes": [
+        "M1 R 0.60 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 631.47 blocks T1"
+      ]
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 tangled · spread -6.24 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": false,
+        "value": "-0.80σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "6 confirmation signals (8h window) · latest exh@628.95"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-37.9M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $2.1M@631.47 · ask $2.2M@637.81"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 656.35 · below 619.55"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "bestR 0.60"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 2.63 ≥ 2.5 — MAGNET GATE: passive entries BANNED (S3/S2); S1 sweep-reversal only",
+      "R 0.60 < 1.5 floor — NOT tradable",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "veto: M1 R 0.60 < 1.5 — reward does not pay the risk",
+      "veto: opposing $1M+ wall at 631.47 blocks T1"
+    ],
+    "tradable": false,
+    "score": 77.5
+  },
+  {
+    "asset": "BTC",
+    "mt5Sym": "BTCUSD",
+    "supported": true,
+    "price": 68659.7,
+    "chgDay": -3.8693255562260576,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack tangled · EMA spread -7.04 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 83,
+    "activeModel": "M1_TREND_PULLBACK",
+    "m1": "TRIGGERED",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 5,
+    "fails": 3,
+    "stale": true,
+    "lsr": 3.85,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 370913.2599999997,
+    "longsBelow": 96368.46000000002,
+    "funding8hPct": 0.6237999999999999,
+    "plan": {
+      "entryZone": [
+        68578.00036373171,
+        75582.54489962086
+      ],
+      "compositeEntry": 70599.17618754065,
+      "triggerRule": "footprint exh fired sell in short direction at the zone",
+      "stop": 75916.74676704578,
+      "invalidation": "structure beyond 75916.7 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 68021.19879945411,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.48480360524456884
+        },
+        {
+          "level": 73116.3375,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.4733667893682374
+        },
+        {
+          "level": 73333,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.5141114295682306
+        }
+      ],
+      "bestR": 0.5141114295682306,
+      "vetoes": [
+        "M1 R 0.51 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 68486.2 blocks T1"
+      ]
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 tangled · spread -7.04 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": false,
+        "value": "-0.68σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "7 confirmation signals (8h window) · latest sdiv@69062.4"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-2875.7M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $98.1M@68486.2 · ask $96.0M@68897.9"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 70758.2 · below 67465.7"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "bestR 0.51"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 3.85 ≥ 2.5 — MAGNET GATE: passive entries BANNED (S3/S2); S1 sweep-reversal only",
+      "R 0.51 < 1.5 floor — NOT tradable",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "veto: M1 R 0.51 < 1.5 — reward does not pay the risk",
+      "veto: opposing $1M+ wall at 68486.2 blocks T1"
+    ],
+    "tradable": false,
+    "score": 76.6
+  },
+  {
+    "asset": "XAG",
+    "mt5Sym": "XAGUSD",
+    "supported": true,
+    "price": 49.05,
+    "chgDay": -2.3102967536347414,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack down · EMA spread -3.91 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 45,
+    "activeModel": "WAIT_PULLBACK",
+    "m1": "WAIT_PULLBACK",
+    "m2": "TRIGGERED",
+    "h4Trend": "DOWN",
+    "passes": 5,
+    "fails": 2,
+    "stale": true,
+    "lsr": 7.81,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 21045027.96999999,
+    "longsBelow": 2693393.659999999,
+    "funding8hPct": 1.5637999999999999,
+    "plan": {
+      "entryZone": [
+        49.19433011125535,
+        49.58618729355499
+      ],
+      "compositeEntry": null,
+      "triggerRule": "limit fill at the zone + bearish footprint confirmation (absorption / strong divergence / trap)",
+      "stop": 51.153616022753596,
+      "invalidation": "Day VWAP 0σ lost (regime flip)",
+      "targets": [
+        {
+          "level": 48.26052801238589,
+          "label": "trend continuation leg (2 ATR)",
+          "rMultiple": null
+        }
+      ],
+      "bestR": null,
+      "vetoes": [
+        "chase guard: > 2.0σ VWAP extension — wait for the pullback"
+      ]
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 down · spread -3.91 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "-2.37σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": false,
+        "value": "7 confirmation signals (8h window) · latest sdiv@49.600"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-4.5M · latest div bullish"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $8.1M@49.024 · ask $11.5M@49.516"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 51.146 · below 49.084"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": null,
+        "value": "no measurable R"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 7.81 ≥ 2.5 — MAGNET GATE: passive entries BANNED (S3/S2); S1 sweep-reversal only",
+      "no measurable R (WAIT state / chase guard / no target geometry)",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "veto: chase guard: > 2.0σ VWAP extension — wait for the pullback"
+    ],
+    "tradable": true,
+    "score": 52.5
+  },
+  {
+    "asset": "XPT",
+    "mt5Sym": "XPTUSD",
+    "supported": true,
+    "price": 1493.63,
+    "chgDay": -2.114175989094888,
+    "regime": "TREND_DOWN",
+    "regimeNote": "H4 stack down · D1 stack down · EMA spread -0.61 ATR · price holds below Day VWAP",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 45,
+    "activeModel": "WAIT_PULLBACK",
+    "m1": "WAIT_PULLBACK",
+    "m2": "WATCH_EXHAUSTION",
+    "h4Trend": "DOWN",
+    "passes": 5,
+    "fails": 1,
+    "stale": true,
+    "lsr": 3.8,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 10795.139999999989,
+    "longsBelow": 2842.06,
+    "funding8hPct": 0,
+    "plan": {
+      "entryZone": [
+        1498.6969290559468,
+        1507.7889247534524
+      ],
+      "compositeEntry": null,
+      "triggerRule": "limit fill at the zone + bearish footprint confirmation (absorption / strong divergence / trap)",
+      "stop": 1544.1569075434754,
+      "invalidation": "Day VWAP 0σ lost (regime flip)",
+      "targets": [
+        {
+          "level": 1472.3240629045931,
+          "label": "trend continuation leg (2 ATR)",
+          "rMultiple": null
+        }
+      ],
+      "bestR": null,
+      "vetoes": [
+        "chase guard: > 2.0σ VWAP extension — wait for the pullback"
+      ]
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": true,
+        "value": "H4 down · D1 down · spread -0.61 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "-2.56σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "14 confirmation signals (8h window) · latest exh@1507.30"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-0.8M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 1559.34 · below 1494.80"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": null,
+        "value": "no measurable R"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 3.80 ≥ 2.5 — MAGNET GATE: passive entries BANNED (S3/S2); S1 sweep-reversal only",
+      "no measurable R (WAIT state / chase guard / no target geometry)",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "veto: chase guard: > 2.0σ VWAP extension — wait for the pullback"
+    ],
+    "tradable": true,
+    "score": 52.5
+  },
+  {
+    "asset": "DOGE",
+    "mt5Sym": "DOGUSD",
+    "supported": true,
+    "price": 0.06494,
+    "chgDay": -2.3164861612515035,
+    "regime": "RANGE_BALANCE",
+    "regimeNote": "H4 stack down / D1 down · EMA spread -6.74 ATR (flat) · VWAP z 0.16σ oscillating",
+    "direction": "LONG",
+    "grade": "B",
+    "confidence": 35,
+    "activeModel": "WATCH_EXHAUSTION",
+    "m1": "OFF",
+    "m2": "WATCH_EXHAUSTION",
+    "h4Trend": "DOWN",
+    "passes": 4,
+    "fails": 3,
+    "stale": true,
+    "lsr": 2.66,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 6322276818.469999,
+    "longsBelow": 2376106518.22,
+    "funding8hPct": 1,
+    "plan": {
+      "entryZone": null,
+      "compositeEntry": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": false,
+        "value": "H4 down · D1 down · spread -6.74 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "0.16σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "23 confirmation signals (8h window) · latest abs@0.06497"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": false,
+        "value": "24h Δ $-23.1M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $1.3M@0.05991 · ask $3.1M@0.06594"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 0.06726 · below 0.06349"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": null,
+        "value": "no measurable R"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 2.66 ≥ 2.5 — MAGNET GATE: passive entries BANNED (S3/S2); S1 sweep-reversal only",
+      "no measurable R (WAIT state / chase guard / no target geometry)",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution"
+    ],
+    "tradable": true,
+    "score": 34.5
+  },
+  {
+    "asset": "LTC",
+    "mt5Sym": "LTCUSD",
+    "supported": true,
+    "price": 49.16,
+    "chgDay": -1.6996600679864058,
+    "regime": "RANGE_BALANCE",
+    "regimeNote": "H4 stack down / D1 down · EMA spread -5.46 ATR (flat) · VWAP z 0.42σ oscillating",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "confidence": 20,
+    "activeModel": "NO_TRADE",
+    "m1": "OFF",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 4,
+    "fails": 4,
+    "stale": true,
+    "lsr": 1.91,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 1621524.9899999995,
+    "longsBelow": 847760.4400000002,
+    "funding8hPct": 0.5274,
+    "plan": {
+      "entryZone": null,
+      "compositeEntry": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": false,
+        "value": "H4 down · D1 down · spread -5.46 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "0.42σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": false,
+        "value": "19 confirmation signals (8h window) · latest abs@49.53"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-11.2M · latest div bearish"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $3.0M@48.39 · ask $3.1M@49.56"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 50.99 · below 47.88"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "no measurable R"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 1.91 < 2.0 — S3 fully eligible",
+      "no measurable R (WAIT state / chase guard / no target geometry)",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution"
+    ],
+    "tradable": true,
+    "score": 27
+  },
+  {
+    "asset": "XMR",
+    "mt5Sym": "XMRUSD",
+    "supported": true,
+    "price": 530.26,
+    "chgDay": -3.854801276472293,
+    "regime": "RANGE_BALANCE",
+    "regimeNote": "H4 stack tangled / D1 up · EMA spread -4.73 ATR (flat) · VWAP z 0.31σ oscillating",
+    "direction": "LONG",
+    "grade": "B",
+    "confidence": 35,
+    "activeModel": "WATCH_EXHAUSTION",
+    "m1": "OFF",
+    "m2": "WATCH_EXHAUSTION",
+    "h4Trend": "DOWN",
+    "passes": 3,
+    "fails": 3,
+    "stale": true,
+    "lsr": 3.43,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 309914.69000000006,
+    "longsBelow": 90373.33999999997,
+    "funding8hPct": 1,
+    "plan": {
+      "entryZone": null,
+      "compositeEntry": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": false,
+        "value": "H4 tangled · D1 up · spread -4.73 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "0.31σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": true,
+        "value": "19 confirmation signals (8h window) · latest exh@529.530"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": false,
+        "value": "24h Δ $-10.2M"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 548.604 · below 522.614"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": null,
+        "value": "no measurable R"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 3.43 ≥ 2.5 — MAGNET GATE: passive entries BANNED (S3/S2); S1 sweep-reversal only",
+      "no measurable R (WAIT state / chase guard / no target geometry)",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution"
+    ],
+    "tradable": true,
+    "score": 26.5
+  },
+  {
+    "asset": "XLM",
+    "mt5Sym": "XLMUSD",
+    "supported": true,
+    "price": 0.14661,
+    "chgDay": -1.2061994609164512,
+    "regime": "RANGE_BALANCE",
+    "regimeNote": "H4 stack down / D1 down · EMA spread -4.26 ATR (flat) · VWAP z 0.08σ oscillating",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "confidence": 20,
+    "activeModel": "NO_TRADE",
+    "m1": "OFF",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 3,
+    "fails": 4,
+    "stale": true,
+    "lsr": 1.15,
+    "magnetDominant": "SHORTS-ABOVE",
+    "shortsAbove": 270241812.72999996,
+    "longsBelow": 235203760.38999993,
+    "funding8hPct": 1,
+    "plan": {
+      "entryZone": null,
+      "compositeEntry": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": false,
+        "value": "H4 down · D1 down · spread -4.26 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": true,
+        "value": "0.08σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": false,
+        "value": "26 confirmation signals (8h window) · latest abs@0.1464"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ $-3.3M · latest div bearish"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 0.1528 · below 0.1459"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "no measurable R"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      }
+    ],
+    "gates": [
+      "LSR 1.15 < 2.0 — S3 fully eligible",
+      "no measurable R (WAIT state / chase guard / no target geometry)",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution",
+      "POSITION ALREADY OPEN — manage, do not re-enter"
+    ],
+    "tradable": false,
+    "score": 19
+  },
+  {
+    "asset": "USO",
+    "mt5Sym": "USOUSD",
+    "supported": true,
+    "price": 87.34,
+    "chgDay": -0.5125868549948773,
+    "regime": "RANGE_BALANCE",
+    "regimeNote": "H4 stack down / D1 n/a · EMA spread -6.20 ATR (flat) · VWAP z -1.21σ oscillating",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "confidence": 20,
+    "activeModel": "NO_TRADE",
+    "m1": "OFF",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 3,
+    "fails": 5,
+    "stale": true,
+    "lsr": 2.69,
+    "magnetDominant": "LONGS-BELOW",
+    "shortsAbove": 3472833.510000001,
+    "longsBelow": 9344124.110000003,
+    "funding8hPct": 0,
+    "plan": {
+      "entryZone": null,
+      "compositeEntry": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": false,
+        "value": "H4 down · D1 n/a · spread -6.20 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": false,
+        "value": "-1.21σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": false,
+        "value": "6 confirmation signals (8h window) · latest sdiv@86.850"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": true,
+        "value": "24h Δ +$33.6M · latest div bullish"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": true,
+        "value": "bid $7.9M@86.720 · ask $11.5M@88.470"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": true,
+        "value": "above 89.700 · below 86.100"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "no measurable R"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": false,
+        "value": "stale: signals, cvd, walls, liq"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      },
+      {
+        "key": "classic-note",
+        "label": "Classic instrument",
+        "pass": null,
+        "value": "reduced checklist — no perp order flow / funding / OI feeds exist for cash-CFD indices"
+      }
+    ],
+    "gates": [
+      "LSR 2.69 ≥ 2.5 — MAGNET GATE: passive entries BANNED (S3/S2); S1 sweep-reversal only",
+      "no measurable R (WAIT state / chase guard / no target geometry)",
+      "stale telemetry (signals/cvd/walls/liq) — refresh before execution"
+    ],
+    "tradable": true,
+    "score": 19
+  },
+  {
+    "asset": "UKO",
+    "mt5Sym": "UKOUSD",
+    "supported": true,
+    "price": 93.32,
+    "chgDay": -0.4055496264674596,
+    "regime": "RANGE_BALANCE",
+    "regimeNote": "H4 stack down / D1 n/a · EMA spread -7.20 ATR (flat) · VWAP z -1.00σ oscillating",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "confidence": 20,
+    "activeModel": "NO_TRADE",
+    "m1": "OFF",
+    "m2": "OFF",
+    "h4Trend": "DOWN",
+    "passes": 1,
+    "fails": 4,
+    "stale": false,
+    "lsr": 1.79,
+    "magnetDominant": "LONGS-BELOW",
+    "shortsAbove": 2636213.9000000004,
+    "longsBelow": 4710615.629999998,
+    "funding8hPct": 0,
+    "plan": {
+      "entryZone": null,
+      "compositeEntry": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "checklist": [
+      {
+        "key": "htf-emas",
+        "label": "HTF EMAs (H4/D1 13×89×233)",
+        "pass": false,
+        "value": "H4 down · D1 n/a · spread -7.20 ATR"
+      },
+      {
+        "key": "vwap-z",
+        "label": "VWAP Z-Score",
+        "pass": false,
+        "value": "-1.00σ"
+      },
+      {
+        "key": "footprint",
+        "label": "Footprint Signal",
+        "pass": false,
+        "value": "7 confirmation signals (8h window) · latest div@93.490"
+      },
+      {
+        "key": "cvd",
+        "label": "CVD / Spot Lead",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "walls",
+        "label": "Walls / Whale",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "liq",
+        "label": "Liq Magnet",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "funding-ls",
+        "label": "Funding / L-S",
+        "pass": null,
+        "value": "n/a"
+      },
+      {
+        "key": "gex",
+        "label": "GEX / Skew (Deribit)",
+        "pass": null,
+        "value": "BTC/ETH only"
+      },
+      {
+        "key": "r",
+        "label": "R ≥ 1.5",
+        "pass": false,
+        "value": "no measurable R"
+      },
+      {
+        "key": "freshness",
+        "label": "Freshness",
+        "pass": true,
+        "value": "worst age 0s"
+      },
+      {
+        "key": "exec-cost",
+        "label": "Execution cost (MT5 spread)",
+        "pass": null,
+        "value": "no MT5 spread feed (gate off)"
+      },
+      {
+        "key": "classic-note",
+        "label": "Classic instrument",
+        "pass": null,
+        "value": "reduced checklist — no perp order flow / funding / OI feeds exist for cash-CFD indices"
+      }
+    ],
+    "gates": [
+      "LSR 1.79 < 2.0 — S3 fully eligible",
+      "no measurable R (WAIT state / chase guard / no target geometry)"
+    ],
+    "tradable": true,
+    "score": 18
+  }
+]
