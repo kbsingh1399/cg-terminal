@@ -360,6 +360,29 @@ crontab -e
 
 Prerequisite: `wake_cmd` must be configured (§8.2) — otherwise the task still lands in `WAKE.md` and fires the desktop notification, and the next manual Antigravity activation handles it.
 
+### 8.3b The 360° full-universe wake (`scripts/wake_360.mjs`)
+
+The §8.3 wake runs the desk lane (MT5-map symbols). The **360 wake** sweeps the ENTIRE curated universe — all 61 assets (30 crypto-perp + 28 tradfi-perp + 3 classic) — through a three-tier funnel so the deep 16-dimension pass only hits the shortlist:
+
+* **Tier A** — narrative sweep of all 61 (regime · direction · grade · confidence · M1/M2 · vetoes)
+* **Tier B** — deep pass (all 16 dimensions, full endpoint battery) on candidates: grade A/A+, or conf ≥ 80 + triggered, or LSR ≥ 2.5 magnet, or |score| ≥ 2.0 — capped at top 12
+* **Tier C** — LSR Magnet Gate + Table 7 + desk R-standard; Formulation Cards for every Grade ≥ B; suggested orders ONLY for symbols on the MT5 map (`desk/state.json` symbol_map); full-universe tier table committed as `desk/deepscan/UNIVERSE-360-<ts>.md`
+
+Windows (Task Scheduler, every 2 hours — 61-asset sweep is heavier than the desk lane; 2h keeps API pressure sane):
+
+```powershell
+schtasks /Create /TN "Antigravity 360 Universe Formulation" /SC HOURLY /MO 2 ^
+  /TR "cmd /c cd /d C:\Users\SIGMA\cg-terminal && node scripts\wake_360.mjs"
+```
+
+Linux/macOS (every 2 hours on the half hour, offset from the desk lane's :00/:30):
+
+```bash
+30 */2 * * * cd /home/sigma/cg-terminal && node scripts/wake_360.mjs >> desk/rounds.local.log 2>&1
+```
+
+Recommended cadence pair: desk lane every 30 min (§8.3) + 360 every 2 h (§8.3b). Both tasks dispatch through the same inbox → `WAKE.md` → `wake_cmd` pipeline; no daemon modification needed.
+
 ### 8.4 The standard wake prompt (what Antigravity does when woken)
 
 Every woken analysis run MUST follow this checklist — the binding contract between the beacon and the agent:
