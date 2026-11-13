@@ -261,6 +261,32 @@
       "placedTs": 1794580059000
     },
     {
+      "id": "USER-210088411",
+      "asset": "XAG",
+      "action": "sell",
+      "type": "sell_limit",
+      "volume": 0.01,
+      "limitPrice": 50.18,
+      "stopPrice": 50.48,
+      "targetPrice": 49.4,
+      "status": "placed",
+      "ticket": 210088411,
+      "placedTs": 1794580800000
+    },
+    {
+      "id": "USER-210089896",
+      "asset": "CL",
+      "action": "sell",
+      "type": "sell_limit",
+      "volume": 0.1,
+      "limitPrice": 88.95,
+      "stopPrice": 89.45,
+      "targetPrice": 87.5,
+      "status": "placed",
+      "ticket": 210089896,
+      "placedTs": 1794580850000
+    },
+    {
       "id": "USER-210060728",
       "asset": "XLM",
       "action": "sell",
@@ -4883,5 +4909,5 @@
       "notes": null
     }
   ],
-  "updatedAt": "2026-11-13T12:57:06.025Z"
+  "updatedAt": "2026-11-13T13:16:09.842Z"
 }
