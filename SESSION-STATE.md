@@ -23,6 +23,51 @@ dated entry after each meaningful change; keep only the last 10 entries.
 
 ## Log
 
+### 2026-11-13 09:35 UTC — Z.ai sandbox agent — FOOTPRINT-SIGNAL ALPHA RESEARCH (top-20 crypto perps, 180d)
+- **Mandate**: design a profitable strategy from the Coinglass-style footprint
+  signals (absorption / divergence / CVD div / exhaustion / trapped) on the
+  top-20 USDT perps; validate signals against the live Coinglass panel;
+  compare aggregated (5 venues) vs Binance-only. **Deliverable**:
+  download/fp-research/Footprint_Signal_Research_Report.pdf (+4 charts) and
+  scripts/fp-research/ (16 reproducible stages; data in gitignored
+  data/fp-research/ — 5.2M m1 + 3.45M m15 bars, 121,887 signals).
+- **Validation**: calibrated engine (scripts/fp-research/cg_signals_v2.py)
+  reproduces the Coinglass BTC 15m panel **9/9 (100%)** — incl. the Trapped
+  Traders class the v1 engine lacked. Calibration: CG tick-attribution ≈
+  0.94-1.15× our m1-overlap on LOW zones (bull gate 0.27) but ≈ 0.70× on
+  HIGH zones (bear gate 0.43); closePos gates 0.65/0.35; 1-bar hold;
+  CVD-gap > 0.0015; dedup 2 bars. Headless-browser scrape artifacts +
+  reference set: data/fp-research/cg_validation_15m.json.
+- **Aggregated vs Binance**: 10d × BTC/ETH × true price-cell footprint via
+  the terminal's orderflow routes — 74-75% signal congruence (±1 bar),
+  short-window edges statistically indistinguishable. Binance-only is the
+  correct backtest basis (only 180d-grade taker-split source); aggregated
+  adds value only as live confirmation (what orderflow-agg already serves).
+- **HONEST NEGATIVE RESULT**: after realistic 15bp costs, NO standalone
+  profitable configuration exists. Signals carry real but sub-cost
+  information: drift-adjusted +5..+30bp at 30m-24h, SIGN-UNSTABLE across
+  regimes (bear_div shorts: +29bp design window vs -95bp holdout at 24h).
+  Seven architectures tested and failed OOS: fixed-geometry walk-forward
+  (PF 0.29-0.51) · frozen-rule 2-window short book (-12.5%/-91.7% equity,
+  beta-dominated) · no-stop time-exit (-8.8bp/tr) · cross-sectional quintile
+  L/S (no selection edge, |t|<1.4, sign flips) · 4h-trend-gated (-73bp) ·
+  6-fold adaptive walk-forward (-31.4%, P(loss)=0.92) · symmetric
+  trend-aligned long+short (-9.5%/-17.2%). Root cause: raw edges are market
+  beta; median 24h adverse excursion 2.1-2.7% converts any risk-controlling
+  stop into a losing lottery.
+- **Recommendation delivered**: use these signals as CONFIRMATION inputs
+  (exactly the WS7 M1/M2 design — absorption gates, EXHAUSTION_SWEEP_CONFIRMED),
+  never standalone. Two pockets flagged for Virtual-Book paper-testing only:
+  exhaustion/absorption confluence shorts in confirmed downtrends (+29/+31bp
+  holdout, iteration-contaminated) and bear-div shorts at funding z > +1
+  (crowded-long flush, +539bp n=111 in-sample, funding history too short to
+  validate).
+- **Repo state**: no src/ changes (terminal untouched); research committed
+  under scripts/fp-research/. NOTE: local desk pushed c6858ee..d793ee4
+  (stopmap 24h heatmap fix for ETH/non-BTC) — rebased on top; duplicate
+  0543Z round skipped.
+
+
 ### 2026-11-12 21:40 UTC — Z.ai sandbox agent — DUAL-AGENT ARCHITECTURE lockdown: terminal runtime now ZERO external AI APIs
 - **Blueprint acknowledged** (Z.ai = `zai-desk` microstructure engine & data
   architect; Antigravity = `atg-exec` master quant brain via the 24-tool MCP

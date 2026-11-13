@@ -93,7 +93,7 @@ def main():
                 return np.nan
             return fund["z"].iloc[idx]
 
-        with open(f"{DIR}/signals_{sym}.jsonl") as f:
+        with open(f"{DIR}/cgsig_{sym}.jsonl") as f:
             sigs = [json.loads(l) for l in f if l.strip()]
 
         n = len(m15)
@@ -103,7 +103,7 @@ def main():
         c = m15["c"].values
 
         for s in sigs:
-            ts_ms = s["ts"] * 1000
+            ts_ms = int(s["ts"])  # cgsig v2: already ms
             i = ts2i.get(ts_ms)
             if i is None:
                 continue
@@ -165,7 +165,7 @@ def main():
     print("\n=== by regime (4h mean, bps) ===")
     print((df.groupby(["regime"])["ret_4h"].mean() * 1e4).round(1).to_string())
     print("\n=== by strength quartile (4h mean, bps) ===")
-    df["sq"] = pd.qcut(df["strength"], 4, labels=["q1", "q2", "q3", "q4"], duplicates="drop")
+    df["sq"] = pd.qcut(df["strength"].rank(method="first"), 4, labels=["q1", "q2", "q3", "q4"])
     print((df.groupby("sq")["ret_4h"].mean() * 1e4).round(1).to_string())
 
 
