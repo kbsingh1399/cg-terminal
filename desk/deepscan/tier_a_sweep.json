@@ -1,0 +1,1831 @@
+[
+  {
+    "sym": "BTC",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 92,
+    "price": 68889.7,
+    "bestR": 0.6013415349648161,
+    "vetoes": [
+      "M1 R 0.60 < 1.5 — reward does not pay the risk"
+    ],
+    "plan": {
+      "entryZone": [
+        68557.07379732675,
+        75604.44328041976
+      ],
+      "ladder": [
+        {
+          "level": 68762.5525,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 69939.4234669658,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 69939.4234669658,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 69468.67508017948,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 75894.84838624691,
+      "invalidation": "structure beyond 75894.8 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 68029.98318877503,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.22388003293438638
+        },
+        {
+          "level": 73001.84583333333,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.5498094409962319
+        },
+        {
+          "level": 73333,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.6013415349648161
+        }
+      ],
+      "bestR": 0.6013415349648161,
+      "vetoes": [
+        "M1 R 0.60 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack tangled · EMA spread -8.24 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 68557.1-75604.4 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 75894.8; the first objective pays 0.22R at 68030.0."
+  },
+  {
+    "sym": "ETH",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 1948.44,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.01σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.01σ from VWAP but no crowding signal yet (RSI 43, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "BNB",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 638.59,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.14σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.14σ from VWAP but no crowding signal yet (RSI 44, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "SOL",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 80.01,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.04σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.04σ from VWAP but no crowding signal yet (RSI 44, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "XRP",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 1.0239,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.36σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.36σ from VWAP but no crowding signal yet (RSI 48, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "ADA",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 88,
+    "price": 0.1706,
+    "bestR": 1.3668522579554805,
+    "vetoes": [
+      "M1 R 1.37 < 1.5 — reward does not pay the risk",
+      "opposing $1M+ wall at 0.1682 blocks T1"
+    ],
+    "plan": {
+      "entryZone": [
+        0.16934395325570414,
+        0.1749623542897536
+      ],
+      "ladder": [
+        {
+          "level": 0.1715575,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 0.17299293816368214,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 0.1736,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 0.17254017526547286,
+      "triggerRule": "footprint exh fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 0.17603764571024635,
+      "invalidation": "structure beyond 0.1760 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 0.16775964989090164,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 1.3668522579554805
+        },
+        {
+          "level": 0.17003791666666665,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.71544810408491
+        },
+        {
+          "level": 0.171,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.44036834329062846
+        }
+      ],
+      "bestR": 1.3668522579554805,
+      "vetoes": [
+        "M1 R 1.37 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 0.1682 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -5.69 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 0.1693-0.1750 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 0.1760; the first objective pays 1.37R at 0.1678."
+  },
+  {
+    "sym": "DOGE",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 0.06536,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.58σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.58σ from VWAP but no crowding signal yet (RSI 49, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "TRX",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 0.31287,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.44σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.44σ from VWAP but no crowding signal yet (RSI 45, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "LINK",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 9.972,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 tangled · EMA spread -5.66 ATR (flat) · VWAP z 0.42σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "LTC",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 49.65,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 down · EMA spread -5.46 ATR (flat) · VWAP z 1.06σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "AVAX",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 8.38,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 down · EMA spread -1.27 ATR (flat) · VWAP z 0.49σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "DOT",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 0.8239,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.08σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.08σ from VWAP but no crowding signal yet (RSI 46, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "NEAR",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 3.531,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 up · EMA spread -4.86 ATR (flat) · VWAP z 0.73σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "UNI",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 88,
+    "price": 5.813,
+    "bestR": 0.6421740971973661,
+    "vetoes": [
+      "M1 R 0.64 < 1.5 — reward does not pay the risk",
+      "opposing $1M+ wall at 5.765 blocks T1"
+    ],
+    "plan": {
+      "entryZone": [
+        5.7629119663831485,
+        6.982146065270317
+      ],
+      "ladder": [
+        {
+          "level": 5.819325,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 5.9339294007549235,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 5.9339294007549235,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 5.888087640452954,
+      "triggerRule": "footprint div fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 7.033895601396348,
+      "invalidation": "structure beyond 7.034 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 5.6878141477114355,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.17478800948164552
+        },
+        {
+          "level": 6.623895833333333,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.6421740971973661
+        },
+        {
+          "level": 6.61,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.6300465559278049
+        }
+      ],
+      "bestR": 0.6421740971973661,
+      "vetoes": [
+        "M1 R 0.64 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 5.765 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack tangled · EMA spread -7.13 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 5.763-6.982 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 7.034; the first objective pays 0.17R at 5.688."
+  },
+  {
+    "sym": "ATOM",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "A+",
+    "conf": 92,
+    "price": 1.382,
+    "bestR": 4.078674492570982,
+    "vetoes": [],
+    "plan": {
+      "entryZone": [
+        1.3858969035332047,
+        1.437713964985529
+      ],
+      "ladder": [
+        {
+          "level": 1.395425,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 1.4145357431808108,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 1.435,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 1.410984297272324,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 1.4462860350144708,
+      "invalidation": "structure beyond 1.446 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 1.372475,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 1.0908612361693453
+        },
+        {
+          "level": 1.4,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.31115457693772525
+        },
+        {
+          "level": 1.267,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 4.078674492570982
+        }
+      ],
+      "bestR": 4.078674492570982,
+      "vetoes": []
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -2.63 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 1.386-1.438 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 1.446; the first objective pays 1.09R at 1.372."
+  },
+  {
+    "sym": "XLM",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 0.14783,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 down · EMA spread -4.07 ATR (flat) · VWAP z 0.47σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "ETC",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 92,
+    "price": 6.498,
+    "bestR": 0.41585201918427317,
+    "vetoes": [
+      "M1 R 0.42 < 1.5 — reward does not pay the risk"
+    ],
+    "plan": {
+      "entryZone": [
+        6.452214462527928,
+        6.9451817212594875
+      ],
+      "ladder": [
+        {
+          "level": 6.5291250000000005,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 6.5856285001111745,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 6.612,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 6.56830140004447,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 6.980018278740513,
+      "invalidation": "structure beyond 6.980 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 6.397088104706475,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.41585201918427317
+        },
+        {
+          "level": 6.640733333333333,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.17592655787701436
+        },
+        {
+          "level": 6.465,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.25090397161184813
+        }
+      ],
+      "bestR": 0.41585201918427317,
+      "vetoes": [
+        "M1 R 0.42 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -5.28 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 6.452-6.945 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 6.980; the first objective pays 0.42R at 6.397."
+  },
+  {
+    "sym": "FIL",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 88,
+    "price": 0.7132,
+    "bestR": 0.20519643670554888,
+    "vetoes": [
+      "M1 R 0.21 < 1.5 — reward does not pay the risk",
+      "opposing $1M+ wall at 0.7134 blocks T1"
+    ],
+    "plan": {
+      "entryZone": [
+        0.7207547245805216,
+        0.8607710033448075
+      ],
+      "ladder": [
+        {
+          "level": 0.7258,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 0.7370988632885634,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 0.7370988632885634,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 0.7325793179731381,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 0.8659873299885257,
+      "invalidation": "structure beyond 0.8660 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 0.7134084857511872,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.14370075629145668
+        },
+        {
+          "level": 0.7599541666666667,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.20519643670554888
+        },
+        {
+          "level": 0.7134370350361762,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.14348675651319992
+        }
+      ],
+      "bestR": 0.20519643670554888,
+      "vetoes": [
+        "M1 R 0.21 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 0.7134 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -7.03 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 0.7208-0.8608 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 0.8660; the first objective pays 0.14R at 0.7134."
+  },
+  {
+    "sym": "ICP",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 2.561,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack tangled / D1 down · EMA spread 0.83 ATR (flat) · VWAP z -0.72σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "HBAR",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 0.06258,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.07σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.07σ from VWAP but no crowding signal yet (RSI 44, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "APT",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 0.5415,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.04σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.04σ from VWAP but no crowding signal yet (RSI 46, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "ARB",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 0.14469,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.95σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.95σ from VWAP but no crowding signal yet (RSI 41, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "OP",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 92,
+    "price": 0.09291,
+    "bestR": 0.5547600798121076,
+    "vetoes": [
+      "M1 R 0.55 < 1.5 — reward does not pay the risk"
+    ],
+    "plan": {
+      "entryZone": [
+        0.09277268280974488,
+        0.10003486376192834
+      ],
+      "ladder": [
+        {
+          "level": 0.09399166666666667,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 0.09517427208333344,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 0.09611,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 0.09488837550000005,
+      "triggerRule": "footprint div fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 0.10081413623807164,
+      "invalidation": "structure beyond 0.1008 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 0.091601,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.5547600798121076
+        },
+        {
+          "level": 0.0923215,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.4331723154984122
+        },
+        {
+          "level": 0.09483,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.009851140229980272
+        }
+      ],
+      "bestR": 0.5547600798121076,
+      "vetoes": [
+        "M1 R 0.55 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -5.63 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 0.0928-0.1000 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 0.1008; the first objective pays 0.55R at 0.0916."
+  },
+  {
+    "sym": "SUI",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 0.8044,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 down · EMA spread -4.58 ATR (flat) · VWAP z 0.42σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "SEI",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 0.04325,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.48σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.48σ from VWAP but no crowding signal yet (RSI 51, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "INJ",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 8.141,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack tangled / D1 up · EMA spread -0.13 ATR (flat) · VWAP z 0.76σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "TIA",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 92,
+    "price": 0.3952,
+    "bestR": 0.9612542153265645,
+    "vetoes": [
+      "M1 R 0.96 < 1.5 — reward does not pay the risk"
+    ],
+    "plan": {
+      "entryZone": [
+        0.40649884477769904,
+        0.4394730341819312
+      ],
+      "ladder": [
+        {
+          "level": 0.4082,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 0.42811493262608497,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 0.42811493262608497,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 0.42014895957565096,
+      "triggerRule": "footprint div fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 0.44412696581806893,
+      "invalidation": "structure beyond 0.4441 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 0.39818611554301653,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.9159578911853545
+        },
+        {
+          "level": 0.408485,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.48644409621584805
+        },
+        {
+          "level": 0.3971,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.9612542153265645
+        }
+      ],
+      "bestR": 0.9612542153265645,
+      "vetoes": [
+        "M1 R 0.96 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -3.57 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 0.4065-0.4395 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 0.4441; the first objective pays 0.92R at 0.3982."
+  },
+  {
+    "sym": "VET",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 0.005131,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 down · EMA spread -6.44 ATR (flat) · VWAP z 0.33σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "1000PEPE",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 0.0044443,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "1.65σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 1.65σ from VWAP but no crowding signal yet (RSI 42, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "1000SHIB",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 0.004287,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 down · EMA spread -5.07 ATR (flat) · VWAP z 0.36σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "XAU",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 92,
+    "price": 3885.97,
+    "bestR": 0.898764062303786,
+    "vetoes": [
+      "M1 R 0.90 < 1.5 — reward does not pay the risk"
+    ],
+    "plan": {
+      "entryZone": [
+        3892.0107555600566,
+        4050.0983456049785
+      ],
+      "ladder": [
+        {
+          "level": 3896.079083333333,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 3912.263242961051,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 4051.9875686358223,
+          "weightPct": 20,
+          "label": "L3 · 20% at zone ceiling"
+        }
+      ],
+      "compositeEntry": 3933.7344442449184,
+      "triggerRule": "footprint exh fired sell in short direction at the zone",
+      "stop": 4057.6552377283547,
+      "invalidation": "structure beyond 4057.66 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 3882.126583333333,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.4164584446312747
+        },
+        {
+          "level": 3950.2802916666665,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.13351954064076912
+        },
+        {
+          "level": 4045.11,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.898764062303786
+        }
+      ],
+      "bestR": 0.898764062303786,
+      "vetoes": [
+        "M1 R 0.90 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -6.14 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 3892.01-4050.10 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 4057.66; the first objective pays 0.42R at 3882.13."
+  },
+  {
+    "sym": "NVDA",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "A+",
+    "conf": 92,
+    "price": 163.25,
+    "bestR": 2.2044949203961,
+    "vetoes": [
+      "opposing $1M+ wall at 159.81 blocks T1"
+    ],
+    "plan": {
+      "entryZone": [
+        161.47633970386846,
+        168.57792910426892
+      ],
+      "ladder": [
+        {
+          "level": 160.77841666666666,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 168.15975782893835,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 168.15975782893835,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 165.2072213640297,
+      "triggerRule": "footprint exh fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 171.6725475047719,
+      "invalidation": "structure beyond 171.67 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 159.23958333333334,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.9230219637475668
+        },
+        {
+          "level": 158.80145833333333,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.9907873000140708
+        },
+        {
+          "level": 179.46,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 2.2044949203961
+        }
+      ],
+      "bestR": 2.2044949203961,
+      "vetoes": [
+        "opposing $1M+ wall at 159.81 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack tangled · EMA spread -7.16 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 161.48-168.58 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 171.67; the first objective pays 0.92R at 159.24."
+  },
+  {
+    "sym": "SNDK",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 885.6,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 n/a · EMA spread -4.17 ATR (flat) · VWAP z -0.52σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "SOXL",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 58.96,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 n/a · EMA spread -1.41 ATR (flat) · VWAP z -0.20σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "SPCX",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 139.45,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack tangled / D1 n/a · EMA spread 0.33 ATR (flat) · VWAP z -0.45σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "GOOGL",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 296.03,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "1.32σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 1.32σ from VWAP but no crowding signal yet (RSI 41, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "MU",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 782.45,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 n/a · EMA spread -0.57 ATR (flat) · VWAP z -0.06σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "SKHY",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 132.31,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 n/a · EMA spread -1.65 ATR (flat) · VWAP z -0.79σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "XAG",
+    "regime": "TREND_DOWN",
+    "model": "WAIT_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 45,
+    "price": 48.97,
+    "bestR": null,
+    "vetoes": [
+      "chase guard: > 2.0σ VWAP extension — wait for the pullback"
+    ],
+    "plan": {
+      "entryZone": [
+        49.01129446591364,
+        49.45964246013579
+      ],
+      "triggerRule": "limit fill at the zone + bearish footprint confirmation (absorption / strong divergence / trap)",
+      "stop": 51.25303443702438,
+      "invalidation": "Day VWAP 0σ lost (regime flip)",
+      "targets": [
+        {
+          "level": 48.2507113142116,
+          "label": "trend continuation leg (2 ATR)",
+          "rMultiple": null
+        }
+      ],
+      "bestR": null,
+      "vetoes": [
+        "chase guard: > 2.0σ VWAP extension — wait for the pullback"
+      ]
+    },
+    "thesis": "trend down regime (H4 stack down · D1 stack down · EMA spread -4.70 ATR · price holds below Day VWAP), but price sits 2.09σ from the Day VWAP — chasing here pays no edge. Working limit order at the trend-side band 49.011-49.460; the offer is earned when footprint absorption or a strong divergence prints at the zone."
+  },
+  {
+    "sym": "CL",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 87.54,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 n/a · EMA spread -6.76 ATR (flat) · VWAP z -0.49σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "INTC",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 92,
+    "price": 59.87,
+    "bestR": 1.8706701291897363,
+    "vetoes": [
+      "opposing $1M+ wall at 59.026 blocks T1"
+    ],
+    "plan": {
+      "entryZone": [
+        58.86331926339515,
+        62.624810963123664
+      ],
+      "ladder": [
+        {
+          "level": 60.199999999999996,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 61.486542601504944,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 61.486542601504944,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 60.97192556090296,
+      "triggerRule": "footprint exh fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 63.095189036876334,
+      "invalidation": "structure beyond 63.095 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 57.91352713277229,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 1.4404234155295312
+        },
+        {
+          "level": 57,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 1.8706701291897363
+        },
+        {
+          "level": 59.02637051321369,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.9163041090778249
+        }
+      ],
+      "bestR": 1.8706701291897363,
+      "vetoes": [
+        "opposing $1M+ wall at 59.026 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack tangled · EMA spread -3.80 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 58.863-62.625 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 63.095; the first objective pays 1.44R at 57.914."
+  },
+  {
+    "sym": "CRCL",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 92,
+    "price": 62.37,
+    "bestR": 0.31590212433199233,
+    "vetoes": [
+      "M1 R 0.32 < 1.5 — reward does not pay the risk"
+    ],
+    "plan": {
+      "entryZone": [
+        62.136766601739154,
+        75.41746607213668
+      ],
+      "ladder": [
+        {
+          "level": 62.48,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 63.295479417235576,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 63.295479417235576,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 62.96928765034134,
+      "triggerRule": "footprint sdiv fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 75.84420059453,
+      "invalidation": "structure beyond 75.844 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 61.58037932136923,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.10787710448939584
+        },
+        {
+          "level": 67.0365,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.31590212433199233
+        },
+        {
+          "level": 64.3,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.10335699786298731
+        }
+      ],
+      "bestR": 0.31590212433199233,
+      "vetoes": [
+        "M1 R 0.32 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -6.95 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 62.137-75.417 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 75.844; the first objective pays 0.11R at 61.580."
+  },
+  {
+    "sym": "MSTR",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 111.95,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.12σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.12σ from VWAP but no crowding signal yet (RSI 46, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "QQQ",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 681.23,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack tangled / D1 n/a · EMA spread 0.10 ATR (flat) · VWAP z -0.33σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "ANTHROPIC",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 1349.22,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 n/a · EMA spread -11.19 ATR (flat) · VWAP z -0.06σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "AAPL",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 356.56,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack up / D1 n/a · EMA spread 5.61 ATR (flat) · VWAP z -1.17σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "TSLA",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 391.78,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack up / D1 tangled · EMA spread 2.95 ATR (flat) · VWAP z -0.93σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "DRAM",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 42.55,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 n/a · EMA spread -1.47 ATR (flat) · VWAP z -0.53σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "KORU",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 7.67,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 n/a · EMA spread -3.94 ATR (flat) · VWAP z -0.41σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "META",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 35,
+    "price": 642.68,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "2.43σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 2.43σ from VWAP but no crowding signal yet (RSI 68, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "NBIS",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 116.1,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.54σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.54σ from VWAP but no crowding signal yet (RSI 32, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "MSFT",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 524.27,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack tangled / D1 n/a · EMA spread -1.59 ATR (flat) · VWAP z 1.48σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "AMZN",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 266.91,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack up / D1 up · EMA spread 4.07 ATR (flat) · VWAP z -0.71σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "AMD",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 537,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack tangled / D1 n/a · EMA spread 3.80 ATR (flat) · VWAP z -0.82σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "COIN",
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "conf": 92,
+    "price": 128.02,
+    "bestR": 0.26414051885805967,
+    "vetoes": [
+      "M1 R 0.26 < 1.5 — reward does not pay the risk"
+    ],
+    "plan": {
+      "entryZone": [
+        127.53253298569273,
+        136.24582243778707
+      ],
+      "ladder": [
+        {
+          "level": 127.90375,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 129.33798375467853,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 129.33798375467853,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 128.76429025280711,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 137.05792756221297,
+      "invalidation": "structure beyond 137.06 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 126.57360459068009,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.26414051885805967
+        },
+        {
+          "level": 130.148875,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.16694541797995255
+        },
+        {
+          "level": 127.84,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.11144570449914291
+        }
+      ],
+      "bestR": 0.26414051885805967,
+      "vetoes": [
+        "M1 R 0.26 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -6.07 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 127.53-136.25 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 137.06; the first objective pays 0.26R at 126.57."
+  },
+  {
+    "sym": "NFLX",
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "conf": 35,
+    "price": 62.45,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "2.14σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 2.14σ from VWAP but no crowding signal yet (RSI 39, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush."
+  },
+  {
+    "sym": "AVGO",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 347.43,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack tangled / D1 n/a · EMA spread 4.59 ATR (flat) · VWAP z -0.93σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "TSM",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 400.55,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack tangled / D1 n/a · EMA spread 0.74 ATR (flat) · VWAP z -0.44σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "SPX500",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 7560.2,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack tangled / D1 tangled · EMA spread 0.84 ATR (flat) · VWAP z -0.17σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "UKO",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 93.36,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 n/a · EMA spread -7.98 ATR (flat) · VWAP z -0.75σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  },
+  {
+    "sym": "NDX100",
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "conf": 20,
+    "price": 27948,
+    "bestR": null,
+    "vetoes": [],
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack tangled / D1 tangled · EMA spread 0.10 ATR (flat) · VWAP z -0.17σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch."
+  }
+]

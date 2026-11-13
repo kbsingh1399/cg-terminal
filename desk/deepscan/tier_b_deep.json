@@ -1,0 +1,2519 @@
+{
+  "ATOM": {
+    "sym": "ATOM",
+    "price": 1.382,
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "A+",
+    "confidence": 92,
+    "plan": {
+      "entryZone": [
+        1.3858969035332047,
+        1.437713964985529
+      ],
+      "ladder": [
+        {
+          "level": 1.395425,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 1.4145357431808108,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 1.435,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 1.410984297272324,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 1.4462860350144708,
+      "invalidation": "structure beyond 1.446 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 1.372475,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 1.0908612361693453
+        },
+        {
+          "level": 1.4,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.31115457693772525
+        },
+        {
+          "level": 1.267,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 4.078674492570982
+        }
+      ],
+      "bestR": 4.078674492570982,
+      "vetoes": []
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -2.63 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 1.386-1.438 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 1.446; the first objective pays 1.09R at 1.372.",
+    "auction": {
+      "session": {
+        "poc": 1.3900166666666667,
+        "vah": 1.4141833333333333,
+        "val": 1.3813166666666665,
+        "high": 1.434,
+        "low": 1.376,
+        "volume": 4974876.767320003,
+        "bins": 60
+      },
+      "day": {
+        "poc": 1.395425,
+        "vah": 1.407575,
+        "val": 1.372475,
+        "high": 1.442,
+        "low": 1.361,
+        "volume": 14366281.439719995,
+        "bins": 60
+      },
+      "week": {
+        "poc": 1.3901999999999999,
+        "vah": 1.416511111111111,
+        "val": 1.3688222222222222,
+        "high": 1.442,
+        "low": 1.294,
+        "volume": 73656519.44134,
+        "bins": 90
+      },
+      "month": {
+        "poc": 1.3900791666666665,
+        "vah": 1.4600875,
+        "val": 1.3607208333333334,
+        "high": 1.538,
+        "low": 1.267,
+        "volume": 199240640.52514,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 1.3980733058497723,
+      "bands": {
+        "sd1": 0.016462437331038374,
+        "sd2": 0.03292487466207675,
+        "sd3": 0.04938731199311512
+      },
+      "open": 1.434,
+      "high": 1.442,
+      "low": 1.361,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 1.387499752628612,
+        "e89": 1.3980943765115807,
+        "e233": 1.3983694600668568
+      },
+      "h1": {
+        "e13": 1.3954261724865358,
+        "e89": 1.3960372288791856,
+        "e233": 1.4117504123630678
+      },
+      "h4": {
+        "e13": 1.3962625879267696,
+        "e89": 1.4413820733347227,
+        "e233": 1.5474538044009316
+      },
+      "d1": {
+        "e13": 1.4232088545188248,
+        "e89": 1.6004936649352999,
+        "e233": 1.8162703675566967
+      }
+    },
+    "rsi": {
+      "m15": 40.3678086816093,
+      "h1": 41.16770472214409,
+      "h4": 46.60058414908572,
+      "d1": 39.93060798324297
+    },
+    "signals": {
+      "counts": {
+        "all": 115,
+        "bullish": 53,
+        "bearish": 62
+      },
+      "recent": [
+        {
+          "i": 150,
+          "t": "abs",
+          "side": "buy",
+          "p": 1.388,
+          "q": 31150.51,
+          "u": 43330.35941,
+          "lo": 1.387,
+          "hi": 1.389,
+          "ts": 1794593340,
+          "bt": "range"
+        },
+        {
+          "i": 154,
+          "t": "exh",
+          "side": "sell",
+          "p": 1.396,
+          "ts": 1794595740,
+          "bt": "range"
+        },
+        {
+          "i": 156,
+          "t": "abs",
+          "side": "sell",
+          "p": 1.398,
+          "q": 13621.849999999999,
+          "u": 19002.48075,
+          "lo": 1.3969999999999998,
+          "hi": 1.3989999999999998,
+          "ts": 1794597060,
+          "bt": "range"
+        },
+        {
+          "i": 156,
+          "t": "trap",
+          "side": "sell",
+          "p": 1.398,
+          "j": 157,
+          "q": 13621.849999999999,
+          "u": 19002.48075,
+          "lo": 1.3969999999999998,
+          "hi": 1.3989999999999998,
+          "ts": 1794597060,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793275200000,
+        "priceA": 1.62,
+        "priceB": 1.63,
+        "priceC": 1.619,
+        "bars": [
+          13,
+          19,
+          24
+        ],
+        "ret12": 0.56,
+        "hit": false
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 5.6551
+    },
+    "mt5": null
+  },
+  "NVDA": {
+    "sym": "NVDA",
+    "price": 163.15,
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "A+",
+    "confidence": 92,
+    "plan": {
+      "entryZone": [
+        161.47633970386846,
+        168.57570688204672
+      ],
+      "ladder": [
+        {
+          "level": 160.77841666666666,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 168.15428343052974,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 168.15428343052974,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 165.20393672498452,
+      "triggerRule": "footprint exh fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 171.66482962685242,
+      "invalidation": "structure beyond 171.66 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 159.23958333333334,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.9231469213685339
+        },
+        {
+          "level": 158.80145833333333,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.9909587558401048
+        },
+        {
+          "level": 179.46,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 2.2065159555413656
+        }
+      ],
+      "bestR": 2.2065159555413656,
+      "vetoes": [
+        "opposing $1M+ wall at 159.81 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack tangled · EMA spread -7.16 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 161.48-168.58 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 171.66; the first objective pays 0.92R at 159.24.",
+    "auction": {
+      "session": {
+        "poc": 160.77841666666666,
+        "vah": 164.29575,
+        "val": 159.45941666666667,
+        "high": 171.88,
+        "low": 158.69,
+        "volume": 1395789578.2375014,
+        "bins": 60
+      },
+      "day": {
+        "poc": 160.77841666666666,
+        "vah": 167.81308333333334,
+        "val": 159.23958333333334,
+        "high": 171.88,
+        "low": 158.69,
+        "volume": 2162843731.2585,
+        "bins": 60
+      },
+      "week": {
+        "poc": 161.2425,
+        "vah": 175.74583333333334,
+        "val": 158.57083333333333,
+        "high": 183.57,
+        "low": 149.22,
+        "volume": 11807318287.591599,
+        "bins": 90
+      },
+      "month": {
+        "poc": 161.39104166666667,
+        "vah": 179.518125,
+        "val": 158.80145833333333,
+        "high": 211.37,
+        "low": 149.22,
+        "volume": 14112241297.141598,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 164.64373723420704,
+      "bands": {
+        "sd1": 3.510546196322697,
+        "sd2": 7.021092392645394,
+        "sd3": 10.531638588968091
+      },
+      "open": 168.28,
+      "high": 171.88,
+      "low": 158.69,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 162.5805275642657,
+        "e89": 164.75292748594381,
+        "e233": 166.86549961199916
+      },
+      "h1": {
+        "e13": 164.2040597894777,
+        "e89": 169.27362991924852,
+        "e233": 179.82182760392172
+      },
+      "h4": {
+        "e13": 165.7993551394829,
+        "e89": 185.80088787073026,
+        "e233": 202.2043389037246
+      },
+      "d1": {
+        "e13": 181.4852719560987,
+        "e89": 209.81084020010437,
+        "e233": 209.26227467811157
+      }
+    },
+    "rsi": {
+      "m15": 50.396627669972695,
+      "h1": 45.04040403505437,
+      "h4": 41.41898816851249,
+      "d1": 26.672132999748996
+    },
+    "signals": {
+      "counts": {
+        "all": 55,
+        "bullish": 19,
+        "bearish": 36
+      },
+      "recent": [
+        {
+          "i": 233,
+          "t": "exh",
+          "side": "sell",
+          "p": 162.53,
+          "ts": 1794595020,
+          "bt": "range"
+        },
+        {
+          "i": 241,
+          "t": "sdiv",
+          "side": "sell",
+          "p": 163.55,
+          "i0": 235,
+          "p0": 163.21,
+          "dc": -31217.139999999898,
+          "ts": 1794599820,
+          "bt": "range"
+        },
+        {
+          "i": 247,
+          "t": "div",
+          "side": "sell",
+          "p": 162.47,
+          "r": -0.22944763613806013,
+          "ts": 1794601980,
+          "bt": "range"
+        },
+        {
+          "i": 247,
+          "t": "exh",
+          "side": "buy",
+          "p": 161.84,
+          "ts": 1794601980,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793285100000,
+        "priceA": 215.13,
+        "priceB": 215.6,
+        "priceC": 214.27,
+        "bars": [
+          21,
+          30,
+          35
+        ],
+        "ret12": -0.47,
+        "hit": true
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 33.3809
+    },
+    "mt5": null
+  },
+  "BTC": {
+    "sym": "BTC",
+    "price": 68843.1,
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 92,
+    "plan": {
+      "entryZone": [
+        68557.25027133699,
+        75604.24506613404
+      ],
+      "ladder": [
+        {
+          "level": 68762.5525,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 69939.2611276808,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 69939.2611276808,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 69468.57767660847,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 75895.04660053263,
+      "invalidation": "structure beyond 75895.0 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 68029.99659825194,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.22385249121816453
+        },
+        {
+          "level": 73001.84583333333,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.5497993063611288
+        },
+        {
+          "level": 73333,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.6013290298510954
+        }
+      ],
+      "bestR": 0.6013290298510954,
+      "vetoes": [
+        "M1 R 0.60 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack tangled · EMA spread -8.24 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 68557.3-75604.2 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 75895.0; the first objective pays 0.22R at 68030.0.",
+    "auction": {
+      "session": {
+        "poc": 68936.92083333334,
+        "vah": 69430.30416666667,
+        "val": 68478.77916666666,
+        "high": 70188,
+        "low": 68073.5,
+        "volume": 5396843932.486594,
+        "bins": 60
+      },
+      "day": {
+        "poc": 68762.5525,
+        "vah": 69570.8925,
+        "val": 68291.02083333333,
+        "high": 71490.7,
+        "low": 67449,
+        "volume": 18144206857.7841,
+        "bins": 60
+      },
+      "week": {
+        "poc": 73724.07777777778,
+        "vah": 75529.85555555555,
+        "val": 71376.56666666667,
+        "high": 75575,
+        "low": 67449,
+        "volume": 63374757402.92351,
+        "bins": 90
+      },
+      "month": {
+        "poc": 75749.64583333333,
+        "vah": 78497.44583333333,
+        "val": 73001.84583333333,
+        "high": 81188,
+        "low": 67449,
+        "volume": 146462221689.39816,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 69175.55531590925,
+      "bands": {
+        "sd1": 763.7058117715433,
+        "sd2": 1527.4116235430865,
+        "sd3": 2291.11743531463
+      },
+      "open": 71423.4,
+      "high": 71490.7,
+      "low": 67449,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 68915.2941999742,
+        "e89": 69553.5320206504,
+        "e233": 71143.8803846376
+      },
+      "h1": {
+        "e13": 69110.72387601479,
+        "e89": 71999.68265013072,
+        "e233": 74301.615940708
+      },
+      "h4": {
+        "e13": 70558.29385568574,
+        "e89": 75350.18440201202,
+        "e233": 78177.36763422424
+      },
+      "d1": {
+        "e13": 74676.29825881169,
+        "e89": 77463.96504755405,
+        "e233": 77415.73218543478
+      }
+    },
+    "rsi": {
+      "m15": 46.470861480702055,
+      "h1": 35.95346820869142,
+      "h4": 24.322579270682596,
+      "d1": 25.202858023110878
+    },
+    "signals": {
+      "counts": {
+        "all": 49,
+        "bullish": 29,
+        "bearish": 20
+      },
+      "recent": [
+        {
+          "i": 36,
+          "t": "abs",
+          "side": "buy",
+          "p": 68541.8,
+          "q": 1172.67791,
+          "u": 80509850.10767703,
+          "lo": 68530,
+          "hi": 68580,
+          "ts": 1794556380,
+          "bt": "range"
+        },
+        {
+          "i": 47,
+          "t": "exh",
+          "side": "sell",
+          "p": 69466.2,
+          "ts": 1794564660,
+          "bt": "range"
+        },
+        {
+          "i": 76,
+          "t": "abs",
+          "side": "buy",
+          "p": 68830,
+          "q": 465.80772999999994,
+          "u": 32111177.869531497,
+          "lo": 68810,
+          "hi": 68860,
+          "ts": 1794581400,
+          "bt": "range"
+        },
+        {
+          "i": 99,
+          "t": "abs",
+          "side": "buy",
+          "p": 68355.1,
+          "q": 362.98316,
+          "u": 24856197.488058,
+          "lo": 68350,
+          "hi": 68405,
+          "ts": 1794586620,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793275200000,
+        "priceA": 80327,
+        "priceB": 80345,
+        "priceC": 80076.7,
+        "bars": [
+          12,
+          19,
+          24
+        ],
+        "ret12": 1.85,
+        "hit": false
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 8.1482
+    },
+    "mt5": {
+      "spreadPct": 0.0303,
+      "basisPct": 0.0445,
+      "tradeAllowed": true,
+      "ok": true
+    }
+  },
+  "XAU": {
+    "sym": "XAU",
+    "price": 3884.03,
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 92,
+    "plan": {
+      "entryZone": [
+        3891.9979274704674,
+        4050.0983456049785
+      ],
+      "ladder": [
+        {
+          "level": 3896.079083333333,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 3912.2601368871215,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 4051.9875686358223,
+          "weightPct": 20,
+          "label": "L3 · 20% at zone ceiling"
+        }
+      ],
+      "compositeEntry": 3933.7332018153465,
+      "triggerRule": "footprint exh fired sell in short direction at the zone",
+      "stop": 4057.6552377283547,
+      "invalidation": "structure beyond 4057.66 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 3882.126583333333,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.4164442433647605
+        },
+        {
+          "level": 3950.2802916666665,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.1335282278846338
+        },
+        {
+          "level": 4045.11,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.8987650772848732
+        }
+      ],
+      "bestR": 0.8987650772848732,
+      "vetoes": [
+        "M1 R 0.90 < 1.5 — reward does not pay the risk"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -6.15 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 3892.00-4050.10 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 4057.66; the first objective pays 0.42R at 3882.13.",
+    "auction": {
+      "session": {
+        "poc": 3889.1864166666664,
+        "vah": 3896.9724166666665,
+        "val": 3881.4004166666664,
+        "high": 3912.22,
+        "low": 3873.29,
+        "volume": 865651992.6598997,
+        "bins": 60
+      },
+      "day": {
+        "poc": 3896.079083333333,
+        "vah": 3908.17125,
+        "val": 3882.126583333333,
+        "high": 3929.1,
+        "low": 3873.29,
+        "volume": 1973695830.0349,
+        "bins": 60
+      },
+      "week": {
+        "poc": 4128.2853888888885,
+        "vah": 4154.595611111111,
+        "val": 3924.3811666666666,
+        "high": 4156.24,
+        "low": 3860.25,
+        "volume": 10721308667.40973,
+        "bins": 90
+      },
+      "month": {
+        "poc": 4053.8767916666666,
+        "vah": 4150.073541666667,
+        "val": 3950.2802916666665,
+        "high": 4156.24,
+        "low": 3860.25,
+        "volume": 25315639546.547726,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 3900.2398091479504,
+      "bands": {
+        "sd1": 12.020327739171,
+        "sd2": 24.040655478342,
+        "sd3": 36.060983217513
+      },
+      "open": 3887.68,
+      "high": 3929.1,
+      "low": 3873.29,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 3884.5905361874106,
+        "e89": 3898.813675870897,
+        "e233": 3937.84407246344
+      },
+      "h1": {
+        "e13": 3891.326115732068,
+        "e89": 3964.4554689398606,
+        "e233": 4008.56899980314
+      },
+      "h4": {
+        "e13": 3922.2848502447982,
+        "e89": 4015.2630190290897,
+        "e233": 4080.6115491788896
+      },
+      "d1": {
+        "e13": 4000.266471039348,
+        "e89": 4162.0236858245025,
+        "e233": 4373.423662216981
+      }
+    },
+    "rsi": {
+      "m15": 45.52738422814755,
+      "h1": 39.90632667983407,
+      "h4": 30.756662325366676,
+      "d1": 36.17653568420318
+    },
+    "signals": {
+      "counts": {
+        "all": 48,
+        "bullish": 26,
+        "bearish": 22
+      },
+      "recent": [
+        {
+          "i": 171,
+          "t": "exh",
+          "side": "sell",
+          "p": 3896.94,
+          "ts": 1794592080,
+          "bt": "vol"
+        },
+        {
+          "i": 176,
+          "t": "div",
+          "side": "buy",
+          "p": 3883.81,
+          "r": 0.15488198219760432,
+          "ts": 1794595980,
+          "bt": "vol"
+        },
+        {
+          "i": 180,
+          "t": "sdiv",
+          "side": "buy",
+          "p": 3879.28,
+          "i0": 165,
+          "p0": 3882.55,
+          "dc": 1971.4290000000165,
+          "ts": 1794599400,
+          "bt": "vol"
+        },
+        {
+          "i": 8,
+          "t": "div",
+          "side": "buy",
+          "p": 3900.06,
+          "r": 0.15995159770076506,
+          "ts": 1794554340,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793276100000,
+        "priceA": 4045.26,
+        "priceB": 4046.62,
+        "priceC": 4032.34,
+        "bars": [
+          12,
+          20,
+          25
+        ],
+        "ret12": -0.04,
+        "hit": true
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 37.0181
+    },
+    "mt5": {
+      "spreadPct": 0.0206,
+      "basisPct": -0.1617,
+      "tradeAllowed": true,
+      "ok": true
+    }
+  },
+  "ETH": {
+    "sym": "ETH",
+    "price": 1947.04,
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 88,
+    "plan": {
+      "entryZone": [
+        1928.0316603388794,
+        2229.0468695899926
+      ],
+      "ladder": [
+        {
+          "level": 1930.5,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 1973.4653087349511,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 1973.4653087349511,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 1956.2791852409707,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 2239.5191304100076,
+      "invalidation": "structure beyond 2239.52 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 1910.1280852273521,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.16293994120806557
+        },
+        {
+          "level": 2085.867,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.4575195588379732
+        },
+        {
+          "level": 2050.32,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.3320181929243988
+        }
+      ],
+      "bestR": 0.4575195588379732,
+      "vetoes": [
+        "M1 R 0.46 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 1939.25 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -8.80 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 1928.03-2229.05 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 2239.52; the first objective pays 0.16R at 1910.13.",
+    "auction": {
+      "session": {
+        "poc": 1950.6723333333332,
+        "vah": 1967.373,
+        "val": 1926.2636666666667,
+        "high": 1988.57,
+        "low": 1911.49,
+        "volume": 3559831315.4425087,
+        "bins": 60
+      },
+      "day": {
+        "poc": 1938.9341666666667,
+        "vah": 1964.3541666666667,
+        "val": 1915.6325000000002,
+        "high": 2020.49,
+        "low": 1893.39,
+        "volume": 10617888707.003214,
+        "bins": 60
+      },
+      "week": {
+        "poc": 2057.337,
+        "vah": 2143.003,
+        "val": 2004.165,
+        "high": 2159.25,
+        "low": 1893.39,
+        "volume": 42336001028.03286,
+        "bins": 90
+      },
+      "month": {
+        "poc": 2234.283,
+        "vah": 2447.631,
+        "val": 2085.867,
+        "high": 2449.95,
+        "low": 1893.39,
+        "volume": 99977366387.97711,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 1948.1304193319115,
+      "bands": {
+        "sd1": 25.33488940303955,
+        "sd2": 50.6697788060791,
+        "sd3": 76.00466820911865
+      },
+      "open": 2019.01,
+      "high": 2020.49,
+      "low": 1893.39,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 1945.8625513083016,
+        "e89": 1959.1450883719424,
+        "e233": 2000.2757779170456
+      },
+      "h1": {
+        "e13": 1948.6589485660222,
+        "e89": 2029.2033975396,
+        "e233": 2124.8219607867627
+      },
+      "h4": {
+        "e13": 1985.304019756263,
+        "e89": 2169.5869161861187,
+        "e233": 2305.8695781148785
+      },
+      "d1": {
+        "e13": 2140.9501264066425,
+        "e89": 2319.045987615387,
+        "e233": 2354.2632542187907
+      }
+    },
+    "rsi": {
+      "m15": 52.40568439403695,
+      "h1": 42.64625375148969,
+      "h4": 31.267086980752836,
+      "d1": 24.93471969090379
+    },
+    "signals": {
+      "counts": {
+        "all": 54,
+        "bullish": 31,
+        "bearish": 23
+      },
+      "recent": [
+        {
+          "i": 145,
+          "t": "trap",
+          "side": "buy",
+          "p": 1918.37,
+          "j": 146,
+          "q": 13822.3367,
+          "u": 26557892.1769625,
+          "lo": 1918,
+          "hi": 1919.5,
+          "ts": 1794583860,
+          "bt": "range"
+        },
+        {
+          "i": 167,
+          "t": "abs",
+          "side": "buy",
+          "p": 1917.28,
+          "q": 5757.8482,
+          "u": 11056738.319978,
+          "lo": 1917,
+          "hi": 1918.5,
+          "ts": 1794586680,
+          "bt": "range"
+        },
+        {
+          "i": 173,
+          "t": "abs",
+          "side": "sell",
+          "p": 1932.85,
+          "q": 3598.5546999999997,
+          "u": 6945966.267487,
+          "lo": 1932,
+          "hi": 1933,
+          "ts": 1794587700,
+          "bt": "range"
+        },
+        {
+          "i": 184,
+          "t": "exh",
+          "side": "sell",
+          "p": 1945.82,
+          "ts": 1794591720,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793275200000,
+        "priceA": 2326.42,
+        "priceB": 2330.05,
+        "priceC": 2321.98,
+        "bars": [
+          12,
+          19,
+          24
+        ],
+        "ret12": 1.78,
+        "hit": false
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 4.2622
+    },
+    "mt5": {
+      "spreadPct": 0.0282,
+      "basisPct": 0.0218,
+      "tradeAllowed": true,
+      "ok": true
+    }
+  },
+  "XLM": {
+    "sym": "XLM",
+    "price": 0.14764,
+    "regime": "RANGE_BALANCE",
+    "model": "NO_TRADE",
+    "direction": "NEUTRAL",
+    "grade": "SKIP",
+    "confidence": 20,
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "range balance regime (H4 stack down / D1 down · EMA spread -4.07 ATR (flat) · VWAP z 0.39σ oscillating) with no validated M1 pullback and no ±2σ M2 stretch — no edge is paying for the risk right now. Re-evaluate on the next footprint signal or a VWAP band touch.",
+    "auction": {
+      "session": {
+        "poc": 0.14940975,
+        "vah": 0.14993591666666667,
+        "val": 0.14768091666666666,
+        "high": 0.15065,
+        "low": 0.14614,
+        "volume": 19823953.423360005,
+        "bins": 60
+      },
+      "day": {
+        "poc": 0.14815191666666666,
+        "vah": 0.14992475,
+        "val": 0.14557325,
+        "high": 0.15065,
+        "low": 0.14098,
+        "volume": 51302417.52275999,
+        "bins": 60
+      },
+      "week": {
+        "poc": 0.14738966666666667,
+        "vah": 0.14937966666666666,
+        "val": 0.14460366666666666,
+        "high": 0.15263,
+        "low": 0.14069,
+        "volume": 218736323.3426001,
+        "bins": 90
+      },
+      "month": {
+        "poc": 0.147668125,
+        "vah": 0.160609375,
+        "val": 0.141070625,
+        "high": 0.17114,
+        "low": 0.14069,
+        "volume": 528699938.70329976,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 0.146708970521136,
+      "bands": {
+        "sd1": 0.0023624122112060044,
+        "sd2": 0.004724824422412009,
+        "sd3": 0.007087236633618013
+      },
+      "open": 0.14839,
+      "high": 0.15065,
+      "low": 0.14098,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 0.14863221319831219,
+        "e89": 0.14737241739526097,
+        "e233": 0.14695856936166873
+      },
+      "h1": {
+        "e13": 0.14785251981405642,
+        "e89": 0.1472925756376643,
+        "e233": 0.15152079409095795
+      },
+      "h4": {
+        "e13": 0.14705382507190595,
+        "e89": 0.15529985265097065,
+        "e233": 0.1688459496116105
+      },
+      "d1": {
+        "e13": 0.1534845729399824,
+        "e89": 0.17812941785916586,
+        "e233": 0.19263102650984396
+      }
+    },
+    "rsi": {
+      "m15": 42.9691661300832,
+      "h1": 51.51004759942833,
+      "h4": 50.02685140809513,
+      "d1": 33.333494334181495
+    },
+    "signals": {
+      "counts": {
+        "all": 88,
+        "bullish": 34,
+        "bearish": 54
+      },
+      "recent": [
+        {
+          "i": 150,
+          "t": "div",
+          "side": "sell",
+          "p": 0.14667,
+          "r": -0.21661918139708652,
+          "ts": 1794588300,
+          "bt": "range"
+        },
+        {
+          "i": 150,
+          "t": "exh",
+          "side": "buy",
+          "p": 0.14614,
+          "ts": 1794588300,
+          "bt": "range"
+        },
+        {
+          "i": 159,
+          "t": "div",
+          "side": "sell",
+          "p": 0.1482,
+          "r": -0.27414532692057714,
+          "ts": 1794591060,
+          "bt": "range"
+        },
+        {
+          "i": 164,
+          "t": "abs",
+          "side": "sell",
+          "p": 0.14859,
+          "q": 252098,
+          "u": 37396.21732,
+          "lo": 0.1484,
+          "hi": 0.14859999999999998,
+          "ts": 1794592440,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793275200000,
+        "priceA": 0.1692,
+        "priceB": 0.1704,
+        "priceC": 0.1695,
+        "bars": [
+          12,
+          19,
+          24
+        ],
+        "ret12": 1.62,
+        "hit": false
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 5.5997
+    },
+    "mt5": {
+      "spreadPct": 0.1344,
+      "basisPct": 0.0673,
+      "tradeAllowed": true,
+      "ok": true
+    }
+  },
+  "XAG": {
+    "sym": "XAG",
+    "price": 48.94,
+    "regime": "TREND_DOWN",
+    "model": "WAIT_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 45,
+    "plan": {
+      "entryZone": [
+        49.00936327793018,
+        49.45834642536248
+      ],
+      "triggerRule": "limit fill at the zone + bearish footprint confirmation (absorption / strong divergence / trap)",
+      "stop": 51.25427901509168,
+      "invalidation": "Day VWAP 0σ lost (regime flip)",
+      "targets": [
+        {
+          "level": 48.2207113142116,
+          "label": "trend continuation leg (2 ATR)",
+          "rMultiple": null
+        }
+      ],
+      "bestR": null,
+      "vetoes": [
+        "chase guard: > 2.0σ VWAP extension — wait for the pullback"
+      ]
+    },
+    "thesis": "trend down regime (H4 stack down · D1 stack down · EMA spread -4.71 ATR · price holds below Day VWAP), but price sits 2.15σ from the Day VWAP — chasing here pays no edge. Working limit order at the trend-side band 49.009-49.458; the offer is earned when footprint absorption or a strong divergence prints at the zone.",
+    "auction": {
+      "session": {
+        "poc": 49.892833333333336,
+        "vah": 50.36683333333333,
+        "val": 49.287166666666664,
+        "high": 50.38,
+        "low": 48.8,
+        "volume": 378641463.8575499,
+        "bins": 60
+      },
+      "day": {
+        "poc": 50.10625,
+        "vah": 50.41975,
+        "val": 49.44441666666666,
+        "high": 50.89,
+        "low": 48.8,
+        "volume": 684739760.5314499,
+        "bins": 60
+      },
+      "week": {
+        "poc": 50.166555555555554,
+        "vah": 52.788111111111114,
+        "val": 49.608777777777775,
+        "high": 53.82,
+        "low": 48.8,
+        "volume": 3519744361.330979,
+        "bins": 90
+      },
+      "month": {
+        "poc": 52.05970833333333,
+        "vah": 53.45945833333333,
+        "val": 50.447874999999996,
+        "high": 53.82,
+        "low": 48.73,
+        "volume": 8795145274.022476,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 49.90732957279478,
+      "bands": {
+        "sd1": 0.4489831474323007,
+        "sd2": 0.8979662948646014,
+        "sd3": 1.3469494422969022
+      },
+      "open": 50.22,
+      "high": 50.89,
+      "low": 48.8,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 49.05988309744257,
+        "e89": 49.80045993708898,
+        "e233": 50.59973336770257
+      },
+      "h1": {
+        "e13": 49.486852978102256,
+        "e89": 50.98534476155195,
+        "e233": 51.59824090116752
+      },
+      "h4": {
+        "e13": 50.19993181609884,
+        "e89": 51.893136915089826,
+        "e233": 54.7202330928268
+      },
+      "d1": {
+        "e13": 51.43558435597669,
+        "e89": 58.400866707498636,
+        "e233": 66.60006832383965
+      }
+    },
+    "rsi": {
+      "m15": 32.23178929565168,
+      "h1": 26.72708155337004,
+      "h4": 28.218834680195528,
+      "d1": 33.086624381416655
+    },
+    "signals": {
+      "counts": {
+        "all": 69,
+        "bullish": 44,
+        "bearish": 25
+      },
+      "recent": [
+        {
+          "i": 22,
+          "t": "exh",
+          "side": "buy",
+          "p": 49.8,
+          "ts": 1794576000,
+          "bt": "range"
+        },
+        {
+          "i": 22,
+          "t": "sdiv",
+          "side": "buy",
+          "p": 49.8,
+          "i0": 18,
+          "p0": 49.89,
+          "dc": 76002.74099999995,
+          "ts": 1794576000,
+          "bt": "range"
+        },
+        {
+          "i": 31,
+          "t": "sdiv",
+          "side": "buy",
+          "p": 49.6,
+          "i0": 22,
+          "p0": 49.8,
+          "dc": 86642.81899999996,
+          "ts": 1794578880,
+          "bt": "range"
+        },
+        {
+          "i": 46,
+          "t": "abs",
+          "side": "buy",
+          "p": 49.01,
+          "q": 49441.175,
+          "u": 2428550.516,
+          "lo": 49.01,
+          "hi": 49.059999999999995,
+          "ts": 1794588540,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793276100000,
+        "priceA": 53.13,
+        "priceB": 53.19,
+        "priceC": 52.69,
+        "bars": [
+          8,
+          20,
+          25
+        ],
+        "ret12": -0.21,
+        "hit": true
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 33.2095
+    },
+    "mt5": {
+      "spreadPct": 0.1595,
+      "basisPct": -0.147,
+      "tradeAllowed": true,
+      "ok": true
+    }
+  },
+  "INTC": {
+    "sym": "INTC",
+    "price": 59.68,
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 92,
+    "plan": {
+      "entryZone": [
+        58.862962694911204,
+        62.624810963123664
+      ],
+      "ladder": [
+        {
+          "level": 60.199999999999996,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 61.48344375667102,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 61.48344375667102,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 60.97006625400262,
+      "triggerRule": "footprint exh fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 63.095189036876334,
+      "invalidation": "structure beyond 63.095 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 57.91385613337583,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 1.4381334317511754
+        },
+        {
+          "level": 57,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 1.8681585299434125
+        },
+        {
+          "level": 59.02637051321369,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.9146275012686771
+        }
+      ],
+      "bestR": 1.8681585299434125,
+      "vetoes": [
+        "opposing $1M+ wall at 59.026 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack tangled · EMA spread -3.83 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 58.863-62.625 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 63.095; the first objective pays 1.44R at 57.914.",
+    "auction": {
+      "session": {
+        "poc": 58.013416666666664,
+        "vah": 60.20491666666667,
+        "val": 57.282916666666665,
+        "high": 61.95,
+        "low": 57.08,
+        "volume": 88092748.72080001,
+        "bins": 60
+      },
+      "day": {
+        "poc": 60.95458333333333,
+        "vah": 62.41325,
+        "val": 59.04008333333333,
+        "high": 62.55,
+        "low": 57.08,
+        "volume": 148651823.23660004,
+        "bins": 60
+      },
+      "week": {
+        "poc": 61.20027777777777,
+        "vah": 62.305833333333325,
+        "val": 57.88361111111111,
+        "high": 64.13,
+        "low": 54.18,
+        "volume": 1212687407.3005009,
+        "bins": 90
+      },
+      "month": {
+        "poc": 60.35870833333333,
+        "vah": 62.298875,
+        "val": 54.95395833333333,
+        "high": 67.08,
+        "low": 50.45,
+        "volume": 3935577950.6841016,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 60.055608707352945,
+      "bands": {
+        "sd1": 1.4278350493180783,
+        "sd2": 2.8556700986361565,
+        "sd3": 4.2835051479542345
+      },
+      "open": 62.05,
+      "high": 62.55,
+      "low": 57.08,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 59.330755109451175,
+        "e89": 60.19304391973504,
+        "e233": 60.46812689987545
+      },
+      "h1": {
+        "e13": 59.77433067650682,
+        "e89": 60.182457452946,
+        "e233": 61.003152478073766
+      },
+      "h4": {
+        "e13": 60.355768131188235,
+        "e89": 63.96009878701192,
+        "e233": 77.42677665630545
+      },
+      "d1": {
+        "e13": 62.320217683646646,
+        "e89": 89.05807701403742,
+        "e233": 87.72308027173382
+      }
+    },
+    "rsi": {
+      "m15": 55.82032388780341,
+      "h1": 44.6845300290703,
+      "h4": 48.616376214095546,
+      "d1": 35.33448746728814
+    },
+    "signals": {
+      "counts": {
+        "all": 122,
+        "bullish": 48,
+        "bearish": 74
+      },
+      "recent": [
+        {
+          "i": 213,
+          "t": "trap",
+          "side": "sell",
+          "p": 59.67,
+          "j": 214,
+          "q": 1480.95,
+          "u": 88220.1915,
+          "lo": 59.65,
+          "hi": 59.69,
+          "ts": 1794600660,
+          "bt": "range"
+        },
+        {
+          "i": 216,
+          "t": "abs",
+          "side": "buy",
+          "p": 59.36,
+          "q": 995.3,
+          "u": 59215.3735,
+          "lo": 59.36,
+          "hi": 59.42,
+          "ts": 1794602340,
+          "bt": "range"
+        },
+        {
+          "i": 219,
+          "t": "abs",
+          "side": "buy",
+          "p": 59.81,
+          "q": 1653.3200000000002,
+          "u": 99066.93440000001,
+          "lo": 59.8,
+          "hi": 59.849999999999994,
+          "ts": 1794603240,
+          "bt": "range"
+        },
+        {
+          "i": 219,
+          "t": "trap",
+          "side": "sell",
+          "p": 60.03,
+          "j": 220,
+          "q": 5755.9800000000005,
+          "u": 344898.3216,
+          "lo": 59.989999999999995,
+          "hi": 60.04,
+          "ts": 1794603240,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793285100000,
+        "priceA": 92.66,
+        "priceB": 93.64,
+        "priceC": 92.86,
+        "bars": [
+          12,
+          30,
+          35
+        ],
+        "ret12": -1.46,
+        "hit": true
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 12.6225
+    },
+    "mt5": null
+  },
+  "ADA": {
+    "sym": "ADA",
+    "price": 0.1705,
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 88,
+    "plan": {
+      "entryZone": [
+        0.16934809290752495,
+        0.1749587828611822
+      ],
+      "ladder": [
+        {
+          "level": 0.1715575,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 0.17299079079578075,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 0.1736,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 0.1725393163183123,
+      "triggerRule": "footprint exh fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 0.17604121713881782,
+      "invalidation": "structure beyond 0.1760 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 0.16776089701193875,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 1.364521598782384
+        },
+        {
+          "level": 0.17003791666666665,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.7142976857021739
+        },
+        {
+          "level": 0.171,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.43956593781832626
+        }
+      ],
+      "bestR": 1.364521598782384,
+      "vetoes": [
+        "M1 R 1.36 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 0.1682 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -5.66 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 0.1693-0.1750 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 0.1760; the first objective pays 1.36R at 0.1678.",
+    "auction": {
+      "session": {
+        "poc": 0.17153749999999998,
+        "vah": 0.1729125,
+        "val": 0.1697958333333333,
+        "high": 0.1747,
+        "low": 0.1692,
+        "volume": 54872273.9055,
+        "bins": 60
+      },
+      "day": {
+        "poc": 0.1715575,
+        "vah": 0.1746925,
+        "val": 0.1695775,
+        "high": 0.1756,
+        "low": 0.1657,
+        "volume": 160186741.64960003,
+        "bins": 60
+      },
+      "week": {
+        "poc": 0.17185999999999998,
+        "vah": 0.1775311111111111,
+        "val": 0.17009999999999997,
+        "high": 0.1833,
+        "low": 0.1657,
+        "volume": 630403992.8610998,
+        "bins": 90
+      },
+      "month": {
+        "poc": 0.17302958333333332,
+        "vah": 0.18948375,
+        "val": 0.17003791666666665,
+        "high": 0.2016,
+        "low": 0.1657,
+        "volume": 1514983408.7266002,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 0.17089883328224395,
+      "bands": {
+        "sd1": 0.002091957513536795,
+        "sd2": 0.00418391502707359,
+        "sd3": 0.006275872540610385
+      },
+      "open": 0.1743,
+      "high": 0.1756,
+      "low": 0.1657,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 0.17131715182535673,
+        "e89": 0.171469348146051,
+        "e233": 0.17265570494469917
+      },
+      "h1": {
+        "e13": 0.17139174512616812,
+        "e89": 0.17385833142731508,
+        "e233": 0.17969796902081447
+      },
+      "h4": {
+        "e13": 0.17211394902256208,
+        "e89": 0.1843730763499682,
+        "e233": 0.20101553500681787
+      },
+      "d1": {
+        "e13": 0.18159895657082545,
+        "e89": 0.2078846690517771,
+        "e233": 0.24929314769894168
+      }
+    },
+    "rsi": {
+      "m15": 40.459715864273534,
+      "h1": 45.169801125152645,
+      "h4": 41.43470441898187,
+      "d1": 29.474017891156805
+    },
+    "signals": {
+      "counts": {
+        "all": 137,
+        "bullish": 63,
+        "bearish": 74
+      },
+      "recent": [
+        {
+          "i": 286,
+          "t": "abs",
+          "side": "buy",
+          "p": 0.1716,
+          "q": 252312,
+          "u": 43372.4328,
+          "lo": 0.1716,
+          "hi": 0.1718,
+          "ts": 1794599760,
+          "bt": "range"
+        },
+        {
+          "i": 286,
+          "t": "trap",
+          "side": "sell",
+          "p": 0.1722,
+          "j": 287,
+          "q": 1305143,
+          "u": 224354.0817,
+          "lo": 0.1721,
+          "hi": 0.1723,
+          "ts": 1794599760,
+          "bt": "range"
+        },
+        {
+          "i": 288,
+          "t": "abs",
+          "side": "buy",
+          "p": 0.1715,
+          "q": 826896,
+          "u": 142060.7328,
+          "lo": 0.1715,
+          "hi": 0.17170000000000002,
+          "ts": 1794600060,
+          "bt": "range"
+        },
+        {
+          "i": 295,
+          "t": "abs",
+          "side": "buy",
+          "p": 0.1705,
+          "q": 434388,
+          "u": 74171.751,
+          "lo": 0.1705,
+          "hi": 0.17070000000000002,
+          "ts": 1794602880,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bull",
+        "ts": 1793390400000,
+        "priceA": 0.1914,
+        "priceB": 0.1899,
+        "priceC": 0.1932,
+        "bars": [
+          136,
+          147,
+          152
+        ],
+        "ret12": 0.62,
+        "hit": true
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 7.7815
+    },
+    "mt5": {
+      "spreadPct": 2.2093,
+      "basisPct": 0.3501,
+      "tradeAllowed": true,
+      "ok": true
+    }
+  },
+  "UNI": {
+    "sym": "UNI",
+    "price": 5.808,
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 88,
+    "plan": {
+      "entryZone": [
+        5.762914778682369,
+        6.982146065270317
+      ],
+      "ladder": [
+        {
+          "level": 5.819325,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 5.933899448746091,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 5.961,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 5.893489779498436,
+      "triggerRule": "footprint div fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 7.033895601396348,
+      "invalidation": "structure beyond 7.034 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 5.687825151087669,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.18034336940554344
+        },
+        {
+          "level": 6.623895833333333,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.6404790643907132
+        },
+        {
+          "level": 6.61,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.6282940745682246
+        }
+      ],
+      "bestR": 0.6404790643907132,
+      "vetoes": [
+        "M1 R 0.64 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 5.765 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack tangled · EMA spread -7.14 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 5.763-6.982 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 7.034; the first objective pays 0.18R at 5.688.",
+    "auction": {
+      "session": {
+        "poc": 5.79825,
+        "vah": 5.917083333333333,
+        "val": 5.746583333333334,
+        "high": 6.023,
+        "low": 5.713,
+        "volume": 71759023.268,
+        "bins": 60
+      },
+      "day": {
+        "poc": 5.819325,
+        "vah": 5.921374999999999,
+        "val": 5.717275,
+        "high": 6.098,
+        "low": 5.627,
+        "volume": 195696365.62,
+        "bins": 60
+      },
+      "week": {
+        "poc": 6.673866666666667,
+        "vah": 7.133466666666667,
+        "val": 6.095111111111111,
+        "high": 7.159,
+        "low": 5.627,
+        "volume": 968926674.3159997,
+        "bins": 90
+      },
+      "month": {
+        "poc": 7.008020833333333,
+        "vah": 7.501895833333333,
+        "val": 6.623895833333333,
+        "high": 7.822,
+        "low": 5.627,
+        "volume": 2623528301.8129992,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 5.835469729682722,
+      "bands": {
+        "sd1": 0.09842971906336875,
+        "sd2": 0.1968594381267375,
+        "sd3": 0.2952891571901063
+      },
+      "open": 6.069,
+      "high": 6.098,
+      "low": 5.627,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 5.824976744179432,
+        "e89": 5.87009264952869,
+        "e233": 6.083171626183798
+      },
+      "h1": {
+        "e13": 5.83307326117556,
+        "e89": 6.2372115681949305,
+        "e233": 6.624112252239009
+      },
+      "h4": {
+        "e13": 6.013021104076257,
+        "e89": 6.751679532962181,
+        "e233": 7.032315197786735
+      },
+      "d1": {
+        "e13": 6.639300857386473,
+        "e89": 6.6585050832705015,
+        "e233": 5.74312261422692
+      }
+    },
+    "rsi": {
+      "m15": 47.49214579503506,
+      "h1": 43.55109708591755,
+      "h4": 27.484033205430038,
+      "d1": 34.955270893958684
+    },
+    "signals": {
+      "counts": {
+        "all": 117,
+        "bullish": 70,
+        "bearish": 47
+      },
+      "recent": [
+        {
+          "i": 254,
+          "t": "abs",
+          "side": "sell",
+          "p": 5.892,
+          "q": 16444.5,
+          "u": 96726.549,
+          "lo": 5.889,
+          "hi": 5.8950000000000005,
+          "ts": 1794598680,
+          "bt": "range"
+        },
+        {
+          "i": 254,
+          "t": "trap",
+          "side": "sell",
+          "p": 5.892,
+          "j": 256,
+          "q": 16444.5,
+          "u": 96726.549,
+          "lo": 5.889,
+          "hi": 5.8950000000000005,
+          "ts": 1794598680,
+          "bt": "range"
+        },
+        {
+          "i": 257,
+          "t": "div",
+          "side": "sell",
+          "p": 5.88,
+          "r": -0.38646669547222173,
+          "ts": 1794600060,
+          "bt": "range"
+        },
+        {
+          "i": 264,
+          "t": "div",
+          "side": "buy",
+          "p": 5.806,
+          "r": 0.18134582419625975,
+          "ts": 1794603060,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793294100000,
+        "priceA": 7.098,
+        "priceB": 7.52,
+        "priceC": 7.317,
+        "bars": [
+          12,
+          40,
+          45
+        ],
+        "ret12": -3.49,
+        "hit": true
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 7.8908
+    },
+    "mt5": null
+  },
+  "FIL": {
+    "sym": "FIL",
+    "price": 0.7129,
+    "regime": "TREND_DOWN",
+    "model": "M1_TREND_PULLBACK",
+    "direction": "SHORT",
+    "grade": "B",
+    "confidence": 88,
+    "plan": {
+      "entryZone": [
+        0.720721417678062,
+        0.8607710033448075
+      ],
+      "ladder": [
+        {
+          "level": 0.7258,
+          "weightPct": 40,
+          "label": "L1 · 40% at POC"
+        },
+        {
+          "level": 0.7370867399859798,
+          "weightPct": 40,
+          "label": "L2 · 40% at +1σ VWAP band"
+        },
+        {
+          "level": 0.7370867399859798,
+          "weightPct": 20,
+          "label": "L3 · 20% at absorption high"
+        }
+      ],
+      "compositeEntry": 0.7325720439915879,
+      "triggerRule": "footprint abs fired sell in short direction at the zone (absorption inside the zone)",
+      "stop": 0.8659873299885257,
+      "invalidation": "structure beyond 0.8660 (signal zone / ±2σ VWAP / 0.5 ATR buffer)",
+      "targets": [
+        {
+          "level": 0.7133698829487587,
+          "label": "T1 · Day VAH/VAL or ±1.5σ",
+          "rMultiple": 0.14392774335670935
+        },
+        {
+          "level": 0.7599541666666667,
+          "label": "T2 · same-direction liquidation cluster",
+          "rMultiple": 0.2052397704690846
+        },
+        {
+          "level": 0.7134370350361762,
+          "label": "T3 · whale wall / PWH-PWL",
+          "rMultiple": 0.14342441207112475
+        }
+      ],
+      "bestR": 0.2052397704690846,
+      "vetoes": [
+        "M1 R 0.21 < 1.5 — reward does not pay the risk",
+        "opposing $1M+ wall at 0.7134 blocks T1"
+      ]
+    },
+    "thesis": "trend down context (H4 stack down · D1 stack down · EMA spread -7.04 ATR · price holds below Day VWAP) set the SHORT bias. Price pulled back into the confluence zone 0.7207-0.8608 (VWAP band · POC · EMA pocket · PDH/PDL flip), where the footprint printed its confirmation. Risk is defined beyond 0.8660; the first objective pays 0.14R at 0.7134.",
+    "auction": {
+      "session": {
+        "poc": 0.7247,
+        "vah": 0.7391,
+        "val": 0.7181,
+        "high": 0.746,
+        "low": 0.71,
+        "volume": 22921304.765390012,
+        "bins": 60
+      },
+      "day": {
+        "poc": 0.73414,
+        "vah": 0.7395799999999999,
+        "val": 0.71782,
+        "high": 0.7474,
+        "low": 0.7066,
+        "volume": 57767941.35978999,
+        "bins": 60
+      },
+      "week": {
+        "poc": 0.7478366666666667,
+        "vah": 0.7700766666666667,
+        "val": 0.7348633333333333,
+        "high": 0.79,
+        "low": 0.7066,
+        "volume": 290519322.24641,
+        "bins": 90
+      },
+      "month": {
+        "poc": 0.8633791666666666,
+        "vah": 0.8880041666666666,
+        "val": 0.7599541666666667,
+        "high": 0.9036,
+        "low": 0.7066,
+        "volume": 791158267.2356097,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 0.7275999971710914,
+      "bands": {
+        "sd1": 0.009486742814888444,
+        "sd2": 0.01897348562977689,
+        "sd3": 0.028460228444665333
+      },
+      "open": 0.7441,
+      "high": 0.7474,
+      "low": 0.7066,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 0.7198513946805349,
+        "e89": 0.7304729913538115,
+        "e233": 0.7405730914466675
+      },
+      "h1": {
+        "e13": 0.7267863817742396,
+        "e89": 0.74758277710271,
+        "e233": 0.7818075044301757
+      },
+      "h4": {
+        "e13": 0.7349325027421607,
+        "e89": 0.8083264020928408,
+        "e233": 0.8840422537529361
+      },
+      "d1": {
+        "e13": 0.790591780067342,
+        "e89": 0.8954313050664356,
+        "e233": 0.9785453668109978
+      }
+    },
+    "rsi": {
+      "m15": 33.10110313749787,
+      "h1": 33.473234113080125,
+      "h4": 34.06552994250933,
+      "d1": 30.214107741018367
+    },
+    "signals": {
+      "counts": {
+        "all": 113,
+        "bullish": 53,
+        "bearish": 60
+      },
+      "recent": [
+        {
+          "i": 273,
+          "t": "abs",
+          "side": "sell",
+          "p": 0.724,
+          "q": 49591.6,
+          "u": 35852.24722,
+          "lo": 0.7236,
+          "hi": 0.7242,
+          "ts": 1794597660,
+          "bt": "range"
+        },
+        {
+          "i": 275,
+          "t": "exh",
+          "side": "buy",
+          "p": 0.7212,
+          "ts": 1794598140,
+          "bt": "range"
+        },
+        {
+          "i": 282,
+          "t": "abs",
+          "side": "buy",
+          "p": 0.7177,
+          "q": 94876.79999999999,
+          "u": 68192.7,
+          "lo": 0.7176,
+          "hi": 0.7182000000000001,
+          "ts": 1794600780,
+          "bt": "range"
+        },
+        {
+          "i": 285,
+          "t": "abs",
+          "side": "sell",
+          "p": 0.716,
+          "q": 189142.2,
+          "u": 134981.33103,
+          "lo": 0.7152000000000001,
+          "hi": 0.7161000000000001,
+          "ts": 1794601620,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793275200000,
+        "priceA": 0.9017,
+        "priceB": 0.91,
+        "priceC": 0.9041,
+        "bars": [
+          12,
+          19,
+          24
+        ],
+        "ret12": 1.69,
+        "hit": false
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 7.0126
+    },
+    "mt5": null
+  },
+  "ARB": {
+    "sym": "ARB",
+    "price": 0.14463,
+    "regime": "RANGE_BALANCE",
+    "model": "WATCH_EXHAUSTION",
+    "direction": "LONG",
+    "grade": "B",
+    "confidence": 35,
+    "plan": {
+      "entryZone": null,
+      "triggerRule": "n/a",
+      "stop": null,
+      "invalidation": "no setup",
+      "targets": [],
+      "bestR": null,
+      "vetoes": []
+    },
+    "thesis": "0.98σ VWAP stretch detected, but the anti-knife-catching gate is not satisfied (price 0.98σ from VWAP but no crowding signal yet (RSI 41, funding n/a% APR, top L/S n/a)). Wait for the footprint to print exhaustion/trap/absorption or a defending wall before fading — or for the ±3σ flush.",
+    "auction": {
+      "session": {
+        "poc": 0.14533849999999998,
+        "vah": 0.14772283333333333,
+        "val": 0.1444055,
+        "high": 0.15047,
+        "low": 0.14425,
+        "volume": 19788540.898518004,
+        "bins": 60
+      },
+      "day": {
+        "poc": 0.14595225,
+        "vah": 0.14806625,
+        "val": 0.14383825,
+        "high": 0.15203,
+        "low": 0.14146,
+        "volume": 70134210.70361798,
+        "bins": 60
+      },
+      "week": {
+        "poc": 0.1453375,
+        "vah": 0.1706705,
+        "val": 0.1417185,
+        "high": 0.18799,
+        "low": 0.14146,
+        "volume": 459670920.9844729,
+        "bins": 90
+      },
+      "month": {
+        "poc": 0.164143375,
+        "vah": 0.173449375,
+        "val": 0.154061875,
+        "high": 0.18799,
+        "low": 0.14146,
+        "volume": 905325280.026773,
+        "bins": 120
+      }
+    },
+    "vwap": {
+      "anchorTs": 1794528000000,
+      "vwap": 0.1465426518424421,
+      "bands": {
+        "sd1": 0.0019600813508912347,
+        "sd2": 0.003920162701782469,
+        "sd3": 0.005880244052673704
+      },
+      "open": 0.15077,
+      "high": 0.15203,
+      "low": 0.14146,
+      "bars": 84
+    },
+    "ema": {
+      "m15": {
+        "e13": 0.14537761228879786,
+        "e89": 0.14675998006141164,
+        "e233": 0.15056470090008384
+      },
+      "h1": {
+        "e13": 0.1461393540588174,
+        "e89": 0.1535721419528152,
+        "e233": 0.15982771933218484
+      },
+      "h4": {
+        "e13": 0.14929838384004246,
+        "e89": 0.1621064725026969,
+        "e233": 0.16821435500175752
+      },
+      "d1": {
+        "e13": 0.15948137309616012,
+        "e89": 0.1590528329043592,
+        "e233": 0.15545764514099547
+      }
+    },
+    "rsi": {
+      "m15": 41.368577716288804,
+      "h1": 41.06695234649595,
+      "h4": 33.196465573522346,
+      "d1": 37.20262597343542
+    },
+    "signals": {
+      "counts": {
+        "all": 98,
+        "bullish": 51,
+        "bearish": 47
+      },
+      "recent": [
+        {
+          "i": 204,
+          "t": "abs",
+          "side": "sell",
+          "p": 0.14623,
+          "q": 233459.80000000002,
+          "u": 34048.944531,
+          "lo": 0.14611000000000002,
+          "hi": 0.14627,
+          "ts": 1794592080,
+          "bt": "range"
+        },
+        {
+          "i": 212,
+          "t": "trap",
+          "side": "buy",
+          "p": 0.14431,
+          "j": 213,
+          "q": 510062.80000000005,
+          "u": 73737.228682,
+          "lo": 0.14427,
+          "hi": 0.14439000000000002,
+          "ts": 1794594360,
+          "bt": "range"
+        },
+        {
+          "i": 230,
+          "t": "div",
+          "side": "buy",
+          "p": 0.14597,
+          "r": 0.26454271352034264,
+          "ts": 1794601200,
+          "bt": "range"
+        },
+        {
+          "i": 230,
+          "t": "exh",
+          "side": "sell",
+          "p": 0.14648,
+          "ts": 1794601200,
+          "bt": "range"
+        }
+      ]
+    },
+    "cvd": {
+      "activeDiv": {
+        "type": "bear",
+        "ts": 1793283300000,
+        "priceA": 0.1697,
+        "priceB": 0.1721,
+        "priceC": 0.17,
+        "bars": [
+          19,
+          28,
+          33
+        ],
+        "ret12": 0.71,
+        "hit": false
+      }
+    },
+    "walls": {},
+    "liq": {
+      "shortsAbove": 0,
+      "longsBelow": 0,
+      "lsr": null,
+      "lsrDominant": "balanced"
+    },
+    "quant": {
+      "fundingAprPct": 2.0634
+    },
+    "mt5": null
+  }
+}
