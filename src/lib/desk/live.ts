@@ -251,11 +251,13 @@ export function getDeskIndex(): Map<string, { badge: string; tone: "pos" | "limi
     (asset || revSym.get((mt5Sym ?? "").toUpperCase()) || (mt5Sym ?? "").replace(/USD$/i, "")).toUpperCase();
 
   for (const o of st?.orders ?? []) {
-    if (o.status === "suggested" || o.status === "placed" || o.status === "open" || o.status === "active") {
-      const s = o.sym.toUpperCase();
+    const sym = (o.sym || o.asset) as string | undefined;
+    const side = (o.side || o.action) as string | undefined;
+    if (sym && side && (o.status === "suggested" || o.status === "placed" || o.status === "open" || o.status === "active")) {
+      const s = sym.toUpperCase();
       if (!map.has(s)) {
         map.set(s, {
-          badge: `${o.status === "suggested" ? "SUG" : "ORD"} ${o.side.toUpperCase()}`,
+          badge: `${o.status === "suggested" ? "SUG" : "ORD"} ${side.toUpperCase()}`,
           tone: o.status === "suggested" ? "suggested" : "limit",
         });
       }
@@ -291,7 +293,8 @@ export async function buildDeskLiveSnapshot(): Promise<DeskLiveSnapshot> {
   for (const p of mt5?.positions ?? []) activeSyms.add(symOf(p.asset, p.symbol));
   for (const o of mt5?.orders ?? []) activeSyms.add(symOf(o.asset, o.symbol));
   for (const o of state?.orders ?? []) {
-    if (["suggested", "placed", "open", "active"].includes(o.status)) activeSyms.add(o.sym.toUpperCase());
+    const sym = (o.sym || o.asset) as string | undefined;
+    if (sym && ["suggested", "placed", "open", "active"].includes(o.status)) activeSyms.add(sym.toUpperCase());
   }
 
   const priceMap = new Map<string, number | null>();
@@ -358,14 +361,14 @@ export async function buildDeskLiveSnapshot(): Promise<DeskLiveSnapshot> {
     .reverse()
     .slice(0, 20)
     .map((o) => {
-      const sym = o.sym.toUpperCase();
+      const sym = ((o.sym || o.asset || "") as string).toUpperCase();
       const livePrice = priceMap.get(sym) ?? null;
       return {
         id: o.id,
         round: o.round ?? "–",
         sym,
         mt5Symbol: o.mt5Symbol ?? `${sym}USD`,
-        side: o.side,
+        side: o.side || o.action,
         type: o.type ?? "limit",
         status: o.status,
         entry: o.entry,
