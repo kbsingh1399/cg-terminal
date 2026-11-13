@@ -4943,3 +4943,32 @@ analysis script rc=1
 
 analysis script rc=1
 
+## R234 · 2026-11-13 22:06 UTC · zai-desk
+
+**Market**: BTC 68,258.3 (-4.4%)  ETH 1,920.50 (-4.9%)  SOL 78.32 (-4.1%)  XAU 3,892.36 (+0.1%)  XAG 48.860 (-2.7%)
+**Bias (|score|≥2)**: ADA-6(TREND)  AVAX-6(TREND)  XRP-6(TREND)  LINK-4(TREND)  BNB-5(TREND)  SOL-3(TREND)  DOGE-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- NEW R234-ADA-1 ADA SHORT limit 0.1716 · stop 0.1737 · T1 0.1657 · T2 0.1644 · T3 0.1633 · R 2.8
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (0.1675 vs 0.1708), h4 RSI 36.8, day -3.9%
+      [FOR    ] footprint: bull 43 / bear 57; recent: Exhaustion/buy[vol], Exhaustion/buy[range]
+      [AGAINST] microFlow(abs/trap/exh): 6h micro-events: abs:buy×6, abs:sell×6, div:buy×2, div:sell×2, exh:buy×4, sdiv:buy×2, sdiv:sell×1, trap:buy×1, trap:sell×4 — net 15 buy-side vs 13 sell-side
+      [FOR    ] liquidation: long-liq magnet 0.1657 (str 77, ~$5M est, -1.13%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.373 (5m ago -0.001, falling bids); bid $0.01B vs ask $0.02B
+      [FOR    ] cvd: taker buy 49.0%, perpCvd -18, spotCvd -3, quadrant both-selling, latestDiv bear (stale/none)
+      [FOR    ] notifications: 6h weighted bias -15.0 (15 events)
+- NEW R234-AVAX-2 AVAX SHORT limit 8.317 · stop 8.458 · T1 7.990 · R 2.3
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (8.234 vs 8.309), h4 RSI 45.1, day -1.5%
+      [FOR    ] footprint: bull 26 / bear 47; recent: Divergence/sell[time], Exhaustion/sell[vol], Exhaustion/buy[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×3, abs:sell×3, div:sell×1, exh:buy×3, exh:sell×2, trap:sell×2 — net 6 buy-side vs 8 sell-side
+      [FOR    ] liquidation: long-liq magnet 8.200 (str 50, ~$1M est, -0.41%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.126 (5m ago +0.067, rising bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 49.0%, perpCvd -24, spotCvd +2, quadrant spot-bid, latestDiv bear (recent)
+      [FOR    ] notifications: 6h weighted bias -2.9 (3 events)
+
+### Order lifecycle
+- SUG-XAUUSD-1794606230990 WITHDRAWN (re-debate lost: FOR 3/AGAINST 3)
+
+### Positions
+- ETH ETH SELL: +0.6R open @ 1,920.50 → HOLD
+

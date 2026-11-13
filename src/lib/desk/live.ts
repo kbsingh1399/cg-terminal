@@ -179,13 +179,15 @@ interface RawState {
   orders?: Array<{
     id: string;
     round?: string;
-    sym: string;
+    sym?: string;
+    asset?: string;
     mt5Symbol?: string;
-    side: "long" | "short";
+    side?: "long" | "short" | string;
+    action?: string;
     type?: string;
     status: string;
-    entry: number;
-    stop: number;
+    entry?: number;
+    stop?: number;
     targets?: number[];
     riskR?: number;
     regime?: string;
@@ -363,16 +365,18 @@ export async function buildDeskLiveSnapshot(): Promise<DeskLiveSnapshot> {
     .map((o) => {
       const sym = ((o.sym || o.asset || "") as string).toUpperCase();
       const livePrice = priceMap.get(sym) ?? null;
+      const rawSide = String(o.side || o.action || "long").toLowerCase();
+      const side: "long" | "short" = rawSide.includes("short") || rawSide.includes("sell") ? "short" : "long";
       return {
         id: o.id,
         round: o.round ?? "–",
         sym,
         mt5Symbol: o.mt5Symbol ?? `${sym}USD`,
-        side: o.side || o.action,
+        side,
         type: o.type ?? "limit",
         status: o.status,
-        entry: o.entry,
-        stop: o.stop,
+        entry: o.entry ?? 0,
+        stop: o.stop ?? 0,
         targets: o.targets ?? [],
         riskR: o.riskR ?? null,
         regime: o.regime ?? null,
@@ -383,7 +387,7 @@ export async function buildDeskLiveSnapshot(): Promise<DeskLiveSnapshot> {
         createdTs: o.createdTs ?? 0,
         expiresTs: o.expiresTs ?? null,
         livePrice,
-        distToEntryPct: ["suggested", "placed", "open", "active"].includes(o.status) ? distPct(o.entry, livePrice) : null,
+        distToEntryPct: ["suggested", "placed", "open", "active"].includes(o.status) ? distPct(o.entry ?? 0, livePrice) : null,
       };
     });
 

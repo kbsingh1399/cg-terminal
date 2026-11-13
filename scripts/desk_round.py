@@ -97,10 +97,10 @@ def cluster_usd(lv):
 
 
 # ---------------------------------------------------------------- load state
-state = json.loads(STATE_FILE.read_text())
+state = json.loads(STATE_FILE.read_text(encoding="utf-8"))
 cfg = state["config"]
 
-log_txt = LOG_FILE.read_text()
+log_txt = LOG_FILE.read_text(encoding="utf-8")
 round_no = len(re.findall(r"^## R(\d+)", log_txt, re.M)) + 1
 rid = f"R{round_no}"
 
@@ -704,7 +704,7 @@ state["analysis"] = {
     "watchlist": watch,
 }
 if not DRY:
-    STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
+    STATE_FILE.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
 
 bias_tbl = "  ".join(f"{s}{scored[s]['score']:+.0f}({regimes.get(s, '?')[:5]})" for s in cands if abs(scored[s]["score"]) >= 2)
 lines = [f"## {rid} · {now_iso} · zai-desk", ""]
@@ -716,7 +716,7 @@ if lifecycle_events:
     lines += ["### Order lifecycle"] + [f"- {e}" for e in lifecycle_events] + [""]
 lines += ["### Positions"] + (pos_lines or ["- no open positions"]) + [""]
 if not DRY:
-    with LOG_FILE.open("a") as f:
+    with LOG_FILE.open("a", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
 
 print("=" * 96)
