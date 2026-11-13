@@ -159,17 +159,7 @@ export default function LiquidationLevelsTool({ sym = "BTC" }: { sym?: string })
       </div>
 
       {tab === "stops" ? (
-        sym === "BTC" ? (
-          <StopmapSection sym={sym} />
-        ) : (
-          <div className="flex h-64 flex-col items-center justify-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900/60 text-sm text-neutral-500">
-            <div>The 24h stops heatmap is BTC-only on the anonymous Coinglass API.</div>
-            <div className="text-xs text-neutral-600">
-              The liqHeatMap endpoint rejects {sym} (upstream code 40000). Switch to BTC for the stops map — the 3D/7D/30D
-              levels above work for every asset.
-            </div>
-          </div>
-        )
+        <StopmapSection sym={sym} />
       ) : (
         <>
       {err && (

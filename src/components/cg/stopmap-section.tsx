@@ -15,6 +15,8 @@ import { assetOf } from "@/lib/cg/assets";
 
 interface StopmapResponse {
   ok: boolean;
+  supported?: boolean;
+  reason?: string;
   error?: string;
   sym: string;
   window: { interval: string; bars: number; from: number; to: number };
@@ -53,8 +55,13 @@ export default function StopmapSection({ sym = "BTC" }: { sym?: string }) {
 
   if (!m) {
     return (
-      <div className="flex h-64 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-900/60 text-sm text-neutral-500">
-        {q.loading ? "Loading 24h liquidation heatmap…" : q.error ? `Stops data error: ${q.error}` : "No data"}
+      <div className="flex h-64 flex-col items-center justify-center gap-1 rounded-lg border border-neutral-800 bg-neutral-900/60 p-4 text-center text-sm text-neutral-400">
+        <div>{q.loading ? "Loading 24h liquidation heatmap…" : q.error ? `Stops data error: ${q.error}` : q.data?.reason || "No data"}</div>
+        {q.data?.supported === false && (
+          <div className="text-xs text-neutral-500">
+            Switch to BTC or view the 3D/7D/30D Levels tab above for active liquidation magnets.
+          </div>
+        )}
       </div>
     );
   }
