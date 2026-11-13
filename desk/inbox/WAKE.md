@@ -420,3 +420,26 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 - [FOR] cvd: taker buy 48.2%, perpCvd -99, spotCvd -5, quadrant both-selling, latestDiv bear (recent)
 - [FOR] notifications: 6h weighted bias -5.0 (6 events)
 - → place on DOGUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-13 04:24 UTC — new suggested order — place in MT5 (debate FOR 6/AGAINST 0)
+- R225-AVAX-1 AVAX SHORT limit entry 8.308 · stop 8.414 · targets 7.98 / 7.87 / 7.82 · R 3.1 · expires 2026-11-13 08:24 UTC
+- BASIS: levels are PERP prices (perpRef 8.031). Before placing in MT5 read spreads.AVAXUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (8.031 vs 8.201), h4 RSI 37.6, day -3.9%
+- [FOR] footprint: bull 35 / bear 49; recent: Exhaustion/buy[time], Exhaustion/buy[vol], Divergence/sell[range]
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:buy×1, abs:sell×5, div:buy×2, div:sell×4, exh:buy×4, sdiv:sell×2, trap:buy×2 — net 9 buy-side vs 11 sell-side
+- [FOR] liquidation: long-liq magnet 7.980 (str 58, ~$1M est, -0.74%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.086 (5m ago +0.085, rising bids); bid $0.01B vs ask $0.01B
+- [FOR] cvd: taker buy 48.6%, perpCvd -36, spotCvd +1, quadrant spot-bid, latestDiv bear (recent)
+- → place on AVAXUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-13 04:24 UTC — new suggested order — place in MT5 (debate FOR 6/AGAINST 1)
+- R225-BNB-2 BNB SHORT limit entry 635.74 · stop 643.54 · targets 616.26 · R 2.5 · expires 2026-11-13 08:24 UTC
+- BASIS: levels are PERP prices (perpRef 633.61). Before placing in MT5 read spreads.BNBUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (633.61 vs 644.01), h4 RSI 20.4, day -3.6%
+- [FOR] footprint: bull 28 / bear 33; recent: Exhaustion/buy[time], Exhaustion/buy[vol], Divergence/buy[range]
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:sell×1, div:buy×2, div:sell×5, exh:buy×4, exh:sell×1, sdiv:sell×2 — net 6 buy-side vs 9 sell-side
+- [FOR] liquidation: long-liq magnet 628.58 (str 54, ~$2M est, -0.82%) as target
+- [FOR] bookWalls: ±5% depth imbalance +0.041 (5m ago +0.094, falling bids); bid $0.03B vs ask $0.03B
+- [FOR] cvd: taker buy 47.6%, perpCvd -68, spotCvd -16, quadrant both-selling, latestDiv bear (recent)
+- [AGAINST] notifications: 6h weighted bias +2.0 (2 events)
+- → place on BNBUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
