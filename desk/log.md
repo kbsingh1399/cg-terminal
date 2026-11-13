@@ -4847,3 +4847,12 @@ analysis script rc=1
 - **CANDIDATE RADAR (TABLE 7 CONFLUENCE)**:
   - Screened: BTC, ETH, XAU, XLM, XRP, CL (all broker-qualified, spread < 0.15%).
   - Top Standby: `ETH` Short (Limit 1,948.00 / SL 1,995.00 / TP 1,894.00, Score 10.0/11.5 Grade A) awaiting crypto slot clearance.
+
+## CANDIDATE RADAR & FORMULATION · 2026-11-13 19:25 UTC · atg-exec
+- **360° BROKER-QUALIFIED SCAN RESULTS (TABLE 7 CONFLUENCE)**:
+  - `BTCUSD`: Grade A (8.0–10.0 / 11.5) · Bias: SHORT · Standing Limit #210156552 @ 69,500.00 (SL 70,280.00 / TP 67,200.00).
+  - `ETHUSD`: Grade A (7.0–10.0 / 11.5) · Bias: SHORT · Standby Limit @ 1,948.00 (SL 1,995.00 / TP 1,894.00) awaiting crypto slot release.
+  - `XAUUSD`: Grade B+ (7.5 / 11.5) · Bias: SHORT · Formulated S7 Trend Pullback Limit @ 3,900.50 (SL 3,916.50 / TP 3,865.00). Qualifies for Macro Commodity Slot 3 ($16.00 risk / 0.34% heat).
+  - `XLMUSD`: **LSR MAGNET VETO FIRED (40.66:1 shorts above)**. Explains stalled momentum and 8-bar time stop warning. Recommend closing at market (-$2.72) or tightening stop to 0.15070.
+- **FORMULATION CARD COMMITTED**:
+  - `desk/deepscan/FORMULATION-XAU-1794590000.md`: Full 16-dimension DECIDE card for Gold (XAUUSD).
