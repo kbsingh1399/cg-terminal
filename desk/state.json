@@ -233,22 +233,20 @@
       "status": "placed",
       "ticket": 210049839,
       "placedTs": 1794570003000
-    },
-    {
-      "id": "USER-210089896",
-      "asset": "CL",
-      "action": "sell",
-      "type": "sell_limit",
-      "volume": 0.1,
-      "limitPrice": 88.95,
-      "stopPrice": 89.45,
-      "targetPrice": 87.5,
-      "status": "placed",
-      "ticket": 210089896,
-      "placedTs": 1794580850000
     }
   ],
   "positions": [
+    {
+      "ticket": 210088411,
+      "sym": "XAG",
+      "side": "sell",
+      "volume": 0.01,
+      "entry": 50.18,
+      "stop": 50.18,
+      "target": 49.4,
+      "openedTs": 1794582000000,
+      "profit": 18.1
+    },
     {
       "ticket": 210060728,
       "sym": "XLM",
@@ -258,18 +256,7 @@
       "stop": 0.15233,
       "target": 0.14113,
       "openedTs": 1794579786000,
-      "profit": -2.24
-    },
-    {
-      "ticket": 210088411,
-      "sym": "XAG",
-      "side": "sell",
-      "volume": 0.01,
-      "entry": 50.18,
-      "stop": 50.48,
-      "target": 49.4,
-      "openedTs": 1794582000000,
-      "profit": 1.35
+      "profit": -1.84
     }
   ],
   "closed": [
@@ -4855,7 +4842,7 @@
       "notes": null
     }
   ],
-  "updatedAt": "2026-11-13T13:40:16.328Z",
+  "updatedAt": "2026-11-13T13:59:24.043Z",
   "closedPositions": [
     {
       "ticket": 210050569,
