@@ -5495,3 +5495,28 @@ analysis script rc=1
 
 analysis script rc=1
 
+
+
+## 360 FULL-UNIVERSE TRADE FORMULATION ROUND · 2026-11-14 10:12 UTC · lead-4
+
+- **Scope**: All 61 curated assets (30 Crypto USDT-M Perps, 28 TradFi USDT-M Perps, 3 Classic Benchmarks).
+- **Session Posture**: Weekend Session — TradFi 28 + Classic 3 tagged as **WEEKEND MARKET HALT / CLOSED** (no execution possible until Sunday 21:00 UTC). Crypto 30 evaluated on 100% live Coinglass API data.
+- **Table 7 Confluence Scoring**: Zero-fallback mandate enforced. Unfulfilled dimensions receive strictly 0.0 pts.
+  * BTC: 7.8 / 11.5 pts (Grade A) — Standing Sell Limit #210199407 (69,500.0) active at Day VAH retest.
+  * ETH: 5.5 / 11.5 pts (Grade B) — Active Position #210199486 Short locked at Breakeven (1948.29); LSR 3.06:1 magnet gate bans new passive entries.
+  * BNB: 7.0 / 11.5 pts (Grade A) — Hard Veto (No MT5 Venue & M1 R 0.76 < 1.5).
+  * SOL: 6.8 / 11.5 pts (Grade B) — Hard Veto (No MT5 Venue & M1 R 0.61 < 1.5).
+  * XRP: 6.2 / 11.5 pts (Grade B) — Hard Veto (M1 R 0.35 < 1.5 Desk R-standard & Crypto Slots 2/2 Full).
+  * All other 25 crypto assets scored < 5.0 pts (Hard Veto / No Trade) or lacked execution venues.
+- **Liquidation Magnet Gate (±2% LSR ≥ 2.5:1)**:
+  * Magnet condition active across ETH (3.06:1 Shorts), DOGE (3.56:1 Shorts), NEAR (4.20:1 Shorts), ATOM (6.71:1 Shorts), XLM (11.57:1 Shorts), ICP (2.76:1 Shorts), HBAR (222.87:1 Shorts), APT (3.35:1 Longs), SEI (3.23:1 Longs), INJ (4.95:1 Longs), VET (7.78:1 Longs), 1000PEPE (3.67:1 Shorts).
+  * Passive front-running (S3) strictly BANNED; desk posture is WAIT FOR THE SWEEP (Setup S1).
+- **Broker Spread Gate (`desk/mt5.json`)**:
+  * Qualified (<0.15%): BTCUSD (0.0348%), ETHUSD (0.0285%), XRPUSD (0.0986%), XLMUSD (0.1157%), XAUUSD (0.0224%).
+  * Disqualified (≥0.15%): ADA (2.25%), DOGE (1.39%), LTC (2.42%), LINK (0.57%), XAG (0.1784%). Zero suggested orders placed on disqualified instruments.
+- **Position & Invariant Audit**:
+  * ETHUSD Short (#210199486): +1.0R Breakeven invariant verified locked at 1948.29 (+2.03R floating profit achieved; $0.00 downside risk). 8-bar time stop satisfied as excursion exceeded +0.5R.
+  * Standing Limits: BTCUSD #210199407 (0.01 @ 69,500.0) & XAUUSD #210199455 (0.01 @ 3,900.5) structurally validated and maintained.
+  * Portfolio Heat: Active risk = $0.00 (ETH at BE); contingent risk if all standing limits fill = $9.40 (0.20% equity heat), well under $46.45 cap (1.0%).
+  * Concurrency: Crypto Slot 1 (ETH) + Crypto Slot 2 (BTC) = 2/2 slots FULL. Slot 3 (Macro Commodity) = XAU limit. Zero new crypto orders allowed.
+- **Deliverable**: Authored and persisted `desk/deepscan/UNIVERSE-360-1794651140227.md`.
