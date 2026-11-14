@@ -5543,3 +5543,22 @@ analysis script rc=1
 
 analysis script rc=1
 
+## R262 · 2026-11-14 10:59 UTC · zai-desk
+
+**Market**: BTC 67,262.3 (-1.5%)  ETH 1,908.66 (-1.1%)  SOL 75.69 (-3.2%)  XAU 3,886.00 (-0.1%)  XAG 48.910 (-0.0%)
+**Bias (|score|≥2)**: AVAX-6(TREND)  LINK-5(TREND)  DOGE-5(TRANS)  BNB-5(TRANS)  BTC-4(TRANS)  SOL-3(TRANS)  LTC-2(TREND)  XRP-2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- none meeting the gates this round
+
+### Order lifecycle
+- R261-AVAX-1 re-debated: FOR 6/AGAINST 0 — stands
+
+### Positions
+- ETH ETH SELL: +0.0R open @ 1,908.66 → HOLD
+
+
+## ROUND FAILED · 2026-11-14 11:04 UTC · zai-desk
+
+analysis script rc=1
+
