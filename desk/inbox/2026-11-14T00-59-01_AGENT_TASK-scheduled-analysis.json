@@ -1,0 +1,8 @@
+{
+  "id": "wake-analysis-1794617941969",
+  "ts": 1794617941969,
+  "from": "cron (scheduled analysis wake)",
+  "action": "AGENT_TASK",
+  "priority": "info",
+  "instruction": "SCHEDULED ANALYSIS ROUND (manual-bound — desk/TRADE_FORMULATION_MANUAL.md):\n1. git pull --rebase origin main\n2. Read desk/inbox/WAKE.md + desk/TRADE_FORMULATION_MANUAL.md (the SOP)\n3. Pull live telemetry for target symbols: /api/cg/screener, /api/cg/narrative,\n   /api/cg/quant, /api/cg/options (BTC/ETH), /api/cg/bookwalls, /api/cg/lto,\n   /api/cg/liqlevels (3d/7d/30d), /api/cg/cvd, /api/cg/signals, desk/mt5.json\n4. Run the 6-step DECIDE (manual §1) per symbol across ALL 16 dimensions (§2)\n5. Compute the LSR and apply the Liquidation Magnet Gate (§4): LSR >= 2.5:1\n   bans S3 passive front-runs — wait for the S1 sweep\n6. Score Table 7 confluence (§5); apply hard vetoes; assign grade + risk %\n7. Grade >= B candidates: Formulation Card (§9.2) to\n   desk/deepscan/FORMULATION-<SYMBOL>-<ts>.md; order-worthy ones become\n   suggested orders in desk/state.json per desk/PROTOCOL.md\n8. Review open positions vs §6 invariants (+1.0R breakeven rule, 8-bar time\n   stop, 40/40/20 scale-outs)\n9. Commit + push; append the round entry to desk/log.md"
+}
