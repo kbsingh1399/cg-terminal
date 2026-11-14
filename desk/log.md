@@ -5356,3 +5356,16 @@ analysis script rc=1
 
 analysis script rc=1
 
+
+## R360 · 2026-11-14 07:12 UTC · atg-exec
+
+360 FULL-UNIVERSE TRADE FORMULATION ROUND (manual-bound v1.1.0)
+- Scope: 61 curated assets (30 Crypto, 28 TradFi, 3 Classic)
+- Tier A Narrative Sweep: 5 Grade A+, 28 Grade B, 28 Grade C/SKIP
+- Tier B Shortlist (Top 12 Qualifiers): BTC, ETH, XAU, AVAX, ATOM, XLM, NVDA, INTC, DOGE, LINK, LTC, ADA
+- Tier C LSR Magnet Gate: 24 assets flagged with LSR ≥ 2.5:1 (dominant Long Liq below). Passive front-running S3 BANNED; S1 Sweep Reversal armed.
+- Broker Spread Gate: ADA (2.25%), DOGE (1.39%), LTC (2.42%), LINK (0.57%), XAG (0.178%) barred from MT5 placement. BTC (0.035%), ETH (0.028%), XAU (0.022%), XLM (0.116%), XRP (0.099%) qualified.
+- Open Positions: ETHUSD #210199486 Short (+1.17R peak excursion) — Breakeven invariant strictly applied (SL 1948.29, 0.00% risk).
+- Standing Limits: BTCUSD #210199407 Sell Limit (69,500.0), XAUUSD #210199455 Sell Limit (3,900.5) maintained.
+- Suggested Order: XLMUSD S1 Sweep Reversal Limit @ 0.14863 (0.5% risk, 4h expiry).
+- Deliverable written: desk/deepscan/UNIVERSE-360-1794640333611.md
