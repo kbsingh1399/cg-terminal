@@ -5589,3 +5589,26 @@ analysis script rc=1
   * Portfolio Heat: Active risk = $0.00 (ETH at BE); contingent risk if all standing limits fill = $9.40 (0.20% equity heat), well under $46.45 cap (1.0%).
   * Concurrency: Crypto Slot 1 (ETH) + Crypto Slot 2 (BTC) = 2/2 slots FULL. Slot 3 (Macro Commodity) = XAU limit. Zero new crypto orders allowed.
 - **Deliverable**: Authored and persisted `desk/deepscan/UNIVERSE-360-1794654589505.md`.
+## R263 · 2026-11-14 11:29 UTC · zai-desk
+
+**Market**: BTC 67,217.8 (-1.6%)  ETH 1,907.90 (-1.1%)  SOL 75.76 (-3.1%)  XAU 3,885.25 (-0.1%)  XAG 48.910 (-0.0%)
+**Bias (|score|≥2)**: BTC-7(TRANS)  LINK-5(TREND)  BNB-4(TREND)  DOGE-5(TRANS)  AVAX-2(TREND)  LTC-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- NEW R263-LINK-1 LINK SHORT limit 9.598 · stop 9.677 · T1 9.434 · T2 9.400 · T3 9.306 · R 2.1
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (9.585 vs 9.640), h4 RSI 33.9, day -2.7%
+      [FOR    ] footprint: bull 35 / bear 50; recent: Divergence/buy[time], Trapped longs/sell[vol], Divergence/sell[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×1, abs:sell×1, div:buy×3, div:sell×3, exh:sell×2, trap:sell×1 — net 4 buy-side vs 7 sell-side
+      [FOR    ] liquidation: long-liq magnet 9.468 (str 87, ~$4M est, -1.10%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance -0.053 (5m ago -0.030, falling bids); bid $0.01B vs ask $0.02B
+      [FOR    ] cvd: taker buy 48.8%, perpCvd -23, spotCvd -7, quadrant both-selling, latestDiv bull (recent)
+      [FOR    ] notifications: 6h weighted bias -3.9 (4 events)
+
+### Positions
+- ETH ETH SELL: +0.0R open @ 1,907.90 → CLOSE_RECOMMENDED (VWAP regime + confluence +2.0 flipped against)
+
+
+## ROUND FAILED · 2026-11-14 11:31 UTC · zai-desk
+
+analysis script rc=1
+

@@ -1343,3 +1343,36 @@ placement against the desk card (reply contract below). zai-desk runs rounds + a
 8. Review open positions vs §6 invariants (+1.0R breakeven rule, 8-bar time
    stop, 40/40/20 scale-outs)
 9. Commit + push; append the round entry to desk/log.md
+
+## 2026-11-14 11:31 UTC — new suggested order — place in MT5 (debate FOR 7/AGAINST 0)
+- R263-LINK-1 LINK SHORT limit entry 9.598 · stop 9.677 · targets 9.434 / 9.4 / 9.306 · R 2.1 · expires 2026-11-14 15:29 UTC
+- BASIS: levels are PERP prices (perpRef 9.585). Before placing in MT5 read spreads.LNKUSD.basisPct in desk/mt5.json and set every level = perpLevel × (1 + basisPct/100). Remember the broker spread — a SHORT fills at bid.
+- [FOR] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (9.585 vs 9.640), h4 RSI 33.9, day -2.7%
+- [FOR] footprint: bull 35 / bear 50; recent: Divergence/buy[time], Trapped longs/sell[vol], Divergence/sell[range]
+- [FOR] microFlow(abs/trap/exh): 6h micro-events: abs:buy×1, abs:sell×1, div:buy×3, div:sell×3, exh:sell×2, trap:sell×1 — net 4 buy-side vs 7 sell-side
+- [FOR] liquidation: long-liq magnet 9.468 (str 87, ~$4M est, -1.10%) as target
+- [FOR] bookWalls: ±5% depth imbalance -0.053 (5m ago -0.030, falling bids); bid $0.01B vs ask $0.02B
+- [FOR] cvd: taker buy 48.8%, perpCvd -23, spotCvd -7, quadrant both-selling, latestDiv bull (recent)
+- [FOR] notifications: 6h weighted bias -3.9 (4 events)
+- → place on LNKUSD in MT5, then set status "placed" + ticket + ACTUAL MT5 levels in desk/state.json and append an EXEC entry to desk/log.md
+
+## 2026-11-14 11:31 UTC — agent task from zai-desk
+- SCHEDULED ANALYSIS ROUND (manual-bound — desk/TRADE_FORMULATION_MANUAL.md):
+1. git pull --rebase origin main
+2. Read desk/inbox/WAKE.md + desk/TRADE_FORMULATION_MANUAL.md (the SOP)
+3. Pull live telemetry for target symbols: /api/cg/screener, /api/cg/narrative,
+   /api/cg/quant, /api/cg/options (BTC/ETH), /api/cg/bookwalls, /api/cg/lto,
+   /api/cg/liqlevels (3d/7d/30d), /api/cg/cvd, /api/cg/signals, desk/mt5.json
+4. Run the 6-step DECIDE (manual §1) per symbol across ALL 16 dimensions (§2)
+5. Compute the LSR and apply the Liquidation Magnet Gate (§4): LSR >= 2.5:1
+   bans S3 passive front-runs — wait for the S1 sweep
+6. Score Table 7 confluence (§5); apply hard vetoes; assign grade + risk %
+7. Grade >= B candidates: Formulation Card (§9.2) to
+   desk/deepscan/FORMULATION-<SYMBOL>-<ts>.md; order-worthy ones become
+   suggested orders in desk/state.json per desk/PROTOCOL.md
+8. Review open positions vs §6 invariants (+1.0R breakeven rule, 8-bar time
+   stop, 40/40/20 scale-outs)
+9. Commit + push; append the round entry to desk/log.md
+
+## 2026-11-14 11:31 UTC — ALERT A10 — outbox-reply
+- BELL: atg replied to directive (2026-11-10T16-10-00_DIR-0003-broker-symbols-and-status.reply.md, 2026-11-10T17-36-00_DIR-0004-funding-oi-endpoints.reply.md, 2026-11-10T17-59-00_DIR-0005-expiry-cancel-BTC-209404683.reply.md, 2026-11-10T18-12-00_DIR-0006-local-alerts.reply.md, 2026-11-10T19-25-00_DIR-0007-expiry-cancel-ETH-XAG.reply.md, 2026-11-10T20-30-00_DIR-0008-terminal-rebuild-and-feed-verify.reply.md, 2026-11-10T21-25-00_DIR-0009-full-universe-feed-verify-and-symbols-dump.reply.md, 2026-11-11T03-02-00_DIR-0010-expiry-cancel-ETH-XAG-rearm.reply.md, 2026-11-11T07-55-00_DIR-0011-rebuild-full-universe-ui.reply.md, 2026-11-11T09-50-00_DIR-0013-rebuild-r4-microstructure-layer.reply.md, 2026-11-11T15-35-00_DIR-0014-binance-top200-tier-rebuild.reply.md, VERIFY-R18-ETH-1.reply.md, VERIFY-R4-BTC-1.reply.md, VERIFY-TP-209404683.reply.md) — zai-desk to verify on next wake
