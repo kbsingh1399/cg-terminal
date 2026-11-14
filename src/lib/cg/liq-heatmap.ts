@@ -82,7 +82,6 @@ export function buildStopModel(p: LiqHeatmapPayload, topN = 8): StopModel | null
   const profile = new Array<number>(nY).fill(0);
   const tail = new Array<number>(nY).fill(0);
   const perBar = new Map<number, [number, number][]>();
-  const lastBar = new Array<number>(nY).fill(0);
 
   for (const [b, yi, usd] of liq) {
     if (!(usd > 0) || yi < 0 || yi >= nY) continue;
@@ -90,12 +89,12 @@ export function buildStopModel(p: LiqHeatmapPayload, topN = 8): StopModel | null
     let cells = perBar.get(b);
     if (!cells) perBar.set(b, (cells = []));
     cells.push([yi, usd]);
-    if (b > lastBar[yi] || lastBar[yi] === 0) {
-      // track the newest bar value per row (cross-section)
-    }
   }
-  // cross-section: value at the LAST bar each row was seen at (approximation of
-  // "currently resting"); rows absent from the final bars have decayed/cleared
+  // cross-section: value at the FINAL bar only (approximation of "currently
+  // resting"); rows absent from the final bar have decayed/cleared and read 0.
+  // (External review C11, 2026-11-14: removed a dead lastBar[] branch whose
+  // body was empty — it computed nothing and implied a cross-section that
+  // was never taken. tail's semantics are unchanged: final-bar exposure.)
   const finalBar = Math.max(0, ...liq.map((r) => r[0]));
   const finalCells = new Map<number, number>();
   for (const [b, yi, usd] of liq) {

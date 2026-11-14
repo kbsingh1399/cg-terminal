@@ -28,12 +28,12 @@ Read in this order (it maps to how the system is layered):
 3. `desk/PROTOCOL.md` — the two-agent trading desk contract
 4. `desk/TRADE_FORMULATION_MANUAL.md` — the 6-step DECIDE framework + 16-dimension data contract + Table 7 confluence scoring
 5. `src/lib/` — engine core: `cg/` (Coinglass client + series), `live/` (Binance WS/REST + circuit breaker), `universe/curated.ts` (61 assets), `desk/`
-6. `src/app/api/cg/` — 48 API routes (narrative, quant, bookwalls, cvd, liqlevels, stopmap, signals, notifications, backtest, paperbook, ...)
+6. `src/app/api/cg/` — 39 API routes (narrative, quant, bookwalls, cvd, liqlevels, stopmap, signals, notifications, backtest, paperbook, ...) plus 9 non-cg routes (binance/*, desk/live, health)
 7. `mcp/server.mjs` — 24 MCP tools for agent integration
-8. `scripts/` — desk daemon, analysis rounds, scanners (some operational scratch scripts live here too)
-9. `tests/` — currently only build/runtime smoke tests
+8. `scripts/` — desk daemon, analysis rounds, scanners — 374 files; mixes durable infra with one-off scratch scripts, and also carries ~1,550 lines of existing `test-*` files that are wired to no runner
+9. `tests/` — only build/runtime smoke tests (the real test files live un-wired in `scripts/`)
 
-Stack: Next.js 16 (App Router, React 19, TS), Tailwind 4 + shadcn/radix, Zustand, TanStack Query/Table, Prisma/SQLite, Recharts. ~46.5k LOC of TypeScript under `src/`, 184 scripts, 48 API routes. Local-first: single dev machine, `npm run dev` on :3000, data cached in `data/` (~161 MB series) and `db/custom.db`.
+Stack: Next.js 16 (App Router, React 19, TS), Tailwind 4 + shadcn/radix, Zustand, TanStack Query/Table, Prisma/SQLite, Recharts. ~46.5k LOC of TypeScript under `src/` (190 files), 374 script files, 48 API routes total (39 under `/api/cg`). Local-first: single dev machine, `npm run dev` on :3000, data cached in `data/` (~161 MB series) and `db/custom.db`.
 
 ## 2. WHAT THE TERMINAL DOES (context, 60 seconds)
 
@@ -52,10 +52,10 @@ A local, institution-style order-flow terminal for 61 curated assets (30 crypto 
 6. Resilience: what happens on WS disconnect storms, upstream schema drift, clock skew, partial backfills? Where does the continuity engine's resume-from-last-timestamp design break?
 
 ### C. Engineering quality (medium-high value)
-7. The `src/app/api/cg/` route layer — 48 routes. Is the layering right, or is business logic leaking into routes? Propose a service-layer split if warranted.
+7. The `src/app/api/cg/` route layer — 39 routes. Is the layering right, or is business logic leaking into routes? Propose a service-layer split if warranted.
 8. State management and caching design (Zustand + server-side caches + `data/` JSON persistence + SQLite). Is this the right persistence for ~161 MB of series and 61 assets × many intervals? Would DuckDB / Parquet / a proper TSDB be materially better, and is the migration worth it on a single-machine deployment?
 9. Type safety and error handling: find the three worst patterns in `src/` and propose concrete refactors.
-10. Testing: we have almost none (three build/runtime smoke tests). Propose the minimal high-leverage test suite for this system (what to unit-test, what to golden-file, what to property-test) — sequenced so the first 10 tests give the most protection.
+10. Testing: ~1,550 lines of `scripts/test-*` files exist (quant-math mirrors, paperbook, MCP tools, parity printout) but are wired to NO runner — no `npm test`, no CI, and `test-quant-math.cjs` re-implements the production formulas as mirrors instead of importing them, so it cannot catch regressions. Propose the minimal high-leverage test suite for this system (what to unit-test, what to golden-file, what to property-test) — sequenced so the first 10 tests give the most protection.
 
 ### D. Agent/desk layer (medium value)
 11. The MCP server (24 tools, `mcp/server.mjs`) — tool granularity, context efficiency for an LLM consumer, cursor-based notifications design. Would you restructure the tool surface?

@@ -150,9 +150,16 @@ export function isCuratedTradfi(sym: string): boolean {
 
 /** Centralized lead-instrument derivation — the ONLY place that builds the
  *  kline/lead key (multi-agent review A2: 5 call sites hardcoded
- *  `Binance_${sym}USDT`). Unknown symbols keep the legacy Binance form. */
+ *  `Binance_${sym}USDT`).
+ *
+ *  Resolution order (external review C3, 2026-11-14): curated registry FIRST
+ *  (its `pair` is the verified live Binance instrument — 37 of 58 curated
+ *  perps are absent from the legacy table above), then the legacy table,
+ *  then the legacy Binance form for non-curated symbols (Tier-2 200 list). */
 export function leadInstr(sym: string): string {
   const s = resolveCgSym(sym);
+  const curated = curatedAssetOf(s);
+  if (curated) return `Binance_${curated.pair}`;
   return assetOf(s)?.leadKey(s) ?? `Binance_${s}USDT`;
 }
 

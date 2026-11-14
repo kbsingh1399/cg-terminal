@@ -26,7 +26,7 @@
  * Windows: run from Git Bash (the round script needs bash).
  */
 import { execFile, spawn } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync, appendFileSync, mkdirSync, readdirSync, unlinkSync, statSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, appendFileSync, mkdirSync, readdirSync, unlinkSync, statSync, renameSync } from "node:fs";
 import { promisify } from "node:util";
 import os from "node:os";
 import path from "node:path";
@@ -39,7 +39,25 @@ const ONCE = process.argv.includes("--once");
 
 const log = (m) => console.log(`[desk-daemon ${new Date().toISOString().slice(11, 19)}] ${m}`);
 const loadJson = (p, dflt) => { try { return JSON.parse(readFileSync(p, "utf8")); } catch { return dflt; } };
-const deskState = () => loadJson("desk/state.json", {});
+// atomic JSON write (external review C7, 2026-11-14): tmp file in the same
+// directory + rename, so a crash mid-write can never leave torn JSON that
+// loadJson would swallow into {} — silently resetting desk state.
+const atomicWrite = (p, data) => {
+  const tmp = `${p}.tmp-${process.pid}`;
+  writeFileSync(tmp, data);
+  renameSync(tmp, p);
+};
+// desk/state.json is the multi-writer desk ledger: a parse failure must be
+// LOUD (refuse to run on empty) — loadJson's silent default is fine for
+// optional files but not for this one.
+const deskState = () => {
+  try {
+    return JSON.parse(readFileSync("desk/state.json", "utf8"));
+  } catch (e) {
+    if (!existsSync("desk/state.json")) return {};
+    throw new Error(`desk/state.json is unparseable (${e.message}) — refusing to run a cycle on empty state (C7 guard)`);
+  }
+};
 
 // ---------------- config (env overrides json, reloaded every cycle) ----------------
 function getConfig() {
@@ -68,7 +86,7 @@ if (!dst.startedTs) dst.startedTs = Date.now();
 if (!dst.lastRoundTs) dst.lastRoundTs = deskState().analysis?.last_round_ts ?? 0;
 if (!Array.isArray(dst.orderSig)) dst.orderSig = [];
 let roundFails = dst.roundFails ?? 0;
-const saveDstate = () => writeFileSync(DSTATE, JSON.stringify(dst, null, 2));
+const saveDstate = () => atomicWrite(DSTATE, JSON.stringify(dst, null, 2));
 
 // ---------------- shell helper (never throws) ----------------
 async function sh(cmd, args, opts = {}) {
@@ -299,7 +317,7 @@ async function processInbox() {
     if (existsSync(outp)) continue; // already replied
     const ins = loadJson(path.join("desk/inbox", f), null);
     if (!ins || !ins.action) {
-      writeFileSync(outp, JSON.stringify({ file: f, replyTs: Date.now(), status: "error", reason: "unparseable JSON or missing action" }, null, 2));
+      atomicWrite(outp, JSON.stringify({ file: f, replyTs: Date.now(), status: "error", reason: "unparseable JSON or missing action" }, null, 2));
       continue;
     }
     let res;
@@ -346,7 +364,7 @@ async function processInbox() {
       default:
         res = { status: "skipped", reason: `unknown action ${ins.action}` };
     }
-    writeFileSync(outp, JSON.stringify({ ...ins, replyTs: Date.now(), ...res }, null, 2));
+    atomicWrite(outp, JSON.stringify({ ...ins, replyTs: Date.now(), ...res }, null, 2));
     log(`inbox ${f}: ${res.status}`);
   }
 }
@@ -366,7 +384,7 @@ function loadAlertsLocal() {
 
 function saveAlertsLocal(st) {
   try {
-    writeFileSync(ALERTS_LOCAL, JSON.stringify(st, null, 2) + "\n");
+    atomicWrite(ALERTS_LOCAL, JSON.stringify(st, null, 2) + "\n");
   } catch {}
 }
 

@@ -43,12 +43,17 @@ interface BusState {
   nextId: number;
   items: CgNotification[];
   subs: Set<(n: CgNotification) => void>;
-  /** recent emit keys for 30-min dedup (asset|source|kind|barTs|barType|price) */
+  /** recent emit keys for 30-min dedup (asset|source|kind|barTs|barType|price|seq) */
   seen: Map<string, number>;
+  /** per-(asset|kind) emission counter — the event-cycle identity for sources
+   *  without a barTs (external review C10, 2026-11-14). A wall that is pulled
+   *  and re-added at the SAME price within 30 min must be a NEW event, not a
+   *  dedup hit; the seq makes each (pull → re-add) cycle a distinct key. */
+  seq: Map<string, number>;
 }
 
 const g = globalThis as unknown as { __cgNotifyBus?: BusState };
-const bus: BusState = (g.__cgNotifyBus ??= { nextId: 1, items: [], subs: new Set(), seen: new Map() });
+const bus: BusState = (g.__cgNotifyBus ??= { nextId: 1, items: [], subs: new Set(), seen: new Map(), seq: new Map() });
 
 function loadFromDisk() {
   if (bus.items.length || bus.nextId > 1) return;
@@ -75,15 +80,28 @@ function loadFromDisk() {
 }
 
 /**
- * Emit a notification, deduped per asset|source|kind|barTs|barType|price within
- * 30 min. `price` is part of the key on purpose: whale walls and sweep setups
- * carry no barTs, so without it every distinct wall/cluster at a different
- * price would collapse into one event and be silently dropped.
+ * Emit a notification, deduped per asset|source|kind|barTs|barType|price|seq
+ * within 30 min. `price` is part of the key on purpose: whale walls and sweep
+ * setups carry no barTs, so without it every distinct wall/cluster at a
+ * different price would collapse into one event and be silently dropped.
+ * For those same barTs-less sources the key also carries the per-(asset|kind)
+ * sequence: a wall pulled and re-added at the same price is a new event
+ * cycle, not a dedup hit (C10).
  */
 export function emit(n: Omit<CgNotification, "id">): CgNotification | null {
   loadFromDisk();
   const priceKey = n.price != null && Number.isFinite(n.price) ? n.price.toPrecision(6) : "";
-  const dedupKey = `${n.asset}|${n.source}|${n.kind}|${n.barTs ?? ""}|${n.barType ?? ""}|${priceKey}`;
+  // barTs-bearing events (footprint signals) are bar-identified — seq stays 0
+  // so intra-bar repeats still dedup exactly as before. barTs-less events
+  // (whale walls, sweep setups) advance the (asset|kind) seq per emission, so
+  // each pull→re-add cycle at the same price gets a fresh key.
+  let seq = 0;
+  if (n.barTs == null) {
+    const k = `${n.asset}|${n.kind}`;
+    seq = (bus.seq.get(k) ?? 0) + 1;
+    bus.seq.set(k, seq);
+  }
+  const dedupKey = `${n.asset}|${n.source}|${n.kind}|${n.barTs ?? ""}|${n.barType ?? ""}|${priceKey}|${seq}`;
   const prev = bus.seen.get(dedupKey);
   if (prev && Date.now() - prev < 30 * 60_000) return null;
   bus.seen.set(dedupKey, Date.now());
