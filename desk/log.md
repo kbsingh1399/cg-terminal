@@ -5380,3 +5380,26 @@ analysis script rc=1
 - Standing Limits: BTCUSD #210199407 Sell Limit (69,500.0) & XAUUSD #210199455 Sell Limit (3,900.5) maintained.
 - Open Positions: ETHUSD #210199486 Short (+1.17R peak excursion) — Breakeven invariant strictly applied (SL 1948.29, 0.00% risk).
 - Deliverable updated: desk/deepscan/UNIVERSE-360-1794640965840.md and desk/deepscan/UNIVERSE-360-1794640333611.md
+## R255 · 2026-11-14 07:29 UTC · zai-desk
+
+**Market**: BTC 67,213.0 (-1.6%)  ETH 1,897.83 (-1.6%)  SOL 75.35 (-3.6%)  XAU 3,883.53 (-0.1%)  XAG 48.880 (-0.1%)
+**Bias (|score|≥2)**: AVAX-5(TREND)  LINK-5(TREND)  ADA-6(TREND)  LTC-5(TREND)  BNB-4(TREND)  DOGE-3(TREND)  ETH-2(TRANS)  SOL-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- NEW R255-AVAX-1 AVAX SHORT limit 8.094 · stop 8.164 · T1 7.860 · T2 7.730 · R 3.4
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (8.005 vs 8.090), h4 RSI 39.0, day -2.7%
+      [FOR    ] footprint: bull 49 / bear 60; recent: Absorption/sell[time], Divergence/buy[vol], Absorption/sell[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:buy×4, abs:sell×6, div:buy×6, div:sell×5, exh:sell×4, sdiv:buy×1, sdiv:sell×1, trap:buy×4, trap:sell×2 — net 15 buy-side vs 18 sell-side
+      [FOR    ] liquidation: long-liq magnet 7.860 (str 46, ~$1M est, -2.10%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.056 (5m ago +0.080, falling bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.5%, perpCvd -33, spotCvd -1, quadrant both-selling, latestDiv bull (recent)
+      [FOR    ] notifications: 6h weighted bias -8.9 (11 events)
+
+### Positions
+- ETH ETH SELL: +0.0R open @ 1,897.83 → HOLD
+
+
+## ROUND FAILED · 2026-11-14 07:33 UTC · zai-desk
+
+analysis script rc=1
+
