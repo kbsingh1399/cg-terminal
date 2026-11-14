@@ -84,3 +84,6 @@ desk/.daemon-state.json
 # multi-agent review tooling (cloned externals + probe w/ key copy — never commit)
 external/
 scripts/probe-new-syms.mjs
+
+# large sweep raw data dumps
+scripts/*_data.json
