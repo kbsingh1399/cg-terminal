@@ -5639,3 +5639,26 @@ analysis script rc=1
   * Concurrency: Crypto Slot 1 (ETH) + Crypto Slot 2 (BTC) = 2/2 slots FULL. Slot 3 (Macro Commodity) = XAU limit. Zero new crypto orders allowed.
 - **Deliverables**:
   * Authored and persisted `desk/deepscan/UNIVERSE-360-1794657016913.md` (complete 61-asset matrix, 16-D DECIDE cards for Tier 1 and Tier 2 candidates).
+## R264 · 2026-11-14 12:29 UTC · zai-desk
+
+**Market**: BTC 67,151.5 (-1.7%)  ETH 1,907.30 (-1.1%)  SOL 75.81 (-3.0%)  XAU 3,883.76 (-0.1%)  XAG 48.900 (-0.0%)
+**Bias (|score|≥2)**: AVAX-5(TREND)  BTC-7(TRANS)  LINK-5(TRANS)  BNB-4(TREND)  SOL-3(TRANS)  ADA-3(TREND)  DOGE-3(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- NEW R264-AVAX-1 AVAX SHORT limit 8.138 · stop 8.200 · T1 7.993 · T2 7.930 · T3 7.850 · R 2.3
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (8.035 vs 8.070), h4 RSI 40.3, day -2.4%
+      [FOR    ] footprint: bull 27 / bear 43; recent: Absorption/sell[time], Bear div/sell[vol], Exhaustion/buy[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:sell×2, div:buy×1, div:sell×2, exh:buy×2, exh:sell×2, sdiv:sell×1, trap:sell×1 — net 3 buy-side vs 8 sell-side
+      [FOR    ] liquidation: long-liq magnet 7.930 (str 46, ~$1M est, -1.35%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.029 (5m ago +0.025, rising bids); bid $0.01B vs ask $0.01B
+      [FOR    ] cvd: taker buy 48.5%, perpCvd -32, spotCvd -1, quadrant both-selling, latestDiv bull (recent)
+      [FOR    ] notifications: 6h weighted bias -4.9 (5 events)
+
+### Positions
+- ETH ETH SELL: +0.0R open @ 1,907.30 → HOLD
+
+
+## ROUND FAILED · 2026-11-14 12:30 UTC · zai-desk
+
+analysis script rc=1
+
