@@ -81,6 +81,24 @@ data/*
 desk/.daemon.lock
 desk/.daemon-state.json
 
+# SECURITY (external review AI-2 §0, 2026-11-14): live MT5 account data must
+# never be pushed — the repo is publicly cloneable. mt5.json carries the
+# account login, balance, open positions with tickets/SL/TP; positioning.json
+# and the alert fire-state are machine-local telemetry. Local consumers
+# (/api/desk/live, daemon, deepscan) read them from the working tree, which
+# git does not touch. The sandbox gets positions via desk/state.json
+# positions[] (mirrored by the exec agent), not via these files.
+desk/mt5.json
+desk/positioning.json
+desk/alerts.local.json
+desk/deepscan/MT5-SCAN-*.md
+
+# scratch outputs (local analysis artifacts, never source)
+scripts/*.json
+!scripts/research/*.json
+scripts/*.xlsx
+scripts/*.png
+
 # multi-agent review tooling (cloned externals + probe w/ key copy — never commit)
 external/
 scripts/probe-new-syms.mjs

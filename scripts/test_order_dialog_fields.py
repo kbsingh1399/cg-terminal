@@ -13,7 +13,7 @@ if not hwnd_mt5:
     def find_mt5(h, _):
         buf = ctypes.create_unicode_buffer(256)
         u.GetWindowTextW(h, buf, 256)
-        if "FundedNext" in buf.value or "11808165" in buf.value:
+        if "FundedNext" in buf.value:
             hwnd_mt5 = h
             print(f"Found MT5 by title: {h} - {buf.value}")
         return True

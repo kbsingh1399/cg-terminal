@@ -130,7 +130,22 @@ function load(name: string, keyOf: (row: any) => string): StoreState {
     migrateLegacy(name);
     const f = fileOf(name);
     if (fs.existsSync(f)) {
-      const text = fs.readFileSync(f, "utf8");
+      let text = fs.readFileSync(f, "utf8");
+      // TORN-LINE REPAIR (external review R6, 2026-11-14): a crash mid-append
+      // leaves a partial last line with no trailing \n. The next append writes
+      // fresh rows directly after it, merging the partial and the first good
+      // row into ONE invalid line — silently losing a good row forever.
+      // Truncate the partial tail now, before any append can glue onto it.
+      if (text && !text.endsWith("\n")) {
+        const lastNl = text.lastIndexOf("\n");
+        const good = lastNl === -1 ? "" : text.slice(0, lastNl + 1);
+        try {
+          fs.writeFileSync(f, good, "utf8");
+          text = good;
+        } catch {
+          /* read-only fs: fall through — the corrupt line is skipped below */
+        }
+      }
       for (const line of text.split("\n")) {
         if (!line.trim()) continue;
         try {
@@ -158,27 +173,51 @@ function load(name: string, keyOf: (row: any) => string): StoreState {
   return st;
 }
 
-/** Append rows (deduped by keyOf). Returns the number of NEW rows stored. */
-export function append(name: string, rows: unknown[], keyOf: (row: any) => string): number {
+/** Append rows (deduped by keyOf). Returns the number of NEW rows stored.
+ *
+ * UPSERT MODE (external review R1, 2026-11-14): kline series poll a window
+ * that includes the STILL-OPEN bar. First-write-wins dedup froze that partial
+ * bar forever (verified live: stored BTC 09:45 h=67138.7 vs true closed
+ * h=67499). For upsert series, a row whose key already exists REPLACES the
+ * stored row in place (last-write-wins) and flags a rewrite so the file gets
+ * the corrected values. Flow/lto/liq series keep strict append-only dedup —
+ * their rows are immutable snapshots, and lto:open rows carry poll-unique
+ * (at|id) keys where replacement would corrupt history.
+ */
+export function append(name: string, rows: unknown[], keyOf: (row: any) => string, opts?: { upsert?: boolean }): number {
   const st = load(name, keyOf);
   if (!rows.length) return 0;
   const fresh: unknown[] = [];
+  let replaced = 0;
   for (const r of rows) {
     const k = keyOf(r);
-    if (st.keys.has(k)) continue;
+    if (st.keys.has(k)) {
+      if (opts?.upsert) {
+        // last-write-wins: find and replace the stored row (rows are small,
+        // and upsert only ever hits the most recent bar(s) of a series)
+        const idx = st.rows.findIndex((x) => keyOf(x) === k);
+        if (idx >= 0) {
+          st.rows[idx] = r;
+          replaced++;
+        }
+      }
+      continue;
+    }
     st.keys.add(k);
     st.rows.push(r);
     fresh.push(r);
     const t = Number((r as { t?: number; ts?: number; at?: number }).t ?? (r as { ts?: number }).ts ?? (r as { at?: number }).at ?? 0);
     if (t > (st.lastTs ?? 0)) st.lastTs = t;
   }
-  if (!fresh.length) return 0;
+  if (!fresh.length && !replaced) return 0;
   // retention: trim in-memory to the cap; rewrite the file when meaningfully
-  // over (avoids rewriting on every append)
+  // over (avoids rewriting on every append) OR when upsert replaced rows
   let compact = false;
-  if (st.rows.length > MAX_ROWS * 1.2) {
-    st.rows = st.rows.slice(-MAX_ROWS);
-    st.keys = new Set(st.rows.map((r) => keyOf(r)));
+  if (st.rows.length > MAX_ROWS * 1.2 || replaced > 0) {
+    if (st.rows.length > MAX_ROWS) {
+      st.rows = st.rows.slice(-MAX_ROWS);
+      st.keys = new Set(st.rows.map((r) => keyOf(r)));
+    }
     compact = true;
   }
   try {

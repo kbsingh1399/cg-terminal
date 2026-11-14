@@ -129,7 +129,8 @@ async function pollKline() {
     append(
       name,
       rows.map((r) => ({ t: 1000 * Number(r[0]), o: +r[1], h: +r[2], l: +r[3], c: +r[4], v: +r[5] })),
-      keyKline
+      keyKline,
+      { upsert: true } // R1: the trailing bar is still forming — last-write-wins
     );
     markPoll(name, keyKline);
   } catch (e) {
@@ -160,7 +161,7 @@ async function pollAssetKlines() {
     if (inst === "Binance_BTCUSDT") continue; // dedicated BTC poller above
     try {
       const rows = await fetchKlines(inst, "m15", 96);
-      append(name, rows.map((r) => ({ t: 1000 * Number(r[0]), o: +r[1], h: +r[2], l: +r[3], c: +r[4], v: +r[5] })), keyKline);
+      append(name, rows.map((r) => ({ t: 1000 * Number(r[0]), o: +r[1], h: +r[2], l: +r[3], c: +r[4], v: +r[5] })), keyKline, { upsert: true }); // R1: trailing bar is forming — last-write-wins
       markPoll(name, keyKline);
     } catch (e) {
       markPoll(name, keyKline, e instanceof Error ? e.message : "error");
@@ -409,7 +410,7 @@ async function backfillKlineAndFlows(days: number) {
         const mapped = isPrice
           ? (rows as KlineRow[]).map((r) => ({ t: 1000 * Number(r[0]), o: +r[1], h: +r[2], l: +r[3], c: +r[4], v: +r[5] }))
           : (rows as { t: number }[]);
-        append(name, mapped, isPrice ? keyKline : keyFlow);
+        append(name, mapped, isPrice ? keyKline : keyFlow, isPrice ? { upsert: true } : undefined); // R1: kline pages can end mid-bar — last-write-wins
         const minTs = Math.min(...mapped.map((r: { t: number }) => r.t));
         if (minTs >= end * 1000 - STEP_MS) break;
         end = Math.floor(minTs / 1000) - 1;
@@ -431,7 +432,20 @@ async function backfillAllAssets(days: number) {
     const name = `kline:${inst}:m15`;
     const stored = lastTs(name, keyKline) ?? 0;
     const targetFrom = Math.max(Date.now() - backMs, stored);
-    if (Date.now() - targetFrom < STEP_MS) continue;
+    if (Date.now() - targetFrom < STEP_MS) {
+      // R1 STARTUP REPAIR (2026-11-14): even when the series is fresh, the
+      // last stored bars may be FROZEN PARTIALS — first-write-wins dedup used
+      // to lock the forming bar's early seconds forever (verified live: BTC
+      // 09:45 stored h=67138.7 vs true closed h=67499). Refetch the last
+      // window and upsert the corrected values over the frozen ones.
+      try {
+        const rows = await fetchKlines(inst, "m15", 96);
+        append(name, rows.map((r) => ({ t: 1000 * Number(r[0]), o: +r[1], h: +r[2], l: +r[3], c: +r[4], v: +r[5] })), keyKline, { upsert: true });
+      } catch {
+        /* repair is best-effort — the next poll's upsert also fixes the tail */
+      }
+      continue;
+    }
     markBackfilling(name, keyKline, true);
     let end = Math.floor(Date.now() / 1000) + 60;
     let guard = 0;
@@ -441,7 +455,7 @@ async function backfillAllAssets(days: number) {
         const rows = await fetchKlines(inst, "m15", 500, end);
         if (!rows.length) break;
         const mapped = rows.map((r) => ({ t: 1000 * Number(r[0]), o: +r[1], h: +r[2], l: +r[3], c: +r[4], v: +r[5] }));
-        append(name, mapped, keyKline);
+        append(name, mapped, keyKline, { upsert: true }); // R1: pages ending mid-bar need last-write-wins too
         const minTs = Math.min(...mapped.map((r) => r.t));
         if (minTs >= end * 1000 - STEP_MS) break;
         end = Math.floor(minTs / 1000) - 1;

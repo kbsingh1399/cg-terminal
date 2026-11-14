@@ -40,7 +40,7 @@ def get_mt5_window():
         if "MetaTrader" in cbuf.value or "MetaQuotes" in cbuf.value:
             buf = ctypes.create_unicode_buffer(256)
             u.GetWindowTextW(h, buf, 256)
-            if "FundedNext" in buf.value or "11808165" in buf.value:
+            if "FundedNext" in buf.value:
                 hwnd_mt5[0] = h
         return True
     u.EnumWindows(ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.wintypes.HWND, ctypes.wintypes.LPARAM)(cb), 0)

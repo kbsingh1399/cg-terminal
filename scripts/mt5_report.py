@@ -50,8 +50,12 @@ try:
     if acc is None:
         fail(f"account_info failed: {mt5.last_error()}")
     a = acc._asdict()
+    # SECURITY (external review AI-2, 2026-11-14): desk/mt5.json is desk-local
+    # and now gitignored, but the login is still a social-engineering aid and
+    # other desk copies may leak — never persist it. Local tools that need the
+    # account number read it from the MT5 terminal itself.
     account = {k: a.get(k) for k in
-               ("login", "currency", "leverage", "balance", "equity",
+               ("currency", "leverage", "balance", "equity",
                 "margin", "margin_free", "margin_level", "profit")}
 
     state = json.loads((ROOT / "desk" / "state.json").read_text())

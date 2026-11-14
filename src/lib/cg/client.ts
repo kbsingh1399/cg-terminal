@@ -170,7 +170,14 @@ async function cgGetInner(pathAndQuery: string, ttlMs: number, host: string): Pr
       return stale.data;
     }
     const rem = coolUntil - Date.now();
-    if (rem > 0 && rem <= 15_000) {
+    if (rem > 15_000) {
+      // R5 (external review, 2026-11-14): remaining window LONGER than the
+      // clamp used to fall through and fire the request INTO the ban (windows
+      // reach 25 s). Callers already treat a throw as "serve stale" — failing
+      // fast beats poking upstream mid-ban and re-extending it.
+      throw new Error(`cg cooldown: ${Math.round(rem / 1000)}s remaining on ${host}`);
+    }
+    if (rem > 0) {
       await new Promise((r) => setTimeout(r, rem));
     }
   }

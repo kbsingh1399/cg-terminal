@@ -647,7 +647,7 @@ async function main() {
   let md = `# 360 FULL-UNIVERSE TRADE FORMULATION ROUND\n\n`;
   md += `**Timestamp**: ${tsIso} (${tsEpoch})  \n`;
   md += `**Protocol**: \`desk/TRADE_FORMULATION_MANUAL.md\` v1.1.0 (Merged Canonical)  \n`;
-  md += `**Account**: Login 11808165 (FundedNext MT5) | Balance: $${mt5.account?.balance || 4643.54} | Equity: $${equity.toFixed(2)} | Heat Cap: 1.0% ($${heatCapUsd.toFixed(2)})  \n`;
+  md += `**Account**: FundedNext MT5 | Balance: $${mt5.account?.balance || 4643.54} | Equity: $${equity.toFixed(2)} | Heat Cap: 1.0% ($${heatCapUsd.toFixed(2)})  \n`;
   md += `**Operating Agent**: @desk (Swarm Execution & Formulation Desk)  \n`;
   md += `**Auditor**: @auditor (Independent Verification Desk)  \n\n`;
 
