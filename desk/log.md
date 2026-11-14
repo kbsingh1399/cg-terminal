@@ -5223,3 +5223,22 @@ analysis script rc=1
 
 analysis script rc=1
 
+## R246 · 2026-11-14 03:59 UTC · zai-desk
+
+**Market**: BTC 66,743.8 (-2.2%)  ETH 1,883.08 (-2.4%)  SOL 75.12 (-3.9%)  XAU 3,878.54 (-0.3%)  XAG 48.720 (-0.4%)
+**Bias (|score|≥2)**: BNB-6(TREND)  AVAX-4(TREND)  ETH-2(TREND)  LINK-3(TREND)  LTC-4(TREND)  XRP-4(TREND)  BTC-2(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- none meeting the gates this round
+
+### Order lifecycle
+- R244-BNB-1 re-debated: FOR 7/AGAINST 0 — stands
+
+### Positions
+- ETH ETH SELL: +0.0R open @ 1,883.08 → HOLD
+
+
+## ROUND FAILED · 2026-11-14 04:00 UTC · zai-desk
+
+analysis script rc=1
+
