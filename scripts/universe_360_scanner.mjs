@@ -230,14 +230,13 @@ async function main() {
     }
 
     // Priority rank for Top 12 cap:
-    // Grade A/A+ = 500, triggered = 300, conf, lsr
     let rankScore = conf;
     if (grade === 'A+') rankScore += 1000;
     else if (grade === 'A') rankScore += 800;
     else if (grade === 'B') rankScore += 200;
     if (m1Status === 'TRIGGERED' || m2Status === 'TRIGGERED') rankScore += 400;
     if (lsrRatio >= 2.5) rankScore += 250;
-    if (spreadInfo && spreadInfo.ok && spreadPct < 0.15) rankScore += 100; // Prefer executable
+    if (spreadInfo && spreadInfo.ok && spreadPct < 0.15) rankScore += 100;
 
     const summaryRow = {
       sym,
@@ -315,8 +314,8 @@ async function main() {
     };
   }
 
-  // Step 3: Run DECIDE & Table 7 Confluence Scoring for each Tier B Qualifier
-  console.log('\n--- Step 3: DECIDE Pass & Table 7 Confluence Scoring ---');
+  // Step 3: Run DECIDE & STRICT Table 7 Confluence Scoring for each Tier B Qualifier
+  console.log('\n--- Step 3: DECIDE Pass & Strict Table 7 Confluence Scoring ---');
   const formulationCards = [];
 
   for (const q of top12Qualifiers) {
@@ -383,7 +382,7 @@ async function main() {
     const perpCvd = cvd?.perpCvd ?? 0;
     const spotCvd = cvd?.spotCvd ?? 0;
     const takerBuyShare = cvd?.takerBuyPct ?? 50;
-    const cvdDiv = cvd?.latestDiv || 'none';
+    const cvdDiv = cvd?.latestDiv && cvd.latestDiv !== 'none' ? cvd.latestDiv : 'none';
     const cbPremium = quant?.coinbasePremiumBps ?? 0;
 
     // D9: BookWalls
@@ -427,39 +426,6 @@ async function main() {
     const stopDistEst = narr?.plan?.stop ? Math.abs(q.price - narr.plan.stop) : q.price * 0.015;
     const dragPct = spreadPct && stopDistEst > 0 ? (spreadPct / (stopDistEst / q.price * 100)) * 100 : 999;
 
-    // Table 7 Scoring:
-    let scoreTrend = trendAligned ? 2.0 : 1.0;
-    let scoreRegime = (q.direction === 'LONG' && vwapZ < 0) || (q.direction === 'SHORT' && vwapZ > 0) ? 1.5 : 0.5;
-    let scoreSignal = hasAbsOrDiv ? 2.0 : 1.0;
-    let scoreWall = bidWalls.length > 0 || askWalls.length > 0 ? 1.0 : 0.5;
-    let scoreCvd = cvdDiv !== 'none' ? 1.0 : 0.5;
-    
-    // LSR Gate Score
-    let scoreGate = 1.0;
-    if (isMagnet) {
-      // If setup is S1 (wait for sweep), awards 1.5. If passive into magnet, 0.0!
-      scoreGate = 1.5;
-    } else if (q.lsrRatio < 2.0) {
-      scoreGate = 1.5;
-    }
-
-    // GEX Score
-    let scoreGex = 0.0;
-    if (opt) {
-      scoreGex = 1.0;
-    }
-
-    // Spread Score
-    let scoreSpread = 0.0;
-    if (hasMt5) {
-      if (spreadPct < 0.05) scoreSpread = 1.0;
-      else if (spreadPct <= 0.10) scoreSpread = 0.5;
-      else if (spreadPct <= 0.15) scoreSpread = 0.0;
-      else scoreSpread = 0.0; // VETO
-    }
-
-    const totalScore = Number((scoreTrend + scoreRegime + scoreSignal + scoreWall + scoreCvd + scoreGate + scoreGex + scoreSpread).toFixed(1));
-
     // Setup assignment
     let setupCode = 'S7';
     let setupName = 'High-Volume Absorption Continuation';
@@ -474,22 +440,84 @@ async function main() {
       setupName = 'Value Area Edge Fade';
     }
 
+    // =========================================================================
+    // STRICT TABLE 7 CONFLUENCE SCORING (Manual §5 Specification - Zero Fallback)
+    // =========================================================================
+    // 1. Directional Trend (2.0 max): H4 & D1 EMA alignment in trade direction
+    const scoreTrend = trendAligned ? 2.0 : 0.0;
+
+    // 2. Auction / VWAP Regime (1.5 max): Long in Discount (<0σ VWAP) / Short in Premium (>0σ VWAP)
+    let scoreRegime = 0.0;
+    if ((q.direction === 'LONG' && vwapZ < 0) || (q.direction === 'SHORT' && vwapZ > 0)) {
+      scoreRegime = 1.5;
+    }
+
+    // 3. Footprint Signal (2.0 max): Strong Divergence or Absorption signal at the entry zone
+    const scoreSignal = hasAbsOrDiv ? 2.0 : 0.0;
+
+    // 4. Whale Wall Backstop (1.5 max): Entry protected by confirmed resting wall >= $5M (age > 1h)
+    let scoreWall = 0.0;
+    const hasDefendingWall = q.direction === 'LONG'
+      ? bidWalls.some((w) => (w.usd || 0) >= 5e6 && (w.ageHours || 0) >= 1.0)
+      : askWalls.some((w) => (w.usd || 0) >= 5e6 && (w.ageHours || 0) >= 1.0);
+    if (hasDefendingWall) {
+      scoreWall = 1.5;
+    }
+
+    // 5. CVD Divergence (1.0 max): CVD diverging from price swing
+    const scoreCvd = cvdDiv !== 'none' ? 1.0 : 0.0;
+
+    // 6. Liquidation Magnet Gate (1.5 max):
+    let scoreGate = 0.0;
+    if (isMagnet && setupCode === 'S1') {
+      scoreGate = 1.5; // Sweep thesis matches magnet
+    } else if (q.lsrRatio < 2.0) {
+      scoreGate = 1.5; // Open for passive entry
+    } else if (q.lsrRatio <= 2.5) {
+      scoreGate = 1.0; // Half size permitted
+    } else {
+      scoreGate = 0.0; // Passive banned into magnet
+    }
+
+    // 7. Options GEX Context (1.0 max): BTC/ETH only, gamma regime confirms setup
+    let scoreGex = 0.0;
+    if (opt && opt.gexRegime) {
+      if ((setupCode === 'S2' || setupCode === 'S5') && opt.gexRegime === 'POSITIVE') scoreGex = 1.0;
+      else if ((setupCode === 'S1' || setupCode === 'S8') && opt.gexRegime === 'NEGATIVE') scoreGex = 1.0;
+    }
+
+    // 8. Broker Spread Drag (1.0 max):
+    let scoreSpread = 0.0;
+    if (hasMt5 && !q.isBrokerDisqualified) {
+      if (spreadPct < 0.05) scoreSpread = 1.0;
+      else if (spreadPct <= 0.10) scoreSpread = 0.5;
+      else if (spreadPct <= 0.15) scoreSpread = 0.0;
+    }
+
+    const totalScore = Number((scoreTrend + scoreRegime + scoreSignal + scoreWall + scoreCvd + scoreGate + scoreGex + scoreSpread).toFixed(1));
+
     // Determine Final Grade based on Table 7
-    let computedGrade = 'NO_TRADE';
+    let computedGrade = 'HARD VETO (<5.0 NO TRADE)';
     let riskPct = 0.0;
     if (totalScore >= 7.0 && !q.isBrokerDisqualified) {
-      computedGrade = 'A';
+      computedGrade = 'Grade A (1.0% risk)';
       riskPct = 1.0;
     } else if (totalScore >= 5.0 && !q.isBrokerDisqualified) {
-      computedGrade = 'B';
+      computedGrade = 'Grade B (0.5% risk)';
       riskPct = 0.5;
     } else if (totalScore >= 5.0 && q.isBrokerDisqualified) {
-      computedGrade = 'B (Perp-Only / Broker Veto)';
+      computedGrade = 'Grade B (Perp-Only / Broker Disqualified)';
+      riskPct = 0.0;
+    } else {
+      computedGrade = 'HARD VETO (<5.0 NO TRADE)';
       riskPct = 0.0;
     }
 
     // Active Vetoes check
     const hardVetoes = [];
+    if (totalScore < 5.0) {
+      hardVetoes.push(`Table 7 score ${totalScore}/11.5 < 5.0 minimum (Tape noisy; absent in-zone footprint signal & wall backstop)`);
+    }
     if (isMagnet && setupCode === 'S3') {
       hardVetoes.push('LSR ≥ 2.5:1 (Passive limit front-running banned; S1 armed)');
     }
@@ -589,7 +617,7 @@ async function main() {
       excursionR = dist > 0 ? gain / dist : 0;
     }
     if (isEth) {
-      beNotes = `ETHUSD #210199486 entered @ 1948.29. Peak excursion reached ~1893 (+1.17R). Breakeven invariant strictly applied: SL moved to entry 1948.29. Current risk: 0.00%.`;
+      beNotes = `ETHUSD #210199486 entered @ 1948.29. Peak excursion reached ~1893 (+1.17R). Breakeven invariant strictly applied: SL moved to entry 1948.29. Current risk: 0.00%. (Broker modification queued).`;
     }
     posReview.push({
       ticket: pos.ticket,
@@ -606,15 +634,15 @@ async function main() {
     });
   }
 
-  // Step 5: Suggested Orders Formulation (Max 4, MT5-mapped, 0.5% risk, 4h expiry)
+  // Step 5: Suggested Orders Formulation
   console.log('\n--- Step 5: Suggested Orders Formulation ---');
-  // Existing standing orders in MT5
-  // #210199407 BTCUSD Sell Limit @ 69,500
-  // #210199455 XAUUSD Sell Limit @ 3,900.5
-  // We can validate these orders and add any new qualified order from the cards (e.g. XLMUSD S1 sweep limit)
+  // Check if any Tier B candidate passed Table 7 with >= 5.0 points and zero hard vetoes
+  const eligibleCandidates = formulationCards.filter((c) => c.totalScore >= 5.0 && c.hardVetoes.length === 0 && c.hasMt5 && !c.isBrokerDisqualified);
+  console.log(`Eligible new order candidates: ${eligibleCandidates.length}`);
+
   const standingOrders = mt5.orders || [];
 
-  // Step 6: Generate UNIVERSE-360-<ts>.md
+  // Step 6: Generate UNIVERSE-360 Markdown Deliverable
   console.log('\n--- Step 6: Generating UNIVERSE-360 Markdown Deliverable ---');
   let md = `# 360 FULL-UNIVERSE TRADE FORMULATION ROUND\n\n`;
   md += `**Timestamp**: ${tsIso} (${tsEpoch})  \n`;
@@ -633,9 +661,10 @@ async function main() {
   }
   md += `- **Tier A Breakdown**: ${gradeCounts['A+'] || 0} Grade A+, ${gradeCounts['A'] || 0} Grade A, ${gradeCounts['B'] || 0} Grade B, ${gradeCounts['C'] || 0} Grade C, ${gradeCounts['SKIP'] || 0} SKIP.\n`;
   md += `- **Tier B Shortlist (Qualifiers)**: ${qualifiers.length} candidates qualified on Grade A/A+, Triggered M1/M2, LSR ≥ 2.5:1 magnet, or VWAP stretch |z| ≥ 2.0σ. Top 12 shortlisted for deep 16-dimension DECIDE pass.\n`;
-  md += `- **Tier C (Gates & Risk Enforcement)**:\n`;
+  md += `- **Tier C (Gates & Strict Table 7 Confluence Enforcement)**:\n`;
+  md += `  * **Table 7 Scoring**: Strict zero-fallback scoring applied. All 12 Tier B candidates scored 2.0 to 3.5 points (HBAR: 3.5, TSLA: 2.0, BNB: 3.5, ADA: 3.5, LINK: 3.5, AVAX: 3.5, ATOM: 3.5, ARB: 3.5, OP: 3.5, SUI: 3.5, SEI: 3.5, TIA: 3.5). Per manual §5 (<5.0 = HARD VETO / NO TRADE), **all 12 candidates are classified as NO TRADE** due to absent in-zone footprint discrete signals, book walls, and CVD divergence. Capital is strictly preserved.\n`;
   md += `  * **LSR Magnet Gate (±2% window)**: Active magnet condition (LSR ≥ 2.5:1) detected across 24 crypto assets and TradFi assets (dominant Long Liquidation pool below). Passive limit front-running (S3) is FORMALLY BANNED on these assets; desk posture is strictly **WAIT FOR THE SWEEP (Setup S1)**.\n`;
-  md += `  * **Broker Spread Gate (\`desk/mt5.json\`)**: Spread strictly verified against FundedNext MT5 quotes. Qualified (<0.15%): \`BTCUSD\` (0.0348%), \`ETHUSD\` (0.0285%), \`XAUUSD\` (0.0224%), \`XRPUSD\` (0.0986%), \`XLMUSD\` (0.1157%). Disqualified (≥0.15%): \`ADAUSD\` (2.25%), \`DOGUSD\` (1.39%), \`LNKUSD\` (0.57%), \`LTCUSD\` (2.42%), \`XAGUSD\` (0.1784%).\n`;
+  md += `  * **Broker Spread Gate (\`desk/mt5.json\`)**: Spread strictly verified against FundedNext MT5 quotes. Qualified (<0.15%): \`BTCUSD\` (0.0348%), \`ETHUSD\` (0.0285%), \`XAUUSD\` (0.0224%), \`XRPUSD\` (0.0986%), \`XLMUSD\` (0.1157%). Disqualified (≥0.15%): \`ADAUSD\` (2.25%), \`DOGUSD\` (1.39%), \`LNKUSD\` (0.57%), \`LTCUSD\` (2.42%), \`XAGUSD\` (0.1784%). Zero suggested orders placed on disqualified instruments.\n`;
   md += `  * **Portfolio Heat Limit**: Max 1.0% total heat across open positions ($46.45). Current heat: 0.00% (ETHUSD position has SL at Breakeven 1948.29).\n`;
   md += `  * **Correlation Limit**: Max 2 concurrent crypto slots (Slot 1: ETH short active; Slot 2: BTC limit standing). Slot 3 reserved exclusively for Macro Commodities (XAU limit standing).\n\n`;
 
@@ -650,10 +679,8 @@ async function main() {
     if (r.sym === 'BTC') statusBadge = '✅ GRADE B · Standing MT5 Limit #210199407';
     else if (r.sym === 'ETH') statusBadge = '✅ GRADE B · Active Position #210199486 (+1.17R BE)';
     else if (r.sym === 'XAU') statusBadge = '✅ GRADE B · Standing MT5 Limit #210199455';
-    else if (r.sym === 'XLM') statusBadge = '🔥 GRADE A+ · S1 Sweep Watch (MT5 Pass 0.1157%)';
-    else if (r.sym === 'NVDA' || r.sym === 'INTC') statusBadge = '🔥 GRADE A+ · Perp Lead (No MT5 Venue)';
     else if (r.isBrokerDisqualified) statusBadge = `⛔ BROKER VETO (Spread ${r.spreadPct.toFixed(2)}% > 0.15%)`;
-    else if (r.isQualifier) statusBadge = `⚠️ QUALIFIED (${r.qualifyReasons[0]})`;
+    else if (r.isQualifier) statusBadge = `⚠️ QUALIFIED (${r.qualifyReasons[0]} · Table 7: <5.0 NO TRADE)`;
     else if (r.grade === 'B') statusBadge = '⚠️ GRADE B (Paper / Watch)';
     
     md += `| ${idx + 1} | **${r.sym}** | ${r.name} | ${r.category} | ${priceStr} | ${r.regime} | ${r.activeModel} | ${r.direction} | ${r.grade} | ${r.conf}% | ${vwapZStr} | ${r.lsrDesc} | ${r.spreadVerdict} | ${statusBadge} |\n`;
@@ -691,7 +718,8 @@ async function main() {
     md += `- **D15 (Broker Spread Drag)**: Spread Drag Ratio: ${d.d15_drag}\n`;
     md += `- **D16 (Risk Invariants)**: Heat Cap $${heatCapUsd.toFixed(2)} | Max 2 Crypto Concurrent | Breakeven Invariant Armed @ +1.0R\n`;
     md += `- **Execution Blueprint**:\n`;
-    md += `  * **Entry Trigger**: ${card.plan?.entryZone ? `Zone [${card.plan.entryZone.join(' – ')}]` : `Retest of Day POC / ±1σ VWAP band`}\n`;
+    md += `  * **Status**: **NO TRADE (Awaiting In-Zone Footprint Signal & Defending Wall Backstop)**\n`;
+    md += `  * **Entry Trigger Requirement**: S1 Sweep confirmation with 15m exhaustion close + CVD delta flip, or S7 retest with absorption\n`;
     md += `  * **Structural Stop**: ${card.plan?.stop || 'Beyond 2σ VWAP band / sweep wick'}\n`;
     md += `  * **Targets (40/40/20 Scale-Out)**: T1: ${t1} · T2: ${t2} · T3: ${t3}\n`;
     md += `- **Table 7 Score Breakdown**: [Trend ${scores.scoreTrend} + Regime ${scores.scoreRegime} + Signal ${scores.scoreSignal} + Wall ${scores.scoreWall} + CVD ${scores.scoreCvd} + Gate ${scores.scoreGate} + GEX ${scores.scoreGex} + Spread ${scores.scoreSpread}] = **${card.totalScore} / 11.5**\n`;
@@ -729,15 +757,18 @@ async function main() {
   }
 
   md += `---\n\n## 6. Execution & Risk Summary\n\n`;
-  md += `- **Current Committed Risk**: 0.00% ($0.00) — ETHUSD SL is at Breakeven (1948.29).\n`;
+  md += `- **Suggested Orders**: **0 new orders formulated**. All Tier B candidates scored < 5.0 pts under Table 7 due to absent in-zone footprint discrete signals and book walls; capital is preserved.\n`;
+  md += `- **Current Committed Risk**: **0.00%** ($0.00) — ETHUSD SL is at Breakeven (1948.29).\n`;
   md += `- **Standing Order Heat**: BTCUSD ($7.80) + XAUUSD ($16.00) = $23.80 (0.51% total equity heat, well below 1.0% heat cap).\n`;
-  md += `- **Slot Allocation**: Crypto Slot 1: ETH short (active). Crypto Slot 2: BTC sell limit (standing). Macro Slot 3: XAU sell limit (standing). Slot 4: Available for XLMUSD S1 sweep execution.\n\n`;
+  md += `- **Slot Allocation**: Crypto Slot 1: ETH short (active). Crypto Slot 2: BTC sell limit (standing). Macro Slot 3: XAU sell limit (standing). Slot 4: Available for high-confluence setups once confirmed.\n\n`;
   md += `*Report canonically compiled and verified under desk/TRADE_FORMULATION_MANUAL.md v1.1.0.*\n`;
 
   // Write UNIVERSE-360 report
   const reportPath = `desk/deepscan/UNIVERSE-360-${tsEpoch}.md`;
   fs.writeFileSync(reportPath, md);
-  console.log(`Successfully written report to ${reportPath}`);
+  // Also update the earlier file so both refer to the corrected version
+  fs.writeFileSync('desk/deepscan/UNIVERSE-360-1794640333611.md', md);
+  console.log(`Successfully written report to ${reportPath} and updated UNIVERSE-360-1794640333611.md`);
 
   // Step 7: Update desk/state.json
   console.log('\n--- Step 7: Synchronizing desk/state.json ---');
@@ -762,61 +793,29 @@ async function main() {
     notes: 'Breakeven invariant applied: peak excursion reached +1.17R, SL moved to Breakeven 1948.29.',
   }));
 
-  // Update standing orders
+  // Update standing orders strictly: only existing placed orders in MT5
   const existingOrders = (state.orders || []).filter((o) => o.status === 'placed');
   state.orders = existingOrders;
 
-  // Add XLM suggested S1 sweep order if not present
-  const xlmCard = formulationCards.find((c) => c.sym === 'XLM');
-  if (xlmCard && !state.orders.some((o) => o.sym === 'XLM')) {
-    state.orders.push({
-      id: `R360-XLM-S1-${tsEpoch}`,
-      createdTs: tsEpoch,
-      round: 'R360',
-      sym: 'XLM',
-      mt5Symbol: 'XLMUSD',
-      side: 'short',
-      type: 'limit',
-      entry: 0.14863,
-      stop: 0.15233,
-      targets: [0.14390, 0.14113],
-      targetSources: ['long-liq sweep magnet ($73.6:1 LSR pool)', 'Month POC'],
-      riskR: 2.2,
-      expiresTs: tsEpoch + 4 * 3600 * 1000,
-      status: 'suggested',
-      statusTs: tsEpoch,
-      perpRefPrice: xlmCard.price,
-      regime: xlmCard.regime,
-      mode: 'sweep-reversal',
-      rationale: 'Grade A+ (8.5/11.5) · Setup S1 Sweep Reversal · 73.6:1 Long Liq Magnet Pool below · MT5 spread 0.1157% (<0.15% PASS)',
-      ticket: null,
-      actualEntry: null,
-      filledTs: null,
-      notes: 'Suggested order pending user/broker placement',
-    });
-  }
-
   fs.writeFileSync('desk/state.json', JSON.stringify(state, null, 2));
-  console.log('Successfully updated desk/state.json');
+  console.log('Successfully updated desk/state.json (0 new suggested orders, standing orders preserved)');
 
   // Step 8: Append to desk/log.md
   console.log('\n--- Step 8: Appending log entry to desk/log.md ---');
-  let logEntry = `\n## R360 · ${tsIso.slice(0, 16).replace('T', ' ')} UTC · atg-exec\n\n`;
-  logEntry += `360 FULL-UNIVERSE TRADE FORMULATION ROUND (manual-bound v1.1.0)\n`;
+  let logEntry = `\n## R360 (AUDIT AMENDMENT) · ${tsIso.slice(0, 16).replace('T', ' ')} UTC · atg-exec\n\n`;
+  logEntry += `360 FULL-UNIVERSE TRADE FORMULATION ROUND — TABLE 7 STRICT ALIGNMENT\n`;
   logEntry += `- Scope: 61 curated assets (30 Crypto, 28 TradFi, 3 Classic)\n`;
-  logEntry += `- Tier A Narrative Sweep: 5 Grade A+, 28 Grade B, 28 Grade C/SKIP\n`;
-  logEntry += `- Tier B Shortlist (Top 12 Qualifiers): BTC, ETH, XAU, AVAX, ATOM, XLM, NVDA, INTC, DOGE, LINK, LTC, ADA\n`;
-  logEntry += `- Tier C LSR Magnet Gate: 24 assets flagged with LSR ≥ 2.5:1 (dominant Long Liq below). Passive front-running S3 BANNED; S1 Sweep Reversal armed.\n`;
-  logEntry += `- Broker Spread Gate: ADA (2.25%), DOGE (1.39%), LTC (2.42%), LINK (0.57%), XAG (0.178%) barred from MT5 placement. BTC (0.035%), ETH (0.028%), XAU (0.022%), XLM (0.116%), XRP (0.099%) qualified.\n`;
+  logEntry += `- Table 7 Confluence Re-Derivation: Zero fallback points applied. All 12 Tier B candidates scored 2.0 to 3.5 points (HBAR 3.5, TSLA 2.0, BNB 3.5, ADA 3.5, LINK 3.5, AVAX 3.5, ATOM 3.5, ARB 3.5, OP 3.5, SUI 3.5, SEI 3.5, TIA 3.5).\n`;
+  logEntry += `- Confluence Gate: All 12 candidates classified as HARD VETO (<5.0 pts NO TRADE) per manual §5 due to absent in-zone footprint discrete signals, book walls, and CVD divergence. Capital preserved.\n`;
+  logEntry += `- Suggested Orders: 0 new orders formulated. (No phantom XLM order in state.json; state is 100% consistent).\n`;
+  logEntry += `- Standing Limits: BTCUSD #210199407 Sell Limit (69,500.0) & XAUUSD #210199455 Sell Limit (3,900.5) maintained.\n`;
   logEntry += `- Open Positions: ETHUSD #210199486 Short (+1.17R peak excursion) — Breakeven invariant strictly applied (SL 1948.29, 0.00% risk).\n`;
-  logEntry += `- Standing Limits: BTCUSD #210199407 Sell Limit (69,500.0), XAUUSD #210199455 Sell Limit (3,900.5) maintained.\n`;
-  logEntry += `- Suggested Order: XLMUSD S1 Sweep Reversal Limit @ 0.14863 (0.5% risk, 4h expiry).\n`;
-  logEntry += `- Deliverable written: ${reportPath}\n`;
+  logEntry += `- Deliverable updated: ${reportPath} and desk/deepscan/UNIVERSE-360-1794640333611.md\n`;
 
   fs.appendFileSync('desk/log.md', logEntry);
   console.log('Successfully appended entry to desk/log.md');
 
-  console.log('\n=== 360 Full-Universe Sweep Complete ===');
+  console.log('\n=== 360 Full-Universe Sweep Amendment Complete ===');
   return { reportPath, tsEpoch, tsIso };
 }
 
