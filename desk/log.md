@@ -5441,3 +5441,19 @@ analysis script rc=1
 
 analysis script rc=1
 
+## R258 · 2026-11-14 08:59 UTC · zai-desk
+
+**Market**: BTC 66,955.0 (-1.9%)  ETH 1,894.30 (-1.8%)  SOL 75.20 (-3.8%)
+**Bias (|score|≥2)**: ADA-4(TREND)  BNB-4(TREND)  BTC-3(TREND)  SOL-2(TREND)  ETH-2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- none meeting the gates this round
+
+### Positions
+- ETH ETH SELL: +0.0R open @ 1,894.30 → HOLD
+
+
+## ROUND FAILED · 2026-11-14 09:00 UTC · zai-desk
+
+analysis script rc=1
+
