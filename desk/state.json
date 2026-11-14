@@ -27,8 +27,8 @@
     }
   },
   "analysis": {
-    "last_round": "R263",
-    "last_round_ts": 1794655747032,
+    "last_round": "R264",
+    "last_round_ts": 1794657016913,
     "engine": "v3.2 (regime-aware: trend-pullback + mean-revert templates | 9-source debate + microFlow vote | FOR>=3 & FOR>AGAINST | min R 2.0 | perpRefPrice basis stamp)",
     "assets": {
       "BTC": {
@@ -356,8 +356,8 @@
       ],
       "riskR": 2.1,
       "expiresTs": 1794670147032,
-      "status": "suggested",
-      "statusTs": 1794655747032,
+      "status": "rejected",
+      "statusTs": 1794657016913,
       "perpRefPrice": 9.585,
       "regime": "TREND-DOWN",
       "mode": "trend-pullback",
@@ -412,7 +412,7 @@
       "ticket": null,
       "actualEntry": null,
       "filledTs": null,
-      "notes": null
+      "notes": "Rejected / Disqualified: LNKUSD broker spread 0.5666% exceeds 0.15% Broker Spread Gate · Crypto slots 2/2 saturated (ETHUSD active #210199486 + BTCUSD limit #210199407) · Desk R 0.36 < 2.0"
     }
   ],
   "positions": [

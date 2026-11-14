@@ -5612,3 +5612,30 @@ analysis script rc=1
 
 analysis script rc=1
 
+
+
+## 360 FULL-UNIVERSE TRADE FORMULATION ROUND · 2026-11-14 11:50 UTC · lead-6
+
+- **Scope**: All 61 curated assets (30 Crypto USDT-M Perps, 28 TradFi USDT-M Perps, 3 Classic Benchmarks).
+- **Session Posture**: Weekend Session — TradFi 28 + Classic 3 tagged as **WEEKEND MARKET HALT / CLOSED** (no execution possible until Sunday 21:00 UTC). Crypto 30 evaluated on 100% live Coinglass API data.
+- **Table 7 Confluence Scoring**: Zero-fallback mandate enforced. Unfulfilled dimensions receive strictly 0.0 pts.
+  * BTC: 8.5 / 11.5 pts (Grade A) — Standing Sell Limit #210199407 (69,500.0) active at Day VAH retest (Slot 2).
+  * ETH: 8.0 / 11.5 pts (Grade A) — Active Position #210199486 Short locked at Breakeven (1948.29, $0.00 risk, Slot 1).
+  * XRP: 7.0 / 11.5 pts (Grade A) — Blocked on MT5 (M1 R 0.35 < 1.5 Desk R-standard & Crypto Slots 2/2 Full).
+  * BNB: 8.0 / 11.5 pts (Grade A) — Tier 2 Crypto Perp Venue Candidate (No MT5 Venue & LSR 2.6:1 Magnet Gate).
+  * Tier 2 Candidates (Binance / Bybit / Hyperliquid): AVAX (8.0 A), NEAR (8.0 A), UNI (8.0 A), LINK (8.0 A), LTC (8.0 A), 1000SHIB (8.0 A), SEI (7.3 A), TIA (7.3 A), VET (7.3 A), SUI (7.0 A), ADA (6.5 B), ICP (6.3 B), APT (6.3 B), OP (6.3 B), DOT (5.8 B), FIL (5.5 B), 1000PEPE (5.3 B), SOL (5.0 B), HBAR (5.0 B).
+  * Hard Vetoes (< 5.0 pts): ATOM (4.3 pts), ARB (4.3 pts), INJ (0.0 pts).
+- **Liquidation Magnet Gate (±2% LSR ≥ 2.5:1)**:
+  * Magnet condition active across 14 assets: BNB (2.6:1 LB), LTC (3.5:1 LB), UNI (3.7:1 LB), ATOM (3.5:1 SA), ICP (17.9:1 LB), HBAR (6.8:1 SA), ARB (10.7:1 SA), OP (2.7:1 LB), SUI (2.8:1 LB), SEI (5.3:1 LB), INJ (2.9:1 LB), VET (8.9:1 LB), 1000PEPE (4.5:1 SA), 1000SHIB (2.6:1 LB).
+  * Passive front-running (S3) strictly BANNED; desk posture is WAIT FOR THE SWEEP (Setup S1).
+- **Broker Spread Gate (`desk/mt5.json`)**:
+  * Qualified (<0.15%): BTCUSD (0.0348%), ETHUSD (0.0285%), XRPUSD (0.0986%), XLMUSD (0.1157%), XAUUSD (0.0224%).
+  * Disqualified (≥0.15%): ADA (2.25%), DOGE (1.39%), LTC (2.42%), LINK (0.57%), XAG (0.1784%). Zero suggested orders placed on disqualified instruments.
+  * Audit of R263-LINK-1: Formally REJECTED / DISQUALIFIED due to LNKUSD broker spread 0.5666% exceeding 0.15% gate, crypto slots 2/2 saturated, and Desk R 0.36 < 2.0. Status in `desk/state.json` updated to `"rejected"`. Exactly 0 suggested orders remain on disqualified assets.
+- **Position & Invariant Audit**:
+  * ETHUSD Short (#210199486): +1.0R Breakeven invariant verified locked at 1948.29 (+2.03R MT5 / +2.31R perp floating excursion; $0.00 downside risk). 8-bar time stop satisfied as excursion exceeded +0.5R.
+  * Standing Limits: BTCUSD #210199407 (0.01 @ 69,500.0) & XAUUSD #210199455 (0.01 @ 3,900.5) structurally validated and maintained.
+  * Portfolio Heat: Active risk = $0.00 (ETH at BE); contingent risk if all standing limits fill = $9.40 (0.20% equity heat), well under $46.45 cap (1.0%).
+  * Concurrency: Crypto Slot 1 (ETH) + Crypto Slot 2 (BTC) = 2/2 slots FULL. Slot 3 (Macro Commodity) = XAU limit. Zero new crypto orders allowed.
+- **Deliverables**:
+  * Authored and persisted `desk/deepscan/UNIVERSE-360-1794657016913.md` (complete 61-asset matrix, 16-D DECIDE cards for Tier 1 and Tier 2 candidates).
