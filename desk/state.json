@@ -27,42 +27,43 @@
     }
   },
   "analysis": {
-    "last_round": "R258",
-    "last_round_ts": 1794646746669,
+    "last_round": "R259",
+    "last_round_ts": 1794648547351,
     "engine": "v3.2 (regime-aware: trend-pullback + mean-revert templates | 9-source debate + microFlow vote | FOR>=3 & FOR>AGAINST | min R 2.0 | perpRefPrice basis stamp)",
     "assets": {
       "BTC": {
-        "price": 66955,
-        "chgDayPct": -1.9402517289154375,
-        "score": -3.46,
+        "price": 67129.9,
+        "chgDayPct": -1.684099836261982,
+        "score": -4.88,
         "parts": {
-          "notif": -1.29,
-          "signals": 0.33,
+          "notif": -0.93,
+          "signals": -1,
           "trend": -2.0,
           "vwap": -1,
-          "rsi": 0.5
+          "rsi": 0.5,
+          "cvd": -0.45
         },
         "error": null
       },
       "ETH": {
-        "price": 1894.3,
-        "chgDayPct": -1.8095489863726646,
-        "score": -2.16,
+        "price": 1904.12,
+        "chgDayPct": -1.3005323422540909,
+        "score": 1.32,
         "parts": {
-          "notif": -0.65,
-          "signals": 0.99,
+          "notif": 1.32,
+          "signals": 1,
           "trend": -2.0,
-          "vwap": -1,
-          "rsi": 0.5
+          "vwap": 1,
+          "rsi": 0
         },
         "error": null
       },
       "SOL": {
-        "price": 75.2,
-        "chgDayPct": -3.7994115389535614,
-        "score": -2.47,
+        "price": 75.63,
+        "chgDayPct": -3.2493283868491827,
+        "score": -0.86,
         "parts": {
-          "notif": -0.97,
+          "notif": 0.64,
           "signals": 1,
           "trend": -2.0,
           "vwap": -1,
@@ -71,11 +72,11 @@
         "error": null
       },
       "BNB": {
-        "price": 614.55,
-        "chgDayPct": -2.55601186040243,
-        "score": -3.51,
+        "price": 616.42,
+        "chgDayPct": -2.2595017996733633,
+        "score": -2.18,
         "parts": {
-          "notif": -0.01,
+          "notif": 1.32,
           "signals": -1,
           "trend": -2.0,
           "vwap": -1,
@@ -84,94 +85,139 @@
         "error": null
       },
       "XRP": {
-        "price": 0.9827,
-        "chgDayPct": -2.7607361963190113,
-        "score": -0.19,
+        "price": 0.9881,
+        "chgDayPct": -2.226400158321786,
+        "score": -1.05,
         "parts": {
-          "notif": 1.31,
+          "notif": 0.95,
           "signals": 1,
-          "trend": -2.0,
-          "vwap": -1,
-          "rsi": 0.5
-        },
-        "error": null
-      },
-      "ADA": {
-        "price": 0.1626,
-        "chgDayPct": -3.5014836795252324,
-        "score": -4.0,
-        "parts": {
-          "notif": -0.0,
-          "signals": -1,
           "trend": -2.0,
           "vwap": -1,
           "rsi": 0
         },
         "error": null
       },
+      "ADA": {
+        "price": 0.1632,
+        "chgDayPct": -3.1454005934718094,
+        "score": -2.99,
+        "parts": {
+          "notif": 0.0,
+          "signals": 0.33,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0,
+          "cvd": -0.32
+        },
+        "error": null
+      },
       "AVAX": {
-        "price": null,
-        "chgDayPct": null,
-        "score": null,
-        "parts": {},
-        "error": "market: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>; signals: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+        "price": 8.034,
+        "chgDayPct": -2.3815309842041277,
+        "score": -4.15,
+        "parts": {
+          "notif": -0.65,
+          "signals": -1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0,
+          "cvd": 0.5
+        },
+        "error": null
       },
       "DOGE": {
-        "price": null,
-        "chgDayPct": null,
-        "score": null,
-        "parts": {},
-        "error": "market: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>; signals: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+        "price": 0.0628,
+        "chgDayPct": -2.635658914728693,
+        "score": -5.68,
+        "parts": {
+          "notif": -1.6,
+          "signals": -0.66,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0,
+          "cvd": -0.43
+        },
+        "error": null
       },
       "LINK": {
-        "price": null,
-        "chgDayPct": null,
-        "score": null,
-        "parts": {},
-        "error": "market: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>; signals: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+        "price": 9.617,
+        "chgDayPct": -2.3853024766544806,
+        "score": -3.6,
+        "parts": {
+          "notif": -0.95,
+          "signals": -0.33,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0,
+          "cvd": 0.68
+        },
+        "error": null
       },
       "LTC": {
-        "price": null,
-        "chgDayPct": null,
-        "score": null,
-        "parts": {},
-        "error": "market: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>; signals: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+        "price": 48.18,
+        "chgDayPct": -2.3708206686930127,
+        "score": -3.73,
+        "parts": {
+          "notif": -0.33,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": -1,
+          "rsi": 0,
+          "cvd": -1.4
+        },
+        "error": null
       },
       "XAU": {
-        "price": null,
-        "chgDayPct": null,
-        "score": null,
-        "parts": {},
-        "error": "market: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>; signals: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+        "price": 3884.61,
+        "chgDayPct": -0.09798324255095761,
+        "score": 0.0,
+        "parts": {
+          "notif": 0.0,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": 1,
+          "rsi": 0
+        },
+        "error": null
       },
       "XAG": {
-        "price": null,
-        "chgDayPct": null,
-        "score": null,
-        "parts": {},
-        "error": "market: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>; signals: <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>"
+        "price": 48.9,
+        "chgDayPct": -0.040883074407201805,
+        "score": 1.49,
+        "parts": {
+          "notif": 0.99,
+          "signals": 1,
+          "trend": -2.0,
+          "vwap": 1,
+          "rsi": 0.5
+        },
+        "error": null
       }
     },
     "watchlist": [
       {
-        "sym": "ADA",
-        "score": -4.0
+        "sym": "DOGE",
+        "score": -5.68
       },
       {
-        "sym": "BNB",
-        "score": -3.51
+        "sym": "AVAX",
+        "score": -4.15
       },
       {
         "sym": "BTC",
-        "score": -3.46
+        "score": -4.88
       },
       {
-        "sym": "SOL",
-        "score": -2.47
+        "sym": "LINK",
+        "score": -3.6
       },
       {
-        "sym": "ETH",
-        "score": -2.16
+        "sym": "ADA",
+        "score": -2.99
+      },
+      {
+        "sym": "LTC",
+        "score": -3.73
       }
     ]
   },
@@ -232,34 +278,34 @@
       "expiresTs": 1794655745349,
       "status": "suggested",
       "statusTs": 1794641345349,
-      "perpRefPrice": 8.036,
+      "perpRefPrice": 8.034,
       "regime": "TREND-DOWN",
       "mode": "trend-pullback",
       "debate": [
         {
           "source": "overview",
           "verdict": "FOR",
-          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (8.036 vs 8.083), h4 RSI 40.3, day -2.4%"
+          "evidence": "h4 \u2193/d1 \u2193 EMA, price below day VWAP (8.034 vs 8.079), h4 RSI 40.2, day -2.4%"
         },
         {
           "source": "footprint",
           "verdict": "FOR",
-          "evidence": "bull 23 / bear 40; recent: Absorption/sell[time], Divergence/buy[vol], Exhaustion/buy[range]"
+          "evidence": "bull 19 / bear 36; recent: Absorption/sell[time], Divergence/buy[vol], Exhaustion/sell[range]"
         },
         {
           "source": "microFlow(abs/trap/exh)",
           "verdict": "FOR",
-          "evidence": "6h micro-events: abs:buy\u00d71, abs:sell\u00d74, div:buy\u00d74, exh:buy\u00d71, exh:sell\u00d74, sdiv:sell\u00d71, trap:sell\u00d72 \u2014 net 6 buy-side vs 11 sell-side"
+          "evidence": "6h micro-events: abs:buy\u00d71, abs:sell\u00d72, div:buy\u00d73, exh:buy\u00d71, exh:sell\u00d74, trap:sell\u00d71 \u2014 net 5 buy-side vs 7 sell-side"
         },
         {
           "source": "largeOrders",
           "verdict": "NEUTRAL",
-          "evidence": "1 walls \u2265$5M, none within 2% of price"
+          "evidence": "0 walls \u2265$5M, none within 2% of price"
         },
         {
           "source": "liquidation",
           "verdict": "FOR",
-          "evidence": "long-liq magnet 7.920 (str 42, ~$1M est, -1.36%) as target"
+          "evidence": "long-liq magnet 7.920 (str 44, ~$1M est, -1.54%) as target"
         },
         {
           "source": "stops(BTC heatmap)",
@@ -269,17 +315,17 @@
         {
           "source": "bookWalls",
           "verdict": "FOR",
-          "evidence": "\u00b15% depth imbalance +0.026 (5m ago +0.064, falling bids); bid $0.01B vs ask $0.01B"
+          "evidence": "\u00b15% depth imbalance +0.057 (5m ago -0.013, rising bids); bid $0.01B vs ask $0.01B"
         },
         {
           "source": "cvd",
           "verdict": "FOR",
-          "evidence": "taker buy 48.5%, perpCvd -32, spotCvd +0, quadrant both-selling, latestDiv bull (recent)"
+          "evidence": "taker buy 48.0%, perpCvd -24, spotCvd +0, quadrant spot-bid, latestDiv bull (recent)"
         },
         {
           "source": "notifications",
           "verdict": "FOR",
-          "evidence": "6h weighted bias -1.0 (5 events)"
+          "evidence": "6h weighted bias -1.9 (2 events)"
         }
       ],
       "rationale": "recent signals: Absorption/sell (time), Divergence/buy (vol), Absorption/sell (range); confluence -5.4 [notif -2.0 \u00b7 signals -1.0 \u00b7 trend -2 \u00b7 vwap -1 \u00b7 rsi +0.0 \u00b7 cvd +0.6] \u00b7 debate FOR 7/AGAINST 0; entry VWAP+1\u03c3/day-POC 8.094 [trend-pullback \u00b7 TREND-DOWN]; stop beyond 2\u03c3 zone; T1 long-liq cluster str 46 (~$1M est) \u00b7 T2 long-liq cluster str 42 (~$1M est) \u00b7 T3 \u2014; levels are PERP prices \u2014 translate to broker via live basis before MT5; liq clusters are Coinglass estimates",
