@@ -5369,3 +5369,14 @@ analysis script rc=1
 - Standing Limits: BTCUSD #210199407 Sell Limit (69,500.0), XAUUSD #210199455 Sell Limit (3,900.5) maintained.
 - Suggested Order: XLMUSD S1 Sweep Reversal Limit @ 0.14863 (0.5% risk, 4h expiry).
 - Deliverable written: desk/deepscan/UNIVERSE-360-1794640333611.md
+
+## R360 (AUDIT AMENDMENT) · 2026-11-14 07:22 UTC · atg-exec
+
+360 FULL-UNIVERSE TRADE FORMULATION ROUND — TABLE 7 STRICT ALIGNMENT
+- Scope: 61 curated assets (30 Crypto, 28 TradFi, 3 Classic)
+- Table 7 Confluence Re-Derivation: Zero fallback points applied. All 12 Tier B candidates scored 2.0 to 3.5 points (HBAR 3.5, TSLA 2.0, BNB 3.5, ADA 3.5, LINK 3.5, AVAX 3.5, ATOM 3.5, ARB 3.5, OP 3.5, SUI 3.5, SEI 3.5, TIA 3.5).
+- Confluence Gate: All 12 candidates classified as HARD VETO (<5.0 pts NO TRADE) per manual §5 due to absent in-zone footprint discrete signals, book walls, and CVD divergence. Capital preserved.
+- Suggested Orders: 0 new orders formulated. (No phantom XLM order in state.json; state is 100% consistent).
+- Standing Limits: BTCUSD #210199407 Sell Limit (69,500.0) & XAUUSD #210199455 Sell Limit (3,900.5) maintained.
+- Open Positions: ETHUSD #210199486 Short (+1.17R peak excursion) — Breakeven invariant strictly applied (SL 1948.29, 0.00% risk).
+- Deliverable updated: desk/deepscan/UNIVERSE-360-1794640965840.md and desk/deepscan/UNIVERSE-360-1794640333611.md
