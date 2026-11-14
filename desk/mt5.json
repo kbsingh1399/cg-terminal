@@ -1,5 +1,5 @@
 {
-  "ts": 1794646886329,
+  "ts": 1794648802745,
   "error": null,
   "account": {
     "login": 11808165,
@@ -68,8 +68,8 @@
       "spreadPct": 2.2499,
       "tradeAllowed": true,
       "asset": "ADA",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 0.1636,
+      "basisPct": 3.2396,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -97,8 +97,8 @@
       "spreadPct": 0.0348,
       "tradeAllowed": true,
       "asset": "BTC",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 67204.1,
+      "basisPct": 1.7786,
       "spec": {
         "contractSize": 1.0,
         "volumeMin": 0.01,
@@ -118,8 +118,8 @@
       "spreadPct": 1.3921,
       "tradeAllowed": true,
       "asset": "DOGE",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 0.06291,
+      "basisPct": 2.7659,
       "spec": {
         "contractSize": 1000.0,
         "volumeMin": 0.01,
@@ -139,8 +139,8 @@
       "spreadPct": 0.0285,
       "tradeAllowed": true,
       "asset": "ETH",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 1907.91,
+      "basisPct": 1.0459,
       "spec": {
         "contractSize": 1.0,
         "volumeMin": 0.01,
@@ -160,8 +160,8 @@
       "spreadPct": 0.5666,
       "tradeAllowed": true,
       "asset": "LINK",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 9.62,
+      "basisPct": 2.7443,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -181,8 +181,8 @@
       "spreadPct": 2.4241,
       "tradeAllowed": true,
       "asset": "LTC",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 48.22,
+      "basisPct": 3.5151,
       "spec": {
         "contractSize": 1.0,
         "volumeMin": 0.01,
@@ -206,8 +206,8 @@
       "spreadPct": 0.0794,
       "tradeAllowed": true,
       "asset": "UKO",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 93.52,
+      "basisPct": 5.0289,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -227,8 +227,8 @@
       "spreadPct": 0.0831,
       "tradeAllowed": true,
       "asset": "USO",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 87.62,
+      "basisPct": 1.6857,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -248,8 +248,8 @@
       "spreadPct": 0.1784,
       "tradeAllowed": true,
       "asset": "XAG",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 48.91,
+      "basisPct": -0.2954,
       "spec": {
         "contractSize": 5000.0,
         "volumeMin": 0.01,
@@ -269,8 +269,8 @@
       "spreadPct": 0.0224,
       "tradeAllowed": true,
       "asset": "XAU",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 3884.59,
+      "basisPct": -0.0112,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -290,8 +290,8 @@
       "spreadPct": 0.1157,
       "tradeAllowed": true,
       "asset": "XLM",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 0.14355,
+      "basisPct": 2.3163,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -311,8 +311,8 @@
       "spreadPct": 0.2925,
       "tradeAllowed": true,
       "asset": "XMR",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 528.25,
+      "basisPct": 0.9655,
       "spec": {
         "contractSize": 1.0,
         "volumeMin": 0.01,
@@ -332,8 +332,8 @@
       "spreadPct": 0.5765,
       "tradeAllowed": true,
       "asset": "XPT",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 1496.07,
+      "basisPct": -0.2814,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -353,8 +353,8 @@
       "spreadPct": 0.0986,
       "tradeAllowed": true,
       "asset": "XRP",
-      "perpMid": null,
-      "basisPct": null,
+      "perpMid": 0.9899,
+      "basisPct": 2.4043,
       "spec": {
         "contractSize": 100.0,
         "volumeMin": 0.01,
@@ -369,22 +369,42 @@
   },
   "positioning": {
     "BTC": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "error": "timed out"
     },
     "ETH": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0.000999,
+      "oiUsd": 23140972189,
+      "oiDelta1hPct": 0.49,
+      "oiDelta4hPct": 0.35,
+      "oiDelta24hPct": -3.4
     },
     "SOL": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": -0.001026,
+      "oiUsd": 4529556389,
+      "oiDelta1hPct": 0.62,
+      "oiDelta4hPct": 0.89,
+      "oiDelta24hPct": -4.76
     },
     "BNB": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": -0.000693,
+      "oiUsd": 1001376013,
+      "oiDelta1hPct": 0.44,
+      "oiDelta4hPct": -0.51,
+      "oiDelta24hPct": -3.78
     },
     "DOGE": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": -0.008727,
+      "oiUsd": 831815722,
+      "oiDelta1hPct": 0.68,
+      "oiDelta4hPct": 0.36,
+      "oiDelta24hPct": -2.41
     },
     "XAU": {
-      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refu"
+      "fundingPct8h": 0,
+      "oiUsd": 1798213487,
+      "oiDelta1hPct": 0.09,
+      "oiDelta4hPct": -0.6,
+      "oiDelta24hPct": -0.46
     }
   }
 }

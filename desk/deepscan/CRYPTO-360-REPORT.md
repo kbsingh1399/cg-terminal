@@ -1,7 +1,7 @@
 # CRYPTO DOMAIN 360° SCREENING & DEEP TELEMETRY REPORT
 
 **Domain Analyst**: `@crypto-3`
-**Timestamp**: 2026-11-14T09:26:58.481Z (Epoch 1794648418482)
+**Timestamp**: 2026-11-14T09:40:12.406Z (Epoch 1794649212407)
 **Coverage**: 30 Curated Crypto USDT-M Perpetual Futures (Zero Mock Values — 100% Live Coinglass API Data)
 
 ## 1. Tier A Full-Universe Screening Table (30 Assets)
@@ -83,12 +83,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 67,092.0
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **7.5 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **8.5 / 11.5 pts** → **Grade A**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (67,092.0) < VWAP (67,244.3) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 68,450.0 -> 2.0 pts
   * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $11.64M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 74,771.4) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **0.0** — Balanced / Sub-threshold skew (1.2:1 (SA)) -> 0.0 pts
   * Options GEX Context (1.0 max): **1.0** — Negative Gamma Expansion confirms trend acceleration / S1 / S8 (Flip: 72,189.4) -> 1.0 pt
   * Broker Spread Drag (1.0 max): **1.0** — Spread 0.0348% < 0.05% -> 1.0 pt
@@ -98,7 +98,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `67,244.3` (z = `-0.39σ`) | -1σ: `66,851.0` · +1σ: `67,637.5` | -2σ: `66,457.8` · +2σ: `68,030.7`
 3. **EMA Cascade**: M15: `13=67,160.5 / 89=68,149.4` | H1: `13=67,584.2 / 89=70,873.0` | H4: `13=69,197.3 / 89=74,794.2` | D1: `13=73,529.9 / 89=77,222.2`
 4. **Footprint & Order Flow**: Signals in set: 15 M15 events (Bull: 16, Bear: 20) | Forming Bar Delta: 67,135.2
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
+5. **CVD Dynamics**: 24h Perp CVD: `-12815` · Spot CVD: `-1349` | Quadrant: `both-selling` | Taker Buy Share: `49%`
 6. **BookWalls & LTO**: Depth ±5%: Bid `$1.23B` vs Ask `$996.77M` (Imbalance: `10.3%`) | Confirmed Walls: 42 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$41.0k` vs Long Liq Below: `$34.8k` → LSR: **1.2:1 (SA)**
 8. **Options GEX**: Regime: `NEGATIVE_GAMMA_EXPANSION` | Gamma Flip Price: `72,189.4` | DVOL: `41.72`
@@ -110,12 +110,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 615.4800
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **7.0 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **6.5 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (615.4800) < VWAP (620.5640) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete SDIV (sell) @ 658.8300 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $11.64M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $1.05M @ 616.8000 (< $5M or < 1h age -> 0.0 pts)
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 658.8300) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (3.9:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — No venue / Veto (0.0 pts)
@@ -125,8 +125,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `620.5640` (z = `-1.04σ`) | -1σ: `615.6896` · +1σ: `625.4383` | -2σ: `610.8153` · +2σ: `630.3127`
 3. **EMA Cascade**: M15: `13=616.9218 / 89=628.2530` | H1: `13=622.4824 / 89=652.4010` | H4: `13=636.8292 / 89=684.7511` | D1: `13=673.6898 / 89=704.2836`
 4. **Footprint & Order Flow**: Signals in set: 28 M15 events (Bull: 24, Bear: 38) | Forming Bar Delta: 615.9200
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.23B` vs Ask `$997.41M` (Imbalance: `10.3%`) | Confirmed Walls: 42 active
+5. **CVD Dynamics**: 24h Perp CVD: `-413` · Spot CVD: `-94` | Quadrant: `both-selling` | Taker Buy Share: `48%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$23.28M` vs Ask `$21.17M` (Imbalance: `4.7%`) | Confirmed Walls: 36 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$29.4k` vs Long Liq Below: `$115.9k` → LSR: **3.9:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -136,12 +136,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 75.4600
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 88%)
-- **Table 7 Confluence Score**: **5.5 / 11.5 pts** → **Grade B**
+- **Table 7 Confluence Score**: **5.0 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (75.4600) < VWAP (75.9059) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 81.8000 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $11.65M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $11.39M @ 75.6000 (< $5M or < 1h age -> 0.0 pts)
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 84.0400) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **0.0** — Balanced / Sub-threshold skew (1.2:1 (LB)) -> 0.0 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — No venue / Veto (0.0 pts)
@@ -151,8 +151,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `75.9059` (z = `-0.53σ`) | -1σ: `75.0675` · +1σ: `76.7444` | -2σ: `74.2291` · +2σ: `77.5828`
 3. **EMA Cascade**: M15: `13=75.4468 / 89=77.5680` | H1: `13=76.4696 / 89=81.0520` | H4: `13=78.8281 / 89=88.1698` | D1: `13=85.6533 / 89=97.1266`
 4. **Footprint & Order Flow**: Signals in set: 16 M15 events (Bull: 48, Bear: 31) | Forming Bar Delta: 75.5100
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.23B` vs Ask `$993.55M` (Imbalance: `10.7%`) | Confirmed Walls: 42 active
+5. **CVD Dynamics**: 24h Perp CVD: `-1952` · Spot CVD: `-13` | Quadrant: `both-selling` | Taker Buy Share: `48.8%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$102.14M` vs Ask `$127.13M` (Imbalance: `-10.9%`) | Confirmed Walls: 2 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$3.15M` vs Long Liq Below: `$3.76M` → LSR: **1.2:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -166,7 +166,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (0.985700) < VWAP (0.993276) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 1.0166 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $11.64M @ 67,350.0 (Age 3.0h) -> 1.5 pts
+  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $7.27M @ 0.996000 (Age 5.5h) -> 1.5 pts
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **0.0** — Balanced / Sub-threshold skew (1.1:1 (LB)) -> 0.0 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -178,7 +178,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=0.987337 / 89=1.0055` | H1: `13=0.997031 / 89=1.0385` | H4: `13=1.0147 / 89=1.1406` | D1: `13=1.1096 / 89=1.2779`
 4. **Footprint & Order Flow**: Signals in set: 34 M15 events (Bull: 42, Bear: 36) | Forming Bar Delta: 0.986300
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.23B` vs Ask `$997.41M` (Imbalance: `10.3%`) | Confirmed Walls: 42 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$52.05M` vs Ask `$51.88M` (Imbalance: `0.2%`) | Confirmed Walls: 9 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$112.00M` vs Long Liq Below: `$122.38M` → LSR: **1.1:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -188,12 +188,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.163000
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **3.5 / 11.5 pts** → **NO TRADE (<5.0)**
+- **Table 7 Confluence Score**: **4.5 / 11.5 pts** → **NO TRADE (<5.0)**
   * Directional Trend (2.0 max): **0.0** — Misaligned or incomplete EMA stack
   * Auction / VWAP Regime (1.5 max): **0.0** — Failed
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 0.165500 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.28M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $5.69M @ 0.164000 (Age 1.8h) -> 1.5 pts
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 0.174200) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **0.0** — Balanced / Sub-threshold skew (1.4:1 (LB)) -> 0.0 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — DISQUALIFIED by broker spread gate (2.25% >= 0.15%) -> 0.0 pts
@@ -203,8 +203,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `n/a` (z = `-0.88σ`) | -1σ: `n/a` · +1σ: `n/a` | -2σ: `n/a` · +2σ: `n/a`
 3. **EMA Cascade**: M15: `13=n/a / 89=n/a` | H1: `13=n/a / 89=n/a` | H4: `13=n/a / 89=n/a` | D1: `13=n/a / 89=n/a`
 4. **Footprint & Order Flow**: Signals in set: 25 M15 events (Bull: 50, Bear: 47) | Forming Bar Delta: 0.163000
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.23B` vs Ask `$992.94M` (Imbalance: `10.6%`) | Confirmed Walls: 42 active
+5. **CVD Dynamics**: 24h Perp CVD: `-158` · Spot CVD: `-16` | Quadrant: `both-selling` | Taker Buy Share: `48.4%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$9.94M` vs Ask `$19.81M` (Imbalance: `-33.2%`) | Confirmed Walls: 5 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$48.03M` vs Long Liq Below: `$68.87M` → LSR: **1.4:1 (LB)**
 - **Verdict**: **NO TRADE** (DISQUALIFIED BY BROKER SPREAD)
 
@@ -214,12 +214,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.062680
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **5.0 / 11.5 pts** → **Grade B**
+- **Table 7 Confluence Score**: **6.0 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **0.0** — Misaligned or incomplete EMA stack
   * Auction / VWAP Regime (1.5 max): **0.0** — Failed
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 0.064480 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.28M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $6.45M @ 0.063200 (Age 2.8h) -> 1.5 pts
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 0.066670) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (2.7:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — DISQUALIFIED by broker spread gate (1.39% >= 0.15%) -> 0.0 pts
@@ -229,8 +229,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `n/a` (z = `-0.57σ`) | -1σ: `n/a` · +1σ: `n/a` | -2σ: `n/a` · +2σ: `n/a`
 3. **EMA Cascade**: M15: `13=n/a / 89=n/a` | H1: `13=n/a / 89=n/a` | H4: `13=n/a / 89=n/a` | D1: `13=n/a / 89=n/a`
 4. **Footprint & Order Flow**: Signals in set: 38 M15 events (Bull: 35, Bear: 37) | Forming Bar Delta: 0.062710
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.23B` vs Ask `$992.94M` (Imbalance: `10.6%`) | Confirmed Walls: 42 active
+5. **CVD Dynamics**: 24h Perp CVD: `-500` · Spot CVD: `-44` | Quadrant: `both-selling` | Taker Buy Share: `48.1%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$26.96M` vs Ask `$33.99M` (Imbalance: `-11.5%`) | Confirmed Walls: 12 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$321.56M` vs Long Liq Below: `$862.38M` → LSR: **2.7:1 (LB)**
 - **Verdict**: **NO TRADE** (DISQUALIFIED BY BROKER SPREAD)
 
@@ -240,12 +240,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 9.5950
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **5.0 / 11.5 pts** → **Grade B**
+- **Table 7 Confluence Score**: **4.5 / 11.5 pts** → **NO TRADE (<5.0)**
   * Directional Trend (2.0 max): **0.0** — Misaligned or incomplete EMA stack
   * Auction / VWAP Regime (1.5 max): **0.0** — Failed
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 9.8250 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.28M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $1.77M @ 9.6600 (< $5M or < 1h age -> 0.0 pts)
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 10.5470) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (2.5:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — DISQUALIFIED by broker spread gate (0.57% >= 0.15%) -> 0.0 pts
@@ -255,8 +255,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `n/a` (z = `-0.59σ`) | -1σ: `n/a` · +1σ: `n/a` | -2σ: `n/a` · +2σ: `n/a`
 3. **EMA Cascade**: M15: `13=n/a / 89=n/a` | H1: `13=n/a / 89=n/a` | H4: `13=n/a / 89=n/a` | D1: `13=n/a / 89=n/a`
 4. **Footprint & Order Flow**: Signals in set: 18 M15 events (Bull: 39, Bear: 47) | Forming Bar Delta: 9.6020
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.23B` vs Ask `$992.94M` (Imbalance: `10.6%`) | Confirmed Walls: 42 active
+5. **CVD Dynamics**: 24h Perp CVD: `-200` · Spot CVD: `-21` | Quadrant: `both-selling` | Taker Buy Share: `48.6%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$16.75M` vs Ask `$14.89M` (Imbalance: `5.9%`) | Confirmed Walls: 11 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$963.9k` vs Long Liq Below: `$2.45M` → LSR: **2.5:1 (LB)**
 - **Verdict**: **NO TRADE** (DISQUALIFIED BY BROKER SPREAD)
 
@@ -266,12 +266,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 48.0900
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **5.0 / 11.5 pts** → **Grade B**
+- **Table 7 Confluence Score**: **4.5 / 11.5 pts** → **NO TRADE (<5.0)**
   * Directional Trend (2.0 max): **0.0** — Misaligned or incomplete EMA stack
   * Auction / VWAP Regime (1.5 max): **0.0** — Failed
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 48.8300 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.28M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $2.20M @ 48.4000 (< $5M or < 1h age -> 0.0 pts)
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 50.0800) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (12.4:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — DISQUALIFIED by broker spread gate (2.42% >= 0.15%) -> 0.0 pts
@@ -281,8 +281,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `n/a` (z = `-1.51σ`) | -1σ: `n/a` · +1σ: `n/a` | -2σ: `n/a` · +2σ: `n/a`
 3. **EMA Cascade**: M15: `13=n/a / 89=n/a` | H1: `13=n/a / 89=n/a` | H4: `13=n/a / 89=n/a` | D1: `13=n/a / 89=n/a`
 4. **Footprint & Order Flow**: Signals in set: 53 M15 events (Bull: 50, Bear: 40) | Forming Bar Delta: 48.1100
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.23B` vs Ask `$992.94M` (Imbalance: `10.6%`) | Confirmed Walls: 42 active
+5. **CVD Dynamics**: 24h Perp CVD: `-107` · Spot CVD: `-6` | Quadrant: `both-selling` | Taker Buy Share: `48.4%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$10.87M` vs Ask `$12.96M` (Imbalance: `-8.8%`) | Confirmed Walls: 7 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$37.0k` vs Long Liq Below: `$457.3k` → LSR: **12.4:1 (LB)**
 - **Verdict**: **NO TRADE** (DISQUALIFIED BY BROKER SPREAD)
 
@@ -292,11 +292,11 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 8.0250
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **7.0 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **5.5 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (8.0250) < VWAP (8.0796) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 8.1360 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.01M @ 67,350.0 (Age 3.0h) -> 1.5 pts
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $1.48M @ 8.1400 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (2.7:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -308,7 +308,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=8.0387 / 89=8.1912` | H1: `13=8.1227 / 89=8.3267` | H4: `13=8.2350 / 89=8.4927` | D1: `13=8.3895 / 89=8.7746`
 4. **Footprint & Order Flow**: Signals in set: 25 M15 events (Bull: 19, Bear: 35) | Forming Bar Delta: 8.0250
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.22B` vs Ask `$979.45M` (Imbalance: `10.9%`) | Confirmed Walls: 43 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$12.66M` vs Ask `$12.28M` (Imbalance: `1.5%`) | Confirmed Walls: 9 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$549.4k` vs Long Liq Below: `$1.51M` → LSR: **2.7:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -318,12 +318,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.785100
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 75%)
-- **Table 7 Confluence Score**: **7.0 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **6.5 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (0.785100) < VWAP (0.793370) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete SDIV (sell) @ 0.829100 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.01M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $673.9k @ 0.798000 (< $5M or < 1h age -> 0.0 pts)
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 0.832700) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (3.6:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — No venue / Veto (0.0 pts)
@@ -333,8 +333,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `0.793370` (z = `-0.94σ`) | -1σ: `0.784588` · +1σ: `0.802152` | -2σ: `0.775805` · +2σ: `0.810934`
 3. **EMA Cascade**: M15: `13=0.786484 / 89=0.807235` | H1: `13=0.797857 / 89=0.830795` | H4: `13=0.813900 / 89=0.895849` | D1: `13=0.871397 / 89=1.0058`
 4. **Footprint & Order Flow**: Signals in set: 19 M15 events (Bull: 49, Bear: 41) | Forming Bar Delta: 0.784400
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.22B` vs Ask `$979.45M` (Imbalance: `10.9%`) | Confirmed Walls: 43 active
+5. **CVD Dynamics**: 24h Perp CVD: `-98` · Spot CVD: `-1` | Quadrant: `both-selling` | Taker Buy Share: `47.2%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$6.28M` vs Ask `$5.45M` (Imbalance: `7.1%`) | Confirmed Walls: 7 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$2.04M` vs Long Liq Below: `$7.39M` → LSR: **3.6:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -344,11 +344,11 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 3.3220
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **7.0 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **5.5 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (3.3220) < VWAP (3.3658) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 3.3620 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.01M @ 67,350.0 (Age 3.0h) -> 1.5 pts
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $3.31M @ 3.3400 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (4.7:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -360,7 +360,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=3.3295 / 89=3.4135` | H1: `13=3.3784 / 89=3.5015` | H4: `13=3.4382 / 89=3.8045` | D1: `13=3.6859 / 89=3.7267`
 4. **Footprint & Order Flow**: Signals in set: 19 M15 events (Bull: 38, Bear: 45) | Forming Bar Delta: 3.3180
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.22B` vs Ask `$979.45M` (Imbalance: `10.9%`) | Confirmed Walls: 43 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$20.46M` vs Ask `$21.06M` (Imbalance: `-1.4%`) | Confirmed Walls: 6 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$2.26M` vs Long Liq Below: `$10.69M` → LSR: **4.7:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -370,12 +370,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 5.5210
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **7.0 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **6.5 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (5.5210) < VWAP (5.5919) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete SDIV (sell) @ 5.8770 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.01M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $2.29M @ 5.5400 (< $5M or < 1h age -> 0.0 pts)
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 6.1150) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (3.7:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — No venue / Veto (0.0 pts)
@@ -385,8 +385,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `5.5919` (z = `-1.05σ`) | -1σ: `5.5240` · +1σ: `5.6598` | -2σ: `5.4561` · +2σ: `5.7277`
 3. **EMA Cascade**: M15: `13=5.5282 / 89=5.6919` | H1: `13=5.6128 / 89=6.0802` | H4: `13=5.8225 / 89=6.6697` | D1: `13=6.4702 / 89=6.6316`
 4. **Footprint & Order Flow**: Signals in set: 22 M15 events (Bull: 39, Bear: 30) | Forming Bar Delta: 5.5110
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.22B` vs Ask `$989.00M` (Imbalance: `10.4%`) | Confirmed Walls: 43 active
+5. **CVD Dynamics**: 24h Perp CVD: `-343` · Spot CVD: `-4` | Quadrant: `both-selling` | Taker Buy Share: `48.3%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$12.73M` vs Ask `$12.66M` (Imbalance: `0.3%`) | Confirmed Walls: 8 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$688.7k` vs Long Liq Below: `$2.58M` → LSR: **3.7:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -396,11 +396,11 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 1.3310
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **7.0 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **5.5 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (1.3310) < VWAP (1.3389) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 1.3530 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.01M @ 67,350.0 (Age 3.0h) -> 1.5 pts
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $514.2k @ 1.3400 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (3.4:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -412,7 +412,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=1.3304 / 89=1.3613` | H1: `13=1.3468 / 89=1.3834` | H4: `13=1.3715 / 89=1.4341` | D1: `13=1.4088 / 89=1.5943`
 4. **Footprint & Order Flow**: Signals in set: 50 M15 events (Bull: 66, Bear: 43) | Forming Bar Delta: 1.3310
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.22B` vs Ask `$979.45M` (Imbalance: `10.9%`) | Confirmed Walls: 43 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$1.78M` vs Ask `$2.21M` (Imbalance: `-10.8%`) | Confirmed Walls: 5 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$256.3k` vs Long Liq Below: `$868.2k` → LSR: **3.4:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -422,11 +422,11 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.142960
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **7.0 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **5.5 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (0.142960) < VWAP (0.143434) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 0.143430 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.01M @ 67,350.0 (Age 3.0h) -> 1.5 pts
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $543.0k @ 0.143600 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (4.5:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -438,7 +438,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=0.143018 / 89=0.145088` | H1: `13=0.144168 / 89=0.146499` | H4: `13=0.145341 / 89=0.154453` | D1: `13=0.151787 / 89=0.177314`
 4. **Footprint & Order Flow**: Signals in set: 29 M15 events (Bull: 31, Bear: 30) | Forming Bar Delta: 0.142970
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.22B` vs Ask `$979.45M` (Imbalance: `10.9%`) | Confirmed Walls: 43 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$7.79M` vs Ask `$6.61M` (Imbalance: `8.2%`) | Confirmed Walls: 19 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$15.38M` vs Long Liq Below: `$68.54M` → LSR: **4.5:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -448,11 +448,11 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 6.2940
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **7.0 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **5.5 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (6.2940) < VWAP (6.3185) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 6.6110 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.01M @ 67,350.0 (Age 3.0h) -> 1.5 pts
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $272.3k @ 6.4000 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (1.9:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -464,7 +464,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=6.2972 / 89=6.4080` | H1: `13=6.3538 / 89=6.5672` | H4: `13=6.4636 / 89=6.8983` | D1: `13=6.7734 / 89=7.5791`
 4. **Footprint & Order Flow**: Signals in set: 32 M15 events (Bull: 42, Bear: 42) | Forming Bar Delta: 6.2880
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.22B` vs Ask `$979.45M` (Imbalance: `10.9%`) | Confirmed Walls: 43 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$3.79M` vs Ask `$3.14M` (Imbalance: `9.4%`) | Confirmed Walls: 11 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$236.2k` vs Long Liq Below: `$441.7k` → LSR: **1.9:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -474,11 +474,11 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.686800
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **5.5 / 11.5 pts** → **Grade B**
+- **Table 7 Confluence Score**: **4.0 / 11.5 pts** → **NO TRADE (<5.0)**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (0.686800) < VWAP (0.689490) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 0.717100 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $12.01M @ 67,350.0 (Age 3.0h) -> 1.5 pts
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $1.68M @ 0.692000 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **0.0** — Balanced / Sub-threshold skew (1.1:1 (SA)) -> 0.0 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -490,9 +490,9 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=0.685064 / 89=0.704704` | H1: `13=0.695033 / 89=0.733981` | H4: `13=0.716188 / 89=0.800229` | D1: `13=0.775238 / 89=0.890704`
 4. **Footprint & Order Flow**: Signals in set: 36 M15 events (Bull: 72, Bear: 47) | Forming Bar Delta: 0.686300
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.22B` vs Ask `$979.45M` (Imbalance: `10.9%`) | Confirmed Walls: 43 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$4.92M` vs Ask `$5.63M` (Imbalance: `-6.7%`) | Confirmed Walls: 4 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$4.75M` vs Long Liq Below: `$4.18M` → LSR: **1.1:1 (SA)**
-- **Verdict**: **ELIGIBLE** (VETO ACTIVE)
+- **Verdict**: **NO TRADE** (FAILED CONFLUENCE THRESHOLD (< 5.0 PTS))
 
 ---
 
@@ -504,7 +504,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
   * Directional Trend (2.0 max): **0.0** — Misaligned or incomplete EMA stack
   * Auction / VWAP Regime (1.5 max): **0.0** — Failed
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (buy) @ 2.6160 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Bid $11.90M @ 67,040.0 (< $5M or < 1h age -> 0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Bid $403.1k @ 2.4000 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **1.5** — Short Liq Above dominates (3.5:1 (SA)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -516,7 +516,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=n/a / 89=n/a` | H1: `13=n/a / 89=n/a` | H4: `13=n/a / 89=n/a` | D1: `13=n/a / 89=n/a`
 4. **Footprint & Order Flow**: Signals in set: 21 M15 events (Bull: 32, Bear: 41) | Forming Bar Delta: 2.4140
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.21B` vs Ask `$1.00B` (Imbalance: `9.5%`) | Confirmed Walls: 44 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$1.90M` vs Ask `$1.95M` (Imbalance: `-1.2%`) | Confirmed Walls: 3 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$982.5k` vs Long Liq Below: `$278.9k` → LSR: **3.5:1 (SA)**
 - **Verdict**: **NO TRADE** (FAILED CONFLUENCE THRESHOLD (< 5.0 PTS))
 
@@ -526,11 +526,11 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.059970
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **3.5 / 11.5 pts** → **NO TRADE (<5.0)**
+- **Table 7 Confluence Score**: **2.0 / 11.5 pts** → **NO TRADE (<5.0)**
   * Directional Trend (2.0 max): **0.0** — Misaligned or incomplete EMA stack
   * Auction / VWAP Regime (1.5 max): **0.0** — Failed
   * Footprint Signal (2.0 max): **2.0** — Discrete SDIV (sell) @ 0.064550 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $16.25M @ 67,350.0 (Age 3.0h) -> 1.5 pts
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $678.7k @ 0.060200 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **0.0** — Balanced / Sub-threshold skew (1.7:1 (SA)) -> 0.0 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -542,7 +542,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=n/a / 89=n/a` | H1: `13=n/a / 89=n/a` | H4: `13=n/a / 89=n/a` | D1: `13=n/a / 89=n/a`
 4. **Footprint & Order Flow**: Signals in set: 42 M15 events (Bull: 41, Bear: 44) | Forming Bar Delta: 0.059920
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.21B` vs Ask `$1.00B` (Imbalance: `9.5%`) | Confirmed Walls: 44 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$4.95M` vs Ask `$4.28M` (Imbalance: `7.3%`) | Confirmed Walls: 5 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$53.72M` vs Long Liq Below: `$31.36M` → LSR: **1.7:1 (SA)**
 - **Verdict**: **NO TRADE** (FAILED CONFLUENCE THRESHOLD (< 5.0 PTS))
 
@@ -552,11 +552,11 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.513100
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **5.0 / 11.5 pts** → **Grade B**
+- **Table 7 Confluence Score**: **3.5 / 11.5 pts** → **NO TRADE (<5.0)**
   * Directional Trend (2.0 max): **0.0** — Misaligned or incomplete EMA stack
   * Auction / VWAP Regime (1.5 max): **0.0** — Failed
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 0.521700 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $16.25M @ 67,350.0 (Age 3.0h) -> 1.5 pts
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $428.4k @ 0.518000 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (6.1:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -568,9 +568,9 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=n/a / 89=n/a` | H1: `13=n/a / 89=n/a` | H4: `13=n/a / 89=n/a` | D1: `13=n/a / 89=n/a`
 4. **Footprint & Order Flow**: Signals in set: 41 M15 events (Bull: 36, Bear: 29) | Forming Bar Delta: 0.512100
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.21B` vs Ask `$1.00B` (Imbalance: `9.5%`) | Confirmed Walls: 44 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$4.54M` vs Ask `$3.89M` (Imbalance: `7.7%`) | Confirmed Walls: 11 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$1.01M` vs Long Liq Below: `$6.20M` → LSR: **6.1:1 (LB)**
-- **Verdict**: **ELIGIBLE** (VETO ACTIVE)
+- **Verdict**: **NO TRADE** (FAILED CONFLUENCE THRESHOLD (< 5.0 PTS))
 
 ---
 
@@ -578,11 +578,11 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.138850
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **5.0 / 11.5 pts** → **Grade B**
+- **Table 7 Confluence Score**: **3.5 / 11.5 pts** → **NO TRADE (<5.0)**
   * Directional Trend (2.0 max): **0.0** — Misaligned or incomplete EMA stack
   * Auction / VWAP Regime (1.5 max): **0.0** — Failed
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 0.141900 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $16.25M @ 67,350.0 (Age 3.0h) -> 1.5 pts
+  * Whale Wall Backstop (1.5 max): **0.0** — No protecting institutional book wall (0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (7.1:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -594,9 +594,9 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=n/a / 89=n/a` | H1: `13=n/a / 89=n/a` | H4: `13=n/a / 89=n/a` | D1: `13=n/a / 89=n/a`
 4. **Footprint & Order Flow**: Signals in set: 39 M15 events (Bull: 42, Bear: 52) | Forming Bar Delta: 0.138580
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.21B` vs Ask `$1.00B` (Imbalance: `9.5%`) | Confirmed Walls: 44 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$0.00` vs Ask `$8.14M` (Imbalance: `-100.0%`) | Confirmed Walls: 0 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$10.47M` vs Long Liq Below: `$73.87M` → LSR: **7.1:1 (LB)**
-- **Verdict**: **ELIGIBLE** (VETO ACTIVE)
+- **Verdict**: **NO TRADE** (FAILED CONFLUENCE THRESHOLD (< 5.0 PTS))
 
 ---
 
@@ -608,7 +608,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (0.770700) < VWAP (0.776821) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 0.772700 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **0.0** — No protecting institutional book wall (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $1.68M @ 0.772000 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (5.6:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -620,7 +620,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=0.770991 / 89=0.787464` | H1: `13=0.780312 / 89=0.807037` | H4: `13=0.793076 / 89=0.854918` | D1: `13=0.836847 / 89=0.903837`
 4. **Footprint & Order Flow**: Signals in set: 31 M15 events (Bull: 61, Bear: 40) | Forming Bar Delta: n/a
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `n/a` vs Ask `n/a` (Imbalance: `0.0%`) | Confirmed Walls: 0 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$16.70M` vs Ask `$15.22M` (Imbalance: `4.6%`) | Confirmed Walls: 5 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$7.78M` vs Long Liq Below: `$43.34M` → LSR: **5.6:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -634,7 +634,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (0.040950) < VWAP (0.041573) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete SDIV (sell) @ 0.043320 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **0.0** — No protecting institutional book wall (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $710.7k @ 0.041600 (< $5M or < 1h age -> 0.0 pts)
   * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (7.3:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
@@ -646,7 +646,7 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 3. **EMA Cascade**: M15: `13=0.041098 / 89=0.042216` | H1: `13=0.041749 / 89=0.043112` | H4: `13=0.042436 / 89=0.046194` | D1: `13=0.044976 / 89=0.053225`
 4. **Footprint & Order Flow**: Signals in set: 49 M15 events (Bull: 34, Bear: 33) | Forming Bar Delta: n/a
 5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `n/a` vs Ask `n/a` (Imbalance: `0.0%`) | Confirmed Walls: 0 active
+6. **BookWalls & LTO**: Depth ±5%: Bid `$2.78M` vs Ask `$2.13M` (Imbalance: `13.1%`) | Confirmed Walls: 3 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$6.86M` vs Long Liq Below: `$50.26M` → LSR: **7.3:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -671,8 +671,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `8.0357` (z = `-0.60σ`) | -1σ: `7.9562` · +1σ: `8.1152` | -2σ: `7.8766` · +2σ: `8.1948`
 3. **EMA Cascade**: M15: `13=8.0041 / 89=7.9638` | H1: `13=8.0129 / 89=7.8489` | H4: `13=7.8725 / 89=7.8551` | D1: `13=7.8601 / 89=7.0814`
 4. **Footprint & Order Flow**: Signals in set: 30 M15 events (Bull: 90, Bear: 86) | Forming Bar Delta: n/a
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `n/a` vs Ask `n/a` (Imbalance: `0.0%`) | Confirmed Walls: 0 active
+5. **CVD Dynamics**: 24h Perp CVD: `-117` · Spot CVD: `2` | Quadrant: `spot-bid` | Taker Buy Share: `48.4%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$6.04M` vs Ask `$4.74M` (Imbalance: `12.1%`) | Confirmed Walls: 9 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$275.5k` vs Long Liq Below: `$1.65M` → LSR: **6.0:1 (LB)**
 - **Verdict**: **NO TRADE** (FAILED CONFLUENCE THRESHOLD (< 5.0 PTS))
 
@@ -682,12 +682,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.368300
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **4.0 / 11.5 pts** → **NO TRADE (<5.0)**
+- **Table 7 Confluence Score**: **5.0 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (0.368300) < VWAP (0.371713) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete SDIV (sell) @ 0.374600 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **0.0** — No protecting institutional book wall (0.0 pts)
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $314.6k @ 0.368000 (< $5M or < 1h age -> 0.0 pts)
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 0.440200) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **0.0** — Balanced / Sub-threshold skew (1.0:1 (LB)) -> 0.0 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — No venue / Veto (0.0 pts)
@@ -697,10 +697,10 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `0.371713` (z = `-0.88σ`) | -1σ: `0.367820` · +1σ: `0.375606` | -2σ: `0.363928` · +2σ: `0.379498`
 3. **EMA Cascade**: M15: `13=0.368989 / 89=0.386088` | H1: `13=0.376996 / 89=0.408432` | H4: `13=0.396157 / 89=0.441657` | D1: `13=0.427276 / 89=0.452801`
 4. **Footprint & Order Flow**: Signals in set: 35 M15 events (Bull: 81, Bear: 63) | Forming Bar Delta: n/a
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `n/a` vs Ask `n/a` (Imbalance: `0.0%`) | Confirmed Walls: 0 active
+5. **CVD Dynamics**: 24h Perp CVD: `-109` · Spot CVD: `-4` | Quadrant: `both-selling` | Taker Buy Share: `46.7%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$3.59M` vs Ask `$3.47M` (Imbalance: `1.7%`) | Confirmed Walls: 9 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$3.85M` vs Long Liq Below: `$3.86M` → LSR: **1.0:1 (LB)**
-- **Verdict**: **NO TRADE** (FAILED CONFLUENCE THRESHOLD (< 5.0 PTS))
+- **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
 ---
 
@@ -708,12 +708,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.004915
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **7.0 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **6.5 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (0.004915) < VWAP (0.004967) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete ABS (sell) @ 0.005050 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $16.25M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $68.1k @ 0.004920 (< $5M or < 1h age -> 0.0 pts)
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 0.005235) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (16.3:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — No venue / Veto (0.0 pts)
@@ -723,8 +723,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `0.004967` (z = `-1.00σ`) | -1σ: `0.004914` · +1σ: `0.005020` | -2σ: `0.004860` · +2σ: `0.005073`
 3. **EMA Cascade**: M15: `13=0.004921 / 89=0.005031` | H1: `13=0.004983 / 89=0.005130` | H4: `13=0.005060 / 89=0.005494` | D1: `13=0.005351 / 89=0.006513`
 4. **Footprint & Order Flow**: Signals in set: 54 M15 events (Bull: 46, Bear: 45) | Forming Bar Delta: 0.004906
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.21B` vs Ask `$989.03M` (Imbalance: `9.9%`) | Confirmed Walls: 42 active
+5. **CVD Dynamics**: 24h Perp CVD: `-2` · Spot CVD: `n/a` | Quadrant: `spot-bid` | Taker Buy Share: `49.5%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$718.1k` vs Ask `$573.8k` (Imbalance: `11.2%`) | Confirmed Walls: 6 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$9.82M` vs Long Liq Below: `$160.23M` → LSR: **16.3:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
@@ -734,12 +734,12 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 
 - **Live Spot / Perp Price**: 0.004149
 - **Regime / Model**: `TREND_DOWN` | Active Model: `M1_TREND_PULLBACK` (Conf: 92%)
-- **Table 7 Confluence Score**: **7.0 / 11.5 pts** → **Grade A**
+- **Table 7 Confluence Score**: **6.5 / 11.5 pts** → **Grade B**
   * Directional Trend (2.0 max): **2.0** — H4 (13<89) & D1 (13<89) Bearish Cascade aligned
   * Auction / VWAP Regime (1.5 max): **0.0** — Price (0.004149) < VWAP (0.004177) [Discount Zone - Shorting into discount fails regime test] -> 0.0 pts
   * Footprint Signal (2.0 max): **2.0** — Discrete SDIV (sell) @ 0.004314 -> 2.0 pts
-  * Whale Wall Backstop (1.5 max): **1.5** — Resting Ask Wall $16.25M @ 67,350.0 (Age 3.0h) -> 1.5 pts
-  * CVD Divergence (1.0 max): **0.0** — CVD in line with price swing / No active divergence (0.0 pts)
+  * Whale Wall Backstop (1.5 max): **0.0** — Sub-threshold wall: Ask $904.3k @ 0.004220 (< $5M or < 1h age -> 0.0 pts)
+  * CVD Divergence (1.0 max): **1.0** — Active BEAR CVD divergence (Price: 0.004460) -> 1.0 pt
   * Liquidation Magnet Gate (1.5 max): **1.5** — Long Liq Below dominates (3.8:1 (LB)) — Target magnet aligned -> 1.5 pts
   * Options GEX Context (1.0 max): **0.0** — n/a (Non-BTC/ETH or neutral -> 0.0 pts)
   * Broker Spread Drag (1.0 max): **0.0** — No venue / Veto (0.0 pts)
@@ -749,8 +749,8 @@ Identified **26 Qualifying Assets** meeting canonical Tier B criteria (Grade A/A
 2. **VWAP & Bands**: VWAP: `0.004177` (z = `-0.79σ`) | -1σ: `0.004141` · +1σ: `0.004212` | -2σ: `0.004106` · +2σ: `0.004247`
 3. **EMA Cascade**: M15: `13=0.004151 / 89=0.004222` | H1: `13=0.004190 / 89=0.004313` | H4: `13=0.004250 / 89=0.004511` | D1: `13=0.004441 / 89=0.004982`
 4. **Footprint & Order Flow**: Signals in set: 68 M15 events (Bull: 66, Bear: 37) | Forming Bar Delta: 0.004144
-5. **CVD Dynamics**: 24h Perp CVD: `n/a` · Spot CVD: `n/a` | Quadrant: `n/a` | Taker Buy Share: `n/a%`
-6. **BookWalls & LTO**: Depth ±5%: Bid `$1.21B` vs Ask `$989.03M` (Imbalance: `9.9%`) | Confirmed Walls: 42 active
+5. **CVD Dynamics**: 24h Perp CVD: `-19` · Spot CVD: `n/a` | Quadrant: `spot-bid` | Taker Buy Share: `47.7%`
+6. **BookWalls & LTO**: Depth ±5%: Bid `$5.49M` vs Ask `$4.50M` (Imbalance: `10.0%`) | Confirmed Walls: 6 active
 7. **Liquidation Magnet Gate**: ±2% Short Liq Above: `$207.26M` vs Long Liq Below: `$789.95M` → LSR: **3.8:1 (LB)**
 - **Verdict**: **ELIGIBLE** (VETO ACTIVE)
 
