@@ -5179,3 +5179,28 @@ analysis script rc=1
 
 analysis script rc=1
 
+## R244 · 2026-11-14 02:59 UTC · zai-desk
+
+**Market**: BTC 67,665.0 (-0.9%)  ETH 1,911.26 (-0.9%)  SOL 76.16 (-2.6%)  XAU 3,883.15 (-0.1%)  XAG 48.850 (-0.1%)
+**Bias (|score|≥2)**: BNB-4(TRANS)  ADA-2(TRANS)  LINK-2(TRANS)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- NEW R244-BNB-1 BNB SHORT limit 629.55 · stop 633.18 · T1 617.65 · T2 608.83 · R 3.3
+      [FOR    ] overview: h4 ↓/d1 ↓ EMA, price below day VWAP (625.45 vs 625.92), h4 RSI 26.5, day -0.8%
+      [FOR    ] footprint: bull 22 / bear 31; recent: Divergence/sell[time], Exhaustion/buy[vol], Divergence/sell[range]
+      [FOR    ] microFlow(abs/trap/exh): 6h micro-events: abs:sell×2, div:sell×3, exh:buy×2, exh:sell×1 — net 2 buy-side vs 6 sell-side
+      [FOR    ] liquidation: long-liq magnet 617.65 (str 100, ~$20M est, -1.42%) as target
+      [FOR    ] bookWalls: ±5% depth imbalance +0.041 (5m ago +0.034, rising bids); bid $0.02B vs ask $0.02B
+      [FOR    ] cvd: taker buy 47.5%, perpCvd -89, spotCvd -14, quadrant both-selling, latestDiv bear (stale/none)
+
+### Order lifecycle
+- R236-AVAX-1 EXPIRED (unfilled past expiry)
+
+### Positions
+- ETH ETH SELL: +0.0R open @ 1,911.26 → CLOSE_RECOMMENDED (VWAP regime + confluence +1.8 flipped against)
+
+
+## ROUND FAILED · 2026-11-14 03:00 UTC · zai-desk
+
+analysis script rc=1
+
