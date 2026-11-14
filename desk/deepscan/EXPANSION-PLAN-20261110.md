@@ -1,7 +1,7 @@
 # EXPANSION PLAN · 360° Universe Across Verified FundedNext Assets
 
 v2.0 · 2026-11-10 21:20 UTC (T3 un-deferred by explicit user directive: "expand all the mentioned forex, indices and metals along with mentioned cryptos"; XPT/USO/UKO + 77-instrument classic universe SHIPPED — see v2 addendum at bottom) · v1.1 2026-11-10 20:30 UTC (post multi-agent review) · owner: zai-desk · method: Karpathy guidelines (assumptions surfaced, surgical changes, verifiable criteria)
-inputs: user broker audit (FundedNext-Server, acct 11808165, 96 instruments) · live Coinglass web-API probe (19:55–20:00 UTC, this desk) · live Yahoo/Binance/terminal probes 2026-11-10 20:40-21:10 UTC (scripts/t3_probe_results.json) · repo source audit (`src/lib/cg/assets.ts`, `src/lib/cg/classic.ts`, `scripts/desk_deepscan.py`, `desk/state.json`)
+inputs: user broker audit (FundedNext-Server, acct REDACTED, 96 instruments) · live Coinglass web-API probe (19:55–20:00 UTC, this desk) · live Yahoo/Binance/terminal probes 2026-11-10 20:40-21:10 UTC (scripts/t3_probe_results.json) · repo source audit (`src/lib/cg/assets.ts`, `src/lib/cg/classic.ts`, `scripts/desk_deepscan.py`, `desk/state.json`)
 
 ---
 

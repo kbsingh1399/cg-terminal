@@ -276,7 +276,7 @@ dated entry after each meaningful change; keep only the last 10 entries.
   LTC SHORT R5.9 · DOGE SHORT R4.5 (T1-T3 clusters str 64-65) ·
   ADA rejected (nearest magnet 1.1R).
 - Confirmed: local daemon LIVE on user PC (commits 17fa573, fa57fd7),
-  MT5 connected (acct 11808165, $4,679.37, 0 positions).
+  MT5 connected (acct REDACTED, $4,679.37, 0 positions).
 - atg: WAKE.md will refresh with R4 orders on next daemon cycle —
   place only the v2 orders (R ≥ 2.0), ignore stale R1/R2 lines.
 

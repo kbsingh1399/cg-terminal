@@ -21,7 +21,7 @@
 ## Blockers/major findings requiring USER decision (not desk-actionable)
 
 ### Security (Elliot) — urgent, user-side
-- **S1 [BLOCKER] Repo is PUBLIC and streams live trading telemetry**: `desk/mt5.json` (broker acct 11808165, equity, positions), live tickets/entries/stops in WAKEUP.md broadcast, pushed every 45s. → **Fix: make repo private (2 min, zero pipeline impact)**; swap classic PAT → fine-grained scoped to this repo.
+- **S1 [BLOCKER] Repo is PUBLIC and streams live trading telemetry**: `desk/mt5.json` (broker acct REDACTED, equity, positions), live tickets/entries/stops in WAKEUP.md broadcast, pushed every 45s. → **Fix: make repo private (2 min, zero pipeline impact)**; swap classic PAT → fine-grained scoped to this repo.
 - **S2 [BLOCKER] Directive channel unauthenticated**: any push to `desk/inbox/*.json` fires on the Windows box within 45s (no signature, no freshness check, filename-dedupe only). → **Fix: HMAC-SHA256 sig + ts freshness on inbox processing (~15 lines, daemon side)**.
 - **S3 [MAJOR] daemon.json command fields are git-tracked and shell-executed** (`notify_cmd`/`wake_cmd`/`terminal_boot_cmd`) + `notify()` interpolates alerts.json text through `shell:true` → injection path. → **Fix: move commands to gitignored `desk/daemon.local.json`, argv-array not shell string.**
 - **S4 [MAJOR] Sizing is circular-trust**: spec fields come from the same mt5.json being validated; spoofed tickValue/equity prints self-consistent lies; no notional/margin bound. Zero-fields fail safe today, but XAG-live-at-0.72% proves caveats are advisory. → **Fix proposals in quant section (Q5-Q7).**

@@ -15,7 +15,7 @@ guidelines: Karpathy (assumptions surfaced, verifiable criteria, no silent gaps)
 
 ---
 
-## 1 · The verified instrument universe (broker: FundedNext-Server, acct 11808165)
+## 1 · The verified instrument universe (broker: FundedNext-Server, acct REDACTED)
 
 | Class | Count | Symbols (broker tickers) | Source of truth | In terminal |
 |---|---|---|---|---|
