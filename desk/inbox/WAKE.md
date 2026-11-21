@@ -1979,3 +1979,6 @@
 8. Review open positions vs §6 invariants (+1.0R breakeven rule, 8-bar time
    stop, 40/40/20 scale-outs)
 9. Commit + push; append the round entry to desk/log.md
+
+## 2026-11-21 11:29 UTC — ALERT A5 — position-close
+- BELL + WAKE: BTC position closed — capture close price + PnL for desk/log.md
