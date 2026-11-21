@@ -764,8 +764,11 @@ Table 7 Score : <pts> / 11.5 | Grade: <A/B/NO_TRADE> | Action: <EXECUTE / REJECT
   - Defect Remediation: Pre-packaged narrative endpoints (`/api/cg/narrative`) often miss nascent order-flow turning points, massive liquidation clusters, or tight consolidation shelves. Candidate discovery MUST evaluate the exact K-3 venue/feed manifest across all applicable discovery funnels:
 
 [FUNNEL-01] [DISCOVERY] [LIQUIDATION_MAGNET_SWEEP_FUNNEL]:
-  - Action: Scans 3D/7D/30D liquidation clusters from `/api/cg/liqlevels` and 24h stopmap exposures (`/api/cg/stopmap`).
-  - Candidate Trigger: Any asset with a concentrated liquidation cluster $\ge \$10\text{M}$ (Tier 1/2) or $\ge \$500\text{k}$ (Tier 3/4) within $\le 3.5\%$ of current price, or Liquidation Skew Ratio $\text{LSR} \ge 2.0:1$, is automatically promoted to candidate evaluation (S1 Sweep Reversal or S8 Breakout Continuation).
+  - Action: Scans 3D/7D/30D liquidation clusters from `/api/cg/liqlevels` and 24h stopmap exposures (`/api/cg/stopmap`), intersected with the Higher Timeframe (4H/Daily) trend bias from `/api/cg/market`.
+  - Sovereign Default Candidate Trigger (ITCLS Engine):
+    1. Bearish HTF Regime (4H EMA 13 < 89, Price < VWAP): Filter for concentrated overhead short squeeze liquidation shelves (`keyLevels.above`) $\ge \$10\text{M}$ (Tier 1/2) or $\ge \$500\text{k}$ (Tier 3/4) within $\le 3.5\%$ above price. Automatically promotes **S0 / ITCLS Short Entry Intent**, targeting the dominant lower long liquidation floor.
+    2. Bullish HTF Regime (4H EMA 13 > 89, Price > VWAP): Filter for concentrated support long flush liquidation floors (`keyLevels.below`) within $\le 3.5\%$ below price. Automatically promotes **S0 / ITCLS Long Entry Intent**, targeting the dominant upper short liquidation shelf.
+    3. Neutral / Non-Trending Regimes: Promotes S1 Sweep Reversal (when $\text{LSR} \ge 2.5:1$) or S8 Breakout Continuation.
 
 [FUNNEL-02] [DISCOVERY] [FOOTPRINT_TAPE_ABSORPTION_FUNNEL]:
   - Action: Scans `/api/cg/signals` directly across all active perps on 15m time bars, dynamic volume bars, and range bars.
@@ -805,6 +808,7 @@ Table 7 Score : <pts> / 11.5 | Grade: <A/B/NO_TRADE> | Action: <EXECUTE / REJECT
 
 | Code | Setup Name | Best Regime | Entry Trigger | Stop Invalidation | Target |
 | :--- | :--- | :--- | :--- | :--- | :--- |
+| **S0 / ITCLS** | **In-Trend Counter-Liquidation Sweep (DEFAULT)** | Established HTF Trend (4H/Daily EMA 13/89/233 + Day/Month VWAP) | Passive Maker Limit resting directly at the dense counter-trend liquidation shelf (overhead short shelf in downtrends; support long shelf in uptrends) | Tight structural buffer beyond peak liquidation shelf wick (+ 0.15% or 0.2 ATR) | T1: Mean-reversion to Session VWAP/POC (40%); T2: Opposing trend-aligned major liquidation floor/shelf (40%, >=2.0R); T3: Multi-day trend expansion runner (20%) |
 | **S1** | **Liquidation Sweep Reversal** | Over-extended / high LSR ($\ge 2.5:1$) | 15m close back inside value after stops wiped + delta flip | Beyond sweep wick high/low (+ 0.3–0.5 ATR buffer) | Opposite Day VAL/VAH & POC (40/40/20) |
 | **S2** | **Value Area Edge Fade** | Range Balance / High Gamma | Touch of Day VAH (short) / VAL (long) with footprint divergence | Beyond Day VWAP $\pm 2\sigma$ band | Day POC (mean reversion) |
 | **S3** | **Whale Wall Defense / Front-Run** | Trend Pullback (LSR < 2.0) | 0.05%–0.1% in front of confirmed wall (Tiered / $\ge 20\%$ depth) | Behind whale wall + 0.5 ATR buffer | Next opposing wall / POC |
@@ -818,6 +822,16 @@ Table 7 Score : <pts> / 11.5 | Grade: <A/B/NO_TRADE> | Action: <EXECUTE / REJECT
 | **S11** | **Multi-Timeframe 4H×1H Trend Cascade Pullback** | Macro Trend (Stage 2/4, 4H EMA 13<89, 1H EMA 13<55) | 15m pullback into 1H EMA 13–34 Value Reload Zone with $\ge 35\%$ volume decay & footprint exhaustion | Beyond 1H EMA 55 or rejection candle wick (+ 0.15% buffer) | T1: Prior impulse swing extreme; T2: 24h/7d liquidation magnet; T3: 4H extension ($1.618\times$) |
 | **S12** | **HTF VWAP Band & Liquidation Void Retest** | Trending Extension ($|z| \ge 1.0\sigma$, 1H structure aligned) | Retest of broken Day/Session VWAP $\pm1.0\sigma$ or LVN shelf with bearish/bullish CVD absorption | Beyond Session POC / broken HVN shelf (+ 0.15% buffer) | T1: 50% impulse retest; T2: Dominant opposite liquidation cluster; T3: VWAP $\pm3.0\sigma$ |
 | **S13** | **Anchor Fibonacci & Defended Whale Channel Pullback** | Strong Trend (4H slope $\ge 25^\circ$, 1H widening spread) | Retest of 38.2%–50% Fib retracement of 4H impulse + resting whale wall defense ($\ge \$1\text{M}$ TradFi / $\ge \$250\text{k}$ alts) | 0.15% beyond defending whale wall / 61.8% Fib invalidation | T1: Prior impulse swing extreme; T2: Major liquidation shelf; T3: $2.5\text{R}-4.0\text{R}$ expansion |
+
+[ARCH-ITCLS] [INVARIANT] [DEFAULT_EXECUTION_BEHAVIOR]:
+  - Primary Sovereign Directive: The default and primary strategy across CG-Terminal is **In-Trend Counter-Liquidation Sweep (ITCLS)**. Rather than chasing breakout momentum or waiting for deep multi-week mean retracements, the desk enters in alignment with the Higher Timeframe (4H/Daily) trend on counter-trend liquidation sweeps.
+  - Generative Microstructure Mechanics:
+    1. In a Bearish HTF Trend (4H/Daily EMA 13 < 89 < 233, Price < VWAP): Counter-trend bounces squeeze early shorts and induce aggressive retail breakout longs. This creates dense overhead short liquidation shelves (`keyLevels.above`). Market makers and smart money push price into these shelves to harvest buy-stop liquidity. The desk places passive maker SELL LIMIT orders at the peak of the overhead shelf ($1.0\%$ to $3.5\%$ above mark), entering short with the macro trend at peak retail exhaustion.
+    2. In a Bullish HTF Trend (4H/Daily EMA 13 > 89 > 233, Price > VWAP): Counter-trend pullbacks flush over-leveraged longs, creating dense support liquidation floors (`keyLevels.below`). Market makers push price down into these floors to absorb panic selling. The desk places passive maker BUY LIMIT orders at the peak floor, entering long with the macro trend at peak panic absorption.
+  - Risk & Execution Envelope:
+    1. Stop Loss: Pinned strictly beyond the liquidation shelf high/low wick + $0.15\%$ or $0.20\times\text{ATR}$ structural cold-zone buffer. This produces ultra-tight risk ($< 0.8\%$ distance).
+    2. Target Ladder: T1 = Session VWAP / POC (40% off, move SL to breakeven); T2 = Major opposing trend-aligned liquidation pool (40% off, $\text{Net T2 Payoff} \ge 2.0\text{R}$); T3 = Trend expansion runner to Day/Month VWAP $\pm 3\sigma$ (20% runner).
+    3. Venue Rules: Delta Exchange entries MUST be 100% passive maker (`post_only: true`, risk $\le \$0.50$, margin $\le \$1.50$); MT5 entries MUST be pending limits with verified PIT-18 spread clearance ($\ge 5\times\text{spread}$) and risk $\le \$6.00$.
 
 [ARCH-S1] [INVARIANT] [S1_DETAIL]: When LSR >= 2.5:1, wait for cluster to be wiped, wait for exhaustion print (`exh`), wait for taker delta flip, enter on 15m confirmation close back inside value. Grade A+ eligible.
 [ARCH-S2] [INVARIANT] [S2_DETAIL]: Fade value boundaries back to POC; Grade cap: Grade B unless absorption cluster >= $5M; banned when LSR >= 2.5:1.
