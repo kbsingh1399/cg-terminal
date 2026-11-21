@@ -1986,3 +1986,8 @@ warning: in the working copy of 'desk/state.json', CRLF will be replaced by LF t
 
 [stderr] Command failed: C:\Users\SIGMA\AppData\Local\hermes\git\bin\bash.exe scripts/desk_round.sh
 
+
+===== 2026-11-21T15:19:28.554Z daemon round =====
+
+[stderr] /usr/bin/bash: scripts/desk_round.sh: No such file or directory
+
