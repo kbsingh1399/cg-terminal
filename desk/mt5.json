@@ -1,0 +1,529 @@
+{
+  "ts": 1795273237822,
+  "error": null,
+  "account": {
+    "currency": "USD",
+    "leverage": 30,
+    "balance": 2641.26,
+    "equity": 2640.65,
+    "margin": 817.83,
+    "margin_free": 1822.82,
+    "margin_level": 322.88495164031644,
+    "profit": -0.61
+  },
+  "floating": {
+    "total": -0.61,
+    "positions": 23
+  },
+  "positions": [
+    {
+      "ticket": 20297836,
+      "asset": null,
+      "symbol": "EURUSD.pi",
+      "side": "sell",
+      "volume": 0.02,
+      "open": 1.10026,
+      "current": 1.09721,
+      "sl": 1.0975,
+      "tp": 1.0955,
+      "profit": 6.1,
+      "swap": 0.06,
+      "comment": "cg_terminal",
+      "openedTs": 1795091551000
+    },
+    {
+      "ticket": 20318816,
+      "asset": null,
+      "symbol": "USDCAD.pi",
+      "side": "buy",
+      "volume": 0.01,
+      "open": 1.4325,
+      "current": 1.4338899999999999,
+      "sl": 1.42829,
+      "tp": 1.44302,
+      "profit": 0.97,
+      "swap": 0.02,
+      "comment": "Alpha_EMA20_TWO_BA",
+      "openedTs": 1795118404000
+    },
+    {
+      "ticket": 20327972,
+      "asset": null,
+      "symbol": "CHFJPY.pi",
+      "side": "sell",
+      "volume": 0.01,
+      "open": 188.896,
+      "current": 188.737,
+      "sl": 189.529,
+      "tp": 187.33,
+      "profit": 1.0,
+      "swap": -0.0,
+      "comment": "Alpha_VWAP_P2_SHOR",
+      "openedTs": 1795147202000
+    },
+    {
+      "ticket": 20336740,
+      "asset": null,
+      "symbol": "USWTI.p",
+      "side": "sell",
+      "volume": 0.01,
+      "open": 83.812,
+      "current": 84.846,
+      "sl": 85.715,
+      "tp": 76.207,
+      "profit": -1.03,
+      "swap": -0.16,
+      "comment": "Alpha_VWAP_P2_SHOR",
+      "openedTs": 1795161602000
+    },
+    {
+      "ticket": 20336742,
+      "asset": null,
+      "symbol": "CHFJPY.pi",
+      "side": "buy",
+      "volume": 0.01,
+      "open": 189.005,
+      "current": 188.65,
+      "sl": 188.391,
+      "tp": 190.541,
+      "profit": -2.24,
+      "swap": -0.06,
+      "comment": "Alpha_VWAP_M2_LONG",
+      "openedTs": 1795161603000
+    },
+    {
+      "ticket": 20345750,
+      "asset": null,
+      "symbol": "USDCHF.pi",
+      "side": "sell",
+      "volume": 0.01,
+      "open": 0.8412,
+      "current": 0.84056,
+      "sl": 0.84105,
+      "tp": 0.8249,
+      "profit": 0.76,
+      "swap": -0.18,
+      "comment": "Alpha_VWAP_0_SHORT",
+      "openedTs": 1795176006000
+    },
+    {
+      "ticket": 20348830,
+      "asset": null,
+      "symbol": "GBPNOK.pi",
+      "side": "sell",
+      "volume": 0.01,
+      "open": 12.7835,
+      "current": 12.875399999999999,
+      "sl": 12.8133,
+      "tp": 12.60537,
+      "profit": -9.39,
+      "swap": -0.03,
+      "comment": "Alpha_VWAP_0_TWO_B",
+      "openedTs": 1795181403000
+    },
+    {
+      "ticket": 20354671,
+      "asset": null,
+      "symbol": "SOLUSD.p",
+      "side": "sell",
+      "volume": 0.01,
+      "open": 70.35,
+      "current": 70.62,
+      "sl": 71.85,
+      "tp": 67.1,
+      "profit": -0.27,
+      "swap": 0.0,
+      "comment": "cg_terminal",
+      "openedTs": 1795275540000
+    },
+    {
+      "ticket": 20355060,
+      "asset": null,
+      "symbol": "USWTI.p",
+      "side": "buy",
+      "volume": 0.01,
+      "open": 83.602,
+      "current": 84.816,
+      "sl": 81.728,
+      "tp": 91.118,
+      "profit": 1.21,
+      "swap": 0.05,
+      "comment": "Alpha_VWAP_M2_TWO_",
+      "openedTs": 1795190405000
+    },
+    {
+      "ticket": 20355062,
+      "asset": null,
+      "symbol": "CHFJPY.pi",
+      "side": "buy",
+      "volume": 0.01,
+      "open": 189.082,
+      "current": 188.65,
+      "sl": 188.446,
+      "tp": 190.712,
+      "profit": -2.73,
+      "swap": -0.06,
+      "comment": "Alpha_VWAP_M2_TWO_",
+      "openedTs": 1795190406000
+    },
+    {
+      "ticket": 20355065,
+      "asset": null,
+      "symbol": "USDJPY.pi",
+      "side": "sell",
+      "volume": 0.01,
+      "open": 158.675,
+      "current": 158.604,
+      "sl": 159.142,
+      "tp": 155.875,
+      "profit": 0.45,
+      "swap": -0.13,
+      "comment": "Alpha_VWAP_M1_SHOR",
+      "openedTs": 1795190406000
+    },
+    {
+      "ticket": 20362624,
+      "asset": null,
+      "symbol": "EURUSD.pi",
+      "side": "sell",
+      "volume": 0.01,
+      "open": 1.09818,
+      "current": 1.09721,
+      "sl": 1.09813,
+      "tp": 1.08823,
+      "profit": 0.97,
+      "swap": 0.02,
+      "comment": "Alpha_VWAP_P2_TWO_",
+      "openedTs": 1795197604000
+    },
+    {
+      "ticket": 20365852,
+      "asset": null,
+      "symbol": "BTCUSD.pi",
+      "side": "sell",
+      "volume": 0.01,
+      "open": 60850.0,
+      "current": 60252.0,
+      "sl": 61650.0,
+      "tp": 58200.0,
+      "profit": 5.98,
+      "swap": 0.0,
+      "comment": "cg_terminal",
+      "openedTs": 1795277004000
+    },
+    {
+      "ticket": 20366538,
+      "asset": null,
+      "symbol": "USWTI.p",
+      "side": "buy",
+      "volume": 0.01,
+      "open": 84.007,
+      "current": 84.816,
+      "sl": 81.731,
+      "tp": 93.031,
+      "profit": 0.81,
+      "swap": 0.05,
+      "comment": "Alpha_VWAP_M2_LONG",
+      "openedTs": 1795204804000
+    },
+    {
+      "ticket": 20366540,
+      "asset": null,
+      "symbol": "USDJPY.pi",
+      "side": "sell",
+      "volume": 0.01,
+      "open": 158.759,
+      "current": 158.604,
+      "sl": 159.132,
+      "tp": 156.514,
+      "profit": 0.98,
+      "swap": -0.13,
+      "comment": "Alpha_VWAP_0_PINBA",
+      "openedTs": 1795204805000
+    },
+    {
+      "ticket": 20366541,
+      "asset": null,
+      "symbol": "USDCHF.pi",
+      "side": "buy",
+      "volume": 0.01,
+      "open": 0.83972,
+      "current": 0.83916,
+      "sl": 0.83651,
+      "tp": 0.8591,
+      "profit": -0.67,
+      "swap": 0.05,
+      "comment": "Alpha_VWAP_M2_LONG",
+      "openedTs": 1795204805000
+    },
+    {
+      "ticket": 20370002,
+      "asset": null,
+      "symbol": "USWTI.p",
+      "side": "buy",
+      "volume": 0.01,
+      "open": 84.165,
+      "current": 84.816,
+      "sl": 82.881,
+      "tp": 89.396,
+      "profit": 0.65,
+      "swap": 0.05,
+      "comment": "Alpha_VWAP_P1_LONG",
+      "openedTs": 1795208403000
+    },
+    {
+      "ticket": 20371977,
+      "asset": null,
+      "symbol": "EURUSD.pi",
+      "side": "sell",
+      "volume": 0.02,
+      "open": 1.09669,
+      "current": 1.09721,
+      "sl": 1.09742,
+      "tp": 1.09234,
+      "profit": -1.04,
+      "swap": 0.03,
+      "comment": "Alpha_VWAP_P2_SHOR",
+      "openedTs": 1795213801000
+    },
+    {
+      "ticket": 20372265,
+      "asset": null,
+      "symbol": "ETHUSD.pi",
+      "side": "sell",
+      "volume": 0.07,
+      "open": 1665.0,
+      "current": 1689.6,
+      "sl": 1725.0,
+      "tp": 1540.0,
+      "profit": -1.72,
+      "swap": 0.0,
+      "comment": "cg_terminal",
+      "openedTs": 1795267999000
+    },
+    {
+      "ticket": 20372437,
+      "asset": null,
+      "symbol": "EURUSD.pi",
+      "side": "buy",
+      "volume": 0.02,
+      "open": 1.09665,
+      "current": 1.09631,
+      "sl": 1.09595,
+      "tp": 1.10105,
+      "profit": -0.68,
+      "swap": -0.14,
+      "comment": "Alpha_VWAP_M2_LONG",
+      "openedTs": 1795215605000
+    },
+    {
+      "ticket": 20372783,
+      "asset": null,
+      "symbol": "USWTI.p",
+      "side": "sell",
+      "volume": 0.01,
+      "open": 84.816,
+      "current": 84.846,
+      "sl": 85.06,
+      "tp": 83.287,
+      "profit": -0.03,
+      "swap": -0.16,
+      "comment": "Alpha_EMA20_REJECT",
+      "openedTs": 1795218301000
+    },
+    {
+      "ticket": 20378454,
+      "asset": null,
+      "symbol": "ETHUSD.pi",
+      "side": "sell",
+      "volume": 0.03,
+      "open": 1704.16,
+      "current": 1689.6,
+      "sl": 1740.0,
+      "tp": 1540.0,
+      "profit": 0.44,
+      "swap": 0.0,
+      "comment": "cg_terminal",
+      "openedTs": 1795275391000
+    },
+    {
+      "ticket": 20378518,
+      "asset": null,
+      "symbol": "BNBUSD.p",
+      "side": "sell",
+      "volume": 0.34,
+      "open": 546.9,
+      "current": 548.1,
+      "sl": 558.0,
+      "tp": 497.97,
+      "profit": -0.41,
+      "swap": 0.0,
+      "comment": "cg_terminal",
+      "openedTs": 1795275549000
+    }
+  ],
+  "orders": [
+    {
+      "ticket": 20365867,
+      "asset": null,
+      "symbol": "XAUUSD.pi",
+      "type": "sell_limit",
+      "volume": 0.01,
+      "price": 3550.0,
+      "sl": 3558.0,
+      "tp": 3520.0,
+      "placedTs": 1795203334000,
+      "comment": "cg_terminal"
+    },
+    {
+      "ticket": 20372436,
+      "asset": null,
+      "symbol": "HK50.p",
+      "type": "buy_limit",
+      "volume": 0.01,
+      "price": 21919.27,
+      "sl": 21763.75,
+      "tp": 22852.42,
+      "placedTs": 1795215604000,
+      "comment": "Alpha_VWAP_M2__Lmt"
+    },
+    {
+      "ticket": 20372533,
+      "asset": null,
+      "symbol": "GBPUSD.pi",
+      "type": "sell_limit",
+      "volume": 0.02,
+      "price": 1.3115,
+      "sl": 1.3145,
+      "tp": 1.3025,
+      "placedTs": 1795216229000,
+      "comment": "cg_terminal"
+    },
+    {
+      "ticket": 20372741,
+      "asset": null,
+      "symbol": "AUDUSD.pi",
+      "type": "sell_limit",
+      "volume": 0.03,
+      "price": 0.6635,
+      "sl": 0.666,
+      "tp": 0.656,
+      "placedTs": 1795217785000,
+      "comment": "cg_terminal"
+    }
+  ],
+  "spreads": {
+    "ADAUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "AVAXUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "BNBUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "BTCUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "DOGUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "ETHUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "LNKUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "LTCUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "SOLUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "UKOUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "USOUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "XAGUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "XAUUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "XLMUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "XMRUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "XPTUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    },
+    "XRPUSD": {
+      "ok": false,
+      "reason": "no tick \u2014 check broker symbol name/suffix in config.symbol_map"
+    }
+  },
+  "positioning": {
+    "BTC": {
+      "fundingPct8h": 0.002511,
+      "oiUsd": 38672281325,
+      "oiDelta1hPct": -0.09,
+      "oiDelta4hPct": 2.92,
+      "oiDelta24hPct": -6.19
+    },
+    "ETH": {
+      "fundingPct8h": 9.1e-05,
+      "oiUsd": 21759630564,
+      "oiDelta1hPct": -0.55,
+      "oiDelta4hPct": 2.6,
+      "oiDelta24hPct": -5.04
+    },
+    "SOL": {
+      "fundingPct8h": -0.014598,
+      "oiUsd": 3909992744,
+      "oiDelta1hPct": -0.2,
+      "oiDelta4hPct": 4.15,
+      "oiDelta24hPct": -0.93
+    },
+    "BNB": {
+      "fundingPct8h": 0.003238,
+      "oiUsd": 849341904,
+      "oiDelta1hPct": 0.32,
+      "oiDelta4hPct": 3.48,
+      "oiDelta24hPct": -8.87
+    },
+    "DOGE": {
+      "fundingPct8h": 0.005228,
+      "oiUsd": 673942439,
+      "oiDelta1hPct": 0.33,
+      "oiDelta4hPct": 3.07,
+      "oiDelta24hPct": -6.1
+    },
+    "XAU": {
+      "fundingPct8h": 0.019643,
+      "oiUsd": 1610798611,
+      "oiDelta1hPct": -0.25,
+      "oiDelta4hPct": 0.07,
+      "oiDelta24hPct": -13.22
+    }
+  }
+}
