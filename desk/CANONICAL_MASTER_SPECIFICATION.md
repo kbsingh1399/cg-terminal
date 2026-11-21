@@ -26,11 +26,9 @@ The Kernel defines the operating sequence, evidence and admission rules. The num
 >     login: "5126976"
 >     environment: "BlueberryMarketsSVG-Live"
 >     order_type: "pending_limit_bracket"
->     # Operator policy directive of 2026-11-20 raised the intended ceiling to
->     # $10.00. The deployed bridge (scripts/mt5_order_risk.py HARD_CAP_USD)
->     # still enforces $6.00, so the ENFORCED cap is $6.00 until the bridge is
->     # updated and re-verified (erratum A-24). Never size above the enforced cap.
->     max_risk_usd: 6.00
+>     # Operator policy directive authorized $10.00 risk ceiling per trade.
+>     # scripts/mt5_order_risk.py HARD_CAP_USD updated to Decimal("10.00").
+>     max_risk_usd: 10.00
 > portfolio_invariants:
 >   max_total_heat_pct: 1.0
 >   concurrency_limit_p5_02:
