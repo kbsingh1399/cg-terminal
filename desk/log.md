@@ -19720,3 +19720,16 @@ analysis script rc=139
 - None — data missing, HOLD (manual check)
 - None — data missing, HOLD (manual check)
 
+## R822 · 2026-11-21 14:29 UTC · zai-desk
+
+**Market**: BTC 60,317.7 (+2.4%)  ETH 1,692.24 (+4.3%)  SOL 70.57 (+2.5%)  XAU 3,563.38 (+0.4%)  XAG 41.700 (+0.7%)
+**Bias (|score|≥2)**: BNB-3(TREND)  XAU-3(TREND)  ADA-4(TREND)  AVAX-3(TREND)
+
+### Opportunities (engine v3.2 (regime-aware: trend-pullback + mean-revert) — debate-gated + microFlow vote, min R 2)
+- none meeting the gates this round
+
+### Positions
+- None — data missing, HOLD (manual check)
+- None — data missing, HOLD (manual check)
+- None — data missing, HOLD (manual check)
+
